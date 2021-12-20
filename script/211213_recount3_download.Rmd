@@ -1,0 +1,130 @@
+---
+title: "211213_recount3_download"
+author: "Jennifer Fisher"
+date: "12/13/2021"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# START 
+    Goal/Purpose of operations: 
+    quick summary 
+    
+    Finished psedocode on: Date
+    
+    System which operations were done on: my laptop(on cheaha), lab mac etc... 
+    
+    GitHub Repo:
+    
+    Directory of operations: /path
+    
+    Scripts being edited for operations: filename(s)
+    
+    Data being used: description and location
+    
+    Papers and tools: deseq with paper 
+
+# STEPS
+### Set working directory 
+### load in data
+### Analysis
+```{r}
+library(recount3)
+```
+
+```{r}
+human_projects<- available_projects()
+```
+
+#GBM
+
+```{r}
+human_recount_projects_gbm <- human_projects[! (human_projects$project == "GBM" | human_projects$project == "BRAIN"),]
+```
+
+```{r}
+test<- create_rse(human_recount_projects_gbm[1,])
+recount3__gbm_tf <- as.data.frame(assay(test))
+```
+
+```{r}
+library(parallel)
+library(MASS)
+```
+
+
+```{r}
+numCores<- detectCores()
+```
+
+```{r}
+recount_data_download <- function(index){
+  test<- suppressMessages(create_rse(human_recount_projects_gbm[index,]))
+  test<- as.data.frame(assay(test))
+  return(test)
+}
+```
+
+
+
+```{r}
+test1<- recount_data_download(1)
+```
+
+```{r}
+date()
+result1<- mclapply(1:1000, recount_data_download, mc.cores = numCores)
+date()
+```
+
+
+```{r}
+#saveRDS(result1, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_1_8.rds")
+result2<- mclapply(1001:2000, recount_data_download, mc.cores = numCores)
+
+```
+
+
+```{r}
+result2<- mclapply(1001:2000, recount_data_download, mc.cores = numCores)
+saveRDS(result2, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_2_8.rds")
+result3<- mclapply(2001:3000, recount_data_download, mc.cores = numCores)
+saveRDS(result3, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_3_8.rds")
+result4<- mclapply(4001:5000, recount_data_download, mc.cores = numCores)
+saveRDS(result4, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_4_8.rds")
+result5<- mclapply(5001:6000, recount_data_download, mc.cores = numCores)
+saveRDS(result5, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_5_8.rds")
+result6<- mclapply(6001:7000, recount_data_download, mc.cores = numCores)
+saveRDS(result6, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_6_8.rds")
+result7<- mclapply(7001:8000, recount_data_download, mc.cores = numCores)
+saveRDS(result7, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_7_8.rds")
+result8<- mclapply(8001:8740, recount_data_download, mc.cores = numCores)
+saveRDS(result8, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_8_8.rds")
+```
+
+
+Double check the number of samples 
+
+
+### Save Data
+### Save Figures
+    
+# END
+    Location of final scripts:
+    
+    Location of data produced:
+    
+    Dates when operations were done:
+    
+## Versions
+```{r}
+sessionInfo()
+```
+
