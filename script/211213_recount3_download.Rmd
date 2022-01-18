@@ -15,113 +15,266 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # START 
     Goal/Purpose of operations: 
-    quick summary 
+    Donwloading Recount 3 RNA-seq Counts and normlizing counts by gene length via tpm 
     
     Finished psedocode on: Date
+    211213
     
-    System which operations were done on: my laptop(on cheaha), lab mac etc... 
+    System which operations were done on:
+    my laptop(on cheaha)
     
     GitHub Repo:
+    Transfer_Learning_R03
     
-    Directory of operations: /path
+    Docker/Singularity: 
+    rstudio_tf_dr_v3
     
-    Scripts being edited for operations: filename(s)
+    Directory of operations: 
+    /data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03
     
-    Data being used: description and location
+    Scripts being edited for operations:
+    NA
     
-    Papers and tools: deseq with paper 
+    Data being used:
+    recount3
+    recount3 is an online resource consisting of RNA-seq gene, exon, and exon-exon junction counts as well as coverage bigWig files for 8,679 and 10,088 different studies for human and mouse respectively. It is the third generation of the ReCount project and part of recount.bio.
+    http://rna.recount.bio/
+    
+    Papers and tools: 
+    recount3- see details above 
 
 # STEPS
 ### Set working directory 
+/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03
+
 ### load in data
+in analysis
+
 ### Analysis
 ```{r}
 library(recount3)
 ```
 
-```{r}
+```{r eval= FALSE}
 human_projects<- available_projects()
 ```
 
 #GBM
 
-```{r}
-human_recount_projects_gbm <- human_projects[! (human_projects$project == "GBM" | human_projects$project == "BRAIN"),]
+```{r eval= FALSE}
+ human_recount_projects_gbm <- human_projects[! (human_projects$project == "GBM" | human_projects$project == "BRAIN"),]
 ```
 
-```{r}
+```{r eval= FALSE}
 test<- create_rse(human_recount_projects_gbm[1,])
 recount3__gbm_tf <- as.data.frame(assay(test))
 ```
 
-```{r}
-library(parallel)
-library(MASS)
+
+```{r eval= FALSE}
+human_projects$gene_url <- apply(human_projects, 1, function(x)
+    locate_url(
+        project = x["project"],
+        project_home = x["project_home"],
+        type = "gene",
+        organism = x["organism"],
+        annotation = annotation_options(x["organism"])[1] # Use default annotation
+    ))
+```
+
+```{r eval= FALSE}
+human_projects$command <- paste0("wget ", human_projects$gene_url, sep="")
 ```
 
 
-```{r}
-numCores<- detectCores()
+```{r eval= FALSE}
+saveRDS(human_projects, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/human_samples.rds")
 ```
 
-```{r}
-recount_data_download <- function(index){
-  test<- suppressMessages(create_rse(human_recount_projects_gbm[index,]))
-  test<- as.data.frame(assay(test))
+```{r eval= FALSE}
+write.table(human_projects$command[1:1000], file = "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_1.sh", row.names= FALSE, quote= FALSE)
+write.table(human_projects$command[1001:2000], file = "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_2.sh", row.names= FALSE, quote= FALSE)
+write.table(human_projects$command[2001:3000], file = "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_3.sh", row.names= FALSE, quote= FALSE)
+write.table(human_projects$command[3001:4000], file = "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_4.sh", row.names= FALSE, quote= FALSE)
+write.table(human_projects$command[4001:5000], file = "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_5.sh", row.names= FALSE, quote= FALSE)
+write.table(human_projects$command[5001:6000], file = "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_6.sh", row.names= FALSE, quote= FALSE)
+write.table(human_projects$command[6001:7000], file = "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_7.sh", row.names= FALSE, quote= FALSE)
+write.table(human_projects$command[7001:8742], file = "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_8.sh", row.names= FALSE, quote= FALSE)
+
+```
+
+
+```{r eval= FALSE}
+count_table<- function(file_dir){
+  setwd(file_dir)
+  files <- list.files(file_dir)
+  
+  test<- read.table( files[1], header= TRUE)
+   for (i in 2:length(files)){
+     test2<- read.table( files[i], header= TRUE)
+     test<- cbind(test, test2[,-1])
+     #print(files[i])
+   }
   return(test)
 }
 ```
 
 
-
-```{r}
-test1<- recount_data_download(1)
-```
-
-```{r}
-date()
-result1<- mclapply(1:1000, recount_data_download, mc.cores = numCores)
-date()
+```{r eval= FALSE}
+group1<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_1/")
 ```
 
 
-```{r}
-#saveRDS(result1, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_1_8.rds")
-result2<- mclapply(1001:2000, recount_data_download, mc.cores = numCores)
-
+```{r eval= FALSE}
+group2<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_2/")
+saveRDS(group2, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2.rds")
+rm(group2)
+group3<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_3/")
+saveRDS(group3, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group3.rds")
+rm(group3)
+group4<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_4/")
+saveRDS(group4, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group4.rds")
+rm(group4)
+group5<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_5/")
+saveRDS(group5, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group5.rds")
+rm(group5)
+group6<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_6/")
+saveRDS(group6, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group6.rds")
+rm(group6)
+group7<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_7/")
+saveRDS(group7, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group7.rds")
+rm(group7)
+group8<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_8/")
+saveRDS(group8, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group8.rds")
+rm(group8)
 ```
 
 
-```{r}
-result2<- mclapply(1001:2000, recount_data_download, mc.cores = numCores)
-saveRDS(result2, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_2_8.rds")
-result3<- mclapply(2001:3000, recount_data_download, mc.cores = numCores)
-saveRDS(result3, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_3_8.rds")
-result4<- mclapply(4001:5000, recount_data_download, mc.cores = numCores)
-saveRDS(result4, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_4_8.rds")
-result5<- mclapply(5001:6000, recount_data_download, mc.cores = numCores)
-saveRDS(result5, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_5_8.rds")
-result6<- mclapply(6001:7000, recount_data_download, mc.cores = numCores)
-saveRDS(result6, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_6_8.rds")
-result7<- mclapply(7001:8000, recount_data_download, mc.cores = numCores)
-saveRDS(result7, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_7_8.rds")
-result8<- mclapply(8001:8740, recount_data_download, mc.cores = numCores)
-saveRDS(result8, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_8_8.rds")
+
+```{r eval= FALSE}
+saveRDS(group1, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1.rds")
+saveRDS(group2, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2.rds")
+saveRDS(group3, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group3.rds")
+saveRDS(group4, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group4.rds")
+saveRDS(group5, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group5.rds")
+saveRDS(group6, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group6.rds")
+saveRDS(group7, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group7.rds")
+saveRDS(group8, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group8.rds")
+```
+
+```{r eval= FALSE}
+recount3_Counts<- cbind(recount3_group1, recount3_group2, recount3_group3, recount3_group4, recount3_group5, recount3_group6, recount3_group7, recount3_group8)
+rm(recount3_group1, recount3_group2, recount3_group3, recount3_group4, recount3_group5, recount3_group6, recount3_group7, recount3_group8)
+#saveRDS(recount3_Counts, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_counts.rds")
+#crashes R
+```
+
+#change it to tpm 
+
+```{r eval= FALSE}
+Counts_to_tpm <- function(counts, featureLength) {
+  # Ensure valid arguments.
+  stopifnot(length(featureLength) == nrow(counts))
+  # Compute effective lengths of features in each library.
+  effLen <- featureLength
+  # Process one column at a time.
+  tpm <- do.call(cbind, lapply(1:ncol(counts), function(i) {
+    rate = log(counts[,i]) - log(effLen)
+    denom = log(sum(exp(rate)))
+    exp(rate - denom + log(1e6))
+  }))
+  # Copy the row and column names from the original matrix.
+  colnames(tpm) <- colnames(counts)
+  rownames(tpm) <- rownames(counts)
+  return(tpm)
+}
 ```
 
 
-Double check the number of samples 
+
+```{r eval= FALSE}
+#SRP118922
+test<- create_rse(human_projects[(human_projects$project == "SRP118922"),])
+```
+```{r eval= FALSE}
+gene_info <- test@rowRanges
+rm(test)
+```
+
+```{r eval= FALSE}
+recount3_group1_tpm<- Counts_to_tpm(recount3_group1[,-1] , gene_info$bp_length)
+rownames(recount3_group1_tpm)<- recount3_group2[,1]
+saveRDS(recount3_group1_tpm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1_tpm.rds")
+rm(recount3_group1)
+```
+
+```{r eval= FALSE}
+recount3_group2_tpm<- Counts_to_tpm(recount3_group2[,-1] , gene_info$bp_length)
+rownames(recount3_group2_tpm)<- recount3_group2[,1]
+saveRDS(recount3_group2_tpm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2_tpm.rds")
+rm(recount3_group2)
+rm(recount3_group2_tpm)
+```
+```{r eval= FALSE}
+recount3_group3_tpm<- Counts_to_tpm(recount3_group3[,-1] , gene_info$bp_length)
+rownames(recount3_group3_tpm)<- recount3_group3[,1]
+saveRDS(recount3_group3_tpm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group3_tpm.rds")
+rm(recount3_group3)
+rm(recount3_group3_tpm)
+```
+
+```{r eval= FALSE}
+recount3_group4_tpm<- Counts_to_tpm(recount3_group4[,-1] , gene_info$bp_length)
+rownames(recount3_group4_tpm)<- recount3_group4[,1]
+saveRDS(recount3_group4_tpm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group4_tpm.rds")
+rm(recount3_group4)
+rm(recount3_group4_tpm)
+```
+
+```{r eval= FALSE}
+recount3_group5_tpm<- Counts_to_tpm(recount3_group5[,-1] , gene_info$bp_length)
+rownames(recount3_group5_tpm)<- recount3_group5[,1]
+saveRDS(recount3_group5_tpm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group5_tpm.rds")
+rm(recount3_group5)
+rm(recount3_group5_tpm)
+```
+```{r eval= FALSE}
+recount3_group6_tpm<- Counts_to_tpm(recount3_group6[,-1] , gene_info$bp_length)
+rownames(recount3_group6_tpm)<- recount3_group6[,1]
+saveRDS(recount3_group6_tpm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group6_tpm.rds")
+rm(recount3_group6)
+rm(recount3_group6_tpm)
+```
+```{r eval= FALSE}
+recount3_group7_tpm<- Counts_to_tpm(recount3_group7[,-1] , gene_info$bp_length)
+rownames(recount3_group7_tpm)<- recount3_group7[,1]
+saveRDS(recount3_group7_tpm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group7_tpm.rds")
+rm(recount3_group7)
+rm(recount3_group7_tpm)
+```
+
+```{r eval= FALSE}
+recount3_group8_tpm<- Counts_to_tpm(recount3_group8[,-1] , gene_info$bp_length)
+rownames(recount3_group8_tpm)<- recount3_group8[,1]
+saveRDS(recount3_group8_tpm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group8_tpm.rds")
+rm(recount3_group8)
+rm(recount3_group8_tpm)
+```
 
 
 ### Save Data
-### Save Figures
+Done in analysis 
+
     
 # END
     Location of final scripts:
+    ./scripts
     
     Location of data produced:
+    ./data/recount3
     
     Dates when operations were done:
+    211213-220104
     
 ## Versions
 ```{r}

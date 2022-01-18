@@ -1,0 +1,255 @@
+---
+title: "220104_plier_gbm"
+author: "Jennifer Fisher"
+date: "1/4/2022"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# START 
+    Goal/Purpose of operations: 
+    Conducting Demension reduction for Transfer learning with PLIER
+    
+    Finished psedocode on: Date
+    220104
+    
+    System which operations were done on:
+    my laptop(on cheaha)
+    
+    GitHub Repo:
+    Transfer_Learning_R03
+    
+    Docker/Singularity: 
+    rstudio_tf_dr_v3
+    
+    Directory of operations: 
+    /data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03
+    
+    Scripts being edited for operations:
+    NA
+    
+    Data being used:
+    recount3- tpm normalized
+    recount3 is an online resource consisting of RNA-seq gene, exon, and exon-exon junction counts as well as coverage bigWig files for 8,679 and 10,088 different studies for human and mouse respectively. It is the third generation of the ReCount project and part of recount.bio.
+    http://rna.recount.bio/
+    ./data/recount3
+    
+    Papers and tools: 
+    recount3- see details above 
+    PLIER and MultiPLIER wrapper functions for PLIER
+
+# STEPS
+### Set working directory 
+/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03
+
+### load in data
+```{r}
+recount3_group1_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1_tpm.rds")
+recount3_group2_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2_tpm.rds")
+recount3_group3_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group3_tpm.rds")
+recount3_group4_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group4_tpm.rds")
+recount3_group5_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group5_tpm.rds")
+recount3_group6_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group6_tpm.rds")
+recount3_group7_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group7_tpm.rds")
+recount3_group8_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group8_tpm.rds")
+```
+
+```{r}
+recount3_tpm <- cbind(recount3_group1_tpm, recount3_group2_tpm, recount3_group3_tpm, recount3_group4_tpm, recount3_group5_tpm, recount3_group6_tpm, recount3_group7_tpm, recount3_group8_tpm)
+```
+
+```{r}
+rm(recount3_group1_tpm, recount3_group2_tpm, recount3_group3_tpm, recount3_group4_tpm, recount3_group5_tpm, recount3_group6_tpm, recount3_group7_tpm, recount3_group8_tpm)
+gc()
+```
+
+remove Nas
+
+```{r}
+dim(recount3_tpm[1:4,is.na(recount3_tpm[1,])])
+```
+
+
+```{r}
+recount3_tpm<- recount3_tpm[,! is.na(recount3_tpm[1,])]
+```
+
+
+
+```{r}
+#recount3_tpm<- as.data.frame(recount3_tpm)
+#gc()
+```
+
+### Analysis
+```{r}
+library(PLIER)
+```
+
+```{r}
+source("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/script/plier_util.R")
+```
+
+```{r}
+library(recount3)
+```
+
+```{r}
+human_samples<- available_samples()
+```
+```{r eval= FALSE}
+human_projects<- available_projects()
+```
+```{r eval= FALSE}
+#SRP118922
+test<- create_rse(human_projects[(human_projects$project == "SRP118922"),])
+```
+```{r eval= FALSE}
+gene_info <- test@rowRanges
+rm(test)
+```
+
+
+```{r}
+human_samples_not_gbm<- human_samples$external_id[! human_samples$project == "GBM" | human_samples$project  == "BRAIN"]
+```
+
+```{r}
+recount3_wo_gbm_tpm <- recount3_tpm[, colnames(recount3_tpm) %in% human_samples_not_gbm]
+```
+
+```{r}
+rm(human_samples, human_samples_not_gbm, recount3_tpm)
+gc()
+```
+
+
+```{r}
+recount3_wo_gbm_tpm<- as.matrix(recount3_wo_gbm_tpm)
+rownames(recount3_wo_gbm_tpm) <- gene_info$gene_name
+```
+
+```{r}
+recount3_plier_gbm <- PLIERNewData_JLF(recount3_wo_gbm_tpm)
+```
+
+
+
+```{r}
+PLIERNewData_JLF <- function(exprs.mat, seed = 12345) {
+  # A wrapper function for applying PLIER to a data set. We use the following
+  # genesets that come with PLIER: bloodCellMarkersIRISDMAP, svmMarkers, 
+  # and canonicalPathways. We set the k parameter for the PLIER model by
+  # identifying the number of "significant PCs" with PLIER::num.pc and then 
+  # using sig PCs * 0.3. This is consistent with recommendations from the 
+  # PLIER authors.
+  # 
+  # Args:
+  #   exprs.mat: a gene expression matrix, rows are genes, columns are samples
+  #   seed: an integer to be supplied to set.seed() for reproducibility 
+  #         purposes, default is 12345
+  #         
+  # Returns:
+  #   plier.res: output from PLIER::PLIER()
+  #
+  require(PLIER)
+  
+  set.seed(seed)
+  
+  # load PLIER pathway and cell type data
+  data(bloodCellMarkersIRISDMAP)
+  data(svmMarkers)
+  data(canonicalPathways)
+  
+  print("combine the pathway data from PLIER")
+  all.paths <- PLIER::combinePaths(bloodCellMarkersIRISDMAP, svmMarkers, 
+                                   canonicalPathways)
+  
+  # what genes are common to the pathway data and the expression matrix
+  cm.genes <- PLIER::commonRows(all.paths, exprs.mat)
+  
+  print(" row normalize")
+  exprs.norm <- PLIER::rowNorm(exprs.mat)
+  
+  # what should we set the minimum k parameter to in PLIER? estimate the number 
+  # of PC for the SVD decomposition 
+  print("num.pc")
+  mtx <- exprs.norm[cm.genes, ]
+  mtx<- mtx[complete.cases(mtx),]
+  set.k <- PLIER::num.pc(mtx )
+  
+  # PLIER main function + return results
+  print("PLIER main function")
+  plier.res <- PLIER::PLIER(mtx, all.paths[cm.genes, ], scale= F,
+                           k = round((set.k + set.k * 0.3), 0), trace = TRUE)
+  
+  return(plier.res)
+  
+}
+```
+
+
+```{r}
+row_sd<- function (index, tpm_table){
+  std <- sd(tpm_table[index,])
+  return(std)
+}
+
+row_mean<- function(index, tpm_table){
+  m<-  mean(as.numeric(tpm_table[index,]))
+  return(m)
+}
+Row_Z_score <- function(index, tpm_table, m, std){
+  #mean
+  score<- tpm_table[index, ]
+  m<- m[index]
+  std<- std[index]
+  #zscore
+  Row_Z_score<- (score - m)/ std
+  return(Row_Z_score)
+}
+```
+
+```{r}
+library(parallel)
+```
+
+
+```{r}
+test_sd <- mclapply( 1:nrow(recount3_group1_tpm), row_sd, recount3_group1_tpm)
+test_mean<- mclapply( 1:nrow(recount3_group1_tpm), row_mean, recount3_group1_tpm)
+test_z_score<- mclapply( 1:nrow(recount3_group1_tpm), Row_Z_score, recount3_group1_tpm, test_mean, test_sd)
+```
+
+
+
+```{r}
+recount3_plier_gbm <- PLIERNewData_JLF(recount3_wo_gbm_tpm)
+```
+
+### Save Data
+Done in analysis 
+
+    
+# END
+    Location of final scripts:
+    ./scripts
+    
+    Location of data produced:
+    ./data/recount3
+    
+    Dates when operations were done:
+    211213-220104
+    
+## Versions
+```{r}
+sessionInfo()
+```
+
