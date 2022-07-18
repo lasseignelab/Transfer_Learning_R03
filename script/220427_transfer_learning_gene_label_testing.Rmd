@@ -1,0 +1,284 @@
+---
+title: "220427_transfer_learning_gene_label_testing"
+author: "Jennifer Fisher"
+date: "4/27/2022"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# START 
+    Goal/Purpose of operations: 
+    For this analysis, GTEx Brain Frontal Cortex and Cerebellar Hemisphere regions were compared with transfer learning approach, but a fraction of the genes had their labels switched with another gene. This was done at 10 to 100% at 10% intervals of all the genes 50 times. The average number of latent variables significant for each interval was calculated (adj. P-value < 0.05 ; fold change of 0.05). A linear regression model was used to determine if there was an influence of the number of latent variables significant and fraction of genes with a randomly switched label. 
+    
+    Finished psedocode on:
+    220427
+    
+    System which operations were done on: 
+    my laptop 
+    
+    GitHub Repo:
+    Transfer_Leanring_R03
+    
+    Docker:
+    rstudio_tf_dr_v3
+    
+    Directory of operations:
+    /home/rstudio (Docker)
+    
+    Scripts being edited for operations: filename(s)
+    
+    Data being used: 
+    GTEx Brain data from RECOUNT3
+    
+    Papers and tools: 
+    limma, MultiPLIER
+
+# STEPS
+### Set working directory 
+### load in data
+```{r}
+recount3_gbm_gtex_tpm_df <- readRDS("~/output/recount3_gbm_gtex_tpm_df.rds")
+```
+
+```{r}
+library(recount3)
+library(SummarizedExperiment)
+```
+
+```{r }
+human_projects<- available_projects()
+```
+
+```{r}
+
+recount3_rse_BRIAN <- create_rse(human_projects[(human_projects$project == "BRAIN"),])
+```
+
+```{r}
+meta_brain_gtex_data<- colData(recount3_rse_BRIAN)
+```
+
+
+```{r}
+# subsampling from  Brain - Frontal Cortex (BA9); Brain - Cerebellar Hemisphere
+#224 & 250 
+meta_brain_tissue  <- as.data.frame(meta_brain_gtex_data[meta_brain_gtex_data$gtex.smtsd == "Brain - Frontal Cortex (BA9)" | meta_brain_gtex_data$gtex.smtsd =="Brain - Cerebellar Hemisphere",])
+```
+
+```{r}
+#make b Matrix for just the brain regions
+GBM.GTEx.tpm_test<-recount3_gbm_gtex_tpm_df[, colnames(recount3_gbm_gtex_tpm_df) %in% rownames(meta_brain_tissue)]
+
+identical(colnames(GBM.GTEx.tpm_test), rownames(meta_brain_tissue))
+```
+
+```{r}
+#make test vector 
+test_vector <- meta_brain_tissue$gtex.smtsd
+names(test_vector) <- colnames(GBM.GTEx.tpm_test)
+  #change to the
+test_vector<- ifelse(test_vector == "Brain - Cerebellar Hemisphere", "CH", "FC")
+```
+
+```{r}
+rm(recount3_gbm_gtex_tpm_df, recount3_rse_BRIAN, meta_brain_gtex_data, human_projects)
+gc()
+```
+
+
+### Analysis
+
+
+```{r}
+TestLVDifferencesJLF <- function(b.matrix, phenotype,
+                              use.bonferroni = FALSE) {
+  # This function tests for differential expression of PLIER-derived latent
+  # variables between groups specified by the phenotype argument
+  # using limma. Examples include different disease groups or disease v. 
+  # control. It takes the B matrix from a PLIER model and a factor vector with 
+  # the group labels. It will reorder the phenotype vector if control.phenotype
+  # is specified. The resulting p-values are Benjamini-Hochberg corrected by 
+  # default or Bonferroni corrected if use.bonferroni = TRUE
+  # 
+  # Args:
+  #   b.matrix: a B matrix (latent variables are rows, samples are columns) 
+  #             from a PLIER model. Can be the B element of the list 
+  #             returned by PLIER::PLIER or the output of GetNewDataB
+  #   phenotype: a named factor vector that contains group labels to be used
+  #              for contrasts
+  #   blocking: a names facotor vector that contains group labels to be used for blocking
+  #   use.bonferroni: logical - should bonferroni correction be used? if FALSE
+  #                   (default), will use "BH"
+  #   
+  # Returns:
+  #   A limma::topTable, where the first column is the latent variable name and
+  #   all pathways are returned (without filtering or sorting)
+  
+  ## error-handling ##
+  
+  if (is.null(names(phenotype))) {
+    stop("phenotype should be a named factor vector -- the names ensure that
+         the vector is correctly ordered")
+  }
+  # no names should be "missing"
+  check.names <- all(colnames(b.matrix) %in% names(phenotype)) & 
+    all(names(phenotype) %in% colnames(b.matrix)) 
+  
+  if (!check.names) {
+    stop("Some sample(s) is missing from colnames(b.matrix) or 
+         names(phenotype)")
+  }
+  
+  # the phenotype labels should be in the same order as the b.matrix samples
+  ordered.phenotype <- as.factor(phenotype[colnames(b.matrix)])
+  
+  # get contrasts (all pairwise)  
+  num.levels <- length(levels(ordered.phenotype))
+  contrast.vector <- c()
+  for (lvl in levels(ordered.phenotype)[1:(num.levels - 1)]) {
+    for (lvl.2 in levels(ordered.phenotype)[2:num.levels]) {
+      if (lvl != lvl.2) {
+        contrast.vector <- append(contrast.vector, paste(lvl, lvl.2, sep = "-"))
+      }
+    }
+  }
+  contrast.vector <- paste(contrast.vector, collapse = ", ")
+  
+  # prep design matrix
+  design <- model.matrix(~ 0+ ordered.phenotype )
+  colnames(design)[seq_len(nlevels(ordered.phenotype))] <- levels(ordered.phenotype)
+  
+  
+  
+  
+  #colnames(design) <- levels(ordered.phenotype)
+  
+  # fit linear model
+  fit <- limma::lmFit(b.matrix, design)
+  contrast.matrix <-
+    eval(parse(
+      text = paste0('limma::makeContrasts(', contrast.vector, ', levels = design)')))
+  fit2 <- limma::contrasts.fit(fit, contrast.matrix)
+  fit2 <- limma::eBayes(fit2)
+  
+  # extract results as a data.frame
+  if (use.bonferroni) {  # if specified, use Bonferroni correction
+    limma.result <- limma::topTable(fit2, number = nrow(b.matrix),
+                                    adjust.method = "bonferroni", 
+                                    sort.by = "none")
+  } else {  # calculate FDR
+    limma.result <- limma::topTable(fit2, number = nrow(b.matrix),
+                                    adjust.method = "BH", sort.by = "none")
+  }
+  
+  # want feature (latent variable) names as column
+  limma.result <- tibble::rownames_to_column(limma.result, var = "LV")
+  
+  return(limma.result)
+  
+}
+```
+
+```{r }
+recount3_plier_gbm <- readRDS("~/data/recount3/recount3_plier_gbm.rds")
+```
+
+```{r }
+source("~/script/plier_util.R")
+```
+
+
+```{r}
+gene_reordering_testing <- function(seed_num, tpm_table, test_vector, groups){
+  limma_list <- vector(mode = "list", length = 10)
+  #print(test)
+  set.seed(seed_num)
+  
+  for(i in 1:10){
+    #print(groups[[i]])
+    tpm_table_sub <- tpm_table[sample(1:nrow(tpm_table), size= groups[[i]]) ,]
+    tpm_table_left<- tpm_table[! rownames(tpm_table) %in% rownames(tpm_table_sub ) ,]
+    test_index <- sample(1:groups[[i]], size= groups[[i]])
+    reorder_genes <-  rownames(tpm_table_sub)[test_index ]
+    rownames(tpm_table_sub) <- reorder_genes
+    tpm_table_v3 <- rbind(tpm_table_sub, tpm_table_left)
+    test <- GetOrderedRowNorm(as.matrix(tpm_table_v3),recount3_plier_gbm )
+    zeros<- rownames(test)[!complete.cases(test)]
+    tpm_table_v4<- tpm_table_v3[!rownames(tpm_table_v3) %in% zeros,]
+    b.matrix <- GetNewDataB(tpm_table_v4, recount3_plier_gbm)
+    test_res <- TestLVDifferencesJLF(b.matrix, test_vector ,use.bonferroni = TRUE)
+    limma_list[[i]] <- test_res$LV[test_res$adj.P.Val < 0.05 & abs(test_res$logFC)> 0.05]
+    #print("Done")
+
+  }
+  noise_number<- c()
+  for(j in 1:10){
+    noise_number[j] <- length(limma_list[[j]])
+  }
+return(noise_number)    
+}
+
+```
+
+```{r}
+test<- round((1:10 *.1) * nrow(GBM.GTEx.tpm_test))
+#test1<- gene_reordering_testing(100, GBM.GTEx.tpm_test, test_vector,test)
+#test15<- gene_reordering_testing(150, GBM.GTEx.tpm_test, test_vector,test)
+```
+
+```{r}
+limma_genes_df <- data.frame(matrix(ncol = 10, nrow = 50))
+for (i in 1:50){
+  print(i)
+  number_seed<- 100 + (i*3)
+  limma_genes_df[i,] <- gene_reordering_testing(number_seed, GBM.GTEx.tpm_test, test_vector,test)
+}
+```
+
+
+```{r}
+fraction <- (1:10)*.1
+Avg_Num_LV <- colMeans(limma_genes_df)
+gene_test_data <- data.frame(fraction, Avg_Num_LV)
+```
+
+
+```{r}
+library(ggplot2)
+ggplot(data=gene_test_data, aes(x=fraction, y=Avg_Num_LV)) + geom_line()+ geom_point() + scale_color_manual(values ="#228C8DFF")  + labs(title= "Gene Switching GTEx Brain Region Differences", x="Fraction of Gene with Different Labels", y = "Average Number of Latent Variables")+   geom_smooth(method='lm', formula= y~x)+  theme_classic()
+ggsave("/home/rstudio/output/220428_gene_switching_line_plot.png")
+```
+
+```{r}
+summary(lm(gene_test_data$Avg_Num_LV ~ gene_test_data$fraction))
+```
+
+
+
+### Save Data
+NA
+### Save Figures
+Done in script
+
+# END
+    Location of final scripts:
+    /script
+    
+    Location of data produced:
+    none. 
+    
+    Dates when operations were done:
+    204027-220428
+    
+## Versions
+```{r}
+sessionInfo()
+```
+

@@ -1,0 +1,922 @@
+---
+title: "220302_GBM_drug_report"
+author: "Jennifer Fisher"
+date: "3/2/2022"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Description of analysis 
+I will use a dimension reduction method, Pathway-Level Information Extractor (PLIER), to decompose transcript per million (TPM) normalized gene expression profiles from Recount3 into latent variables4,64.  A unique feature of this dimension reduction approach is its penalty for latent variables to reflect annotated pathways4,64. These learned latent variables from over 300,000 human RNA-seq samples from Recount3 will be transferred to disease (GBM IDH-wild type) and control TPM normalized gene expression profiles by matrix multiplication (MultiPLIER)4. To determine the Disease assoicaated Signatures (ie., Latent Variable), I will conduct a differential latent variable analysis via linear regression models (limma)65.  This is a GI1 cell line was used in this analysis.  For transfer learning signature reversion, I will create a gene list with the genes that contribute the most to the DAS (i.e., have the highest weights in the linear gene expression equation) for GBM. Then, I will calculate the gene expression fold change between disease and control to determine if the genes are up or down-regulated in the disease. I will use these up and down-regulated genes as inputs in the gene expression signature reversion method. The LINCS’s signature reversion (SignatureSearch), finds drug candidates with a gene expression perturbation profile (i.e., LINCS, 1,131 cell lines and 41,847 drugs) inverse to the disease profile (i.e., the up -and down-regulated DAGs determined by Aim 1A)32. I will filter drug candidates based on false discovery rates to correct for multiple hypothesis testing and Tau values to identify drugs that are uniquely inverse to the disease signature67. Then, I will rank drug candidates by the bi-directional weighted Kolmogorov-Smirnov statistic, which determines how similar are the disease and drug profiles67.
+
+# Abstract Figure 
+
+# START 
+
+    System which operations were done on: my laptop(on cheaha), lab mac etc... 
+    
+    GitHub Repo:
+    
+    Docker Containter: 
+    
+    Directory of operations: /path
+    
+    Scripts being edited for operations: filename(s)
+    
+    Data being used: description and location
+    
+    Papers and tools: 
+    
+# Results 
+
+```{r}
+fda_marketing_status <- read.delim("~/data/drugsatfda20220302/MarketingStatus.txt")
+```
+
+```{r}
+frda_product_info <- read.delim("~/data/drugsatfda20220302/Products.txt")
+```
+
+```{r}
+fda_marketing_status$ID<- paste(fda_marketing_status$ApplNo, fda_marketing_status$ProductNo, sep= "_")
+```
+
+```{r}
+frda_product_info$ID<- paste(frda_product_info$ApplNo, frda_product_info$ProductNo, sep= "_")
+```
+
+```{r}
+info <- frda_product_info[frda_product_info$ID == fda_marketing_status$ID[1], 3:9]
+for (i in 2:nrow(fda_marketing_status)){
+  info_v2 <- frda_product_info[frda_product_info$ID == fda_marketing_status$ID[i], 3:9]
+  info <- rbind(info, info_v2)
+}
+```
+
+```{r}
+info$ID[duplicated(info$ID)]
+```
+remove one 
+```{r}
+fda_product_info_v2 <- info[- 27986, ]
+```
+
+```{r}
+fda_product_info_v2$market_status<- rep(NA, nrow(fda_product_info_v2))
+for( i in 1:nrow(fda_product_info_v2)){
+  fda_product_info_v2$market_status[i]<- fda_marketing_status$MarketingStatusID[ fda_marketing_status$ID == fda_product_info_v2$ID[i]]
+}
+```
+```{r}
+fda_marketing_status$ID[duplicated(fda_marketing_status$ID)]
+```
+
+```{r}
+fda_product_info_v2$market_status_v2 <- ifelse(fda_product_info_v2$market_status == 1, "Prescription", ifelse(fda_product_info_v2$market_status == 2, "Over-the-Counter",  ifelse(fda_product_info_v2$market_status == 3, "Discontinued", "None (Tentative Approval")))
+```
+
+```{r}
+write.table(fda_product_info_v2,file = "~/data/fda_product_info_df.csv" )
+```
+
+
+```{r}
+repurposing_hub_table<- read.delim("~/data/Repurposing_Hub_export.txt")
+```
+
+```{r}
+FDA_CT_table<- read.csv("~/data/SearchResults.csv")
+```
+
+```{r}
+fda_approved_LINCS <- repurposing_hub_table$Name[repurposing_hub_table$Phase == "Launched"]
+```
+
+```{r}
+lincs_deseq_gbm_res_GI1_top <- read.csv("~/output/TF_L_GBM/220207_lincs_transfer_gbm_res_GI1_tau.csv")
+```
+
+```{r}
+lincs_deseq_gbm_res_GI1_top_order <- lincs_deseq_gbm_res_GI1_top[order(-lincs_deseq_gbm_res_GI1_top$NCS),]
+lincs_deseq_gbm_res_GI1_top$pert <- factor(lincs_deseq_gbm_res_GI1_top$pert, levels = lincs_deseq_gbm_res_GI1_top_order$pert)
+```
+
+```{r}
+lincs_deseq_gbm_res_GI1_top_approved<- lincs_deseq_gbm_res_GI1_top[lincs_deseq_gbm_res_GI1_top$pert %in% fda_approved_LINCS | lincs_deseq_gbm_res_GI1_top$pert== "rucaparib",]
+```
+  
+```{r}
+lincs_deseq_gbm_res_GI1_top_approved_tau <-  lincs_deseq_gbm_res_GI1_top_approved[lincs_deseq_gbm_res_GI1_top_approved$jlf_tau < -80  ,]
+```
+
+```{r}
+library(ggplot2)
+library(viridis)
+```
+
+```{r}
+p<-ggplot(data=lincs_deseq_gbm_res_GI1_top_approved_tau , aes(x=pert, y=NCS, fill=jlf_tau)) +
+  geom_bar(stat="identity")+ scale_fill_viridis(direction=-1)
+p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]")
+ggsave("~/output/TF_L_GBM/220210_ggplot_transfer_tau_gbm_approved_candidates.pdf")
+```
+
+
+
+```{r}
+name<- c()
+moa <- c()
+targets <- c()
+status<- c()
+GBM_CT <- c()
+NCS <- c()
+WTCS_Pval <- c()
+Tau<- c()
+for (i in 1:nrow(lincs_deseq_gbm_res_GI1_top)){
+  name[i] <- as.character(lincs_deseq_gbm_res_GI1_top$pert[i])
+  if (lincs_deseq_gbm_res_GI1_top$pert[i] %in% repurposing_hub_table$Name){
+    moa[i] <- repurposing_hub_table$MOA[ repurposing_hub_table$Name == lincs_deseq_gbm_res_GI1_top$pert[i]]
+    targets[i] <- repurposing_hub_table$Target[ repurposing_hub_table$Name == lincs_deseq_gbm_res_GI1_top$pert[i]]
+    status[i] <- repurposing_hub_table$Phase[ repurposing_hub_table$Name == lincs_deseq_gbm_res_GI1_top$pert[i]]
+  }else{
+    moa[i] <- NA
+    targets[i] <- NA
+    status[i] <- NA
+  }
+  
+  NCS[i] <- lincs_deseq_gbm_res_GI1_top$NCS[ lincs_deseq_gbm_res_GI1_top$pert== lincs_deseq_gbm_res_GI1_top$pert[i]]
+  WTCS_Pval[i] <-  lincs_deseq_gbm_res_GI1_top$WTCS_Pval[ lincs_deseq_gbm_res_GI1_top$pert== lincs_deseq_gbm_res_GI1_top$pert[i]]
+  Tau[i] <-  lincs_deseq_gbm_res_GI1_top$jlf_tau[ lincs_deseq_gbm_res_GI1_top$pert== lincs_deseq_gbm_res_GI1_top$pert[i]]
+  
+  res <- grep( lincs_deseq_gbm_res_GI1_top$pert[i], FDA_CT_table$Interventions, ignore.case=TRUE )
+  GBM_CT[i] <- length(res) >0 
+}
+
+info_table <- as.data.frame(cbind(name, moa, targets, status, GBM_CT, NCS, WTCS_Pval,Tau ))
+```
+
+#cut off -80
+```{r}
+info_table_v2<- info_table[as.numeric(info_table$Tau) <= -80,]
+```
+
+
+```{r}
+table(info_table_v2$status)
+```
+
+```{r}
+table(info_table_v2$GBM_CT)
+```
+ looking at using Drug Bank information 
+ 
+note that the database was created by .... 
+
+```{r}
+library(RSQLite)
+library(DBI)
+```
+#https://github.com/yduan004/drugbankR/blob/master/R/dbxml_handle.R
+```{r}
+dbxml2df <- function(xmlfile, version) {
+    myxml <- xmlParse(file=xmlfile) 
+    rootnode <- xmlRoot(myxml)
+    rootsize <- xmlSize(rootnode)
+    mycol <- c("drugbank-id", "name", "description", "cas-number", "unii", 
+	       "state", "groups", "general-references", "synthesis-reference",
+	       "indication", "pharmacodynamics", "mechanism-of-action", "toxicity", 
+	       "metabolism", "absorption", "half-life", "protein-binding",
+	       "route-of-elimination", "volume-of-distribution", "clearance",
+	       "classification", "salts", "synonyms", "products", "international-brands",
+	       "mixtures", "packagers", "manufacturers", "prices", "categories",
+	       "affected-organisms", "dosages", "atc-codes", "ahfs-codes", "pdb-entries",
+	       "fda-label", "msds", "patents", "food-interactions", "drug-interactions",
+	       "sequences", "experimental-properties", "external-identifiers", "external-links",
+	       "pathways", "reactions", "snp-effects", "snp-adverse-drug-reactions", "targets",
+	       "enzymes", "carriers", "transporters", "average-mass", "monoisotopic-mass", 
+	       "calculated-properties")
+    ## (b) Extract corresponding data in loop and inject into preformatted data.frame 
+    message("Extracting data for column names. This may take 20 minutes.")
+    df <- as.data.frame(matrix(NA, nrow=rootsize, ncol=length(mycol), dimnames=list(1:rootsize, mycol)))
+    for(i in 1:rootsize) {
+        tmp <- xmlToDataFrame(rootnode[i], stringsAsFactors = FALSE, collectNames = FALSE)
+        v <- as.character(tmp[1,]); names(v) <- colnames(tmp)
+        df[i,] <- v[mycol]
+    }
+    message("Successfully convert DrugBank database (xml file) into dataframe.")
+    return(df)
+}
+```
+
+
+```{r}
+#drug_bank<- dbxml2df("~/data/full database.xml", "5.1.8")
+```
+ 
+```{r}
+#saveRDS(drug_bank, "~/data/drug_bank_1_5_8_df.RDS")
+```
+ 
+```{r}
+drug_bank <- readRDS("~/data/drug_bank_1_5_8_df.RDS")
+```
+ 
+ 
+```{r}
+colnames(drug_bank)
+```
+
+```{r}
+drug_bank_v2 <- drug_bank[drug_bank$name %in% info_table_v2$name ,]
+```
+```{r}
+drug_bank_v3 <- drug_bank[tolower(drug_bank$name) %in% info_table_v2$name,]
+```
+
+Capivasertib
+
+```{r}
+drug_bank_v5 <- drug_bank[drug_bank$name == "Capivasertib" ,]
+```
+
+```{r}
+drug_bank_gbm_candidates <- rbind(drug_bank_v2, drug_bank_v3, drug_bank_v5)
+```
+
+```{r}
+#write.table(drug_bank_gbm_candidates, "~/output/TF_L_GBM/220303_drug_canidate_info_drug_bank_1_5_8.csv", sep="@")
+```
+
+```{r}
+#write.csv2(info_table_v2, "~/output/TF_L_GBM/220303_drug_canidate_LINCS_repurposing_hub.csv")
+```
+
+
+#fda DATABASE
+
+```{r}
+info_table_v2
+```
+
+```{r}
+library(recount3)
+library(SummarizedExperiment)
+```
+
+```{r }
+human_projects<- available_projects()
+```
+
+```{r }
+#SRP118922
+recount3_rse_GBM <- create_rse(human_projects[(human_projects$project == "GBM"),])
+```
+tcgabiolinks download done by Avery williams 
+```{r}
+load("/home/rstudio/data/TCGA_GBM_GeneExpression_TCGABIOlinks.rda")
+```
+
+```{r}
+metadata_gbm<- colData(data)
+```
+
+```{r}
+ table(metadata_gbm$paper_IDH.status)
+```
+
+```{r}
+#all primary tumors 
+ metadata_gbm$sample_type[ metadata_gbm$paper_IDH.status == "WT"]
+```
+
+
+141 wildtype GBM. mutant IDH are no longer gbm 
+```{r}
+IDS <- metadata_gbm$barcode[ metadata_gbm$paper_IDH.status == "WT"]
+IDS<- IDS[!is.na(IDS)]
+#inculde the five nromal samples 
+nt<- metadata_gbm$barcode[ metadata_gbm$sample_type == "Solid Tissue Normal"]
+IDS<- c(IDS, nt)
+```
+
+```{r}
+recount_metadata<- colData(recount3_rse_GBM)
+recount_metadata<- as.data.frame(recount_metadata)
+```
+
+```{r}
+recount_1ds<- rownames(recount_metadata)[recount_metadata$tcga.tcga_barcode %in% IDS]
+```
+
+```{r}
+recount3_count_GBM <- as.data.frame(assay(recount3_rse_GBM))
+```
+
+```{r}
+recount3_count_GBM<- recount3_count_GBM[,colnames(recount3_count_GBM) %in% recount_1ds]
+```
+
+```{r}
+#SRP118922
+recount3_rse_BRIAN <- create_rse(human_projects[(human_projects$project == "BRAIN"),])
+```
+
+```{r}
+recount3_count_brain<- assay(recount3_rse_BRIAN)
+recount3_count_brain <- as.data.frame(recount3_count_brain)
+```
+
+```{r}
+#order the tcga data to match recount3 order
+recount3_ids <- colnames(recount3_count_GBM)
+recount_metadata_sub <- recount_metadata[rownames(recount_metadata) %in% recount3_ids,]
+identical(rownames(recount_metadata_sub),recount3_ids)
+ids <- recount_metadata_sub$tcga.tcga_barcode 
+
+nam <- 
+status<- c()
+subtype<- c()
+sex<- c()
+for (i in 1:length(ids)){
+  
+nam[i]<- ids[i]
+#create tumor/normal col
+status[i] <-metadata_gbm$sample_type[metadata_gbm$barcode == ids[i]]
+#create subtype col
+subtype[i] <-as.character(metadata_gbm$paper_Transcriptome.Subtype[metadata_gbm$barcode == ids[i]])
+subtype[i]<- ifelse(is.na(subtype[i]), "NA", subtype[i])
+#create sex col 
+sex[i]<- metadata_gbm$gender[metadata_gbm$barcode == ids[i]]
+}
+#create database col
+database <- rep("TCGA", 146)
+#create metadata 
+tcga_gbm_metadata<- as.data.frame(cbind(nam, database, status, subtype, sex))
+rownames(tcga_gbm_metadata)<- recount3_ids
+tcga_gbm_metadata[1:5,]
+```
+
+```{r}
+#order the metadata to match recount3 order
+metadata_gtex<- as.data.frame(colData(recount3_rse_BRIAN))
+
+#create sex col 
+identical (rownames(metadata_gtex), colnames( recount3_count_brain))
+nam<- metadata_gtex$external_id
+sex<- ifelse(metadata_gtex$gtex.sex == 1, "male", "female")
+#create database col
+database<- rep ("GTEx",2931 )
+#create normal col
+status<- rep ("Solid Tissue Normal", 2931)
+#create subtype col
+subtype<- rep("NA", 2931)
+#create metadata 
+gtex_metadata<- as.data.frame(cbind(nam, database, status, subtype, sex))
+rownames(gtex_metadata)<- rownames(metadata_gtex)
+#combine count and metadata
+gtex_metadata[1:5,]
+```
+
+
+```{r}
+all_metadata <- rbind(tcga_gbm_metadata, gtex_metadata)
+rownames(all_metadata)<- c(rownames(tcga_gbm_metadata), rownames(gtex_metadata))
+count_table<- cbind(recount3_count_GBM, recount3_count_brain)
+```
+
+```{r}
+identical(rownames(all_metadata), colnames(count_table))
+```
+
+normalize count data by tpm
+```{r}
+Counts_to_tpm <- function(counts, featureLength) {
+  # Ensure valid arguments.
+  stopifnot(length(featureLength) == nrow(counts))
+  # Compute effective lengths of features in each library.
+  effLen <- featureLength
+  # Process one column at a time.
+  tpm <- do.call(cbind, lapply(1:ncol(counts), function(i) {
+    rate = log(counts[,i]) - log(effLen)
+    denom = log(sum(exp(rate)))
+    exp(rate - denom + log(1e6))
+  }))
+  # Copy the row and column names from the original matrix.
+  colnames(tpm) <- colnames(counts)
+  rownames(tpm) <- rownames(counts)
+  return(tpm)
+}
+```
+
+
+```{r}
+gene_info <- as.data.frame(recount3_rse_BRIAN@rowRanges)
+```
+check to make sure things line up 
+```{r}
+identical(gene_info$gene_id, rownames(count_table))
+```
+
+```{r}
+tpm_table<- Counts_to_tpm(count_table, gene_info$bp_length)
+```
+
+```{r}
+rownames(tpm_table)<- gene_info$gene_name
+```
+
+```{r}
+tpm_df <- as.data.frame(tpm_table)
+```
+
+
+```{r}
+tpm_df[1:5,1:5]
+```
+
+```{r}
+deseq_results <- read.csv("~/output/deseq2_gbm/Deseq2_gbm_normal_gtx_res.csv", sep=",")
+```
+
+```{r}
+gene_info$gene_name[1]
+identical(gene_info$gene_id, rownames(deseq_results))
+```
+
+```{r}
+deseq_results$Symbol <- gene_info$gene_name
+```
+
+
+## Overview
+table with name moa targets approved clinical trials of NCS and p-avalue and Tau value 
+
+pie chart of moa, targets, aprpoved/phases, clinical trial
+
+
+diflunisal 
+look at the Gene expression of targets
+prostanoid receptor antagonist
+NSAID used to treat mild to moderate pain, inflammation, osteoarthritis, and rheumatoid arthritis. 
+https://go.drugbank.com/drugs/DB00861
+Blood Brain Barrier	+	0.8047
+several drug interactions (but not with Tmz)
+
+PTGS1, PTGS2
+```{r}
+library(dplyr)
+library(tidyr)
+```
+
+```{r}
+tpm_sub <- tpm_df[rownames(tpm_df) %in% c("PTGS1", "PTGS2"),]
+tpm_sub$genes<- rownames(tpm_sub)
+tpm_sub_v2 <- tpm_sub %>%
+  pivot_longer(!genes, names_to = "sample", values_to = "tpm")
+tpm_sub_v2$type <- rep(all_metadata$status, 2)
+```
+
+```{r}
+deseq_sub <-  deseq_results[ deseq_results$Symbol %in% c("PTGS1", "PTGS2"),]
+stat_table <- deseq_sub[,c(7,6)]
+stat_table$group1 <- rep("Primary Tumor" , 2)
+stat_table$group2 <- rep("Solid Tissue Normal" , 2)
+stat_table$padj <- ifelse(stat_table$padj < 0.05, formatC(stat_table$padj, format = "e", digits = 2), "Not Significant")
+#stat_table$padj <- 
+
+colnames(stat_table)<- c("genes", "padj" ,  "group1" ,"group2")
+```
+
+```{r}
+library(ggpubr)
+```
+
+```{r}
+name<- "diflunisal"
+ggplot(tpm_sub_v2, aes(x=genes, y=tpm, color=type)) +
+  geom_boxplot()+ stat_pvalue_manual(stat_table, x="genes" , label = "p = {padj}", y.position= 205) + labs(title=name,x="Drug Targets", y = "Gene Expression (TPM)", color= "Sample Type") + scale_colour_manual(values =  c("#440154FF","#228C8DFF"), aesthetics = c("colour", "fill"))+theme_classic()
+```
+PTGS1 deseq2 adjpvalue 0.001813387
+PTGS2 WAS NOT SIGNFICANT
+
+```{r}
+library(signatureSearch)
+library(HDF5Array)
+se <- SummarizedExperiment(HDF5Array("~/data/lincs_2020.h5", name="assay"))
+```
+
+```{r}
+rownames(se) <- HDF5Array("~/data/lincs_2020.h5", name="rownames")
+colnames(se) <- HDF5Array("~/data/lincs_2020.h5", name="colnames")
+```
+
+```{r}
+se_asssay<- assay(se)
+```
+
+```{r}
+sub <- se_asssay[,grep("diflunisal__GI1__trt_cp", colnames(se))]
+up <- sub[sub >= 2  ]
+up<- names(up[order(-up)])
+down<- sub[ sub <= -2 ]
+down <- names(down[order(down)])
+```
+
+```{r}
+library(gprofiler2)
+```
+
+```{r}
+downset_pathway_results <- gost(query = down, 
+                organism = "hsapiens", ordered_query = TRUE, 
+                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                measure_underrepresentation = FALSE, evcodes = FALSE, 
+                user_threshold = 0.05, correction_method = "g_SCS", 
+                domain_scope = "annotated", custom_bg = NULL, 
+                numeric_ns = "", sources = NULL, as_short_link = FALSE)
+downset_pathway_results<- downset_pathway_results$result
+```
+
+```{r}
+upset_pathway_results <- gost(query = up, 
+                organism = "hsapiens", ordered_query = TRUE, 
+                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                measure_underrepresentation = FALSE, evcodes = FALSE, 
+                user_threshold = 0.05, correction_method = "g_SCS", 
+                domain_scope = "annotated", custom_bg = NULL, 
+                numeric_ns = "", sources = NULL, as_short_link = FALSE)
+upset_pathway_results<- upset_pathway_results$result
+```
+
+```{r}
+pathway_results<- rbind(upset_pathway_results, downset_pathway_results)
+```
+```{r}
+pathway_results$set<- c(rep("Up", nrow(upset_pathway_results)), rep("Down", nrow(downset_pathway_results)))
+```
+
+```{r}
+ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value))+geom_tile()+scale_fill_viridis(direction=-1)+theme_classic()+ labs(title=name,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
+```
+
+
+
+
+```{r}
+drug_analysis <- function(drug_name, target_list,  tpm_df, sample_vector, deseq_results, se, result_path){
+  #drug target expression
+  tpm_sub <- tpm_df[rownames(tpm_df) %in% target_list,]
+  tpm_sub$genes<- rownames(tpm_sub)
+  tpm_sub_v2 <- tpm_sub %>%
+  pivot_longer(!genes, names_to = "sample", values_to = "tpm")
+  tpm_sub_v2$type <- rep(sample_vector, nrow(tpm_sub))
+  name<- drug_name
+  y_max<- max(tpm_sub_v2$tpm) +5
+  
+  
+  deseq_sub <-  deseq_results[ deseq_results$Symbol %in% unique( tpm_sub$genes),]
+  stat_table <- deseq_sub[,c(7,6)]
+  stat_table$group1 <- rep("Primary Tumor" ,  nrow(tpm_sub))
+  stat_table$group2 <- rep("Solid Tissue Normal" ,  nrow(tpm_sub))
+  stat_table$padj <- ifelse(stat_table$padj < 0.05, formatC(stat_table$padj, format = "e", digits = 2), "")
+  colnames(stat_table)<- c("genes", "padj" ,  "group1" ,"group2")
+  
+  
+  file_name<- paste0(result_path, "/", drug_name, "_drug_target_expression_deseq2_padj.png")
+  
+  ggplot(tpm_sub_v2, aes(x=genes, y=tpm, color=type)) + geom_boxplot()+ stat_pvalue_manual(stat_table, x="genes" , label = "{padj}", y.position= y_max,  size = 3) + labs(title=name,x="Drug Targets", y = "Gene Expression (TPM)", color= "Sample Type") + scale_colour_manual(values =  c("#440154FF","#228C8DFF"), aesthetics = c("colour", "fill"))+theme_classic()
+  ggsave(file_name, width = 20, height = 8)
+  
+  #pathway enrichment
+  lincs_name<- paste0(drug_name, "__GI1__trt_cp")
+  sub <- se_asssay[,grep(lincs_name, colnames(se))]
+  up <- sub[sub >= 2  ]
+  up<- names(up[order(-up)])
+  down<- sub[ sub <= -2 ]
+  down <- names(down[order(down)])
+  
+  downset_pathway_results <- gost(query = down, 
+                organism = "hsapiens", ordered_query = TRUE, 
+                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                measure_underrepresentation = FALSE, evcodes = FALSE, 
+                user_threshold = 0.05, correction_method = "g_SCS", 
+                domain_scope = "annotated", custom_bg = NULL, 
+                numeric_ns = "", sources = NULL, as_short_link = FALSE)
+  downset_pathway_results<- downset_pathway_results$result
+  
+  upset_pathway_results <- gost(query = up, 
+                organism = "hsapiens", ordered_query = TRUE, 
+                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                measure_underrepresentation = FALSE, evcodes = FALSE, 
+                user_threshold = 0.05, correction_method = "g_SCS", 
+                domain_scope = "annotated", custom_bg = NULL, 
+                numeric_ns = "", sources = NULL, as_short_link = FALSE)
+  upset_pathway_results<- upset_pathway_results$result
+  
+  pathway_results<- rbind(upset_pathway_results, downset_pathway_results)
+  pathway_results$set<- c(rep("Up", nrow(upset_pathway_results)), rep("Down", nrow(downset_pathway_results)))
+  file_name<- paste0(result_path, "/", drug_name, "_drug_pathways.csv")
+  write.csv2(as.data.frame(pathway_results[,-14]), file_name )
+  
+  file_name<- paste0(result_path, "/", drug_name, "_drug_pathways.png")
+  if(nrow(pathway_results)<50){
+    ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value))+geom_tile()+scale_fill_viridis(direction=-1)+theme_classic()+ labs(title=name,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
+    
+  }else{
+    pathway_results<- pathway_results[pathway_results$source %in% c("KEGG","REAC","GO:MF" ),]
+    ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value)) + geom_tile()+ scale_fill_viridis(direction=-1)+ theme_classic() + labs(title=name,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
+  }
+  ggsave(file_name, width = 12, height = 14)
+  
+}
+```
+
+
+```{r}
+drug_analysis("diflunisal", c("PTGS1", "PTGS2"),  tpm_df, all_metadata$status, deseq_results, se, "~/output/TF_L_GBM/220308_gbm_candidates_plots")
+```
+
+```{r}
+drug_analysis("tiagabine", "SLC6A1",  tpm_df, all_metadata$status, deseq_results, se, "~/output/TF_L_GBM/220308_gbm_candidates_plots")
+
+drug_analysis("vemurafenib", c("BRAF", "RAF1"),  tpm_df, all_metadata$status, deseq_results, se, "~/output/TF_L_GBM/220308_gbm_candidates_plots")
+drug_analysis("saxagliptin", "DPP4",  tpm_df, all_metadata$status, deseq_results, se, "~/output/TF_L_GBM/220308_gbm_candidates_plots")
+drug_analysis("nifedipine", c("CACNA1C", "CACNA1D", "CACNA1F", "CACNA1H", "CACNA1S", "CACNA2D1", "CACNB2", "CALM1", "GLRA1", "GLRA3", "GLRB", "KCNA1", "KCNA5", "NR1I2", "TRPM3"),  tpm_df, all_metadata$status, deseq_results, se, "~/output/TF_L_GBM/220308_gbm_candidates_plots")
+drug_analysis("spironolactone", c("AR", "CACNA1A", "CACNA1B", "CACNA1C", "CACNA1D", "CACNA1F", "CACNA1G", "CACNA1H", "CACNA1I", "CACNA1S", "CACNA2D1", "CACNA2D2", "CACNA2D3", "CACNB1", "CACNB2", "CACNB3", "CACNB4", "CACNG1", "CYP11B2", "NR3C1", "NR3C2", "PGR", "SHBG"),  tpm_df, all_metadata$status, deseq_results, se, "~/output/TF_L_GBM/220308_gbm_candidates_plots")
+drug_analysis("icosapent", c("ACSL3", "ACSL4", "FADS1", "FFAR1", "PPARD", "PPARG", "PTGS1", "PTGS2", "SLC8A1", "TRPV1"),  tpm_df, all_metadata$status, deseq_results, se, "~/output/TF_L_GBM/220308_gbm_candidates_plots")
+drug_analysis("pamidronate", "FDPS",  tpm_df, all_metadata$status, deseq_results, se, "~/output/TF_L_GBM/220308_gbm_candidates_plots")
+```
+
+```{r}
+#"DRD1", "DRD2", "DRD3", "DRD4", "DRD5", 
+drug_analysis("thioridazine", c("DRD1", "DRD2", "DRD3", "DRD5","HRH1", "HTR1A", "HTR2A", "HTR2C", "HTR6", "HTR7"),  tpm_df, all_metadata$status, deseq_results, se, "~/output/TF_L_GBM/220308_gbm_candidates_plots")
+```
+
+looking at ap-1 complex and e2f1 in gbm and diflunisal 
+P-1 is a dimer of JUN (JUN, JUNB, and JUND) and FOS (FOS, FOSB, FOSL1/FRA1, and FOSL2/FRA2) families of leucine-zipper proteins
+```{r}
+tpm_sub <- tpm_df[rownames(tpm_df) %in% c("JUN"  ,  "FOSL1" , "FOS" ,   "JUNB" ,  "JUND" ,  "FOSB" ,  "FOSL2" , "NFATC2" ),]
+tpm_sub$genes<- rownames(tpm_sub)
+tpm_sub_v2 <- tpm_sub %>%
+  pivot_longer(!genes, names_to = "sample", values_to = "tpm")
+tpm_sub_v2$type <- rep(all_metadata$status, 8)
+```
+
+```{r}
+deseq_sub <-  deseq_results[ deseq_results$Symbol %in% c("JUN"  ,  "FOSL1" , "FOS" ,   "JUNB" ,  "JUND" ,  "FOSB" ,  "FOSL2" , "NFATC2"),]
+stat_table <- deseq_sub[,c(7,6)]
+stat_table$group1 <- rep("Primary Tumor" , 8)
+stat_table$group2 <- rep("Solid Tissue Normal" , 8)
+stat_table$padj <- ifelse(stat_table$padj < 0.05, formatC(stat_table$padj, format = "e", digits = 2), "Not Significant")
+#stat_table$padj <- 
+
+colnames(stat_table)<- c("genes", "padj" ,  "group1" ,"group2")
+```
+
+```{r}
+library(ggpubr)
+```
+
+```{r}
+name<- "diflunisal AP-1 complex genes"
+ggplot(tpm_sub_v2, aes(x=genes, y=tpm, color=type)) +
+  geom_boxplot()+ stat_pvalue_manual(stat_table, x="genes" , label = "p = {padj}", y.position= 4000) + labs(title=name,x="Drug Targets", y = "Gene Expression (TPM)", color= "Sample Type") + scale_colour_manual(values =  c("#440154FF","#228C8DFF"), aesthetics = c("colour", "fill"))+theme_classic()
+```
+```{r}
+tpm_sub <- tpm_df[rownames(tpm_df) %in% "E2F1",]
+tpm_sub$genes<- rownames(tpm_sub)
+tpm_sub_v2 <- tpm_sub %>%
+  pivot_longer(!genes, names_to = "sample", values_to = "tpm")
+tpm_sub_v2$type <- rep(all_metadata$status, 1)
+```
+
+```{r}
+deseq_sub <-  deseq_results[ deseq_results$Symbol %in% "E2F1" ,]
+stat_table <- deseq_sub[,c(7,6)]
+stat_table$group1 <- rep("Primary Tumor" , 1)
+stat_table$group2 <- rep("Solid Tissue Normal" , 1)
+stat_table$padj <- ifelse(stat_table$padj < 0.05, formatC(stat_table$padj, format = "e", digits = 2), "Not Significant")
+#stat_table$padj <- 
+
+colnames(stat_table)<- c("genes", "padj" ,  "group1" ,"group2")
+```
+
+```{r}
+library(ggpubr)
+```
+
+```{r}
+name<- "diflunisal E2F1"
+ggplot(tpm_sub_v2, aes(x=genes, y=tpm, color=type)) +
+  geom_boxplot()+ stat_pvalue_manual(stat_table, x="genes" , label = "p = {padj}", y.position= 250) + labs(title=name,x="Drug Targets", y = "Gene Expression (TPM)", color= "Sample Type") + scale_colour_manual(values =  c("#440154FF","#228C8DFF"), aesthetics = c("colour", "fill"))+theme_classic()
+```
+
+```{r}
+library(readr)
+vemurafenib_drug_pathways <- read_delim("~/output/TF_L_GBM/220308_gbm_candidates_plots/vemurafenib_drug_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+```{r}
+library("stringr") 
+```
+
+
+```{r}
+pathway_results<- vemurafenib_drug_pathways[vemurafenib_drug_pathways$source %in% c("KEGG", "REAC"),]
+pathway_results$p_value <- as.numeric(gsub(",", ".", pathway_results$p_value))
+pathway_results<- pathway_results[order(pathway_results$p_value)[1:30],]
+    ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value)) + geom_tile()+ scale_fill_viridis(direction=-1)+ theme_classic() + labs(title="vemurafenib",x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value") + theme(axis.text = element_text(size = 15))  
+    #+ scale_y_discrete(labels = function(x) str_wrap(pathway_results$term_name, width = 20))
+ggsave("~/output/TF_L_GBM/220308_gbm_candidates_plots/vemurafenib_kegg_reac_top30.png", width = 12, height = 14)
+```
+```{r}
+lincs_deseq_gbm_res_GI1_top <- read.csv("~/output/TF_L_GBM/220207_lincs_transfer_gbm_res_GI1_tau.csv")
+```
+
+```{r}
+lincs_deseq_gbm_res_GI1_top_approved_tau <-lincs_deseq_gbm_res_GI1_top[lincs_deseq_gbm_res_GI1_top$pert %in% c("fludarabine", "rucaparib", "diflunisal", "tiagabine","thioridazine", "vemurafenib", "vorinostat", "dasatinib", "saxagliptin", "nifedipine", "spironolactone", "lapatinib", "pentoxifylline", "icosapent", "pamidronate", "erlotinib") ,]
+lincs_deseq_gbm_res_GI1_top_order <- lincs_deseq_gbm_res_GI1_top_approved_tau[order(-lincs_deseq_gbm_res_GI1_top_approved_tau$NCS),]
+```
+
+
+```{r}
+lincs_deseq_gbm_res_GI1_top_order$pert <- factor(lincs_deseq_gbm_res_GI1_top_order$pert, levels =lincs_deseq_gbm_res_GI1_top_order$pert )
+p<-ggplot(data=lincs_deseq_gbm_res_GI1_top_order, aes(x=pert, y=NCS, fill=jlf_tau)) +
+  geom_bar(stat="identity")+ scale_fill_viridis(direction=-1)
+p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]")
+ggsave("~/output/TF_L_GBM/220210_ggplot_transfer_tau_gbm_approved_candidates_updated.png")
+```
+
+```{r}
+tpm_sub <- tpm_df[rownames(tpm_df) %in% c("BRAF", "RAF1" ),]
+tpm_sub$genes<- rownames(tpm_sub)
+tpm_sub_v2 <- tpm_sub %>%
+  pivot_longer(!genes, names_to = "sample", values_to = "tpm")
+tpm_sub_v2$type <- rep(all_metadata$status, 2)
+```
+
+```{r}
+deseq_sub <-  deseq_results[ deseq_results$Symbol %in% c("BRAF", "RAF1" ),,]
+stat_table <- deseq_sub[,c(7,6)]
+stat_table$group1 <- rep("Primary Tumor" , 2)
+stat_table$group2 <- rep("Solid Tissue Normal" , 2)
+stat_table$padj <- ifelse(stat_table$padj < 0.05, formatC(stat_table$padj, format = "e", digits = 2), "Not Significant")
+#stat_table$padj <- 
+
+colnames(stat_table)<- c("genes", "padj" ,  "group1" ,"group2")
+```
+
+```{r}
+library(ggpubr)
+```
+
+```{r}
+#name<- "diflunisal AP-1 complex genes"
+ggplot(tpm_sub_v2, aes(x=genes, y=tpm, color=type)) +
+  geom_boxplot()+ stat_pvalue_manual(stat_table, x="genes" , label = "p = {padj}", y.position= 120) + labs(title="vemurafenib",x="Drug Targets", y = "Gene Expression (TPM)", color= "Sample Type") + scale_colour_manual(values =  c("#440154FF","#228C8DFF"), aesthetics = c("colour", "fill"))+theme_classic()
+ggsave("~/output/TF_L_GBM/220308_gbm_candidates_plots/vemurafenib_update_drug_targets.png")
+```
+
+
+
+
+```{r}
+tpm_sub <- tpm_df[rownames(tpm_df) %in% c("SREBF1","SREBF2"),]
+tpm_sub$genes<- rownames(tpm_sub)
+tpm_sub_v2 <- tpm_sub %>%
+  pivot_longer(!genes, names_to = "sample", values_to = "tpm")
+tpm_sub_v2$type <- rep(all_metadata$status, 2)
+```
+
+```{r}
+deseq_sub <-  deseq_results[ deseq_results$Symbol %in% c("SREBF1","SREBF2"),]
+stat_table <- deseq_sub[,c(7,6)]
+stat_table$group1 <- rep("Primary Tumor" , 2)
+stat_table$group2 <- rep("Solid Tissue Normal" , 2)
+stat_table$padj <- ifelse(stat_table$padj < 0.05, formatC(stat_table$padj, format = "e", digits = 2), "Not Significant")
+#stat_table$padj <- 
+
+colnames(stat_table)<- c("genes", "padj" ,  "group1" ,"group2")
+```
+
+```{r}
+library(ggpubr)
+```
+
+```{r}
+#name<- "SREBP genes"
+ggplot(tpm_sub_v2, aes(x=genes, y=tpm, color=type)) +
+  geom_boxplot()+ stat_pvalue_manual(stat_table, x="genes" , label = "p = {padj}", y.position= 120) + labs(title="SREBP genes",x="Drug Targets", y = "Gene Expression (TPM)", color= "Sample Type") + scale_colour_manual(values =  c("#440154FF","#228C8DFF"), aesthetics = c("colour", "fill"))+theme_classic()
+#ggsave("~/output/TF_L_GBM/220308_gbm_candidates_plots/vemurafenib_update_drug_targets.png")
+```
+
+
+16 total
+9- not in clinical trials 
+7- in clinical trials 
+finish this test 
+```{r}
+fda_info <- read.table("~/data/fda_product_info_df.csv" )
+```
+
+```{r}
+FDA_CT_table<- read.csv("~/data/SearchResults.csv")
+```
+
+```{r}
+repurposing_hub_table<- read.delim("~/data/Repurposing_Hub_export.txt")
+```
+
+```{r}
+library(HDF5Array)
+lincs_samples<- HDF5Array("~/data/lincs_2020.h5", name="colnames")
+lincs_samples<- as.vector(lincs_samples)
+```
+
+```{r}
+lincs_samples_GBM <- lincs_samples[grep("GI1",lincs_samples )]
+```
+
+```{r}
+library(stringr)
+gbm_lincs_drugs <- as.vector(str_split(lincs_samples_GBM,  "__", simplify = TRUE)[,1])
+```
+
+```{r}
+value <- c()
+for (j in 1:685){
+    res <- grep(gbm_lincs_drugs [j], FDA_CT_table$Interventions, ignore.case=TRUE )
+    #if (res == TRUE){
+    #  print(test[j])
+    #}
+    value[j]<- res
+}
+table(value)
+```
+
+
+```{r}
+fraction<-c()
+for (i in 1:10000){
+  test <- gbm_lincs_drugs[ sample(x = 1:685,size = 16,replace = FALSE)]
+  value <- c()
+  
+  #tables<- list()
+  for (j in 1:16){
+    res <- grep(test[j], FDA_CT_table$Interventions, ignore.case=TRUE )
+    res <- length(res) >0 
+    #if (res == TRUE){
+    #  print(test[j])
+    #}
+    value[j]<- res
+  }
+  res_table <- cbind(test, value)
+  fraction[i]<- table(res_table[,2])["TRUE"]
+  #tables[i]<- res_table
+  
+}
+fraction <- ifelse(is.na(fraction), 0, fraction)
+fraction_adj <- fraction/16
+```
+
+
+
+## Drug 1
+
+table with info 
+
+Target expression in normal and tumor tissue (volian plot and table )
+
+pathway analysis of preturbed pathways 
+up 
+down 
+
+Drugbank info in hyperlink 
+
+Clinical/Literature infromation 
+
+Adverse events info 
+
+PRISM info (table and graph)
+
+### Save Data
+### Save Figures
+    
+# END
+    Location of final scripts:
+    
+    Location of data produced:
+    
+    Dates when operations were done:
+    
+## Versions
+```{r}
+sessionInfo()
+```

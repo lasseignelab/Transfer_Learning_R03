@@ -1,0 +1,288 @@
+---
+title: "220228_PRISM_GBM_CELL_LINES"
+author: "Jennifer Fisher"
+date: "2/28/2022"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# START 
+    Goal/Purpose of operations: 
+    quick summary 
+    
+    Finished psedocode on: Date
+    
+    System which operations were done on: my laptop(on cheaha), lab mac etc... 
+    
+    GitHub Repo:
+    
+    Directory of operations: /path
+    
+    Scripts being edited for operations: filename(s)
+    
+    Data being used: description and location
+    
+    Papers and tools: 
+
+The PRISM Repurposing release contains small molecule viability datasets generated using the Broad Repurposing Library and the PRISM multiplexed cell-line viability assay.
+
+The primary PRISM Repurposing dataset contains the results of pooled-cell line chemical-perturbation viability screens for 4,518 compounds screened against 578 cell lines.
+
+The secondary PRISM Repurposing dataset contains the results of pooled-cell line chemical-perturbation viability screens for 1,448 compounds screened against 499 cell lines in a 8-step, 4-fold dilution, starting from 10uM.
+
+Data processing steps are described in the README file. Further descriptions of methods will be published in an upcoming publication.
+
+https://depmap.org/portal/download/all/ 
+
+# STEPS
+### Set working directory 
+### load in data
+```{r}
+library(readr)
+secondary_screen_dose_response_curve_parameters <- read_csv("~/data/DEPMAP_PRISM_220228/secondary-screen-dose-response-curve-parameters.csv")
+```
+### Analysis
+
+```{r}
+ic50 <- secondary_screen_dose_response_curve_parameters[is.finite(secondary_screen_dose_response_curve_parameters$ic50),]
+ic50 <- ic50[! ic50$ic50 == -Inf, ]
+length(unique(ic50$broad_id))
+drug <- unique(ic50$broad_id)
+```
+
+```{r}
+ic50$logIC50<- log(ic50$ic50)
+ic50 <- ic50[! ic50$logIC50 == -Inf, ]
+```
+
+
+```{r}
+drug_v2 <- unique(ic50$name)
+st<- c()
+mean<- c()
+for (i in 1:length(drug_v2)){
+  values <- ic50$logIC50[ic50$name == drug_v2[i]]
+  st[i]<- sd(values)
+  mean[i] <- mean(values)
+}
+drug_ic50_info <- cbind(drug_v2, st, mean)
+```
+
+filter drugs by if the have less than 5 cell lines treated 
+```{r}
+bad_drug<- drug_v2[1]
+for (i in 1:length(drug_v2)){
+  drug_sub <- ic50[ic50$name == drug_v2[i],]
+  if (nrow(drug_sub) < 5){
+    bad_drug<- c(bad_drug, drug_v2[i])
+  }
+}
+```
+
+
+
+
+```{r}
+drug_ic50_info_v2 <- drug_ic50_info[! drug_ic50_info[,1] %in% bad_drug, ]
+```
+
+z-score 
+```{r}
+drug_z_score<- c()
+for( i in 1:nrow(ic50)){
+  sd <- as.numeric( drug_ic50_info_v2[drug_ic50_info_v2[,1] == ic50$name[i], 2])
+  m <-  as.numeric(drug_ic50_info_v2[drug_ic50_info_v2[,1] == ic50$name[i], 3])
+  if(length(m) > 0 ){
+    drug_z_score[i]<- (ic50$logIC50[i]- m)/ sd
+  }else{
+    drug_z_score[i]<- NA
+  }
+}
+```
+
+
+```{r}
+ic50$drug_z_score<- drug_z_score
+```
+
+```{r}
+sample_info <- read_csv("~/data/DEPMAP_PRISM_220228/sample_info.csv")
+```
+```{r}
+brain_cancer_cells <- sample_info$CCLE_Name[sample_info$primary_disease == "Brain Cancer"]
+gbm_cells <- sample_info$CCLE_Name[sample_info$Subtype == "Glioblastoma"]
+brain_cancer_cells <- setdiff(brain_cancer_cells, gbm_cells)
+```
+
+```{r}
+type<- ifelse(ic50$ccle_name %in% gbm_cells, "Glioblastoma", ifelse(ic50$ccle_name %in% brain_cancer_cells, "Brain Cancer", "Other Cell Line"))
+```
+
+```{r}
+table(type)
+```
+
+```{r}
+ic50$cell_line_type <- type
+```
+
+```{r}
+library(plyr)
+```
+
+
+```{r}
+ic50_prism_plot<- function(drug_name){
+  drug_subset <- ic50[ic50$name == drug_name,]
+  print(dim(drug_subset))
+  mu <- ddply(drug_subset, "cell_line_type", summarise, grp.mean=mean(logIC50))
+  plot <- ggplot( drug_subset, aes(x = logIC50, fill = cell_line_type)) + geom_histogram(alpha = 0.5,position= "identity") + geom_vline(data=mu, aes(xintercept=grp.mean, color=cell_line_type),
+             linetype="dashed")
+  return(plot)
+}
+```
+
+```{r}
+test<- ic50_prism_plot("vemurafenib")
+```
+```{r}
+test
+```
+
+```{r}
+drug1 <- ic50_prism_plot("fludarabine")
+drug1
+```
+
+```{r}
+drug2 <- ic50_prism_plot("rucaparib")
+drug2
+```
+
+```{r}
+drug3 <- ic50_prism_plot("diflunisal")
+drug3
+```
+
+tiagabine
+
+
+```{r}
+drug4 <- ic50_prism_plot("tiagabine")
+drug4
+```
+flupirtine
+```{r}
+drug5 <- ic50_prism_plot("flupirtine")
+drug5
+```
+
+```{r}
+drug6 <- ic50_prism_plot("papaverine")
+drug6
+```
+
+```{r}
+drug7 <- ic50_prism_plot("vemurafenib")
+drug7
+```
+
+```{r}
+drug8 <- ic50_prism_plot("vorinostat")
+drug8
+```
+
+```{r}
+drug9 <- ic50_prism_plot("dasatinib")
+drug9
+```
+
+```{r}
+drug10 <- ic50_prism_plot("saxagliptin")
+drug10
+```
+
+```{r}
+drug11 <- ic50_prism_plot("panobinostat")
+drug11
+```
+
+```{r}
+drug12 <- ic50_prism_plot("nifedipine")
+drug12
+```
+
+```{r}
+drug13 <- ic50_prism_plot("camostat-mesilate")
+drug13
+```
+
+```{r}
+drug14 <- ic50_prism_plot("spironolactone")
+drug14
+```
+
+```{r}
+drug15 <- ic50_prism_plot("ambenonium")
+drug15
+```
+```{r}
+drug16 <- ic50_prism_plot("lapatinib")
+drug16
+```
+
+```{r}
+drug17 <- ic50_prism_plot("maltobionic-acid")
+drug17
+```
+
+```{r}
+drug18 <- ic50_prism_plot("pentoxifylline")
+drug18
+```
+
+```{r}
+drug19 <- ic50_prism_plot("icosapent")
+drug19
+```
+
+```{r}
+drug20 <- ic50_prism_plot("pamidronate")
+drug20
+```
+```{r}
+drug21 <- ic50_prism_plot("erlotinib")
+drug21
+```
+```{r}
+drug_cont <- ic50_prism_plot("temozolomide")
+drug_cont
+```
+
+write function to plot drug histrogram and then plot the lines for gbm cell lines 
+
+
+
+
+### Save Data
+### Save Figures
+    
+# END
+    Location of final scripts:
+    
+    Location of data produced:
+    
+    Dates when operations were done:
+    
+## Versions
+```{r}
+sessionInfo()
+```
+

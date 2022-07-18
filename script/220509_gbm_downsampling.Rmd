@@ -1,0 +1,374 @@
+---
+title: "220509_gbm_downsampling"
+author: "Jennifer Fisher"
+date: "5/9/2022"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# START 
+    Goal/Purpose of operations: 
+    quick summary 
+    
+    Finished psedocode on: Date
+    
+    System which operations were done on: my laptop(on cheaha), lab mac etc... 
+    
+    GitHub Repo:
+    
+    Directory of operations: /path
+    
+    Scripts being edited for operations: filename(s)
+    
+    Data being used: description and location
+    
+    Papers and tools: deseq with paper 
+
+# STEPS
+### Set working directory 
+### load in data
+```{r}
+GBM_GTEX_B_MATRIX <- readRDS("~/output/TF_L_GBM/GBM_GTEX_B_MATRIX.rds")
+GBM_GTEX_metadata <- readRDS("~/output/TF_L_GBM/GBM_GTEX_metadata.rds")
+```
+
+### Analysis
+
+```{r}
+#make sample list
+tumor_sample_lists<- paste0("tumor_sample_list", seq(from = 2, to = 100, by =2))
+normal_sample_lists<- paste0("normal_sample_list", seq(from = 2, to = 100, by =2))
+fraction<- seq(from = 2, to = 100, by =2) * 0.01
+```
+
+```{r}
+table(GBM_GTEX_metadata$status)
+tumor_metadata <- GBM_GTEX_metadata[GBM_GTEX_metadata$status == "Primary Tumor",]
+normal_metadata <- GBM_GTEX_metadata[GBM_GTEX_metadata$status == "Solid Tissue Normal",]
+```
+
+
+```{r}
+seed<- 101
+for (j in 1:50){
+  #assign(normal_sample_lists[j],vector(mode = "list", length = 10000) )
+  #assign(tumor_sample_lists[j], vector(mode = "list", length = 10000) )
+  fraction_now <- fraction[j]
+  normal_sample_list_now <- vector(mode = "list", length = 10000)
+  tumor_sample_list_now <- vector(mode = "list", length = 10000)
+  normal_count<- floor( 2936* fraction_now )
+  tumor_count<- floor(141 *fraction_now )
+  for (i in 1:10000){
+    #create normal sample list 
+    normal_sample_list_now[[i]] <- sample(normal_metadata$nam, normal_count, replace = FALSE)
+    x <- grep( "TCGA", normal_sample_list_now[[i]])
+    y <- grep( "GTEX", normal_sample_list_now[[i]])
+    while( length(x) < 1 | length(y) < 1){
+      seed<- seed +20
+      set.seed(seed)
+      normal_sample_list_now[[i]] <- sample(normal_metadata$nam, normal_count, replace = FALSE)
+      x <- grep( "TCGA", normal_sample_list_now[[i]])
+      y <- grep( "GTEX", normal_sample_list_now[[i]])
+    }
+    #create tumor sample list 
+     
+    tumor_sample_list_now[[i]] <- sample(tumor_metadata$nam, tumor_count, replace = FALSE)
+  }
+  assign(normal_sample_lists[j], normal_sample_list_now )
+  assign(tumor_sample_lists[j], tumor_sample_list_now )
+  seed<- seed +1
+}
+saveRDS(normal_sample_lists, "~/output/220509_normal_sample_lists.rds")
+saveRDS(tumor_sample_lists, "~/output/220509_tumor_sample_lists.rds")
+```
+
+
+```{r eval= FALSE}
+TestLVDifferencesJLF <- function(b.matrix, phenotype, blocking,
+                              use.bonferroni = FALSE) {
+  # This function tests for differential expression of PLIER-derived latent
+  # variables between groups specified by the phenotype argument
+  # using limma. Examples include different disease groups or disease v. 
+  # control. It takes the B matrix from a PLIER model and a factor vector with 
+  # the group labels. It will reorder the phenotype vector if control.phenotype
+  # is specified. The resulting p-values are Benjamini-Hochberg corrected by 
+  # default or Bonferroni corrected if use.bonferroni = TRUE
+  # 
+  # Args:
+  #   b.matrix: a B matrix (latent variables are rows, samples are columns) 
+  #             from a PLIER model. Can be the B element of the list 
+  #             returned by PLIER::PLIER or the output of GetNewDataB
+  #   phenotype: a named factor vector that contains group labels to be used
+  #              for contrasts
+  #   blocking: a names facotor vector that contains group labels to be used for blocking
+  #   use.bonferroni: logical - should bonferroni correction be used? if FALSE
+  #                   (default), will use "BH"
+  #   
+  # Returns:
+  #   A limma::topTable, where the first column is the latent variable name and
+  #   all pathways are returned (without filtering or sorting)
+  
+  ## error-handling ##
+  
+  if (is.null(names(phenotype))) {
+    stop("phenotype should be a named factor vector -- the names ensure that
+         the vector is correctly ordered")
+  }
+  if (is.null(names(blocking))) {
+    stop("blocking should be a named factor vector -- the names ensure that
+         the vector is correctly ordered")
+  }  
+  # no names should be "missing"
+  check.names <- all(colnames(b.matrix) %in% names(phenotype)) & 
+    all(names(phenotype) %in% colnames(b.matrix)) 
+  
+  if (!check.names) {
+    stop("Some sample(s) is missing from colnames(b.matrix) or 
+         names(phenotype)")
+  }
+  
+  # the phenotype labels should be in the same order as the b.matrix samples
+  ordered.phenotype <- as.factor(phenotype[colnames(b.matrix)])
+  
+  # the blocking labels should be in the same order as the b.matrix samples
+  ordered.blocking <- as.factor(blocking[colnames(b.matrix)])
+  
+  # get contrasts (all pairwise)  
+  num.levels <- length(levels(ordered.phenotype))
+  contrast.vector <- c()
+  for (lvl in levels(ordered.phenotype)[1:(num.levels - 1)]) {
+    for (lvl.2 in levels(ordered.phenotype)[2:num.levels]) {
+      if (lvl != lvl.2) {
+        contrast.vector <- append(contrast.vector, paste(lvl, lvl.2, sep = "-"))
+      }
+    }
+  }
+  contrast.vector <- paste(contrast.vector, collapse = ", ")
+  
+  # prep design matrix
+  design <- model.matrix(~ 0+ ordered.phenotype+ ordered.blocking )
+  colnames(design)[seq_len(nlevels(ordered.phenotype))] <- levels(ordered.phenotype)
+  
+  
+  
+  
+  #colnames(design) <- levels(ordered.phenotype)
+  
+  # fit linear model
+  fit <- limma::lmFit(b.matrix, design)
+  contrast.matrix <-
+    eval(parse(
+      text = paste0(
+        'limma::makeContrasts(', contrast.vector, ', levels = design)')))
+  fit2 <- limma::contrasts.fit(fit, contrast.matrix)
+  fit2 <- limma::eBayes(fit2)
+  
+  # extract results as a data.frame
+  if (use.bonferroni) {  # if specified, use Bonferroni correction
+    limma.result <- limma::topTable(fit2, number = nrow(b.matrix),
+                                    adjust.method = "bonferroni", 
+                                    sort.by = "none")
+  } else {  # calculate FDR
+    limma.result <- limma::topTable(fit2, number = nrow(b.matrix),
+                                    adjust.method = "BH", sort.by = "none")
+  }
+  
+  # want feature (latent variable) names as column
+  limma.result <- tibble::rownames_to_column(limma.result, var = "LV")
+  
+  return(limma.result)
+  
+}
+```
+
+```{r}
+GBM_GTEX_limma_res <- readRDS("~/output/TF_L_GBM/GBM_GTEX_limma_res.rds")
+top_sig_all_samples <- GBM_GTEX_limma_res$limma$LV[GBM_GTEX_limma_res$limma$adj.P.Val < 0.05 & abs(GBM_GTEX_limma_res$limma$logFC) > 0.2 ]
+lvs <- rownames(GBM_GTEX_B_MATRIX)
+top_sig_all_samples_v2 <- lvs %in% top_sig_all_samples 
+```
+
+
+transfer learning 
+```{r}
+transfer_function <- function(tumor_list, normal_list){
+  transfer_list <- vector(mode = "list", length = 50)
+  for (i in 1:10000){
+    #print(i)
+    sample_list <- unlist(c(tumor_list[i], normal_list[i]))
+    metadata<- GBM_GTEX_metadata[GBM_GTEX_metadata$nam %in% sample_list,]
+    GBM.GTEx.b.matrix_test <- GBM_GTEX_B_MATRIX[, colnames(GBM_GTEX_B_MATRIX) %in% rownames(metadata)]
+    test_vector <- factor(ifelse( metadata$status == "Solid Tissue Normal", "NT", "TR"))
+    names(test_vector) <- colnames(GBM.GTEx.b.matrix_test)
+    blocking_vector<-  metadata$database
+    names(blocking_vector) <- colnames(GBM.GTEx.b.matrix_test)
+    #print(test_vector)
+    test<- TestLVDifferencesJLF(GBM.GTEx.b.matrix_test, test_vector , blocking_vector, use.bonferroni = TRUE)
+    #print(hist( test$logFC[test$adj.P.Val < 0.05]))
+    transfer_list[[i]] <- test$LV[test$adj.P.Val < 0.05 & abs(test$logFC)> 0.2]
+  }
+  #lvs <- rownames(GBM.GTEx.b.matrix_test)
+  limma_lvs_df <- data.frame(matrix(ncol = 10000, nrow = length(lvs)))
+  for (i in 1:10000){
+    limma_lvs_df[,i] <- lvs %in% transfer_list[[i]]
+  }
+  #hamming distance normalized to the length of the string
+  dis_tfl <- c()
+  for (i in 1:10000){
+    dis_tfl[i]<- sum(limma_lvs_df[,i] != top_sig_all_samples_v2 ) / length(lvs)
+  }
+  return(dis_tfl)
+}
+```
+
+```{r}
+transfer_res_df<- data.frame(matrix(ncol =49, nrow =  10000))
+for (i in 1:49){
+  transfer_res_df[,i] <- transfer_function(get(tumor_sample_lists[i]), get(normal_sample_lists[i]))
+  #saveRDS(transfer_res_df, "~/output/220509_gbm_downsampling_transfer_res_df.rds")
+}
+saveRDS(transfer_res_df, "~/output/220509_gbm_downsampling_transfer_res_df.rds")
+```
+```{r}
+for (i in 20:49){
+  transfer_res_df[,i] <- transfer_function(get(tumor_sample_lists[i]), get(normal_sample_lists[i]))
+  saveRDS(transfer_res_df, "~/output/220509_gbm_downsampling_transfer_res_df.rds")
+}
+```
+
+```{r}
+colnames(transfer_res_df) <- seq(from = 0.02, to = .98, by =0.02)
+```
+```{r}
+transfer_res_df_v2 <- as.data.frame.table(as.matrix(transfer_res_df), responseName = "Normalized Hamming Distance")
+```
+
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+ggplot(transfer_res_df_v2, aes(x= Var2, y=Normalized.Hamming.Distance)) +geom_boxplot()
+```
+
+```{r}
+transfer_res_df_v2$num_latent_var <- transfer_res_df_v2$Normalized.Hamming.Distance *385
+ggplot(transfer_res_df_v2, aes(x= Var2, y=num_latent_var)) +geom_boxplot()
+```
+```{r}
+#compute Shannon entropy
+entropy <- function(target) {
+  freq <- table(target)/length(target)
+  # vectorize
+  vec <- as.data.frame(freq)[,2]
+  #drop 0 to avoid NaN resulting from log2
+  vec<-vec[vec>0]
+  #compute entropy
+  -sum(vec * log2(vec))
+}
+```
+```{r}
+entropy(transfer_res_df$`0.02`)
+```
+```{r}
+entropy(transfer_res_df$`0.98`)
+```
+```{r}
+entropy_res <-apply(transfer_res_df, MARGIN = 2, function(x) entropy(x))
+```
+```{r}
+plot(1:49, entropy_res)
+```
+```{r}
+plot(seq(from = 0.02, to = .98, by =0.02),colMeans(transfer_res_df))
+```
+
+
+```{r}
+hist(test)
+```
+
+plot max, avg, med, and min for transfer learning 
+
+also sd for each 
+
+bar plot of perecent of runs with zero hamming distance
+
+
+start with the full data set
+
+loop within a loop
+
+```{r}
+normal_sample_lists <- readRDS("~/output/220509_normal_sample_lists.rds")
+tumor_sample_lists <- readRDS("~/output/220509_tumor_sample_lists.rds")
+gbm_gtex_tpm_df <- readRDS("~/output/recount3_gbm_gtex_tpm_df.rds")
+```
+
+```{r}
+TPM <- log2(as.matrix(gbm_gtex_tpm_df) + 1)
+```
+
+```{r}
+limma_function <- function(tumor_list, normal_list){
+  transfer_list <- vector(mode = "list", length = 50)
+  for (i in 1:1000){
+    #print(i)
+    sample_list <- unlist(c(tumor_list[i], normal_list[i]))
+    metadata<- GBM_GTEX_metadata[GBM_GTEX_metadata$nam %in% sample_list,]
+    TPM_test <- TPM[, colnames(TPM) %in% rownames(metadata)]
+    test_vector <- factor(ifelse( metadata$status == "Solid Tissue Normal", "NT", "TR"))
+    names(test_vector) <- colnames(TPM_test)
+    blocking_vector<-  metadata$database
+    names(blocking_vector) <- colnames(TPM_test)
+    #print(test_vector)
+    test<- TestLVDifferencesJLF(TPM_test, test_vector , blocking_vector, use.bonferroni = TRUE)
+    #print(hist( test$logFC[test$adj.P.Val < 0.05]))
+    transfer_list[[i]] <- test$LV[test$adj.P.Val < 0.05 & abs(test$logFC)> 2]
+  }
+  lvs <- rownames(TPM_test)
+  limma_lvs_df <- data.frame(matrix(ncol = 10000, nrow = length(lvs)))
+  for (i in 1:10000){
+    limma_lvs_df[,i] <- lvs %in% transfer_list[[i]]
+  }
+  #hamming distance normalized to the length of the string
+  dis_tfl <- c()
+  for (i in 1:10000){
+    dis_tfl[i]<- sum(limma_lvs_df[,i] != top_sig_all_samples_v2 ) / length(lvs)
+  }
+  return(dis_tfl)
+}
+```
+
+```{r}
+for (i in 1:49){
+  print(i)
+  limma_res_df[,i] <- limma_function(get(tumor_sample_lists[i]), get(normal_sample_lists[i]))
+  saveRDS(transfer_res_df, "~/output/220509_gbm_downsampling_limma_res_df.rds")
+}
+```
+
+
+### Save Data
+### Save Figures
+    
+# END
+    Location of final scripts:
+    
+    Location of data produced:
+    
+    Dates when operations were done:
+    
+## Versions
+```{r}
+sessionInfo()
+```
+

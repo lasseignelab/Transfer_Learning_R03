@@ -1,0 +1,676 @@
+---
+title: "220503_PRISM_top_candidates_plotting"
+author: "Jennifer Fisher"
+date: "5/3/2022"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# START 
+    Goal/Purpose of operations: 
+    The DepMap/PRISM’s primary and secondary pooled drug screens were used to help evaluate if a candidate could be a suitable candidate (if that drug was tested). The primary screen calculated the median of log fold change median fluorescence intensity between replicates of a cell line treated with a drug. The PRISM study considered a cell line as sensitive to a treatment if the median-collapsed fold-change is less than 0.3. The secondary screen calculated the Area under the curve of the dose-response curve from a 4-parameter logistic curve. While the PRISM study did not provide a cut-off for sensitivity, lower AUC values were considered more sensitive, and we compared the AUC values of a drug candidate to the AUC of temozolomide, the standard treatment of GBM (~0.90).
+    
+    Finished psedocode on: 
+    220503
+    
+    System which operations were done on:
+    my laptop
+    
+    GitHub Repo:
+    Transfer_Learning_R03
+    
+    Docker:
+    rstudio_tf_dr_v3
+    
+    Directory of operations:
+    /home - docker
+    
+    Scripts being edited for operations: 
+    NA
+    
+    Data being used: 
+    PRISM/DEPMAP data downloaded from depmap.org data explore tool. 220503- download data
+    /output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/
+    
+    Papers and tools:
+    NA
+
+# STEPS
+### Set working directory 
+### load in data
+```{r}
+library(readr)
+tiagabine_1_test<- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/tiagabine (BRDBRD-K60160658-003-11-2) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+colnames(tiagabine_1_test)[2]<- "logfoldchange"
+colnames(tiagabine_1_test)[4]<- "cell_line"
+```
+
+### Analysis
+
+```{r}
+library(ggplot2)
+library(cowplot)
+```
+
+```{r}
+tiagabine_1_test_v2 <- tiagabine_1_test[order(tiagabine_1_test$logfoldchange),]
+#tiagabine_1_test_v2$cell_line <- as.factor(tiagabine_1_test_v2$cell_line)
+tiagabine_1_test_v2$cell_line <- factor(tiagabine_1_test_v2$cell_line, levels= as.character(tiagabine_1_test_v2$cell_line))
+
+ggplot(tiagabine_1_test_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal()
+```
+
+```{r}
+ggplot(tiagabine_1_test_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal()
+```
+
+
+```{r}
+p2 <- ggplot(tiagabine_1_test_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3)
+p1 <- ggplot(tiagabine_1_test_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal() +  theme(
+    axis.title.x = element_blank(),
+  )+ geom_vline(xintercept = 0.3)
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+
+```{r}
+tiagabine_secondary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/tiagabine AUC (PRISM Repurposing Secondary Screen)  tiagabine log2 fold change Drug sensitivity.csv")
+colnames(tiagabine_secondary)[2]<- "logfoldchange"
+colnames(tiagabine_secondary)[3]<- "AUC"
+colnames(tiagabine_secondary)[5]<- "cell_line"
+```
+
+```{r}
+ggplot(tiagabine_secondary, aes(x=logfoldchange, y= AUC))+geom_point()+ geom_text(
+    label=tiagabine_secondary$cell_line, nudge_x = 0.005, nudge_y = 0.005, 
+    check_overlap = T) + xlab("PRISM Primary Screen log(fold change)") + ylab("PRISM Secondary Screen AUC") + geom_vline(xintercept = 0.3) +geom_hline(yintercept = 0.9) +theme_minimal()
+```
+
+```{r}
+vemurafenib_primary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/vemurafenib (BRDBRD-K56343971-001-10-6) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+colnames(vemurafenib_primary)[2]<- "logfoldchange"
+colnames(vemurafenib_primary)[4]<- "cell_line"
+```
+
+```{r}
+vemurafenib_primary_v2 <- vemurafenib_primary[order(vemurafenib_primary$logfoldchange),]
+#tiagabine_1_test_v2$cell_line <- as.factor(tiagabine_1_test_v2$cell_line)
+vemurafenib_primary_v2$cell_line <- factor(vemurafenib_primary_v2$cell_line, levels= as.character(vemurafenib_primary_v2$cell_line))
+
+```
+
+```{r}
+p2 <- ggplot(vemurafenib_primary_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3)
+p1 <- ggplot(vemurafenib_primary_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal() +  theme(
+    axis.title.x = element_blank(),
+  )+ geom_vline(xintercept = 0.3)
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+
+```{r}
+vemurafenib_secondary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/vemurafenib (BRDBRD-K56343971-001-14-8) AUC Drug sensitivity AUC (PRISM Repurposing Secondary Screen) 19Q4 vs vemurafenib (BRDBRD-K56343971-001-10-6) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+```{r}
+colnames(vemurafenib_secondary)[2]<- "logfoldchange"
+colnames(vemurafenib_secondary)[3]<- "AUC"
+colnames(vemurafenib_secondary)[5]<- "cell_line"
+```
+
+```{r}
+ggplot(vemurafenib_secondary, aes(x=logfoldchange, y= AUC))+geom_point()+ geom_text(
+    label=vemurafenib_secondary$cell_line, nudge_x = 0.005, nudge_y = 0.005, 
+    check_overlap = T) + xlab("PRISM Primary Screen log(fold change)") + ylab("PRISM Secondary Screen AUC") + geom_vline(xintercept = 0.3) +geom_hline(yintercept = 0.9) +theme_minimal()
+```
+
+
+```{r}
+saxagliptin_primary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/saxagliptin (BRDBRD-A81513827-001-03-6) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+```{r}
+colnames(saxagliptin_primary)[2]<- "logfoldchange"
+colnames(saxagliptin_primary)[4]<- "cell_line"
+```
+
+```{r}
+saxagliptin_primary_v2 <- saxagliptin_primary[order(saxagliptin_primary$logfoldchange),]
+#tiagabine_1_test_v2$cell_line <- as.factor(tiagabine_1_test_v2$cell_line)
+saxagliptin_primary_v2$cell_line <- factor(saxagliptin_primary_v2$cell_line, levels= as.character(saxagliptin_primary_v2$cell_line))
+```
+
+```{r}
+p2 <- ggplot(saxagliptin_primary_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3)
+p1 <- ggplot(saxagliptin_primary_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal() +  theme(
+    axis.title.x = element_blank(),
+  )+ geom_vline(xintercept = 0.3)
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+
+```{r}
+saxagliptin_secondary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/saxagliptin (BRDBRD-A81513827-001-03-6) AUC Drug sensitivity AUC (PRISM Repurposing Secondary Screen) 19Q4 vs saxagliptin (BRDBRD-A81513827-001-03-6) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+
+```{r}
+colnames(saxagliptin_secondary)[2]<- "logfoldchange"
+colnames(saxagliptin_secondary)[3]<- "AUC"
+colnames(saxagliptin_secondary)[5]<- "cell_line"
+```
+
+```{r}
+ggplot(saxagliptin_secondary, aes(x=logfoldchange, y= AUC))+geom_point()+ geom_text(
+    label=saxagliptin_secondary$cell_line, nudge_x = 0.005, nudge_y = 0.005, 
+    check_overlap = T) + xlab("PRISM Primary Screen log(fold change)") + ylab("PRISM Secondary Screen AUC") + geom_vline(xintercept = 0.3) +geom_hline(yintercept = 0.9) +theme_minimal()
+```
+```{r}
+spironolactone_primary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/spironolactone (BRDBRD-K90027355-001-13-3) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+
+```{r}
+colnames(spironolactone_primary)[2]<- "logfoldchange"
+colnames(spironolactone_primary)[4]<- "cell_line"
+```
+
+```{r}
+spironolactone_primary_v2 <- spironolactone_primary[order(spironolactone_primary$logfoldchange),]
+#tiagabine_1_test_v2$cell_line <- as.factor(tiagabine_1_test_v2$cell_line)
+spironolactone_primary_v2$cell_line <- factor(spironolactone_primary_v2$cell_line, levels= as.character(spironolactone_primary_v2$cell_line))
+```
+
+```{r}
+p2 <- ggplot(spironolactone_primary_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3)
+p1 <- ggplot(spironolactone_primary_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal() +  theme(
+    axis.title.x = element_blank(),
+  )+ geom_vline(xintercept = 0.3)
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+
+```{r}
+spironolactone_secondary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/spironolactone (BRDBRD-K90027355-001-13-3) AUC Drug sensitivity AUC (PRISM Repurposing Secondary Screen) 19Q4 vs spironolactone (BRDBRD-K90027355-001-13-3) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+
+```{r}
+colnames(spironolactone_secondary)[2]<- "logfoldchange"
+colnames(spironolactone_secondary)[3]<- "AUC"
+colnames(spironolactone_secondary)[5]<- "cell_line"
+```
+
+```{r}
+ggplot(spironolactone_secondary, aes(x=logfoldchange, y= AUC))+geom_point()+ geom_text(
+    label=spironolactone_secondary$cell_line, nudge_x = 0.005, nudge_y = 0.005, 
+    check_overlap = T) + xlab("PRISM Primary Screen log(fold change)") + ylab("PRISM Secondary Screen AUC") + geom_vline(xintercept = 0.3) +geom_hline(yintercept = 0.9) +theme_minimal()
+```
+
+
+```{r}
+icosapent_primary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/icosapent (BRDBRD-K47192521-001-05-4) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+
+```{r}
+colnames(icosapent_primary )[2]<- "logfoldchange"
+colnames(icosapent_primary )[4]<- "cell_line"
+```
+
+```{r}
+icosapent_primary_v2 <- icosapent_primary [order(icosapent_primary$logfoldchange),]
+#tiagabine_1_test_v2$cell_line <- as.factor(tiagabine_1_test_v2$cell_line)
+icosapent_primary_v2$cell_line <- factor(icosapent_primary_v2$cell_line, levels= as.character(icosapent_primary_v2$cell_line))
+```
+
+```{r}
+p2 <- ggplot(icosapent_primary_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3)
+p1 <- ggplot(icosapent_primary_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal() +  theme(
+    axis.title.x = element_blank(),
+  )+ geom_vline(xintercept = 0.3)
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+```{r}
+pamidronate_primary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/pamidronate (BRDBRD-K58513245-304-02-7) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+
+```{r}
+colnames(pamidronate_primary )[2]<- "logfoldchange"
+colnames(pamidronate_primary )[4]<- "cell_line"
+```
+
+```{r}
+pamidronate_primary_v2 <- pamidronate_primary[order(pamidronate_primary$logfoldchange),]
+#tiagabine_1_test_v2$cell_line <- as.factor(tiagabine_1_test_v2$cell_line)
+pamidronate_primary_v2$cell_line <- factor(pamidronate_primary_v2$cell_line, levels= as.character(pamidronate_primary_v2$cell_line))
+```
+
+```{r}
+p2 <- ggplot(pamidronate_primary_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3)
+p1 <- ggplot(pamidronate_primary_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal() +  theme(
+    axis.title.x = element_blank(),
+  )+ geom_vline(xintercept = 0.3)
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+
+also need to plot tmz
+```{r}
+temozolomide_primary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/temozolomide (BRDBRD-K32107296-001-16-9) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+
+```{r}
+colnames(temozolomide_primary )[2]<- "logfoldchange"
+colnames(temozolomide_primary)[4]<- "cell_line"
+```
+
+```{r}
+temozolomide_primary_v2 <- temozolomide_primary[order(temozolomide_primary$logfoldchange),]
+#tiagabine_1_test_v2$cell_line <- as.factor(tiagabine_1_test_v2$cell_line)
+temozolomide_primary_v2$cell_line <- factor(temozolomide_primary_v2$cell_line, levels= as.character(temozolomide_primary_v2$cell_line))
+```
+
+```{r}
+p2 <- ggplot(temozolomide_primary_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3)
+p1 <- ggplot(temozolomide_primary_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal() +  theme(
+    axis.title.x = element_blank(),
+  )+ geom_vline(xintercept = 0.3)
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+
+```{r}
+temozolomide_secondary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/temozolomide (BRDBRD-K32107296-001-16-9) AUC Drug sensitivity AUC (PRISM Repurposing Secondary Screen) 19Q4 vs temozolomide (BRDBRD-K32107296-001-16-9) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+```{r}
+colnames(temozolomide_secondary)[2]<- "logfoldchange"
+colnames(temozolomide_secondary)[3]<- "AUC"
+colnames(temozolomide_secondary)[5]<- "cell_line"
+```
+
+```{r}
+ggplot(temozolomide_secondary, aes(x=logfoldchange, y= AUC))+geom_point()+ geom_text(
+    label=temozolomide_secondary$cell_line, nudge_x = 0.00008, nudge_y = 0.00008, 
+    check_overlap = T) + xlab("PRISM Primary Screen log(fold change)") + ylab("PRISM Secondary Screen AUC") + geom_vline(xintercept = 0.3) +theme_minimal()
+```
+
+
+PRISM primary result differences between the three methods
+
+```{r}
+library(readr)
+primary_screen <- read_csv("~/data/DEPMAP_PRISM_220228/primary-screen-replicate-collapsed-logfold-change.csv")
+sample_info <- read_csv("~/data/DEPMAP_PRISM_220228/sample_info.csv")
+primary_screen_treatment_info <- read_csv("~/data/DEPMAP_PRISM_220228/primary-screen-replicate-collapsed-treatment-info.csv")
+```
+different order
+
+```{r}
+names_vector<- c()
+for ( i in 2:ncol(primary_screen)){
+  names_vector[i] <- primary_screen_treatment_info$name[ grep(colnames(primary_screen)[i], primary_screen_treatment_info$column_name)]
+}
+```
+
+```{r}
+good_id <- c()
+for (i in 1:nrow(primary_screen)){
+  good_id[i]<- nchar(primary_screen[i,1]) == 10 
+}
+
+```
+
+```{r}
+table(good_id)
+```
+```{r}
+primary_screen_v2 <- primary_screen[good_id,]
+```
+
+
+```{r}
+cell_vector<- c()
+for ( i in 1:nrow(primary_screen_v2)){
+  cell_vector[i] <-sample_info$stripped_cell_line_name[ grep(primary_screen_v2[i,1], sample_info$DepMap_ID)]
+}
+```
+
+```{r}
+primary_screen_v3<-  as.matrix(primary_screen_v2[,-1])
+rownames(primary_screen_v3)<- cell_vector
+```
+
+
+```{r}
+colnames(primary_screen_v3) <- names_vector[-1]
+```
+
+```{r}
+test2<- as.data.frame.table(primary_screen_v3, responseName = "log_fold_change")
+```
+
+
+filter by gbm cell lines
+
+```{r}
+#table(sample_info$Subtype)
+gbm_sample_info <- sample_info[sample_info$Subtype == "Glioblastoma",]
+```
+
+
+```{r}
+primary_gbm_res <- test2[test2$Var1 %in% gbm_sample_info$stripped_cell_line_name,]
+```
+
+
+deseq2 only 
+```{r}
+primary_gbm_deseq2<- primary_gbm_res[primary_gbm_res$Var2 %in% c("suprofen", "trandolapril", "felbamate", "pralidoxime", "abiraterone", "ethotoin", "floxuridine", "vardenafil", "moxifloxacin", "nimodipine", "diltiazem"),]
+```
+
+```{r}
+unique(primary_gbm_deseq2$Var2)
+```
+
+```{r}
+primary_gbm_deseq2$method <- rep("DESeq2", nrow(primary_gbm_deseq2))
+```
+
+limma- only 
+```{r}
+primary_gbm_limma<- primary_gbm_res[primary_gbm_res$Var2 %in% c("lonafarnib", "dabrafenib", "apremilast", "rivastigmine", "crizotinib", "ixazomib", "imatinib", "sulfasalazine", "maraviroc", "amiodarone"),]
+```
+
+```{r}
+unique(primary_gbm_limma$Var2)
+```
+
+```{r}
+primary_gbm_limma$method <- rep("limma", nrow(primary_gbm_limma))
+```
+
+tf-only 
+```{r}
+primary_gbm_tfl<- primary_gbm_res[primary_gbm_res$Var2 %in% c("fludarabine", "tiagabine", "vemurafenib", "dasatinib", "nifedipine", "spironolactone", "lapatinib", "pentoxifylline", "erlotinib"),]
+```
+ nifedipine not in prism
+```{r}
+unique(primary_gbm_tfl$Var2)
+```
+
+```{r}
+primary_gbm_tfl$method <- rep("Transfer Learning", nrow(primary_gbm_tfl))
+```
+
+deseq2/tf 
+```{r}
+primary_gbm_deseq2_tfl<- primary_gbm_res[primary_gbm_res$Var2 %in% c("diflunisal", "rucaparib"),]
+```
+ nifedipine not in prism
+```{r}
+unique(primary_gbm_deseq2_tfl$Var2)
+```
+
+```{r}
+primary_gbm_deseq2_tfl$method <- rep("Transfer Learning and DESeq2", nrow(primary_gbm_deseq2_tfl))
+```
+
+
+limma/tf
+```{r}
+primary_gbm_limma_tfl<- primary_gbm_res[primary_gbm_res$Var2 %in% c("vorinostat", "thioridazine", "saxagliptin", "icosapent"),]
+```
+ nifedipine not in prism
+```{r}
+unique(primary_gbm_limma_tfl$Var2)
+```
+
+```{r}
+primary_gbm_limma_tfl$method <- rep("Transfer Learning and limma", nrow(primary_gbm_limma_tfl))
+```
+
+all 
+```{r}
+primary_gbm_all<- primary_gbm_res[primary_gbm_res$Var2 %in% c("pamidronate"),]
+```
+ nifedipine not in prism
+```{r}
+unique(primary_gbm_all$Var2)
+```
+
+```{r}
+primary_gbm_all$method <- rep("ALL", nrow(primary_gbm_all))
+```
+
+TMZ
+```{r}
+primary_gbm_tmz<- primary_gbm_res[primary_gbm_res$Var2 %in% c("temozolomide"),]
+```
+ nifedipine not in prism
+```{r}
+unique(primary_gbm_tmz$Var2)
+```
+
+```{r}
+primary_gbm_tmz$method <- rep("TMZ Treatment", nrow(primary_gbm_tmz))
+```
+
+```{r}
+primary_gbm_candidates <- rbind(primary_gbm_deseq2, primary_gbm_limma, primary_gbm_tfl, primary_gbm_deseq2_tfl, primary_gbm_limma_tfl, primary_gbm_all, primary_gbm_tmz)
+```
+
+```{r}
+library(ggplot2)
+library(viridis)
+```
+
+
+```{r}
+primary_gbm_candidates$Var2 <- factor(primary_gbm_candidates$Var2, levels=unique(primary_gbm_candidates$Var2))
+ggplot(primary_gbm_candidates, aes(x=log_fold_change, y= Var2))+ geom_violin(aes(fill=method)) +geom_vline(xintercept = -1) +scale_fill_viridis_d()+ theme_minimal()
+```
+
+```{r}
+primary_gbm_candidates_v2 <- rbind(primary_gbm_deseq2, primary_gbm_limma, primary_gbm_tfl,  primary_gbm_tmz)
+```
+```{r}
+primary_gbm_candidates_v2$Var2 <- factor(primary_gbm_candidates_v2$Var2, levels=unique(primary_gbm_candidates_v2$Var2))
+ggplot(primary_gbm_candidates_v2, aes(x=log_fold_change, y= Var2))+ geom_violin(aes(fill=method)) +theme_minimal()
+```
+
+look to see how many gbm cell lines are senstive
+```{r}
+primary_gbm_candidates$Sensitive <- primary_gbm_candidates$log_fold_change < 0.3
+```
+
+```{r}
+table(primary_gbm_candidates$Sensitive)
+```
+```{r}
+drug_fraction <- c()
+drug_list <- as.vector(unique(primary_gbm_candidates$Var2))
+for (i in 1:length(drug_list)){
+  cells <- primary_gbm_candidates$Sensitive[primary_gbm_candidates$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+```
+
+```{r}
+hist(drug_fraction)
+```
+
+```{r}
+drug_senstive_precentage <- data.frame(drug_fraction, drug_list)
+```
+
+```{r}
+ggplot(drug_senstive_precentage, aes( drug_fraction, drug_list ))+ geom_point()
+```
+
+```{r}
+deseq2<- c("suprofen", "trandolapril", "felbamate", "pralidoxime", "abiraterone", "ethotoin", "floxuridine", "vardenafil", "moxifloxacin", "nimodipine", "diltiazem")
+limma<- c("lonafarnib", "dabrafenib", "apremilast", "rivastigmine", "crizotinib", "ixazomib", "imatinib", "sulfasalazine", "maraviroc", "amiodarone")
+transfer_learning<- c("fludarabine", "tiagabine", "vemurafenib", "dasatinib", "nifedipine", "spironolactone", "lapatinib", "pentoxifylline", "erlotinib")
+limma_transfer_learning<- c("vorinostat", "thioridazine", "saxagliptin", "icosapent")
+deseq2_transfer_learning <- c("diflunisal", "rucaparib")
+
+```
+
+```{r}
+drug_senstive_precentage$method<- ifelse(drug_senstive_precentage$drug_list %in% deseq2, "DESeq2", ifelse(
+  drug_senstive_precentage$drug_list %in% limma, "limma", ifelse(
+    drug_senstive_precentage$drug_list %in% transfer_learning, "Transfer Learning", ifelse(
+      drug_senstive_precentage$drug_list %in% limma_transfer_learning, "limma and Transfer Learning", ifelse(
+        drug_senstive_precentage$drug_list %in% deseq2_transfer_learning, "DESeq2 and Transfer Learning", ifelse(
+         drug_senstive_precentage$drug_list == "pamidronate", "ALL", "temozolomide"
+        )
+      )
+    )
+  )
+) )
+```
+
+
+```{r}
+drug_senstive_precentage$drug_list<- factor(drug_senstive_precentage$drug_list,levels= drug_senstive_precentage$drug_list[order(drug_senstive_precentage$drug_fraction)])
+ggplot(drug_senstive_precentage, aes( drug_fraction, drug_list, fill=method ))+ geom_bar(stat="identity")
+```
+
+```{r}
+drug_senstive_precentage_v2 <- drug_senstive_precentage[! drug_senstive_precentage$drug_list == "temozolomide",]
+ggplot(drug_senstive_precentage_v2, aes( drug_fraction, drug_list, fill=method ))+  geom_bar(stat="identity", color = "black")+ scale_fill_viridis_d()+ geom_vline(xintercept = 0.75)+  xlab("PRISM Primary Screen log(fold change)") + ylab("Drug Candidates (All Methods)")
+```
+
+```{r}
+primary_gbm_res$Sensitive <- primary_gbm_res$log_fold_change < 0.3
+drug_fraction <- c()
+drug_list <- as.vector(unique(primary_gbm_res$Var2))
+for (i in 1:length(drug_list)){
+  cells <- primary_gbm_res$Sensitive[primary_gbm_res$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list)
+```
+
+```{r}
+table(drug_senstive_precentage_all_drugs$drug_fraction >= 0.75)
+```
+
+```{r}
+drug_senstive_precentage_all_drugs$tmz <-drug_senstive_precentage_all_drugs$drug_fraction >= 0.75
+```
+
+```{r}
+drug_senstive_precentage_all_drugs<- drug_senstive_precentage_all_drugs[!drug_senstive_precentage_all_drugs$drug_list == "temozolomide",]
+```
+
+
+
+```{r}
+drug_senstive_precentage_all_drugs_tfl<- drug_senstive_precentage_all_drugs[!drug_senstive_precentage_all_drugs$drug_list %in% c("fludarabine", "tiagabine", "vemurafenib", "dasatinib", "nifedipine", "spironolactone", "lapatinib", "pentoxifylline", "erlotinib", "vorinostat", "thioridazine", "saxagliptin", "icosapent","diflunisal", "rucaparib", "pamidronate"),]
+number_of_drugs<- c()
+for ( i in 1:10000){
+  test3 <- table(drug_senstive_precentage_all_drugs_tfl$tmz[sample(1:nrow(drug_senstive_precentage_all_drugs_tfl), 15)])
+  number_of_drugs[i]<- test3[names(test3) == TRUE]
+}
+```
+
+```{r}
+hist(number_of_drugs)
+```
+
+```{r}
+t.test(mu=11, number_of_drugs)
+```
+
+```{r}
+
+drug_senstive_precentage_all_drugs_limma <- drug_senstive_precentage_all_drugs[drug_senstive_precentage_all_drugs$drug_list %in%c("lonafarnib", "dabrafenib", "apremilast", "rivastigmine", "crizotinib", "ixazomib", "imatinib", "sulfasalazine", "maraviroc", "amiodarone", "vorinostat", "thioridazine", "saxagliptin", "icosapent", "pamidronate"),]
+
+drug_senstive_precentage_all_drugs_deseq2 <- drug_senstive_precentage_all_drugs[drug_senstive_precentage_all_drugs$drug_list %in%c("suprofen", "trandolapril", "felbamate", "pralidoxime", "abiraterone", "ethotoin", "floxuridine", "vardenafil", "moxifloxacin", "nimodipine", "diltiazem", "diflunisal", "rucaparib", "pamidronate"),]
+
+```
+
+
+```{r}
+number_of_drugs_v2 <- c()
+for ( i in 1:10000){
+  test3 <- table(drug_senstive_precentage_all_drugs_tfl$tmz[sample(1:nrow(drug_senstive_precentage_all_drugs_tfl), 14)])
+  number_of_drugs_v2[i]<- test3[names(test3) == TRUE]
+}
+```
+
+```{r}
+hist(number_of_drugs_v2)
+```
+
+```{r}
+t.test(mu=9, number_of_drugs_v2, alternative = "less")
+```
+
+```{r}
+hist(drug_senstive_precentage_all_drugs$drug_fraction)
+```
+
+
+
+```{r}
+drug_senstive_precentage$bi_method<- grepl("Transfer Learning",drug_senstive_precentage$method)
+```
+
+```{r}
+ggplot(drug_senstive_precentage, aes( drug_fraction, drug_list, fill=bi_method ))+ geom_bar(stat="identity") +geom_vline(xintercept = 0.75)
+```
+
+```{r}
+drug_senstive_precentage$bi_method<- grepl("DES",drug_senstive_precentage$method)
+```
+
+```{r}
+ggplot(drug_senstive_precentage, aes( drug_fraction, drug_list, fill=bi_method ))+ geom_bar(stat="identity")
+```
+
+```{r}
+drug_senstive_precentage$bi_method<- grepl("limma",drug_senstive_precentage$method)
+```
+
+```{r}
+ggplot(drug_senstive_precentage, aes( drug_fraction, drug_list, fill=bi_method ))+ geom_bar(stat="identity") 
+```
+
+```{r}
+drug_senstive_precentage$drug_list
+```
+
+
+### Save Data
+### Save Figures
+NA
+    
+# END
+    Location of final scripts:
+    /script
+    
+    Location of data produced:
+    na
+    
+    Dates when operations were done:
+    220503
+    
+## Versions
+```{r}
+sessionInfo()
+```
