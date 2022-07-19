@@ -1,0 +1,61 @@
+﻿,name,moa,targets,status,GBM_CT,NCS,WTCS_Pval,Tau,FDA_database
+1,SC-144,P glycoprotein inhibitor,,Preclinical,FALSE,-1.65160389,2.34E-05,-99.44556055,NA
+2,API-001,sigma receptor antagonist,SIGMAR1,Phase 2,FALSE,-1.513269887,2.51E-05,-97.66899078,NA
+3,CP-339818,potassium channel blocker,KCNA3,Preclinical,FALSE,-1.482797823,2.55E-05,-97.10962735,NA
+4,stemregenin-1,aryl hydrocarbon receptor antagonist,AHR,Preclinical,FALSE,-1.449682905,2.59E-05,-95.35472308,NA
+5,CGM-097,selective inhibitor of p53-Mdm2 interaction,NA,NA,FALSE,-1.438155716,2.60E-05,-97.47301662,NA
+6,AZD-5363/capivasertib,selective ATP-competitive pan-AKT kinase inhibitor,NA,NA,FALSE,-1.43617082,2.60E-05,-96.17308753,NA
+7,entinostat,HDAC inhibitor,"HDAC1, HDAC2, HDAC3, HDAC9",Phase 3,FALSE,-1.434199841,2.61E-05,-96.99145198,NA
+8,GS-9973,SYK inhibitor,SYK,Phase 2,FALSE,-1.421132605,2.62E-05,-96.50397857,NA
+9,Ro-20-1724,phosphodiesterase inhibitor,"PDE3A, PDE4A, PDE4B, PDE4C, PDE4D",Preclinical,FALSE,-1.380085389,2.67E-05,-96.33262428,NA
+10,N20C,glutamate receptor antagonist,,Preclinical,FALSE,-1.365275731,2.69E-05,-95.9140865,NA
+11,LY-456236,Selective mGlu1 antagonist,NA,NA,FALSE,-1.361178857,2.69E-05,-97.01114788,NA
+12,SKI-II,sphingosine kinase inhibitor,SPHK1,Preclinical,FALSE,-1.346579757,2.71E-05,-94.20842196,NA
+13,taselisib,PI3K inhibitor,PIK3CA,Phase 3,FALSE,-1.320280181,2.75E-05,-91.8478689,NA
+14,fludarabine,ribonucleotide reductase inhibitor,"ADA, DCK, POLA1, RRM1, RRM2",Launched,TRUE,-1.318214923,2.75E-05,-92.47321358,Prescription/Discontinued
+15,SM-21,sigma receptor antagonist,PGRMC1,Preclinical,FALSE,-1.305579277,2.76E-05,-93.74655322,NA
+16,rucaparib,PARP inhibitor,"PARP1, PARP2",Phase 3,TRUE,-1.295509599,2.78E-05,-95.6137241,Prescription
+17,diflunisal,prostanoid receptor antagonist,"PTGS1, PTGS2",Launched,FALSE,-1.287010274,2.79E-05,-93.12022375,Prescription/Discontinued
+18,tiagabine,GABA uptake inhibitor,SLC6A1,Launched,FALSE,-1.279804054,2.80E-05,-92.16201844,Prescription/Discontinued
+19,thioridazine,dopamine receptor antagonist,"DRD1, DRD2, DRD3, DRD4, DRD5, HRH1, HTR1A, HTR2A, HTR2C, HTR6, HTR7",Withdrawn,FALSE,-1.268857438,2.83E-05,-91.23631135,Prescription/Discontinued
+20,flupirtine,glutamate receptor antagonist,"ADRA2A, KCNQ1, KCNQ2",Launched,FALSE,-1.255926741,2.89E-05,-89.71381864,NA
+21,papaverine,phosphodiesterase inhibitor,"PDE10A, PDE4B, PDE5A",Launched,FALSE,-1.254456204,2.89E-05,-83.86019853,NA
+22,BI-2536,PLK inhibitor,"BRD4, PLK1, PLK2, PLK3",Phase 2,FALSE,-1.248349267,2.94E-05,-91.42342236,NA
+23,AZ-628,RAF inhibitor,"BRAF, RAF1",Preclinical,FALSE,-1.246160508,2.97E-05,-87.56992043,NA
+24,vemurafenib,RAF inhibitor,"BRAF, RAF1",Launched,FALSE,-1.241647514,2.99E-05,-91.31509493,Prescription
+25,vorinostat,HDAC inhibitor,"HDAC1, HDAC10, HDAC11, HDAC2, HDAC3, HDAC5, HDAC6, HDAC8, HDAC9",Launched,TRUE,-1.232894963,3.04E-05,-94.44280312,Prescription
+26,piceatannol,SYK inhibitor,"ATP5A1, ATP5B, ATP5C1, IRF3",Preclinical,FALSE,-1.230022358,3.07E-05,-90.04963366,NA
+27,PI-103,"mTOR inhibitor, PI3K inhibitor","MTOR, PIK3CA, PIK3CB, PIK3CD, PIK3CG, PRKDC",Preclinical,FALSE,-1.220856523,3.25E-05,-80.14949185,NA
+28,suprofen,cyclooxygenase inhibitor,"PTGS1, PTGS2",Withdrawn,FALSE,-1.211343839,3.44E-05,-89.23619318,Discontinued
+29,NNC-05-2090,"GABA uptake inhibitor, GAT inhibitor",SLC6A12,Preclinical,FALSE,-1.210983032,3.44E-05,-86.59891279,NA
+30,dasatinib,"Bcr-Abl kinase inhibitor, ephrin inhibitor, KIT inhibitor, PDGFR tyrosine kinase receptor inhibitor, SRC inhibitor, tyrosine kinase inhibitor","ABL1, ABL2, BLK, EPHA2, FGR, FRK, FYN, HCK, KIT, LCK, LYN, PDGFRB, SRC, SRMS, STAT5B, YES1",Launched,TRUE,-1.207150246,3.52E-05,-90.23969905,Prescription/Discontinued
+31,saxagliptin,dipeptidyl peptidase inhibitor,DPP4,Launched,FALSE,-1.204065808,3.62E-05,-80.36220752,Prescription/Discontinued/None (TENTATIVE APPROVAL)
+32,LY-294002,Specific inhibitor of phosphatidylinositol 3-kinase.,"PIM1, PIK3CG",NA,FALSE,-1.202316434,3.79E-05,-87.96186875,NA
+33,rimonabant,cannabinoid receptor antagonist,"CNR1, GPR55",Withdrawn,FALSE,-1.200733711,3.79E-05,-85.73820216,NA
+34,panobinostat,HDAC inhibitor,"HDAC1, HDAC2, HDAC3, HDAC4, HDAC6, HDAC7, HDAC8, HDAC9",Launched,TRUE,-1.200116761,3.79E-05,-89.04120381,Discontinued
+35,nifedipine,calcium channel blocker,"CACNA1C, CACNA1D, CACNA1F, CACNA1H, CACNA1S, CACNA2D1, CACNB2, CALM1, GLRA1, GLRA3, GLRB, KCNA1, KCNA5, NR1I2, TRPM3",Launched,FALSE,-1.199300818,3.91E-05,-86.46891988,Prescription/Discontinued
+36,ranirestat,aldose reductase inhibitor,AKR1B1,Phase 3,FALSE,-1.190961386,4.20E-05,-86.08091074,NA
+37,VS-4718,focal adhesion kinase inhibitor,,Phase 1,FALSE,-1.187208411,4.38E-05,-85.3354211,NA
+38,GDC-0349,Pim kinase inhibitor,PIK3CA,Phase 1,FALSE,-1.186689325,4.38E-05,-85.65941858,NA
+39,PF-02545920,phosphodiesterase inhibitor,PDE10A,Phase 2,FALSE,-1.173876424,5.31E-05,-84.3555503,NA
+40,anguidine,protein synthesis inhibitor,SLC5A1,Phase 2,FALSE,-1.172328848,5.31E-05,-82.56223903,NA
+41,SAL-003,elf-2a phosphatase inhibitor,NA,NA,FALSE,-1.15789051,6.71E-05,-83.85035059,NA
+42,camostat-mesilate,protease inhibitor,PRSS1,Launched,FALSE,-1.157333361,6.71E-05,-82.94926337,NA
+43,harmane,monoamine oxidase inhibitor,"MAOA, MAOB",Preclinical,FALSE,-1.157243872,6.71E-05,-86.031671,NA
+44,KU-0063794,mTOR inhibitor,MTOR,Preclinical,FALSE,-1.156976534,6.71E-05,-86.28968723,NA
+45,spironolactone,mineralocorticoid receptor antagonist,"AR, CACNA1A, CACNA1B, CACNA1C, CACNA1D, CACNA1F, CACNA1G, CACNA1H, CACNA1I, CACNA1S, CACNA2D1, CACNA2D2, CACNA2D3, CACNB1, CACNB2, CACNB3, CACNB4, CACNG1, CYP11B2, NR3C1, NR3C2, PGR, SHBG",Launched,FALSE,-1.151373868,7.74E-05,-82.33081226,Prescription/Discontinued
+47,obatoclax,BCL inhibitor,BCL2,Phase 3,FALSE,-1.143526634,8.92E-05,-81.64637989,NA
+48,L-693403,"sigma receptor agonist, sigma receptor antagonist","DRD2, SIGMAR1",Preclinical,FALSE,-1.136634138,0.000103269,-81.18254156,NA
+50,SGX-523,A MET receptor tryosine Kinase inhibitor,MET,NA,FALSE,-1.134550605,0.000111842,-84.9779406,NA
+51,ambenonium,cholinesterase inhibitor,ACHE,Launched,FALSE,-1.132297342,0.000111842,-81.93295517,Discontinued
+52,lapatinib,EGFR inhibitor,"EGFR, ERBB2",Launched,TRUE,-1.128590777,0.000121808,-82.97979201,Prescription
+53,maltobionic-acid,matrix metalloprotease inhibitor,,Launched,FALSE,-1.128078866,0.000131709,-82.4539116,NA
+54,pentoxifylline,phosphodiesterase inhibitor,"ADORA1, ADORA2A, ADORA2B, ADRA2B, NT5E, PDE10A, PDE1A, PDE1B, PDE1C, PDE2A, PDE3A, PDE3B, PDE4A, PDE4B, PDE4C, PDE4D, PDE5A, PDE6A, PDE6B, PDE6C, PDE6D, PDE6G, PDE6H, PDE7A, PDE7B, PDE8A, PDE8B, PDE9A, TNF",Launched,TRUE,-1.125650176,0.000131709,-80.80536516,Prescription/Discontinued
+57,"BRD-K37846922/ 3,3'-diindolylmethane",NA,NA,NA,FALSE,-1.117211974,0.000167807,-80.24698653,NA
+58,siramesine,sigma receptor antagonist,"ADRA1A, ADRA1B, ADRA1D",Phase 2,FALSE,-1.113518566,0.000182865,-82.4352005,NA
+63,icosapent,platelet aggregation inhibitor,"ACSL3, ACSL4, FADS1, FFAR1, PPARD, PPARG, PTGS1, PTGS2, SLC8A1, TRPV1",Launched,FALSE,-1.100594436,0.000240222,-80.23910817,Prescription/Discontinued
+64,DPCPX,adenosine receptor antagonist,"ADORA1, ADORA2A, ADORA2B, ADORA3",Phase 1,FALSE,-1.099382178,0.00026259,-82.44800284,NA
+65,BRD-K58930050/ Dizocilpine (MK-801),"antagonist of the N-Methyl-D-aspartate receptor, a glutamate receptor",NA,NA,FALSE,-1.099218741,0.00026259,-83.13834397,NA
+66,pamidronate,bone resorption inhibitor,FDPS,Launched,FALSE,-1.089024431,0.000316771,-81.30367131,Prescription/Discontinued
+69,erlotinib,EGFR inhibitor,"EGFR, NR1I2",Launched,TRUE,-1.078583103,0.000416711,-82.69223194,Prescription/Discontinued
+71,tetrindole,monoamine oxidase inhibitor,MAOA,Phase 3,FALSE,-1.075580309,0.000457096,-80.20660994,Na

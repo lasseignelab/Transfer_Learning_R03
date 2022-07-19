@@ -1,0 +1,12 @@
+DepMap ID,saxagliptin (BRD:BRD-A81513827-001-03-6) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4,saxagliptin (BRD:BRD-A81513827-001-03-6) AUC Drug sensitivity AUC (PRISM Repurposing Secondary Screen) 19Q4,filter,Cell Line Name,Primary Disease,Lineage
+ACH-000863,-0.509184660448,0.781344406960912,glioblastoma,DBTRG05MG,Brain Cancer,Central Nervous System
+ACH-000819,-0.32481684755600004,0.879431756825765,glioblastoma,LN18,Brain Cancer,Central Nervous System
+ACH-000756,0.445291402448,0.663368981139829,glioblastoma,GI1,Brain Cancer,Central Nervous System
+ACH-000622,-0.187897103081,0.922401382621794,glioblastoma,KNS42,Brain Cancer,Central Nervous System
+ACH-000571,-0.105904190634,0.836969450267552,glioblastoma,T98G,Brain Cancer,Central Nervous System
+ACH-000570,-0.709532848033,0.74992694679914,glioblastoma,YKG1,Brain Cancer,Central Nervous System
+ACH-000445,-0.361607755428,0.891596511443703,glioblastoma,KNS60,Brain Cancer,Central Nervous System
+ACH-000368,-0.08752638425760001,0.8577718162600758,glioblastoma,SNU1105,Brain Cancer,Central Nervous System
+ACH-000244,-0.396633116337,0.9044570318798191,glioblastoma,DKMG,Brain Cancer,Central Nervous System
+ACH-000231,0.15649033692199998,0.7918580033548441,glioblastoma,KALS1,Brain Cancer,Central Nervous System
+ACH-000098,-0.405806388151,0.9398929764691271,glioblastoma,GAMG,Brain Cancer,Central Nervous System

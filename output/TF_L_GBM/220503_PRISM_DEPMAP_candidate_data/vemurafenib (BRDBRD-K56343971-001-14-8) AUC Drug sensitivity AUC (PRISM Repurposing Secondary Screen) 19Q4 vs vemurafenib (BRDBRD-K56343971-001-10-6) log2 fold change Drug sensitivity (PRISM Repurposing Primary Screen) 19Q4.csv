@@ -1,0 +1,13 @@
+DepMap ID,vemurafenib (BRD:BRD-K56343971-001-10-6) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4,vemurafenib (BRD:BRD-K56343971-001-14-8) AUC Drug sensitivity AUC (PRISM Repurposing Secondary Screen) 19Q4,filter,Cell Line Name,Primary Disease,Lineage
+ACH-000863,-2.22180746124,0.7533281957956821,glioblastoma,DBTRG05MG,Brain Cancer,Central Nervous System
+ACH-000819,0.104801992292,0.961406484114128,glioblastoma,LN18,Brain Cancer,Central Nervous System
+ACH-000595,0.154885909412,0.9597879206453211,glioblastoma,LN229,Brain Cancer,Central Nervous System
+ACH-000570,-0.275567830141,0.8896410184749421,glioblastoma,YKG1,Brain Cancer,Central Nervous System
+ACH-000558,0.495730026751,0.9638001676146201,glioblastoma,A172,Brain Cancer,Central Nervous System
+ACH-000376,-0.704122515052,0.8300431654140631,glioblastoma,SF295,Brain Cancer,Central Nervous System
+ACH-000368,0.257358595953,0.8820685749410034,glioblastoma,SNU1105,Brain Cancer,Central Nervous System
+ACH-000244,0.14380678309699998,0.9352942787916374,glioblastoma,DKMG,Brain Cancer,Central Nervous System
+ACH-000231,-0.279004984602,0.9159488299607906,glioblastoma,KALS1,Brain Cancer,Central Nervous System
+ACH-000102,-0.0141314066862,0.9851745762528148,glioblastoma,GMS10,Brain Cancer,Central Nervous System
+ACH-000098,0.296050930064,0.9262668300252044,glioblastoma,GAMG,Brain Cancer,Central Nervous System
+ACH-000027,-0.0549362040877,0.9513135248457736,glioblastoma,GOS3,Brain Cancer,Central Nervous System

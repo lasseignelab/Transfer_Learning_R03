@@ -1,0 +1,9 @@
+DepMap ID,tiagabine (BRD:BRD-K60160658-003-11-2) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4,tiagabine (BRD:BRD-K60160658-003-11-2) AUC Drug sensitivity AUC (PRISM Repurposing Secondary Screen) 19Q4,filter,Cell Line Name,Primary Disease,Lineage
+ACH-000863,-0.101273822289,0.980615990106802,glioblastoma,DBTRG05MG,Brain Cancer,Central Nervous System
+ACH-000819,-0.0491688185118,0.970741884714845,glioblastoma,LN18,Brain Cancer,Central Nervous System
+ACH-000738,0.08227919357300001,0.96685489270063,glioblastoma,GB1,Brain Cancer,Central Nervous System
+ACH-000595,0.181819703015,0.905480107869953,glioblastoma,LN229,Brain Cancer,Central Nervous System
+ACH-000289,-0.0792772566989,0.840466203878365,glioblastoma,SNU466,Brain Cancer,Central Nervous System
+ACH-000244,-0.0068153136480600006,0.992452041607291,glioblastoma,DKMG,Brain Cancer,Central Nervous System
+ACH-000102,-0.5996609729460001,0.8581149430198429,glioblastoma,GMS10,Brain Cancer,Central Nervous System
+ACH-000098,0.635615795084,0.936855780867326,glioblastoma,GAMG,Brain Cancer,Central Nervous System
