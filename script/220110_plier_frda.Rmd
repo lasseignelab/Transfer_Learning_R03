@@ -77,9 +77,7 @@ recount3_tpm<- recount3_tpm[,! is.na(recount3_tpm[1,])]
 library(PLIER)
 ```
 
-```{r}
-source("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/script/plier_util.R")
-```
+
 
 ```{r}
 library(recount3)
@@ -89,23 +87,23 @@ library(recount3)
 human_samples<- available_samples()
 ```
 
-```{r eval= FALSE}
+```{r}
 human_projects<- available_projects()
 ```
-```{r eval= FALSE}
+```{r}
 #SRP118922
 test<- create_rse(human_projects[(human_projects$project == "SRP118922"),])
 ```
 
 
-```{r eval= FALSE}
+```{r}
 gene_info <- test@rowRanges
 rm(test)
 ```
 
 
 ```{r}
-human_samples_not_frda<- human_samples$external_id[! human_samples$project == "SRP118922"]
+human_samples_not_frda<- human_samples$external_id[!(human_samples$project == "SRP118922" | human_samples$file_source == "tcga")]
 ```
 
 ```{r}
@@ -121,6 +119,85 @@ gc()
 recount3_wo_frda_tpm<- as.matrix(recount3_wo_frda_tpm)
 rownames(recount3_wo_frda_tpm) <- gene_info$gene_name
 ```
+
+```{r}
+source("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/script/plier_util.R")
+```
+
+```{r}
+PLIERNewData_JLF <- function(exprs.mat, seed = 12345) {
+  # A wrapper function for applying PLIER to a data set. We use the following
+  # genesets that come with PLIER: bloodCellMarkersIRISDMAP, svmMarkers, 
+  # and canonicalPathways. We set the k parameter for the PLIER model by
+  # identifying the number of "significant PCs" with PLIER::num.pc and then 
+  # using sig PCs * 0.3. This is consistent with recommendations from the 
+  # PLIER authors.
+  # 
+  # Args:
+  #   exprs.mat: a gene expression matrix, rows are genes, columns are samples
+  #   seed: an integer to be supplied to set.seed() for reproducibility 
+  #         purposes, default is 12345
+  #         
+  # Returns:
+  #   plier.res: output from PLIER::PLIER()
+  #
+  require(PLIER)
+  
+  set.seed(seed)
+  
+  # load PLIER pathway and cell type data
+  data(bloodCellMarkersIRISDMAP)
+  data(svmMarkers)
+  data(canonicalPathways)
+  
+  print("combine the pathway data from PLIER")
+  all.paths <- PLIER::combinePaths(bloodCellMarkersIRISDMAP, svmMarkers, 
+                                   canonicalPathways)
+  
+  # what genes are common to the pathway data and the expression matrix
+  cm.genes <- PLIER::commonRows(all.paths, exprs.mat)
+  
+  print(" row normalize")
+  exprs.norm <- PLIER::rowNorm(exprs.mat)
+  
+  # what should we set the minimum k parameter to in PLIER? estimate the number 
+  # of PC for the SVD decomposition 
+  print("num.pc")
+  mtx <- exprs.norm[cm.genes, ]
+  mtx<- mtx[complete.cases(mtx),]
+  set.k <- PLIER::num.pc(mtx )
+  #too  long to run for test 
+  #set.k<- 612
+  # PLIER main function + return results
+  print("PLIER main function")
+  plier.res <- PLIER::PLIER(mtx, all.paths[cm.genes, ], scale= F,
+                           k = round((set.k + set.k * 0.3), 0), trace = TRUE)
+  
+  return(plier.res)
+  
+}
+```
+
+```{r}
+rm(gene_info, human_projects, human_samples_not_frda)
+gc()
+```
+
+```{r}
+recount3_plier_frda <- PLIERNewData_JLF(recount3_wo_frda_tpm)
+
+saveRDS(recount3_plier_frda, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_plier_frda.rds")
+```
+
+
+Debug  LATER
+
+
+
+```{r}
+source("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/script/220120_plier_functions_debugging.R")
+```
+
 
 ```{r}
 PLIER_JLF=function(data, priorMat,svdres=NULL, k=NULL, L1=NULL, L2=NULL, L3=NULL,  frac=0.7,  max.iter=350, trace=F, scale=T, Chat=NULL, maxPath=10, doCrossval=T, penalty.factor=rep(1,ncol(priorMat)), glm_alpha=0.9, minGenes=10, tol=1e-6, seed=123456, allGenes=F, rseed=NULL, pathwaySelection=c("complete", "fast")){
@@ -269,8 +346,10 @@ PLIER_JLF=function(data, priorMat,svdres=NULL, k=NULL, L1=NULL, L2=NULL, L3=NULL
           }
       else{
       #HERE
+      
       #solveU=function(Z,  Chat, priorMat, penalty.factor,pathwaySelection="fast", glm_alpha=0.9, maxPath=10, target.frac=0.7, L3=NULL)
-      save(Z, Chat, C, pentalty.factor, pathwaySelection, glm_alpha, mathPath, L3, file= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/u_function_FRDA_input.RData" )
+      #save(Z, Chat, C, pentalty.factor, pathwaySelection, glm_alpha, mathPath, L3, file= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/u_function_FRDA_input.RData" )
+       save.image(file="/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/u_function_FRDA_input.RData")
         
       print("ERROR HERE")  
       U=solveU(Z, Chat, C, penalty.factor, pathwaySelection, glm_alpha, maxPath, L3=L3)
@@ -355,32 +434,39 @@ PLIER_JLF=function(data, priorMat,svdres=NULL, k=NULL, L1=NULL, L2=NULL, L3=NULL
 
 ```{r}
 exprs.mat<- recount3_wo_frda_tpm
-set.seed(12345)
-# load PLIER pathway and cell type data
-  data(bloodCellMarkersIRISDMAP)
-  data(svmMarkers)
-  data(canonicalPathways)
+ set.seed(12345)
+# # load PLIER pathway and cell type data
+   data(bloodCellMarkersIRISDMAP)
+   data(svmMarkers)
+   data(canonicalPathways)
   
   print("combine the pathway data from PLIER")
   all.paths <- PLIER::combinePaths(bloodCellMarkersIRISDMAP, svmMarkers, 
                                    canonicalPathways)
   # what genes are common to the pathway data and the expression matrix
-  cm.genes <- PLIER::commonRows(all.paths, exprs.mat)
+    cm.genes <- PLIER::commonRows(all.paths, exprs.mat)
   
   print(" row normalize")
   exprs.norm <- PLIER::rowNorm(exprs.mat)
-  
+  saveRDS(exprs.norm ,file= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/PLIER_debugging_exprs_norm.rds" )
   # what should we set the minimum k parameter to in PLIER? estimate the number 
   # of PC for the SVD decomposition 
   print("num.pc")
   mtx <- exprs.norm[cm.genes, ]
   mtx<- mtx[complete.cases(mtx),]
-  set.k <- PLIER::num.pc(mtx )
+  #set.k <- PLIER::num.pc(mtx )
   save(mtx, all.paths, cm.genes, file= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/PLIER_function_FRDA_input.RData" )
-  
+  set.k<- 612
   print("PLIER_JLF main function")
   plier.res <- PLIER_JLF(mtx, all.paths[cm.genes, ], scale= F,
                            k = round((set.k + set.k * 0.3), 0), trace = TRUE)
+ # Selecting common genes: 6379
+#Removing 5 pathways with too few genes
+#Computing SVD
+#Using rsvd
+#Done
+#Error in PLIER_JLF(mtx, all.paths[cm.genes, ], scale = F, k = round((set.k +  : 
+#  object 'set.k' not found
   info<- sessionInfo()
   saveRDS(info,file= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/PLIER_debugging_Info.rds" )
 ```
@@ -388,63 +474,4 @@ set.seed(12345)
 
 
 
-```{r}
-PLIERNewData_JLF <- function(exprs.mat, seed = 12345) {
-  # A wrapper function for applying PLIER to a data set. We use the following
-  # genesets that come with PLIER: bloodCellMarkersIRISDMAP, svmMarkers, 
-  # and canonicalPathways. We set the k parameter for the PLIER model by
-  # identifying the number of "significant PCs" with PLIER::num.pc and then 
-  # using sig PCs * 0.3. This is consistent with recommendations from the 
-  # PLIER authors.
-  # 
-  # Args:
-  #   exprs.mat: a gene expression matrix, rows are genes, columns are samples
-  #   seed: an integer to be supplied to set.seed() for reproducibility 
-  #         purposes, default is 12345
-  #         
-  # Returns:
-  #   plier.res: output from PLIER::PLIER()
-  #
-  require(PLIER)
-  
-  set.seed(seed)
-  
-  # load PLIER pathway and cell type data
-  data(bloodCellMarkersIRISDMAP)
-  data(svmMarkers)
-  data(canonicalPathways)
-  
-  print("combine the pathway data from PLIER")
-  all.paths <- PLIER::combinePaths(bloodCellMarkersIRISDMAP, svmMarkers, 
-                                   canonicalPathways)
-  
-  # what genes are common to the pathway data and the expression matrix
-  cm.genes <- PLIER::commonRows(all.paths, exprs.mat)
-  
-  print(" row normalize")
-  exprs.norm <- PLIER::rowNorm(exprs.mat)
-  
-  # what should we set the minimum k parameter to in PLIER? estimate the number 
-  # of PC for the SVD decomposition 
-  print("num.pc")
-  mtx <- exprs.norm[cm.genes, ]
-  mtx<- mtx[complete.cases(mtx),]
-  set.k <- PLIER::num.pc(mtx )
-  
-  # PLIER main function + return results
-  print("PLIER main function")
-  plier.res <- PLIER::PLIER(mtx, all.paths[cm.genes, ], scale= F,
-                           k = round((set.k + set.k * 0.3), 0), trace = TRUE)
-  
-  return(plier.res)
-  
-}
-```
-
-
-```{r}
-recount3_plier_frda <- PLIERNewData_JLF(recount3_wo_frda_tpm)
-
-saveRDS(recount3_plier_frda, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_plier_frda.rds")
-```
 

@@ -104,14 +104,14 @@ library(recount3)
 ```{r}
 human_samples<- available_samples()
 ```
-```{r eval= FALSE}
+```{r}
 human_projects<- available_projects()
 ```
-```{r eval= FALSE}
+```{r}
 #SRP118922
 test<- create_rse(human_projects[(human_projects$project == "SRP118922"),])
 ```
-```{r eval= FALSE}
+```{r}
 gene_info <- test@rowRanges
 rm(test)
 ```
@@ -119,10 +119,12 @@ rm(test)
 
 ```{r}
 human_samples_not_gbm<- human_samples$external_id[! human_samples$project == "GBM" | human_samples$project  == "BRAIN"]
+
+human_samples_not_gbm_v2 <-gsub("-", ".", human_samples_not_gbm)
 ```
 
 ```{r}
-recount3_wo_gbm_tpm <- recount3_tpm[, colnames(recount3_tpm) %in% human_samples_not_gbm]
+recount3_wo_gbm_tpm <- recount3_tpm[, colnames(recount3_tpm) %in% human_samples_not_gbm_v2]
 ```
 
 ```{r}
@@ -137,7 +139,22 @@ rownames(recount3_wo_gbm_tpm) <- gene_info$gene_name
 ```
 
 ```{r}
-recount3_plier_gbm <- PLIERNewData_JLF(recount3_wo_gbm_tpm)
+saveRDS(recount3_wo_gbm_tpm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_tpm.rds")
+```
+
+
+```{r}
+#recount3_plier_gbm <- PLIERNewData_JLF(recount3_wo_gbm_tpm)
+```
+
+```{r}
+#saveRDS(recount3_plier_gbm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_plier_gbm.rds")
+```
+
+
+
+```{r}
+recount3_wo_gbm_tpm<- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_tpm.rds")
 ```
 
 
@@ -182,8 +199,10 @@ PLIERNewData_JLF <- function(exprs.mat, seed = 12345) {
   # of PC for the SVD decomposition 
   print("num.pc")
   mtx <- exprs.norm[cm.genes, ]
-  mtx<- mtx[complete.cases(mtx),]
-  set.k <- PLIER::num.pc(mtx )
+  #mtx<- mtx[complete.cases(mtx),]
+  print(class(mtx))
+  print(dim(mtx))
+  set.k <- PLIER::num.pc(mtx)
   
   # PLIER main function + return results
   print("PLIER main function")
@@ -195,44 +214,12 @@ PLIERNewData_JLF <- function(exprs.mat, seed = 12345) {
 }
 ```
 
-
-```{r}
-row_sd<- function (index, tpm_table){
-  std <- sd(tpm_table[index,])
-  return(std)
-}
-
-row_mean<- function(index, tpm_table){
-  m<-  mean(as.numeric(tpm_table[index,]))
-  return(m)
-}
-Row_Z_score <- function(index, tpm_table, m, std){
-  #mean
-  score<- tpm_table[index, ]
-  m<- m[index]
-  std<- std[index]
-  #zscore
-  Row_Z_score<- (score - m)/ std
-  return(Row_Z_score)
-}
-```
-
-```{r}
-library(parallel)
-```
-
-
-```{r}
-test_sd <- mclapply( 1:nrow(recount3_group1_tpm), row_sd, recount3_group1_tpm)
-test_mean<- mclapply( 1:nrow(recount3_group1_tpm), row_mean, recount3_group1_tpm)
-test_z_score<- mclapply( 1:nrow(recount3_group1_tpm), Row_Z_score, recount3_group1_tpm, test_mean, test_sd)
-```
-
-
-
 ```{r}
 recount3_plier_gbm <- PLIERNewData_JLF(recount3_wo_gbm_tpm)
+
+saveRDS(recount3_plier_gbm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_plier_gbm_V2.rds")
 ```
+
 
 ### Save Data
 Done in analysis 
@@ -246,7 +233,7 @@ Done in analysis
     ./data/recount3
     
     Dates when operations were done:
-    211213-220104
+    211213-220104; redone 220725
     
 ## Versions
 ```{r}

@@ -112,9 +112,15 @@ count_table<- function(file_dir){
   test<- read.table( files[1], header= TRUE)
    for (i in 2:length(files)){
      test2<- read.table( files[i], header= TRUE)
-     test<- cbind(test, test2[,-1])
+      #print(colnames(test2))
+     #print(test2)
+     #colnames(test2)
+    # print(colnames(test2))
+    #print(colnames(test))
+     test<- cbind(test, test2)
      #print(files[i])
    }
+  test<- test[,!grepl("gene_id", colnames(test))]
   return(test)
 }
 ```
@@ -124,49 +130,64 @@ count_table<- function(file_dir){
 group1<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_1/")
 ```
 
+```{r}
+saveRDS(group1, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1.rds")
+rm(group1)
+gc()
+```
+
+
 
 ```{r eval= FALSE}
 group2<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_2/")
 saveRDS(group2, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2.rds")
 rm(group2)
+gc()
 group3<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_3/")
 saveRDS(group3, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group3.rds")
 rm(group3)
+gc()
 group4<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_4/")
 saveRDS(group4, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group4.rds")
 rm(group4)
+gc()
 group5<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_5/")
 saveRDS(group5, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group5.rds")
 rm(group5)
+gc()
 group6<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_6/")
 saveRDS(group6, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group6.rds")
 rm(group6)
+gc()
 group7<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_7/")
 saveRDS(group7, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group7.rds")
 rm(group7)
+gc()
 group8<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_8/")
 saveRDS(group8, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group8.rds")
 rm(group8)
+gc()
 ```
 
 
 
 ```{r eval= FALSE}
-saveRDS(group1, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1.rds")
-saveRDS(group2, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2.rds")
-saveRDS(group3, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group3.rds")
-saveRDS(group4, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group4.rds")
-saveRDS(group5, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group5.rds")
-saveRDS(group6, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group6.rds")
-saveRDS(group7, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group7.rds")
-saveRDS(group8, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group8.rds")
+recount3_group1 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1.rds")
+recount3_group2 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2.rds")
+recount3_group3 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group3.rds")
+recount3_group4 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group4.rds")
+recount3_group5 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group5.rds")
+recount3_group6 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group6.rds")
+recount3_group7 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group7.rds")
+recount3_group8 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group8.rds")
 ```
 
 ```{r eval= FALSE}
-recount3_Counts<- cbind(recount3_group1, recount3_group2, recount3_group3, recount3_group4, recount3_group5, recount3_group6, recount3_group7, recount3_group8)
-rm(recount3_group1, recount3_group2, recount3_group3, recount3_group4, recount3_group5, recount3_group6, recount3_group7, recount3_group8)
+#recount3_Counts<- cbind(recount3_group1, recount3_group2, recount3_group3, recount3_group4, recount3_group5, recount3_group6, recount3_group7, recount3_group8)
+#rm(recount3_group1, recount3_group2, recount3_group3, recount3_group4, recount3_group5, recount3_group6, recount3_group7, recount3_group8)
 #saveRDS(recount3_Counts, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_counts.rds")
 #crashes R
+#gc()
 ```
 
 #change it to tpm 
@@ -202,14 +223,14 @@ rm(test)
 ```
 
 ```{r eval= FALSE}
-recount3_group1_tpm<- Counts_to_tpm(recount3_group1[,-1] , gene_info$bp_length)
-rownames(recount3_group1_tpm)<- recount3_group2[,1]
+recount3_group1_tpm<- Counts_to_tpm(recount3_group1[,-1], gene_info$bp_length)
+rownames(recount3_group1_tpm)<- recount3_group1[,1]
 saveRDS(recount3_group1_tpm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1_tpm.rds")
 rm(recount3_group1)
 ```
 
 ```{r eval= FALSE}
-recount3_group2_tpm<- Counts_to_tpm(recount3_group2[,-1] , gene_info$bp_length)
+recount3_group2_tpm<- Counts_to_tpm(as.data.frame(recount3_group2[,-1]) , gene_info$bp_length)
 rownames(recount3_group2_tpm)<- recount3_group2[,1]
 saveRDS(recount3_group2_tpm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2_tpm.rds")
 rm(recount3_group2)
@@ -261,6 +282,15 @@ rm(recount3_group8)
 rm(recount3_group8_tpm)
 ```
 
+there was no reason for the removal of the first col form the matrix add ing it back as group 9 done 220728 
+```{r}
+#"DRR002593" "DRR001796" "DRR000897" "DRR031682" "DRR006400" "DRR001622" "DRR001173"
+recount3_group9 <- cbind(recount3_group1[,1], recount3_group2[,1], recount3_group3[,1], recount3_group4[,1], recount3_group5[,1], recount3_group6[,1], recount3_group7[,1], recount3_group8[,1])
+recount3_group9_tpm <- Counts_to_tpm(recount3_group9 , gene_info$bp_length)
+colnames(recount3_group9_tpm)<- c( colnames(recount3_group1)[1], colnames(recount3_group2)[1], colnames(recount3_group3)[1], colnames(recount3_group4)[1], colnames(recount3_group5)[1], colnames(recount3_group6)[1], colnames(recount3_group7)[1], colnames(recount3_group8)[1])
+saveRDS(recount3_group9_tpm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group9_tpm.rds")
+```
+
 
 ### Save Data
 Done in analysis 
@@ -274,7 +304,7 @@ Done in analysis
     ./data/recount3
     
     Dates when operations were done:
-    211213-220104
+    211213-220104 
     
 ## Versions
 ```{r}
