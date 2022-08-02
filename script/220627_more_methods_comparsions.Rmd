@@ -1,0 +1,1381 @@
+---
+title: "220627_more_methods_comparsions"
+author: "Jennifer Fisher"
+date: "6/27/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(VennDiagram)
+```
+```{r}
+# Prepare a palette of 3 colors with R colorbrewer:
+myCol <- c("#440154FF" , "#31688EFF" ,"#35B779FF")
+```
+
+```{r}
+venn_dia_methods <- function(limma_list, deseq2_list, tfl_list, file_name='~/output/liver_cancer/SR_liver_all_gene_venn_diagram.png' ){
+venn.diagram(
+        x = list(limma_list, deseq2_list, tfl_list),
+        category.names = c("limma" , "DESeq2" , "Transfer Learning"),
+        filename = file_name,
+        output=TRUE,
+        
+        # Output features
+        imagetype="png" ,
+        height = 1000 , 
+        width = 1000 , 
+        resolution = 300,
+        compression = "lzw",
+        
+        # Circles
+        lwd = 2,
+        lty = 'blank',
+        fill = myCol,
+        
+        # Numbers
+        cex = .4,
+        fontface = "bold",
+        fontfamily = "sans",
+        
+        # Set names
+        cat.cex = 0.3,
+        cat.fontface = "bold",
+        #cat.default.pos = "outer",
+        cat.pos = c(-27, 27, 135),
+        cat.dist = c(0.04, 0.04, 0.04),
+        cat.fontfamily = "sans",
+        rotation = 1
+)
+}
+```
+
+```{r}
+lincs_tfl_gbm_res_GI1_fda_approved <- read_csv( "~/output/TF_L_GBM/220207_lincs_transfer_gbm_res_GI1_tau_fda_approved.csv")
+lincs_limma_gbm_res_GI1_fda_approved <- read_csv("~/output/limma_gbm/220421_SR_LINCS_GBM_LIMMA_RES_tau_fda_approved.csv")
+lincs_deseq2_gbm_res_GI1_fda_approved <- read_csv("~/output/deseq2_gbm/220427_lincs_deseq_gbm_res_GI1_tau_fda_approved.csv")
+```
+
+```{r}
+library(stringr)
+```
+
+```{r}
+limma_gbm_targets <- unique(unlist(str_split(lincs_limma_gbm_res_GI1_fda_approved$t_gn_sym, "; ")))
+
+deseq_gbm_targets <- unique(unlist(str_split(lincs_deseq2_gbm_res_GI1_fda_approved$t_gn_sym, "; ")))
+
+tfl_gbm_targets <- unique(unlist(str_split(lincs_tfl_gbm_res_GI1_fda_approved$t_gn_sym, "; ")))
+```
+
+```{r}
+venn_dia_methods(limma_gbm_targets, deseq_gbm_targets, tfl_gbm_targets, file_name='~/output/gbm_plots/SR_drug_target_venn_diagram.png' )
+```
+
+
+
+```{r}
+lincs_deseq_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/deseq2_res/220602_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_HEPG2_fda_approved <- lincs_deseq_gbm_res_HEPG2_fda_approved [lincs_deseq_gbm_res_HEPG2_fda_approved$fda_approved== TRUE,]
+
+lincs_limma_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/limma_res/220602_SR_LINCS_LIHC_limma_RES_tau.csv")
+
+lincs_limma_gbm_res_HEPG2_fda_approved<- lincs_limma_gbm_res_HEPG2_fda_approved[ lincs_limma_gbm_res_HEPG2_fda_approved$fda_approved== TRUE,]
+
+lincs_tfl_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/TFL_res/220602_SR_LINCS_LIHC_TFL_RES_tau.csv")
+lincs_tfl_gbm_res_HEPG2_fda_approved<- lincs_tfl_gbm_res_HEPG2_fda_approved[ lincs_tfl_gbm_res_HEPG2_fda_approved$fda_approved == TRUE, ]
+```
+
+
+
+```{r}
+limma_gbm_targets <- unique(unlist(str_split(lincs_limma_gbm_res_HEPG2_fda_approved$t_gn_sym, "; ")))
+limma_gbm_targets <- limma_gbm_targets[complete.cases(limma_gbm_targets )]
+
+deseq_gbm_targets <- unique(unlist(str_split(lincs_deseq_gbm_res_HEPG2_fda_approved$t_gn_sym, "; ")))
+deseq_gbm_targets <- deseq_gbm_targets[complete.cases(deseq_gbm_targets)]
+
+tfl_gbm_targets <- unique(unlist(str_split(lincs_tfl_gbm_res_HEPG2_fda_approved$t_gn_sym, "; ")))
+tfl_gbm_targets <- tfl_gbm_targets[complete.cases(tfl_gbm_targets )]
+```
+
+```{r}
+venn_dia_methods(limma_gbm_targets, deseq_gbm_targets, tfl_gbm_targets, file_name='~/output/liver_cancer/SR_drug_target_venn_diagram.png' )
+```
+
+```{r}
+#comment.   
+lincs_limma_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/limma_res/220602_SR_LINCS_LUAD_limma_RES_tau.csv")
+lincs_limma_gbm_res_A549_fda_approved<- lincs_limma_gbm_res_A549_fda_approved[lincs_limma_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
+lincs_deseq_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/deseq2_res/220602_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_A549_fda_approved<- lincs_deseq_gbm_res_A549_fda_approved[lincs_deseq_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
+lincs_tfl_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/TFL_res/220602_SR_LINCS_LUAD_TFL_RES_tau.csv")
+lincs_tfl_gbm_res_A549_fda_approved<- lincs_tfl_gbm_res_A549_fda_approved[lincs_tfl_gbm_res_A549_fda_approved$fda_approved==TRUE,]
+```
+
+
+```{r}
+limma_gbm_targets <- unique(unlist(str_split(lincs_limma_gbm_res_A549_fda_approved$t_gn_sym, "; ")))
+limma_gbm_targets <- limma_gbm_targets[complete.cases(limma_gbm_targets )]
+
+deseq_gbm_targets <- unique(unlist(str_split(lincs_deseq_gbm_res_A549_fda_approved$t_gn_sym, "; ")))
+deseq_gbm_targets <- deseq_gbm_targets[complete.cases(deseq_gbm_targets)]
+
+tfl_gbm_targets <- unique(unlist(str_split(lincs_tfl_gbm_res_A549_fda_approved$t_gn_sym, "; ")))
+tfl_gbm_targets <- tfl_gbm_targets[complete.cases(tfl_gbm_targets )]
+```
+
+```{r}
+venn_dia_methods(limma_gbm_targets, deseq_gbm_targets, tfl_gbm_targets, file_name='~/output/lung_cancer/SR_drug_target_venn_diagram.png' )
+```
+
+
+```{r}
+
+lincs_deseq_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/deseq2_res/220602_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_YAPC_fda_approved<- lincs_deseq_gbm_res_YAPC_fda_approved[lincs_deseq_gbm_res_YAPC_fda_approved$fda_approved == TRUE,]
+
+lincs_limma_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/limma_res/220602_SR_LINCS_PAAD_limma_RES_tau.csv")
+lincs_limma_gbm_res_YAPC_fda_approved<- lincs_limma_gbm_res_YAPC_fda_approved[lincs_limma_gbm_res_YAPC_fda_approved$fda_approved ==TRUE, ]
+
+lincs_tfl_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/TFL_res/220602_SR_LINCS_PAAD_TFL_RES_tau.csv")
+lincs_tfl_gbm_res_YAPC_fda_approved<- lincs_tfl_gbm_res_YAPC_fda_approved[ lincs_tfl_gbm_res_YAPC_fda_approved$fda_approved ==TRUE,]
+```
+
+
+```{r}
+limma_gbm_targets <- unique(unlist(str_split(lincs_limma_gbm_res_YAPC_fda_approved$t_gn_sym, "; ")))
+limma_gbm_targets <- limma_gbm_targets[complete.cases(limma_gbm_targets )]
+
+deseq_gbm_targets <- unique(unlist(str_split(lincs_deseq_gbm_res_YAPC_fda_approved $t_gn_sym, "; ")))
+deseq_gbm_targets <- deseq_gbm_targets[complete.cases(deseq_gbm_targets)]
+
+tfl_gbm_targets <- unique(unlist(str_split(lincs_tfl_gbm_res_YAPC_fda_approved$t_gn_sym, "; ")))
+tfl_gbm_targets <- tfl_gbm_targets[complete.cases(tfl_gbm_targets )]
+```
+
+```{r}
+venn_dia_methods(limma_gbm_targets, deseq_gbm_targets, tfl_gbm_targets, file_name='~/output/pancreas_cancer/SR_drug_target_venn_diagram.png' )
+```
+
+
+```{r}
+SR_gene_list_gbm_tfl <- readRDS("~/output/TF_L_GBM/SR_gene_list_gbm_tfl.rds")
+SR_gene_list_gbm_deseq2 <- readRDS("~/output/deseq2_gbm/SR_gene_list_gbm_deseq2.rds")
+SR_gene_list_gbm_limma <- readRDS("~/output/limma_gbm/SR_gene_list_gbm_limma.rds")
+```
+
+```{r}
+TFL_pathways <- read_delim("~/output/gbm_plots/TFL_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+deseq2_pathways <- read_delim("~/output/gbm_plots/DESEq2_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+limma_pathways <- read_delim("~/output/gbm_plots/limma_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+
+```{r}
+library(GOSemSim)
+hsGO <- godata('org.Hs.eg.db', ont="BP")
+```
+
+
+```{r}
+#up bf
+limma_bp_up <- limma_pathways$term_id[ limma_pathways$source == "GO:BP" & limma_pathways$set == "Up"]
+
+deseq2_bp_up <- deseq2_pathways$term_id[ deseq2_pathways$source == "GO:BP" & deseq2_pathways$set == "Up"]
+
+
+TFL_bp_up <- TFL_pathways$term_id[ TFL_pathways$source == "GO:BP" & TFL_pathways$set == "Up"]
+```
+
+
+```{r}
+go1 <-  unique(c(TFL_bp_up, deseq2_bp_up, limma_bp_up ))
+go_gbm_up_sim <- mgoSim(go1, go1, semData=hsGO, measure="Wang", combine=NULL)
+```
+
+```{r}
+library(ComplexHeatmap)
+```
+
+
+
+```{r}
+tfl_drugs <- grepl(paste(TFL_bp_up,collapse="|"), colnames(go_gbm_up_sim)) 
+deseq2_drugs<- grepl(paste(deseq2_bp_up,collapse="|"), colnames(go_gbm_up_sim)) 
+limma_drugs <- grepl(paste(limma_bp_up,collapse="|"), colnames(go_gbm_up_sim)) 
+
+row_ha = HeatmapAnnotation(Transfer_Learning=tfl_drugs,DESeq2= deseq2_drugs, limma= limma_drugs , col = list(Transfer_Learning = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),DESeq2 = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),limma = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF") ))
+col_fun = colorRamp2(c(0,  1), c( "black", "yellow"))
+#ha = rowAnnotation(foo = anno_mark(at = c(1:4, 20, 60, 97:100), labels = TFL_bp_up[1:10]))
+
+Heatmap(go_gbm_up_sim, nam= "GO Term Similarity (Wang)", col = col_fun, show_column_names = FALSE,  show_row_names = FALSE, top_annotation = row_ha,  
+        clustering_distance_rows= "euclidean",
+             clustering_distance_columns=  "euclidean",
+             clustering_method_rows = "ward.D2" ,
+             clustering_method_columns="ward.D2")
+ggsave(filename = "~/output/gbm_plots/220628_got_term_wang_gmb_up_set.png")
+```
+
+```{r}
+limma_bp_up_term <- limma_pathways$term_name[ limma_pathways$source == "GO:BP" & limma_pathways$set == "Up"]
+
+deseq2_bp_up_term <- deseq2_pathways$term_name[ deseq2_pathways$source == "GO:BP" & deseq2_pathways$set == "Up"]
+
+
+TFL_bp_up_term <- TFL_pathways$term_name[ TFL_pathways$source == "GO:BP" & TFL_pathways$set == "Up"]
+```
+
+
+
+
+```{r}
+list <- c(TFL_bp_up_term, deseq2_bp_up_term, limma_bp_up_term )
+
+test_names <- paste0(strtrim(list, 25), " (", go1, ")")
+```
+
+
+```{r}
+colnames(go_gbm_up_sim)<- test_names 
+rownames(go_gbm_up_sim)<- test_names 
+```
+
+
+
+```{r}
+cluster<- hclust(dist(go_gbm_up_sim), method= "ward.D2")
+dend = as.dendrogram(cluster)
+```
+
+```{r}
+
+test<- ifelse(tfl_drugs== TRUE, "#440154FF", "#228C8DFF")
+test2<- ifelse(limma_drugs== TRUE, "#440154FF", "#228C8DFF")
+test3<- ifelse(deseq2_drugs== TRUE, "#440154FF", "#228C8DFF")
+par(oma=c(0.5,0.5,0.5,20), mar = c(4, 0.01, 0.01, 12))
+dend %>%
+  set("labels_col", k=5) %>%
+  set("branches_k_color", k = 5) %>%
+  set("leaves_pch", 19)  %>% 
+  set("nodes_cex", 0.6) %>% 
+ set("branches_lwd", 3) %>% 
+   set("labels_cex", 0.5) %>%
+  plot(horiz=TRUE, axes=FALSE)
+#addjust eh y shift
+colored_bars(cbind(test, test2, test3), dend,rowLabels = c("Transfer", "limma", "DESeq2"), y_shift = 6, horiz = TRUE)
+#plot(dend)
+```
+
+```{r}
+cutree(dend, k = 5)
+```
+
+
+```{r}
+med_up <- colMedians(go_gbm_up_sim)
+```
+
+```{r}
+med_top<- colnames(go_gbm_up_sim)[order(-med_up)[1:80]]
+#med_top <- names(med_top)
+```
+
+```{r}
+med_bottom<- test_names[! test_names %in% med_top]
+```
+
+
+```{r}
+go_gbm_up_sim_sub <- go_gbm_up_sim[colnames(go_gbm_up_sim) %in% med_top, colnames(go_gbm_up_sim) %in% med_top]
+```
+
+```{r}
+cluster_sub <- hclust(dist(go_gbm_up_sim_sub), method= "ward.D2")
+dend_sub  = as.dendrogram(cluster_sub )
+```
+
+
+```{r}
+tfl_drugs2 <- tfl_drugs[ test_names %in% med_top]
+limma_drugs2 <- limma_drugs[ test_names %in% med_top]
+deseq2_drugs2<- deseq2_drugs[ test_names %in% med_top]
+
+test<- ifelse(tfl_drugs2== TRUE, "#440154FF", "#228C8DFF")
+test2<- ifelse(limma_drugs2== TRUE, "#440154FF", "#228C8DFF")
+test3<- ifelse(deseq2_drugs2== TRUE, "#440154FF", "#228C8DFF")
+#test<- ifelse(tfl_drugs== TRUE, "#440154FF", "#228C8DFF")
+#test2<- ifelse(limma_drugs== TRUE, "#440154FF", "#228C8DFF")
+#test3<- ifelse(deseq2_drugs== TRUE, "#440154FF", "#228C8DFF")
+
+par(oma=c(0.5,0.5,0.5,20), mar = c(4, 0.01, 0.01, 12))
+#dend2 <-prune( dend, med_bottom, reindex_dend=FALSE)
+dend_sub %>%
+  set("labels_col",value =c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), k=5) %>%
+  set("branches_k_color",value =c("#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"),  k = 5) %>%
+  set("leaves_pch", 19)  %>% 
+  set("nodes_cex", 0.6) %>% 
+ set("branches_lwd", 3) %>% 
+   set("labels_cex", 0.5) %>%
+  plot( horiz=TRUE, axes=FALSE)
+#addjust eh y shift
+colored_bars(cbind(test, test2, test3), dend_sub ,rowLabels = c("Transfer", "limma", "DESeq2"), y_shift = 4, horiz = TRUE)
+#note have to save manually via export function as a pdf
+```
+
+
+```{r}
+go_term_heatmap<- function(limma_pathways, deseq2_pathways, TFL_pathways, list_type){
+ 
+  #get terms
+  limma_bp<- limma_pathways$term_id[ limma_pathways$source == "GO:BP" & limma_pathways$set == list_type]
+  deseq2_bp <- deseq2_pathways$term_id[ deseq2_pathways$source == "GO:BP" & deseq2_pathways$set == list_type]
+  TFL_bp <- TFL_pathways$term_id[ TFL_pathways$source == "GO:BP" & TFL_pathways$set == list_type]
+  
+  go1 <-  unique(c(TFL_bp, deseq2_bp, limma_bp ))
+  go_gbm_up_sim <- mgoSim(go1, go1, semData=hsGO, measure="Wang", combine=NULL)
+  
+  tfl_drugs <- grepl(paste(TFL_bp,collapse="|"), colnames(go_gbm_up_sim)) 
+  deseq2_drugs<- grepl(paste(deseq2_bp,collapse="|"), colnames(go_gbm_up_sim))
+  limma_drugs <- grepl(paste(limma_bp,collapse="|"), colnames(go_gbm_up_sim)) 
+  
+  if(length(deseq2_bp) ==0){ deseq2_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
+  if(length(TFL_bp) ==0){ tfl_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
+  if(length(limma_bp) ==0){ limma_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
+  
+  row_ha = HeatmapAnnotation(Transfer_Learning=tfl_drugs,DESeq2= deseq2_drugs, limma= limma_drugs , col = list(Transfer_Learning = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),DESeq2 = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),limma = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF") ))
+  col_fun = colorRamp2(c(0,  1), c( "black", "yellow"))
+#ha = rowAnnotation(foo = anno_mark(at = c(1:4, 20, 60, 97:100), labels = TFL_bp_up[1:10]))
+
+  Heatmap(go_gbm_up_sim, nam= "GO Term Similarity (Wang)", col = col_fun, show_column_names = FALSE,  show_row_names = FALSE, top_annotation = row_ha,  
+        clustering_distance_rows= "euclidean",
+             clustering_distance_columns=  "euclidean",
+             clustering_method_rows = "ward.D2" ,
+             clustering_method_columns="ward.D2")
+}
+
+```
+
+```{r}
+go_term_heatmap(limma_pathways, deseq2_pathways, TFL_pathways, "Down")
+```
+
+
+```{r}
+go_term_tree_plot<- function(limma_pathways, deseq2_pathways, TFL_pathways, list_type, num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift = 4){
+    limma_bp<- limma_pathways$term_id[ limma_pathways$source == "GO:BP" & limma_pathways$set == list_type]
+  deseq2_bp <- deseq2_pathways$term_id[ deseq2_pathways$source == "GO:BP" & deseq2_pathways$set == list_type]
+  TFL_bp <- TFL_pathways$term_id[ TFL_pathways$source == "GO:BP" & TFL_pathways$set == list_type]
+  
+  go1 <-  unique(c(TFL_bp, deseq2_bp, limma_bp ))
+  
+  
+  go_gbm_up_sim <- mgoSim(go1, go1, semData=hsGO, measure="Wang", combine=NULL)
+  
+  limma_bp_up_term <- limma_pathways$term_name[ limma_pathways$source == "GO:BP" & limma_pathways$set == list_type]
+  deseq2_bp_up_term <- deseq2_pathways$term_name[ deseq2_pathways$source == "GO:BP" & deseq2_pathways$set == list_type]
+  TFL_bp_up_term <- TFL_pathways$term_name[ TFL_pathways$source == "GO:BP" & TFL_pathways$set == list_type]
+  
+  list <- unique(c(TFL_bp_up_term, deseq2_bp_up_term, limma_bp_up_term ))
+  test_names <- paste0(strtrim(list, 25), " (", go1, ")")
+  #print(test_names[1:5])
+  #print(length(test_names))
+  #dim(go_gbm_up_sim)
+  colnames(go_gbm_up_sim)<- test_names 
+  rownames(go_gbm_up_sim)<- test_names 
+  
+  med_up <- colMedians(go_gbm_up_sim)
+  med_top<- colnames(go_gbm_up_sim)[order(-med_up)[1:num]]
+
+  med_bottom<- test_names[! test_names %in% med_top]
+
+  go_gbm_up_sim_sub <- go_gbm_up_sim[colnames(go_gbm_up_sim) %in% med_top, colnames(go_gbm_up_sim) %in% med_top]
+
+  cluster_sub <- hclust(dist(go_gbm_up_sim_sub), method= "ward.D2")
+  dend_sub  = as.dendrogram(cluster_sub )
+  
+  tfl_drugs <- grepl(paste(TFL_bp,collapse="|"), colnames(go_gbm_up_sim)) 
+  deseq2_drugs<- grepl(paste(deseq2_bp,collapse="|"), colnames(go_gbm_up_sim)) 
+  limma_drugs <- grepl(paste(limma_bp,collapse="|"), colnames(go_gbm_up_sim)) 
+  
+  if(length(deseq2_bp) ==0){ deseq2_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
+  if(length(TFL_bp) ==0){ tfl_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
+  if(length(limma_bp) ==0){ limma_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
+  
+  tfl_drugs2 <- tfl_drugs[ test_names %in% med_top]
+  limma_drugs2 <- limma_drugs[ test_names %in% med_top]
+  deseq2_drugs2<- deseq2_drugs[ test_names %in% med_top]
+
+  test<- ifelse(tfl_drugs2== TRUE, "#440154FF", "#228C8DFF")
+  print(test)
+  test2<- ifelse(limma_drugs2== TRUE, "#440154FF", "#228C8DFF")
+  test3<- ifelse(deseq2_drugs2== TRUE, "#440154FF", "#228C8DFF")
+#test<- ifelse(tfl_drugs== TRUE, "#440154FF", "#228C8DFF")
+#test2<- ifelse(limma_drugs== TRUE, "#440154FF", "#228C8DFF")
+#test3<- ifelse(deseq2_drugs== TRUE, "#440154FF", "#228C8DFF")
+
+  par(oma=c(0.5,0.5,0.5,20), mar = c(4, 0.01, 0.01, 12))
+#dend2 <-prune( dend, med_bottom, reindex_dend=FALSE)
+dend_sub %>%
+  set("labels_col",value =colors, k=k_num) %>%
+  set("branches_k_color",value =colors,  k = k_num) %>%
+  set("leaves_pch", 19)  %>% 
+  set("nodes_cex", 0.6) %>% 
+ set("branches_lwd", 3) %>% 
+   set("labels_cex", 0.5) %>%
+  plot( horiz=TRUE, axes=FALSE)
+#addjust eh y shift
+colored_bars(cbind(test, test2, test3), dend_sub ,rowLabels = c("Transfer", "limma", "DESeq2"), y_shift = shift, horiz = TRUE)
+
+}
+```
+
+```{r}
+go_term_tree_plot(limma_pathways, deseq2_pathways, TFL_pathways, list_type= "Down", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
+```
+
+# liver 
+```{r}
+TFL_pathways <- read_delim("~/output/liver_cancer/TFL_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+deseq2_pathways1 <-read_delim("~/output/liver_cancer/DESEq2_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+limma_pathways <- read_delim("~/output/liver_cancer/limma_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+up 
+
+```{r}
+go_term_heatmap(limma_pathways, deseq2_pathways1, TFL_pathways, "Up")
+```
+
+```{r}
+go_term_tree_plot(limma_pathways, deseq2_pathways1, TFL_pathways, "Up", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
+```
+
+down
+```{r}
+go_term_heatmap(limma_pathways, deseq2_pathways1, TFL_pathways, "Down")
+```
+
+```{r}
+go_term_tree_plot(limma_pathways, deseq2_pathways1, TFL_pathways, "Down", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
+```
+
+# lung 
+```{r}
+TFL_pathways <- read_delim("~/output/lung_cancer/TFL_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+deseq2_pathways1 <-read_delim("~/output/lung_cancer/DESEq2_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+limma_pathways <- read_delim("~/output/lung_cancer/limma_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+up 
+
+```{r}
+go_term_heatmap(limma_pathways, deseq2_pathways1, TFL_pathways, "Up")
+```
+
+```{r}
+go_term_tree_plot(limma_pathways, deseq2_pathways1, TFL_pathways, "Up", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
+```
+
+down
+```{r}
+go_term_heatmap(limma_pathways, deseq2_pathways1, TFL_pathways, "Down")
+```
+
+```{r}
+go_term_tree_plot(limma_pathways, deseq2_pathways1, TFL_pathways, "Down", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
+```
+# pancreatic 
+
+```{r}
+TFL_pathways <- read_delim("~/output/pancreas_cancer/TFL_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+deseq2_pathways1 <-read_delim("~/output/pancreas_cancer/DESEq2_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+limma_pathways <- read_delim("~/output/pancreas_cancer/limma_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+up 
+
+```{r}
+go_term_heatmap(limma_pathways, deseq2_pathways1, TFL_pathways, "Up")
+```
+
+```{r}
+go_term_tree_plot(limma_pathways, deseq2_pathways1, TFL_pathways, "Up", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
+```
+
+down
+```{r}
+go_term_heatmap(limma_pathways, deseq2_pathways1, TFL_pathways, "Down")
+```
+
+```{r}
+go_term_tree_plot(limma_pathways, deseq2_pathways1, TFL_pathways, "Down", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
+```
+
+test the go term stuff
+
+go_gbm_up_sim
+
+```{r}
+go_sim_median<- function(go_sim_matrix, path_list,  title , method){
+  cos_GI1_cand_tfl <- go_sim_matrix[grep(paste(path_list,collapse="|"), colnames(go_sim_matrix)), grep(paste(path_list,collapse="|"), colnames(go_sim_matrix))]
+
+  cos_GI1_cand_tfl[cos_GI1_cand_tfl == 1] <- NA
+  
+    cos_median <- rowMedians(cos_GI1_cand_tfl, na.rm=TRUE)
+    meth<- rep(method, nrow(cos_GI1_cand_tfl))
+ 
+    #cos_median <- median(cos_GI1_cand_tfl, na.rm=TRUE)
+    #meth<- rep(method, length(cos_GI1_cand_tfl))
+  
+  
+  
+  cos_median<- data.frame(drug = rownames(cos_GI1_cand_tfl), cos_sim_med= cos_median, method= meth)
+  
+  cos_GI1_cand_tfl<- as.data.frame(cos_GI1_cand_tfl)
+  cos_GI1_cand_tfl$names <-  rownames(cos_GI1_cand_tfl)
+  cos_GI1_cand_tfl_long <- cos_GI1_cand_tfl %>% pivot_longer(!names, names_to = "other")
+  #p <- ggplot(cos_GI1_cand_tfl_long, aes(x=names, y=value)) + 
+  #geom_boxplot()+ geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5) +
+  #labs(title=title,x="pathways", y = "Tanimoto Coefficient")
+  #print(p)
+  
+  return(cos_median)
+}
+```
+
+
+```{r}
+go_gbm_med_tfl <- go_sim_median(go_gbm_up_sim, TFL_bp_up, "gbm_up_paths", "Transfer Learning")
+```
+
+```{r}
+go_gbm_med_limma <- go_sim_median(go_gbm_up_sim, limma_bp_up, "gbm_up_paths", "limma")
+```
+
+```{r}
+go_gbm_med_deseq2 <- go_sim_median(go_gbm_up_sim, deseq2_bp_up, "gbm_up_paths", "deseq2")
+```
+
+
+```{r}
+go_gbm_med <- rbind(go_gbm_med_tfl, go_gbm_med_limma, go_gbm_med_deseq2)
+```
+
+```{r}
+ggplot(go_gbm_med, aes(x=method, y=cos_sim_med, fill=method)) + 
+  geom_violin()+ geom_point() +labs(title="GOSim (Wang) of GBM Input Enriched Pathways",x="Method", y = "Median GOSim (Wang)", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
+```
+```{r}
+go_sim_median_others <- function(go_sim_matrix, drug_list_testing_method, drug_list_method1, drug_list_method2,  title , method){
+  drug_list_others<- c(drug_list_method1, drug_list_method2)
+  cos_GI1_cand_tfl <- go_sim_matrix[grep(paste(drug_list_testing_method,collapse="|"), colnames(go_sim_matrix)), grep(paste(drug_list_others,collapse="|"), colnames(go_sim_matrix))]
+
+  cos_GI1_cand_tfl[cos_GI1_cand_tfl == 1] <- NA
+  cos_median <- rowMedians(cos_GI1_cand_tfl, na.rm=TRUE)
+  meth<- rep(method, nrow(cos_GI1_cand_tfl))
+  
+  cos_median<- data.frame(drug = rownames(cos_GI1_cand_tfl), cos_sim_med= cos_median, method= meth)
+  
+  cos_GI1_cand_tfl<- as.data.frame(cos_GI1_cand_tfl)
+  cos_GI1_cand_tfl$names <-  rownames(cos_GI1_cand_tfl)
+  cos_GI1_cand_tfl_long <- cos_GI1_cand_tfl %>% pivot_longer(!names, names_to = "other")
+  #p <- ggplot(cos_GI1_cand_tfl_long, aes(x=names, y=value)) + 
+  #geom_boxplot()+ geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5) +
+  #labs(title=title,x="Drug Candidates", y = "Tanimoto Coefficient of drugs of other methods")
+  #print(p)
+  
+  return(cos_median)
+}
+```
+
+```{r}
+go_gbm_med_tfl_others <- go_sim_median_others(go_gbm_up_sim, TFL_bp_up, limma_bp_up, deseq2_bp_up, "gbm_up_paths", "Transfer Learning_other")
+```
+
+```{r}
+go_gbm_med_limma_others <- go_sim_median_others(go_gbm_up_sim, limma_bp_up, TFL_bp_up, deseq2_bp_up,"gbm_up_paths", "limma_other")
+```
+
+```{r}
+go_gbm_med_deseq2_others <- go_sim_median_others(go_gbm_up_sim, deseq2_bp_up,TFL_bp_up, limma_bp_up, "gbm_up_paths", "deseq2_other")
+```
+
+
+```{r}
+go_gbm_med_others <- rbind(go_gbm_med_tfl_others, go_gbm_med_limma_others, go_gbm_med_deseq2_others)
+```
+
+```{r}
+go_sim_all_gbm<- rbind(go_gbm_med_others, go_gbm_med)
+```
+
+```{r}
+ggplot(go_sim_all_gbm, aes(x=method, y=cos_sim_med, fill=method)) + 
+  geom_violin()+ geom_point() +labs(x="Method", y = "Median GOSim (Wang Method)", color= "Method") + scale_fill_viridis(discrete=TRUE)
+```
+
+
+```{r}
+compare_methods_go_sim<- function(limma_pathways, deseq2_pathways, TFL_pathways, list_type){
+  
+  limma_bp<- limma_pathways$term_id[ limma_pathways$source == "GO:BP" & limma_pathways$set == list_type]
+  deseq2_bp <- deseq2_pathways$term_id[ deseq2_pathways$source == "GO:BP" & deseq2_pathways$set == list_type]
+  #print(deseq2_bp)
+  TFL_bp <- TFL_pathways$term_id[ TFL_pathways$source == "GO:BP" & TFL_pathways$set == list_type]
+  
+  go1 <-  unique(c(TFL_bp, deseq2_bp, limma_bp ))
+  
+  
+  go_gbm_up_sim <- mgoSim(go1, go1, semData=hsGO, measure="Wang", combine=NULL)
+  
+  # tfl_drugs <- grepl(paste(TFL_bp,collapse="|"), colnames(go_gbm_up_sim)) 
+  # deseq2_drugs<- grepl(paste(deseq2_bp,collapse="|"), colnames(go_gbm_up_sim))
+  # limma_drugs <- grepl(paste(limma_bp,collapse="|"), colnames(go_gbm_up_sim)) 
+  # 
+  # if(length(deseq2_bp) ==0){ deseq2_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
+  # if(length(TFL_bp) ==0){ tfl_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
+  # if(length(limma_bp) ==0){ limma_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
+  
+
+  
+  #within
+  go_gbm_med_tfl <- go_sim_median(go_gbm_up_sim, TFL_bp, "gbm_up_paths", "Transfer Learning")
+  
+  go_gbm_med_limma <- go_sim_median(go_gbm_up_sim, limma_bp, "gbm_up_paths", "limma")
+  
+  go_gbm_med_deseq2 <- go_sim_median(go_gbm_up_sim, deseq2_bp, "gbm_up_paths", "deseq2")
+  #print(go_gbm_med_deseq2)
+  go_gbm_med <- rbind(go_gbm_med_tfl, go_gbm_med_limma, go_gbm_med_deseq2)
+  
+  #ggplot(go_gbm_med, aes(x=method, y=cos_sim_med, fill=method)) + 
+  #  geom_violin()+ geom_point() +labs(title="GOSim (Wang) of GBM Input Enriched Pathways",x="Method", y = "Median GOSim (Wang)", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
+  
+  #outside
+  go_gbm_med_tfl_others <- go_sim_median_others(go_gbm_up_sim, TFL_bp, limma_bp, deseq2_bp, "gbm_up_paths", "Transfer Learning_other")
+  
+  go_gbm_med_limma_others <- go_sim_median_others(go_gbm_up_sim, limma_bp, TFL_bp, deseq2_bp,"gbm_up_paths", "limma_other")
+  
+  go_gbm_med_deseq2_others <- go_sim_median_others(go_gbm_up_sim, deseq2_bp,TFL_bp, limma_bp, "gbm_up_paths", "deseq2_other")
+  
+  go_gbm_med_others <- rbind(go_gbm_med_tfl_others, go_gbm_med_limma_others, go_gbm_med_deseq2_others)
+  
+  go_sim_all_gbm<- rbind(go_gbm_med_others, go_gbm_med)
+  
+  if(length(deseq2_bp) == 0){go_sim_all_gbm<- go_sim_all_gbm[!go_sim_all_gbm$method %in% c("deseq2", "deseq2_other"),]}
+  if(length(limma_bp) == 0){go_sim_all_gbm<- go_sim_all_gbm[!go_sim_all_gbm$method %in% c("limma", "limma_other"),]}
+  if(length(TFL_bp) == 0){go_sim_all_gbm<- go_sim_all_gbm[!go_sim_all_gbm$method %in% c("Transfer Learning", "Transfer Learning_other"),]}
+  
+  
+  ggplot(go_sim_all_gbm, aes(x=method, y=cos_sim_med, fill=method)) + 
+    geom_violin()+ geom_point() +labs(x="Method", y = "Median GOSim (Wang Method)", color= "Method") + scale_fill_viridis(discrete=TRUE)
+
+}
+```
+# liver 
+```{r}
+TFL_pathways <- read_delim("~/output/liver_cancer/TFL_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+deseq2_pathways1 <-read_delim("~/output/liver_cancer/DESEq2_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+limma_pathways <- read_delim("~/output/liver_cancer/limma_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+```{r}
+compare_methods_go_sim(limma_pathways, deseq2_pathways1, TFL_pathways, "Down")
+```
+
+```{r}
+compare_methods_go_sim(limma_pathways, deseq2_pathways1, TFL_pathways, "Up")
+```
+
+# pancreatic 
+
+```{r}
+TFL_pathways <- read_delim("~/output/pancreas_cancer/TFL_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+deseq2_pathways1 <-read_delim("~/output/pancreas_cancer/DESEq2_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+limma_pathways <- read_delim("~/output/pancreas_cancer/limma_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+```{r}
+compare_methods_go_sim(limma_pathways, deseq2_pathways1, TFL_pathways, "Down")
+```
+
+```{r}
+compare_methods_go_sim(limma_pathways= limma_pathways,deseq2_pathways1, TFL_pathways,  list_type = "Up")
+```
+
+GBM
+```{r}
+TFL_pathways <- read_delim("~/output/gbm_plots/TFL_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+deseq2_pathways <- read_delim("~/output/gbm_plots/DESEq2_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+limma_pathways <- read_delim("~/output/gbm_plots/limma_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+```{r}
+compare_methods_go_sim(limma_pathways, deseq2_pathways, TFL_pathways, "Down")
+```
+
+```{r}
+compare_methods_go_sim(limma_pathways= limma_pathways,deseq2_pathways, TFL_pathways,  list_type = "Up")
+```
+#lungs
+```{r}
+TFL_pathways <- read_delim("~/output/lung_cancer/TFL_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+deseq2_pathways1 <-read_delim("~/output/lung_cancer/DESEq2_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+limma_pathways <- read_delim("~/output/lung_cancer/limma_pathways.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+```{r}
+compare_methods_go_sim(limma_pathways, deseq2_pathways1, TFL_pathways, "Down")
+```
+
+```{r}
+compare_methods_go_sim_quick_fix <- function(limma_pathways, deseq2_pathways, TFL_pathways, list_type){
+  
+  limma_bp<- limma_pathways$term_id[ limma_pathways$source == "GO:BP" & limma_pathways$set == list_type]
+  deseq2_bp <- deseq2_pathways$term_id[ deseq2_pathways$source == "GO:BP" & deseq2_pathways$set == list_type]
+  #print(deseq2_bp)
+  TFL_bp <- TFL_pathways$term_id[ TFL_pathways$source == "GO:BP" & TFL_pathways$set == list_type]
+  
+  go1 <-  unique(c(TFL_bp, deseq2_bp, limma_bp ))
+  
+  
+  go_gbm_up_sim <- mgoSim(go1, go1, semData=hsGO, measure="Wang", combine=NULL)
+  
+  # tfl_drugs <- grepl(paste(TFL_bp,collapse="|"), colnames(go_gbm_up_sim)) 
+  # deseq2_drugs<- grepl(paste(deseq2_bp,collapse="|"), colnames(go_gbm_up_sim))
+  # limma_drugs <- grepl(paste(limma_bp,collapse="|"), colnames(go_gbm_up_sim)) 
+  # 
+  # if(length(deseq2_bp) ==0){ deseq2_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
+  # if(length(TFL_bp) ==0){ tfl_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
+  # if(length(limma_bp) ==0){ limma_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
+  
+
+  
+  #within
+  go_gbm_med_tfl <- go_sim_median(go_gbm_up_sim, TFL_bp, "gbm_up_paths", "Transfer Learning")
+  
+  #go_gbm_med_limma <- go_sim_median(go_gbm_up_sim, limma_bp, "gbm_up_paths", "limma")
+  
+  go_gbm_med_deseq2 <- go_sim_median(go_gbm_up_sim, deseq2_bp, "gbm_up_paths", "deseq2")
+  #print(go_gbm_med_deseq2)
+  go_gbm_med <- rbind(go_gbm_med_tfl, go_gbm_med_deseq2)
+  
+  #ggplot(go_gbm_med, aes(x=method, y=cos_sim_med, fill=method)) + 
+  #  geom_violin()+ geom_point() +labs(title="GOSim (Wang) of GBM Input Enriched Pathways",x="Method", y = "Median GOSim (Wang)", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
+  
+  
+  print(TFL_bp)
+  print(limma_bp)
+  print(deseq2_bp)
+  #outside
+  go_gbm_med_tfl_others <- go_sim_median_others(go_gbm_up_sim, TFL_bp, limma_bp, deseq2_bp, "gbm_up_paths", "Transfer Learning_other")
+  
+  #go_gbm_med_limma_others <- go_sim_median_others(go_gbm_up_sim, limma_bp, TFL_bp, deseq2_bp,"gbm_up_paths", "limma_other")
+  
+  go_gbm_med_deseq2_others <- go_sim_median_others(go_gbm_up_sim, deseq2_bp,TFL_bp, limma_bp, "gbm_up_paths", "deseq2_other")
+  
+  go_gbm_med_others <- rbind(go_gbm_med_tfl_others,  go_gbm_med_deseq2_others)
+  
+  go_sim_all_gbm<- rbind(go_gbm_med_others, go_gbm_med)
+  
+  if(length(deseq2_bp) == 0){go_sim_all_gbm<- go_sim_all_gbm[!go_sim_all_gbm$method %in% c("deseq2", "deseq2_other"),]}
+ # if(length(limma_bp) == 0){go_sim_all_gbm<- go_sim_all_gbm[!go_sim_all_gbm$method %in% c("limma", "limma_other"),]}
+  if(length(TFL_bp) == 0){go_sim_all_gbm<- go_sim_all_gbm[!go_sim_all_gbm$method %in% c("Transfer Learning", "Transfer Learning_other"),]}
+  
+  
+  ggplot(go_sim_all_gbm, aes(x=method, y=cos_sim_med, fill=method)) + 
+    geom_violin()+ geom_point() +labs(x="Method", y = "Median GOSim (Wang Method)", color= "Method") + scale_fill_viridis(discrete=TRUE)
+
+}
+```
+
+```{r}
+compare_methods_go_sim_quick_fix(limma_pathways= limma_pathways,deseq2_pathways1, TFL_pathways,  list_type = "Up")
+```
+
+# create Alluvial plot for each method/cancer combination
+```{r}
+lincs_commpound_info <- read.delim("~/data/LINCS_210914_LEVEL3/compoundinfo_beta.txt")
+```
+
+```{r}
+library(readr)
+test <- read_csv("~/output/liver_cancer/deseq2_res/220602_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
+```
+
+```{r}
+ library(ggalluvial)
+```
+
+
+```{r}
+test_fda <- test[test$fda_approved,]
+lincs_commpound_info[lincs_commpound_info$cmap_name %in% test_fda$pert,]
+```
+
+```{r}
+summ_df <- as.data.frame(matrix(nrow=1, ncol=3))
+colnames(summ_df)<- c("Var1", "Var2", "Var3")
+for (i in 1:nrow(test_fda)){
+  #get the target from the data results data frame
+  targets1 <- as.vector(unlist(strsplit(test_fda$t_gn_sym[i], "; ")))
+  
+  targets2 <- lincs_commpound_info$target[lincs_commpound_info$cmap_name == test_fda$pert[i]]
+  targets2<- ifelse(targets2 == "", NA, targets2)
+  targets<- unique(c(targets1, targets2))
+  
+  moa <- unique(lincs_commpound_info$moa[lincs_commpound_info$cmap_name == test_fda$pert[i]])
+  moa<- ifelse(moa == "", NA, moa)
+  
+  df<- expand.grid(test_fda$pert[i],targets, moa )
+  
+  summ_df<- rbind(summ_df, df)
+  
+}
+summ_df<- summ_df[-1,]
+colnames(summ_df)<- c( "cmap_name", "target", "moa")
+```
+
+```{r}
+summ_df<- summ_df[!duplicated(summ_df), ]
+```
+
+```{r}
+TEST_LODES<- to_lodes_form(as.data.frame(summ_df),
+                           axes = 1:3,
+                           id = "INDEX")
+```
+
+```{r}
+TEST_LODES$stratum = str_wrap(TEST_LODES$stratum, width = 5)
+TEST_LODES$x <- factor(TEST_LODES$x, levels= c("moa", "cmap_name", "target"))
+```
+
+```{r}
+TEST_LODES$drug <- rep(NA, nrow(summ_df))
+drugs<- unique(summ_df$cmap_name)
+for (i in 1:length(drugs)){
+  ind <- TEST_LODES$INDEX[TEST_LODES$stratum == drugs[i]]
+  TEST_LODES$drug<- ifelse(TEST_LODES$INDEX %in% ind, drugs[i], TEST_LODES$drug)
+}
+```
+
+```{r}
+#not need for this analysis but many for future.
+TEST_LODES$drug<- factor(TEST_LODES$drug, levels= test_fda$pert)
+```
+
+```{r}
+#moa 
+moa_df <- TEST_LODES[TEST_LODES$x == "moa", 2:4]
+moa_df<- moa_df[!duplicated(moa_df), ]
+counts<- as.data.frame(table(moa_df$stratum))
+
+#counts<- as.data.frame(table(TEST_LODES$stratum[TEST_LODES$x == "moa"]))
+moa_order <- counts$Var1[ order(-counts$Freq)]
+counts_moa<- counts
+#targets
+target_df <- TEST_LODES[TEST_LODES$x == "target", 2:4]
+target_df<- target_df[!duplicated(target_df), ]
+counts<- as.data.frame(table(target_df$stratum))
+#counts
+target_order <- counts$Var1[ order(-counts$Freq)]
+
+#factor the stratum column
+TEST_LODES$stratum<- factor(TEST_LODES$stratum, levels= unique(c(test_fda$pert, as.character(moa_order), as.character(target_order))))
+```
+
+```{r}
+TEST_LODES_com <- TEST_LODES[ complete.cases(TEST_LODES),]
+#TEST_LODES_com$index2 <- as.numeric(TEST_LODES_com$drug)
+#TEST_LODES_com_v2 <- TEST_LODES_com[!TEST_LODES_com$x == "cmap_name",]
+
+ggplot(TEST_LODES_com,
+       aes(x = x, stratum = stratum, alluvium = INDEX, label= stratum))+ geom_flow( aes(fill= drug), stat = "alluvium") +
+  geom_stratum(aes(fill= drug)) +geom_label(stat = "stratum", fill="white") + theme_bw() + theme(axis.title.x = element_blank(), axis.title.y = element_blank(), axis.ticks = element_blank(), legend.position="none") + scale_y_continuous(breaks=NULL) + scale_x_discrete(labels=c("moa" = "Mechanism of Action", "cmap_name" = "Drug", "target" = "Target")) +
+  scale_fill_manual(
+    values=viridis(n=length(drugs)),
+    breaks=drugs,
+    labels=drugs,
+    na.value = NA
+  )
+```
+
+```{r}
+counts_moa_v2<- counts_moa[counts_moa$Freq >0,]
+ggplot(counts_moa_v2, aes(x= Freq, y= Var1)) + geom_bar(stat= "identity", fill="deepskyblue4", color= "black") + ylab("Mechanism of Action") + xlab("Number of Drugs") 
+```
+
+
+```{r}
+ggplot(counts, aes(x= Freq, y= Var1)) + geom_bar(stat= "identity", fill="deepskyblue4", color= "black") + ylab("Targets") + xlab("Number of Drugs") 
+```
+
+
+```{r}
+summ_df_moa<- summ_df[,c(1,3)]
+summ_df_moa<- summ_df_moa[!duplicated(summ_df_moa), ]
+TEST_LODES_moa<- to_lodes_form(as.data.frame(summ_df_moa),
+                           axes = 1:2,
+                           id = "INDEX")
+```
+
+```{r}
+TEST_LODES_moa$stratum = str_wrap(TEST_LODES_moa$stratum, width = 5)
+```
+
+```{r}
+TEST_LODES_moa$drug <- rep(NA, nrow(summ_df_moa))
+drugs<- unique(summ_df_moa$cmap_name)
+for (i in 1:length(drugs)){
+  ind <- TEST_LODES_moa$INDEX[TEST_LODES_moa$stratum == drugs[i]]
+  TEST_LODES_moa$drug<- ifelse(TEST_LODES_moa$INDEX %in% ind, drugs[i], TEST_LODES_moa$drug)
+}
+```
+
+```{r}
+#not need for this analysis but many for future.
+TEST_LODES_moa$drug<- factor(TEST_LODES_moa$drug, levels= test_fda$pert)
+```
+
+```{r}
+#moa 
+moa_df <- TEST_LODES_moa[TEST_LODES_moa$x == "moa", 2:4]
+moa_df<- moa_df[!duplicated(moa_df), ]
+counts<- as.data.frame(table(moa_df$stratum))
+
+#counts<- as.data.frame(table(TEST_LODES_moa$stratum[TEST_LODES_moa$x == "moa"]))
+moa_order <- counts$Var1[ order(-counts$Freq)]
+counts_moa<- counts
+
+#factor the stratum column
+TEST_LODES_moa$stratum<- factor(TEST_LODES_moa$stratum, levels= unique(c(test_fda$pert, as.character(moa_order))))
+```
+
+```{r}
+TEST_LODES_moa_com <- TEST_LODES_moa[ complete.cases(TEST_LODES_moa),]
+#TEST_LODES_com$index2 <- as.numeric(TEST_LODES_com$drug)
+#TEST_LODES_com_v2 <- TEST_LODES_com[!TEST_LODES_com$x == "cmap_name",]
+
+ggplot(TEST_LODES_moa_com,
+       aes(x = x, stratum = stratum, alluvium = INDEX, label= stratum))+ geom_flow( aes(fill= drug), stat = "alluvium", color= "black") +
+  geom_stratum(aes(fill= drug)) +geom_label(stat = "stratum", fill="white") + theme_bw() + theme(axis.title.x = element_blank(), axis.title.y = element_blank(), axis.ticks = element_blank(), legend.position="none") + scale_y_continuous(breaks=NULL) + scale_x_discrete(labels=c("cmap_name" = "Drug", "moa" = "Mechanism of Action")) +
+  scale_fill_manual(
+    values=viridis(n=length(drugs)),
+    breaks=drugs,
+    labels=drugs,
+    na.value = NA
+  )
+```
+
+```{r}
+summ_df_tar<- summ_df[,c(1,2)]
+summ_df_tar<- summ_df_tar[!duplicated(summ_df_tar), ]
+TEST_LODES_tar<- to_lodes_form(as.data.frame(summ_df_tar),
+                           axes = 1:2,
+                           id = "INDEX")
+```
+
+```{r}
+TEST_LODES_tar$stratum = str_wrap(TEST_LODES_tar$stratum, width = 5)
+```
+
+```{r}
+TEST_LODES_tar$drug <- rep(NA, nrow(summ_df_tar))
+drugs<- unique(summ_df_tar$cmap_name)
+for (i in 1:length(drugs)){
+  ind <- TEST_LODES_tar$INDEX[TEST_LODES_tar$stratum == drugs[i]]
+  TEST_LODES_tar$drug<- ifelse(TEST_LODES_tar$INDEX %in% ind, drugs[i], TEST_LODES_tar$drug)
+}
+```
+
+```{r}
+#not need for this analysis but many for future.
+TEST_LODES_tar$drug<- factor(TEST_LODES_tar$drug, levels= test_fda$pert)
+```
+
+```{r}
+#targets
+target_df <- TEST_LODES[TEST_LODES$x == "target", 2:4]
+target_df<- target_df[!duplicated(target_df), ]
+counts<- as.data.frame(table(target_df$stratum))
+#counts
+target_order <- counts$Var1[ order(-counts$Freq)]
+
+
+#factor the stratum column
+TEST_LODES_tar$stratum<- factor(TEST_LODES_tar$stratum, levels= unique(c(test_fda$pert, as.character(target_order))))
+```
+
+```{r}
+TEST_LODES_tar_com <- TEST_LODES_tar[ complete.cases(TEST_LODES_tar),]
+#TEST_LODES_com$index2 <- as.numeric(TEST_LODES_com$drug)
+#TEST_LODES_com_v2 <- TEST_LODES_com[!TEST_LODES_com$x == "cmap_name",]
+
+ggplot(TEST_LODES_tar_com,
+       aes(x = x, stratum = stratum, alluvium = INDEX, label= stratum))+ geom_flow( aes(fill= drug), stat = "alluvium", color= "black") +
+  geom_stratum(aes(fill= drug)) +geom_label(stat = "stratum", fill="white") + theme_bw() + theme(axis.title.x = element_blank(), axis.title.y = element_blank(), axis.ticks = element_blank(), legend.position="none") + scale_y_continuous(breaks=NULL) + scale_x_discrete(labels=c("cmap_name" = "Drug", "moa" = "Mechanism of Action")) +
+  scale_fill_manual(
+    values=viridis(n=length(drugs)),
+    breaks=drugs,
+    labels=drugs,
+    na.value = NA
+  )
+```
+
+
+make it into a function
+
+
+
+```{r}
+ library(ggalluvial)
+```
+
+
+```{r}
+drug_moa_target_plotting<- function(fda_approved_res, lincs_commpound_info=lincs_commpound_info, method, cancer, file_path_header ){
+  
+  file_starter<- paste0(file_path_header, "_", cancer, "_", method, "_", sep= "")
+  
+  test_fda <- fda_approved_res
+  lincs_commpound_info[lincs_commpound_info$cmap_name %in% test_fda$pert,]
+
+  summ_df <- as.data.frame(matrix(nrow=1, ncol=3))
+  colnames(summ_df)<- c("Var1", "Var2", "Var3")
+  for (i in 1:nrow(test_fda)){
+    #get the target from the data results data frame
+    targets1 <- as.vector(unlist(strsplit(test_fda$t_gn_sym[i], "; ")))
+    
+    targets2 <- lincs_commpound_info$target[lincs_commpound_info$cmap_name == test_fda$pert[i]]
+    targets2<- ifelse(targets2 == "", NA, targets2)
+    targets<- unique(c(targets1, targets2))
+    
+    moa <- unique(lincs_commpound_info$moa[lincs_commpound_info$cmap_name == test_fda$pert[i]])
+    moa<- ifelse(moa == "", NA, moa)
+    
+    df<- expand.grid(test_fda$pert[i],targets, moa )
+    
+    summ_df<- rbind(summ_df, df)
+    
+  }
+  summ_df<- summ_df[-1,]
+  colnames(summ_df)<- c( "cmap_name", "target", "moa")
+
+  summ_df<- summ_df[!duplicated(summ_df), ]
+
+  TEST_LODES<- to_lodes_form(as.data.frame(summ_df),
+                             axes = 1:3,
+                             id = "INDEX")
+
+  TEST_LODES$stratum = str_wrap(TEST_LODES$stratum, width = 20)
+  TEST_LODES$x <- factor(TEST_LODES$x, levels= c("moa", "cmap_name", "target"))
+
+  TEST_LODES$drug <- rep(NA, nrow(summ_df))
+  drugs<- unique(summ_df$cmap_name)
+  for (i in 1:length(drugs)){
+    ind <- TEST_LODES$INDEX[TEST_LODES$stratum == drugs[i]]
+    TEST_LODES$drug<- ifelse(TEST_LODES$INDEX %in% ind, drugs[i], TEST_LODES$drug)
+  }
+
+  #not need for this analysis but many for future.
+  TEST_LODES$drug<- factor(TEST_LODES$drug, levels= test_fda$pert)
+
+  #moa 
+  moa_df <- TEST_LODES[TEST_LODES$x == "moa", 2:4]
+  moa_df<- moa_df[!duplicated(moa_df), ]
+  counts<- as.data.frame(table(moa_df$stratum))
+  
+  #counts<- as.data.frame(table(TEST_LODES$stratum[TEST_LODES$x == "moa"]))
+  moa_order <- counts$Var1[ order(-counts$Freq)]
+  counts_moa<- counts
+  #targets
+  target_df <- TEST_LODES[TEST_LODES$x == "target", 2:4]
+  target_df<- target_df[!duplicated(target_df), ]
+  counts<- as.data.frame(table(target_df$stratum))
+  #counts
+  target_order <- counts$Var1[ order(-counts$Freq)]
+  
+  #factor the stratum column
+  TEST_LODES$stratum<- factor(TEST_LODES$stratum, levels= unique(c(test_fda$pert, as.character(moa_order), as.character(target_order))))
+
+
+  counts_moa_v2<- counts_moa[counts_moa$Freq >0,]
+  counts_moa_v2$Var1<- factor(counts_moa_v2$Var1, levels= counts_moa_v2$Var1[order(-counts_moa_v2$Freq)])
+  if (nrow(counts_moa_v2) < 20){
+    ggplot(counts_moa_v2, aes(x= Freq, y= Var1)) + geom_bar(stat= "identity", fill="deepskyblue4", color= "black") + ylab("Mechanism of Action") + xlab("Number of Drugs") 
+  
+    file_name<- paste0(file_starter, "_", "barplot_moa.png")
+    ggsave(file_name, width = 8, height=10, units= "in")
+  }else{
+    counts_moa_v2<- counts_moa_v2[order(-counts_moa_v2$Freq),]
+    ggplot(counts_moa_v2[1:20,], aes(x= Freq, y= Var1)) + geom_bar(stat= "identity", fill="deepskyblue4", color= "black") + ylab("Mechanism of Action") + xlab("Number of Drugs") 
+  
+    file_name<- paste0(file_starter, "_", "barplot_moa.png")
+    ggsave(file_name, width = 8, height=10, units= "in")
+  }
+  
+  
+  counts$Var1<- factor(counts$Var1, levels= counts$Var1[order(-counts$Freq)])
+  if( nrow(counts)< 20 ){
+    #counts$Var1<- factor(counts$Var1, levels= counts$Var1[order(-counts$Freq),])
+    ggplot(counts, aes(x= Freq, y= Var1)) + geom_bar(stat= "identity", fill="deepskyblue4", color= "black") + ylab("Targets") + xlab("Number of Drugs") 
+    file_name<- paste0(file_starter, "_", "barplot_target.png")
+    ggsave(file_name, width = 8, height=10, units= "in")
+  }else{
+  
+  counts<- counts[order(-counts$Freq),]
+  
+  ggplot(counts[1:20,], aes(x= Freq, y= Var1)) + geom_bar(stat= "identity", fill="deepskyblue4", color= "black") + ylab("Targets") + xlab("Number of Drugs") 
+  file_name<- paste0(file_starter, "_", "barplot_target.png")
+  ggsave(file_name, width = 8, height=10, units= "in")
+  
+  
+
+  }
+  #add ploting function
+  target_count <- counts
+  
+  
+  #reduce to the top 20 drugs
+  summ_df<- summ_df[summ_df$cmap_name %in% test_fda$pert[1:20],]
+  
+  summ_df_moa<- summ_df[,c(1,3)]
+  summ_df_moa<- summ_df_moa[!duplicated(summ_df_moa), ]
+  TEST_LODES_moa<- to_lodes_form(as.data.frame(summ_df_moa),
+                             axes = 1:2,
+                             id = "INDEX")
+
+  TEST_LODES_moa$stratum = str_wrap(TEST_LODES_moa$stratum, width = 20)
+
+  TEST_LODES_moa$drug <- rep(NA, nrow(summ_df_moa))
+  drugs<- unique(summ_df_moa$cmap_name)
+  for (i in 1:length(drugs)){
+    ind <- TEST_LODES_moa$INDEX[TEST_LODES_moa$stratum == drugs[i]]
+    TEST_LODES_moa$drug<- ifelse(TEST_LODES_moa$INDEX %in% ind, drugs[i], TEST_LODES_moa$drug)
+  }
+
+  #not need for this analysis but many for future.
+  TEST_LODES_moa$drug<- factor(TEST_LODES_moa$drug, levels= test_fda$pert)
+
+  #moa 
+  moa_df <- TEST_LODES_moa[TEST_LODES_moa$x == "moa", 2:4]
+  moa_df<- moa_df[!duplicated(moa_df), ]
+  counts<- as.data.frame(table(moa_df$stratum))
+  
+  #counts<- as.data.frame(table(TEST_LODES_moa$stratum[TEST_LODES_moa$x == "moa"]))
+  moa_order <- counts$Var1[ order(-counts$Freq)]
+  counts_moa<- counts
+  
+  #factor the stratum column
+  TEST_LODES_moa$stratum<- factor(TEST_LODES_moa$stratum, levels= unique(c(test_fda$pert, as.character(moa_order))))
+
+  TEST_LODES_moa_com <- TEST_LODES_moa[ complete.cases(TEST_LODES_moa),]
+  #TEST_LODES_com$index2 <- as.numeric(TEST_LODES_com$drug)
+  #TEST_LODES_com_v2 <- TEST_LODES_com[!TEST_LODES_com$x == "cmap_name",]
+  
+  ggplot(TEST_LODES_moa_com,
+         aes(x = x, stratum = stratum, alluvium = INDEX, label= stratum))+ geom_flow( aes(fill= drug), stat = "alluvium", color= "black") +
+    geom_stratum(aes(fill= drug)) +geom_label(stat = "stratum", fill="white",   size= 5) + theme_bw() + theme(axis.title.x = element_blank(), axis.title.y = element_blank(), axis.ticks = element_blank(), legend.position="none", axis.text=element_text(size=14)) + scale_y_continuous(breaks=NULL) + scale_x_discrete(labels=c("cmap_name" = "Drug", "moa" = "Mechanism of Action")) +
+    scale_fill_manual(
+      values=viridis(n=length(drugs)),
+      breaks=drugs,
+      labels=drugs,
+      na.value = NA
+    )
+  file_name<- paste0(file_starter, "_", "alluvial_moa.png")
+  ggsave(file_name, width =10, height=20, units= "in")
+
+#add saving plot function
+
+  summ_df_tar<- summ_df[,c(1,2)]
+  #keep only the top targets
+  summ_df_tar<- summ_df_tar[summ_df_tar[,2] %in% target_count$Var1[1:20], ]
+  
+  summ_df_tar<- summ_df_tar[!duplicated(summ_df_tar), ]
+  TEST_LODES_tar<- to_lodes_form(as.data.frame(summ_df_tar),
+                             axes = 1:2,
+                             id = "INDEX")
+
+  TEST_LODES_tar$stratum = str_wrap(TEST_LODES_tar$stratum, width = 20)
+
+  TEST_LODES_tar$drug <- rep(NA, nrow(summ_df_tar))
+  drugs<- unique(summ_df_tar$cmap_name)
+  for (i in 1:length(drugs)){
+    ind <- TEST_LODES_tar$INDEX[TEST_LODES_tar$stratum == drugs[i]]
+    TEST_LODES_tar$drug<- ifelse(TEST_LODES_tar$INDEX %in% ind, drugs[i], TEST_LODES_tar$drug)
+  }
+  
+  #not need for this analysis but many for future.
+  TEST_LODES_tar$drug<- factor(TEST_LODES_tar$drug, levels= test_fda$pert)
+  
+  #targets
+  target_df <- TEST_LODES[TEST_LODES$x == "target", 2:4]
+  target_df<- target_df[!duplicated(target_df), ]
+  counts<- as.data.frame(table(target_df$stratum))
+  #counts
+  target_order <- counts$Var1[ order(-counts$Freq)]
+  
+  #factor the stratum column
+  TEST_LODES_tar$stratum<- factor(TEST_LODES_tar$stratum, levels= unique(c(test_fda$pert, as.character(target_order))))
+  
+  TEST_LODES_tar_com <- TEST_LODES_tar[ complete.cases(TEST_LODES_tar),]
+  #TEST_LODES_com$index2 <- as.numeric(TEST_LODES_com$drug)
+  #TEST_LODES_com_v2 <- TEST_LODES_com[!TEST_LODES_com$x == "cmap_name",]
+  
+  ggplot(TEST_LODES_tar_com,
+         aes(x = x, stratum = stratum, alluvium = INDEX, label= stratum))+ geom_flow( aes(fill= drug), stat = "alluvium", color= "black") +
+    geom_stratum(aes(fill= drug)) +geom_label(stat = "stratum", fill="white",  size= 8) + theme_bw() + theme(axis.title.x = element_blank(), axis.title.y = element_blank(), axis.ticks = element_blank(), legend.position="none", axis.text=element_text(size=14)) + scale_y_continuous(breaks=NULL) + scale_x_discrete(labels=c("cmap_name" = "Drug", "target" = "Targets")) +
+    scale_fill_manual(
+      values=viridis(n=length(drugs)),
+      breaks=drugs,
+      labels=drugs,
+      na.value = NA
+    )
+  file_name<- paste0(file_starter, "_", "alluvial_target.png")
+  ggsave(file_name, width = 10, height=20, units= "in")
+}
+```
+
+
+```{r}
+#debugg functions
+#drug_moa_target_plotting(test_fda,lincs_commpound_info=lincs_commpound_info, "deseq2", "liver", "~/output/candidate_moa_target_plots/220630" )
+```
+
+```{r eval=FALSE}
+lincs_tfl_gbm_res_GI1_fda_approved <- read_csv( "~/output/TF_L_GBM/220207_lincs_transfer_gbm_res_GI1_tau_fda_approved.csv")
+lincs_limma_gbm_res_GI1_fda_approved <- read_csv("~/output/limma_gbm/220421_SR_LINCS_GBM_LIMMA_RES_tau_fda_approved.csv")
+lincs_deseq2_gbm_res_GI1_fda_approved <- read_csv("~/output/deseq2_gbm/220427_lincs_deseq_gbm_res_GI1_tau_fda_approved.csv")
+```
+
+```{r}
+drug_moa_target_plotting(lincs_tfl_gbm_res_GI1_fda_approved ,lincs_commpound_info=lincs_commpound_info, "TLF", "GBM", "~/output/candidate_moa_target_plots/220630" )
+
+drug_moa_target_plotting(lincs_limma_gbm_res_GI1_fda_approved ,lincs_commpound_info=lincs_commpound_info, "limma", "GBM", "~/output/candidate_moa_target_plots/220630" )
+
+
+drug_moa_target_plotting(lincs_deseq2_gbm_res_GI1_fda_approved ,lincs_commpound_info=lincs_commpound_info, "deseq2", "GBM", "~/output/candidate_moa_target_plots/220630" )
+
+```
+
+```{r}
+#pancreatic adenicarcinoma
+pancreas_deseq_tau <- read_csv("~/output/pancreas_cancer/deseq2_res/220602_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
+pancreas_deseq_tau_fda_approved <- pancreas_deseq_tau[pancreas_deseq_tau$fda_approved == TRUE, ]
+
+pancreas_limma_tau <- read_csv("~/output/pancreas_cancer/limma_res/220602_SR_LINCS_PAAD_limma_RES_tau.csv")
+pancreas_limma_tau_fda_approved <- pancreas_limma_tau[pancreas_limma_tau$fda_approved == TRUE,]
+
+pancreas_limma_tau <- read_csv("~/output/pancreas_cancer/limma_res/220602_SR_LINCS_PAAD_limma_RES_tau.csv")
+pancreas_limma_tau_fda_approved <- pancreas_limma_tau[pancreas_limma_tau$fda_approved == TRUE,]
+
+pancreas_tfl_tau <- read_csv("~/output/pancreas_cancer/TFL_res/220602_SR_LINCS_PAAD_TFL_RES_tau.csv")
+pancreas_tfl_tau_fda_approved <- pancreas_tfl_tau[pancreas_tfl_tau$fda_approved == TRUE,]
+```
+
+```{r}
+drug_moa_target_plotting(pancreas_tfl_tau_fda_approved  ,lincs_commpound_info=lincs_commpound_info, "TLF", "pan", "~/output/candidate_moa_target_plots/220630" )
+
+drug_moa_target_plotting(pancreas_limma_tau_fda_approved ,lincs_commpound_info=lincs_commpound_info, "limma", "pan", "~/output/candidate_moa_target_plots/220630" )
+
+
+drug_moa_target_plotting(pancreas_deseq_tau_fda_approved ,lincs_commpound_info=lincs_commpound_info, "deseq2", "pan", "~/output/candidate_moa_target_plots/220630" )
+
+```
+
+```{r}
+#lung adenocaracionoma
+lung_deseq_tau <- read_csv("~/output/lung_cancer/deseq2_res/220602_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
+lung_deseq_tau_fda_approved <- lung_deseq_tau[lung_deseq_tau$fda_approved == TRUE, ]
+
+lung_limma_tau <- read_csv("~/output/lung_cancer/limma_res/220602_SR_LINCS_LUAD_limma_RES_tau.csv")
+lung_limma_tau_fda_approved <- lung_limma_tau[lung_limma_tau$fda_approved == TRUE,]
+
+lung_limma_tau <- read_csv("~/output/lung_cancer/limma_res/220602_SR_LINCS_LUAD_limma_RES_tau.csv")
+lung_limma_tau_fda_approved <- lung_limma_tau[lung_limma_tau$fda_approved == TRUE,]
+
+lung_tfl_tau <- read_csv("~/output/lung_cancer/TFL_res/220602_SR_LINCS_LUAD_TFL_RES_tau.csv")
+lung_tfl_tau_fda_approved <- lung_tfl_tau[lung_tfl_tau$fda_approved == TRUE,]
+```
+
+```{r}
+drug_moa_target_plotting(lung_tfl_tau_fda_approved  ,lincs_commpound_info=lincs_commpound_info, "TLF", "lung", "~/output/candidate_moa_target_plots/220630" )
+
+drug_moa_target_plotting(lung_limma_tau_fda_approved ,lincs_commpound_info=lincs_commpound_info, "limma", "lung", "~/output/candidate_moa_target_plots/220630" )
+
+
+drug_moa_target_plotting(lung_deseq_tau_fda_approved ,lincs_commpound_info=lincs_commpound_info, "deseq2", "lung", "~/output/candidate_moa_target_plots/220630" )
+
+```
+
+
+```{r}
+#Liver hepatocellular carcinoma
+liver_deseq_tau <- read_csv("~/output/liver_cancer/deseq2_res/220602_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
+liver_deseq_tau_fda_approved <- liver_deseq_tau[liver_deseq_tau$fda_approved == TRUE, ]
+
+liver_limma_tau <- read_csv("~/output/liver_cancer/limma_res/220602_SR_LINCS_LIHC_limma_RES_tau.csv")
+liver_limma_tau_fda_approved <- liver_limma_tau[liver_limma_tau$fda_approved == TRUE,]
+
+liver_limma_tau <- read_csv("~/output/liver_cancer/limma_res/220602_SR_LINCS_LIHC_limma_RES_tau.csv")
+liver_limma_tau_fda_approved <- liver_limma_tau[liver_limma_tau$fda_approved == TRUE,]
+
+liver_tfl_tau <- read_csv("~/output/liver_cancer/TFL_res/220602_SR_LINCS_LIHC_TFL_RES_tau.csv")
+liver_tfl_tau_fda_approved <- liver_tfl_tau[liver_tfl_tau$fda_approved == TRUE,]
+```
+
+```{r}
+drug_moa_target_plotting(liver_tfl_tau_fda_approved  ,lincs_commpound_info=lincs_commpound_info, "TLF", "liver", "~/output/candidate_moa_target_plots/220630" )
+
+drug_moa_target_plotting(liver_limma_tau_fda_approved ,lincs_commpound_info=lincs_commpound_info, "limma", "liver", "~/output/candidate_moa_target_plots/220630" )
+
+
+drug_moa_target_plotting(liver_deseq_tau_fda_approved ,lincs_commpound_info=lincs_commpound_info, "deseq2", "liver", "~/output/candidate_moa_target_plots/220630" )
+
+```

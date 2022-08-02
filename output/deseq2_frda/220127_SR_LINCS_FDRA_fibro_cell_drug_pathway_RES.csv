@@ -1,0 +1,208 @@
+"","ID","Description","GeneRatio","BgRatio","pvalue","p.adjust","qvalue","itemID","Count"
+"1","hsa05206","MicroRNAs in cancer","13/22","1500/20464",4.45850041022834e-10,9.22909584917265e-08,3.23827924532374e-08,"5-iodotubercidin/withaferin-a/sorafenib/mitoxantrone/progesterone/tenovins/alvocidib/axitinib/jnj-7706621/nch-51/pd-184352/canertinib/zstk-474",13
+"2","hsa05220","Chronic myeloid leukemia","10/22","822/20464",4.31816219877458e-09,4.46929787573169e-07,1.56817469323919e-07,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/alvocidib/jnj-7706621/nch-51/pd-184352/canertinib/zstk-474",10
+"3","hsa05160","Hepatitis C","11/22","1262/20464",1.76315120864985e-08,1.05176621924925e-06,3.69040778683948e-07,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/antimycin-a/alvocidib/jnj-7706621/oleoylethanolamide/pd-184352/canertinib/zstk-474",11
+"4","hsa05218","Melanoma","9/22","700/20464",2.0323984913029e-08,1.05176621924925e-06,3.69040778683948e-07,"5-iodotubercidin/sorafenib/progesterone/alvocidib/axitinib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"5","hsa04068","FoxO signaling pathway","11/22","1326/20464",2.94482739115928e-08,1.21915853993994e-06,4.27774926294716e-07,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/tenovins/alvocidib/axitinib/jnj-7706621/pd-184352/canertinib/zstk-474",11
+"6","hsa05235","PD-L1 expression and PD-1 checkpoint pathway in cancer","10/22","1027/20464",3.61211786771653e-08,1.2461806643622e-06,4.37256373460423e-07,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/alvocidib/jnj-7706621/ei-231/pd-184352/canertinib/zstk-474",10
+"7","hsa05214","Glioma","9/22","816/20464",7.60085122772089e-08,2.07277501546516e-06,7.27289479110582e-07,"5-iodotubercidin/sorafenib/progesterone/alvocidib/axitinib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"8","hsa05221","Acute myeloid leukemia","9/22","827/20464",8.52385452191513e-08,2.07277501546516e-06,7.27289479110582e-07,"5-iodotubercidin/withaferin-a/sorafenib/mitoxantrone/progesterone/axitinib/pd-184352/canertinib/zstk-474",9
+"9","hsa05165","Human papillomavirus infection","11/22","1478/20464",9.01206528463112e-08,2.07277501546516e-06,7.27289479110582e-07,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/alvocidib/axitinib/jnj-7706621/nch-51/pd-184352/canertinib/zstk-474",11
+"10","hsa05163","Human cytomegalovirus infection","12/22","1904/20464",1.08245012735811e-07,2.2406717636313e-06,7.86200618817998e-07,"5-iodotubercidin/sq-22536/withaferin-a/sorafenib/progesterone/antimycin-a/alvocidib/axitinib/jnj-7706621/pd-184352/canertinib/zstk-474",12
+"11","hsa05215","Prostate cancer","10/22","1274/20464",2.7384262288e-07,5.15322026692364e-06,1.80814746207847e-06,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/alvocidib/axitinib/jnj-7706621/pd-184352/canertinib/zstk-474",10
+"12","hsa04540","Gap junction","9/22","994/20464",4.0717699557978e-07,7.0238031737512e-06,2.46449234166709e-06,"5-iodotubercidin/sq-22536/sorafenib/progesterone/alvocidib/axitinib/jnj-7706621/pd-184352/canertinib",9
+"13","hsa05226","Gastric cancer","9/22","1023/20464",5.18971090247028e-07,8.26361659085652e-06,2.89951459328299e-06,"5-iodotubercidin/sorafenib/mitoxantrone/progesterone/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"14","hsa05224","Breast cancer","9/22","1048/20464",6.35938890202829e-07,8.90589066547261e-06,3.12487391770969e-06,"5-iodotubercidin/sorafenib/progesterone/alvocidib/axitinib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"15","hsa04662","B cell receptor signaling pathway","8/22","752/20464",6.48211256830272e-07,8.90589066547261e-06,3.12487391770969e-06,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/terreic-acid/pd-184352/canertinib/zstk-474",8
+"16","hsa01524","Platinum drug resistance","8/22","758/20464",6.88378022451989e-07,8.90589066547261e-06,3.12487391770969e-06,"5-iodotubercidin/mitoxantrone/antimycin-a/alvocidib/amonafide/canertinib/epirubicin/zstk-474",8
+"17","hsa04914","Progesterone-mediated oocyte maturation","9/22","1085/20464",8.51065174692189e-07,1.03629700683108e-05,3.6361298485301e-06,"5-iodotubercidin/sq-22536/sorafenib/progesterone/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"18","hsa04660","T cell receptor signaling pathway","9/22","1113/20464",1.05355445291334e-06,1.19202243300222e-05,4.18253485263937e-06,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"19","hsa04928","Parathyroid hormone synthesis, secretion and action","8/22","806/20464",1.0941268708716e-06,1.19202243300222e-05,4.18253485263937e-06,"5-iodotubercidin/sq-22536/sorafenib/progesterone/alvocidib/calcifediol/pd-184352/canertinib",8
+"20","hsa04921","Oxytocin signaling pathway","9/22","1148/20464",1.36465510447427e-06,1.36058936150972e-05,4.77399775968323e-06,"5-iodotubercidin/sq-22536/sorafenib/progesterone/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"21","hsa04150","mTOR signaling pathway","8/22","841/20464",1.50611754216824e-06,1.36058936150972e-05,4.77399775968323e-06,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/jnj-7706621/pd-184352/canertinib/zstk-474",8
+"22","hsa04722","Neurotrophin signaling pathway","9/22","1164/20464",1.53162890538673e-06,1.36058936150972e-05,4.77399775968323e-06,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"23","hsa05132","Salmonella infection","10/22","1549/20464",1.66560153256444e-06,1.36058936150972e-05,4.77399775968323e-06,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/antimycin-a/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",10
+"24","hsa04072","Phospholipase D signaling pathway","9/22","1177/20464",1.68009656026876e-06,1.36058936150972e-05,4.77399775968323e-06,"5-iodotubercidin/sq-22536/sorafenib/progesterone/alvocidib/axitinib/pd-184352/canertinib/zstk-474",9
+"25","hsa05167","Kaposi sarcoma-associated herpesvirus infection","10/22","1557/20464",1.74595615358148e-06,1.36058936150972e-05,4.77399775968323e-06,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/antimycin-a/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",10
+"26","hsa04810","Regulation of actin cytoskeleton","9/22","1187/20464",1.80266086300936e-06,1.36058936150972e-05,4.77399775968323e-06,"5-iodotubercidin/sorafenib/progesterone/alvocidib/axitinib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"27","hsa04015","Rap1 signaling pathway","10/22","1566/20464",1.84041073054455e-06,1.36058936150972e-05,4.77399775968323e-06,"5-iodotubercidin/sq-22536/sorafenib/progesterone/alvocidib/axitinib/oleoylethanolamide/pd-184352/canertinib/zstk-474",10
+"28","hsa05161","Hepatitis B","10/22","1566/20464",1.84041073054455e-06,1.36058936150972e-05,4.77399775968323e-06,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/antimycin-a/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",10
+"29","hsa04630","JAK-STAT signaling pathway","8/22","880/20464",2.11526834469361e-06,1.50986395638475e-05,5.29776826801667e-06,"sorafenib/mitoxantrone/progesterone/alvocidib/axitinib/jnj-7706621/canertinib/zstk-474",8
+"30","hsa04218","Cellular senescence","9/22","1248/20464",2.73242130071576e-06,1.84427052492746e-05,6.4711246488683e-06,"5-iodotubercidin/sorafenib/progesterone/tenovins/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"31","hsa05231","Choline metabolism in cancer","8/22","912/20464",2.76195102766915e-06,1.84427052492746e-05,6.4711246488683e-06,"5-iodotubercidin/sorafenib/progesterone/alvocidib/axitinib/pd-184352/canertinib/zstk-474",8
+"32","hsa01522","Endocrine resistance","9/22","1259/20464",2.93825055724949e-06,1.90068082922076e-05,6.66905554112548e-06,"5-iodotubercidin/sq-22536/sorafenib/progesterone/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"33","hsa05170","Human immunodeficiency virus 1 infection","10/22","1673/20464",3.35947334135517e-06,2.09769151361374e-05,7.3603211003991e-06,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/antimycin-a/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",10
+"34","hsa05213","Endometrial cancer","7/22","647/20464",3.44548364554914e-06,2.09769151361374e-05,7.3603211003991e-06,"5-iodotubercidin/sorafenib/progesterone/alvocidib/pd-184352/canertinib/zstk-474",7
+"35","hsa04934","Cushing syndrome","8/22","945/20464",3.59883471805538e-06,2.11177687260744e-05,7.40974341265769e-06,"5-iodotubercidin/sq-22536/sorafenib/progesterone/alvocidib/jnj-7706621/pd-184352/canertinib",8
+"36","hsa05210","Colorectal cancer","8/22","949/20464",3.71362321563329e-06,2.11177687260744e-05,7.40974341265769e-06,"5-iodotubercidin/sorafenib/progesterone/antimycin-a/alvocidib/pd-184352/canertinib/zstk-474",8
+"37","hsa05219","Bladder cancer","7/22","656/20464",3.7746736370278e-06,2.11177687260744e-05,7.40974341265769e-06,"5-iodotubercidin/sorafenib/progesterone/alvocidib/jnj-7706621/pd-184352/canertinib",7
+"38","hsa05164","Influenza A","9/22","1317/20464",4.26118241784634e-06,2.31330383501928e-05,8.11685556147115e-06,"5-iodotubercidin/withaferin-a/sorafenib/antimycin-a/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"39","hsa05230","Central carbon metabolism in cancer","8/22","971/20464",4.40245546892067e-06,2.31330383501928e-05,8.11685556147115e-06,"5-iodotubercidin/sorafenib/progesterone/alvocidib/axitinib/pd-184352/canertinib/zstk-474",8
+"40","hsa05223","Non-small cell lung cancer","8/22","973/20464",4.4701523382015e-06,2.31330383501928e-05,8.11685556147115e-06,"5-iodotubercidin/sorafenib/progesterone/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",8
+"41","hsa04012","ErbB signaling pathway","8/22","987/20464",4.96937821902949e-06,2.50892997887586e-05,8.80326308377496e-06,"5-iodotubercidin/sorafenib/progesterone/alvocidib/axitinib/pd-184352/canertinib/zstk-474",8
+"42","hsa04062","Chemokine signaling pathway","9/22","1400/20464",7.03686607226786e-06,3.40735780199301e-05,1.19556414105018e-05,"5-iodotubercidin/sq-22536/withaferin-a/sorafenib/progesterone/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"43","hsa04071","Sphingolipid signaling pathway","9/22","1401/20464",7.0780862553478e-06,3.40735780199301e-05,1.19556414105018e-05,"5-iodotubercidin/sorafenib/mitoxantrone/progesterone/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"44","hsa04725","Cholinergic synapse","8/22","1042/20464",7.41793909945955e-06,3.48980316724574e-05,1.22449233938447e-05,"5-iodotubercidin/sq-22536/withaferin-a/progesterone/alvocidib/pd-184352/canertinib/zstk-474",8
+"45","hsa04014","Ras signaling pathway","10/22","1836/20464",7.77144689760514e-06,3.57486557289836e-05,1.2543387975082e-05,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/alvocidib/axitinib/jnj-7706621/pd-184352/canertinib/zstk-474",10
+"46","hsa01521","EGFR tyrosine kinase inhibitor resistance","8/22","1052/20464",7.958558680837e-06,3.58135140637665e-05,1.25661452855321e-05,"5-iodotubercidin/sorafenib/progesterone/alvocidib/axitinib/pd-184352/canertinib/zstk-474",8
+"47","hsa05212","Pancreatic cancer","8/22","1067/20464",8.83219317099885e-06,3.88992337531226e-05,1.36488539484641e-05,"5-iodotubercidin/withaferin-a/sorafenib/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",8
+"48","hsa04210","Apoptosis","9/22","1454/20464",9.58389863021147e-06,4.1330562842787e-05,1.45019518746621e-05,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/antimycin-a/alvocidib/pd-184352/canertinib/zstk-474",9
+"49","hsa05225","Hepatocellular carcinoma","8/22","1131/20464",1.35364316936432e-05,5.64039300682008e-05,1.97908526555091e-05,"5-iodotubercidin/sorafenib/progesterone/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",8
+"50","hsa04912","GnRH signaling pathway","8/22","1132/20464",1.36241376976331e-05,5.64039300682008e-05,1.97908526555091e-05,"5-iodotubercidin/sq-22536/sorafenib/progesterone/alvocidib/jnj-7706621/pd-184352/canertinib",8
+"51","hsa05166","Human T-cell leukemia virus 1 infection","9/22","1523/20464",1.39664804347042e-05,5.66874794114465e-05,1.98903436531391e-05,"5-iodotubercidin/sq-22536/withaferin-a/progesterone/alvocidib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"52","hsa04371","Apelin signaling pathway","8/22","1167/20464",1.70132276285711e-05,6.7725733059889e-05,2.3763415108733e-05,"5-iodotubercidin/sq-22536/sorafenib/progesterone/nch-51/pd-184352/canertinib/zstk-474",8
+"53","hsa05145","Toxoplasmosis","8/22","1175/20464",1.78808681857852e-05,6.98365983859911e-05,2.45040696091197e-05,"5-iodotubercidin/withaferin-a/progesterone/antimycin-a/alvocidib/jnj-7706621/canertinib/zstk-474",8
+"54","hsa04510","Focal adhesion","9/22","1575/20464",1.83202707674495e-05,7.02277046085566e-05,2.46412998626514e-05,"5-iodotubercidin/sorafenib/progesterone/alvocidib/axitinib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"55","hsa04213","Longevity regulating pathway - multiple species","6/22","578/20464",2.50904137128246e-05,9.42050694448723e-05,3.30544103315341e-05,"sq-22536/progesterone/tenovins/nch-51/canertinib/zstk-474",6
+"56","hsa04664","Fc epsilon RI signaling pathway","7/22","879/20464",2.54854294150379e-05,9.42050694448723e-05,3.30544103315341e-05,"5-iodotubercidin/sorafenib/progesterone/terreic-acid/pd-184352/canertinib/zstk-474",7
+"57","hsa04370","VEGF signaling pathway","7/22","885/20464",2.66270055233928e-05,9.66980726902161e-05,3.39291483123565e-05,"5-iodotubercidin/sorafenib/progesterone/axitinib/pd-184352/canertinib/zstk-474",7
+"58","hsa04380","Osteoclast differentiation","8/22","1250/20464",2.80080084318122e-05,9.99596162997435e-05,3.50735495788574e-05,"5-iodotubercidin/withaferin-a/axitinib/jnj-7706621/terreic-acid/pd-184352/canertinib/zstk-474",8
+"59","hsa04926","Relaxin signaling pathway","8/22","1253/20464",2.8497359962562e-05,9.99822629194974e-05,3.50814957612271e-05,"5-iodotubercidin/sq-22536/sorafenib/progesterone/alvocidib/pd-184352/canertinib/zstk-474",8
+"60","hsa04140","Autophagy - animal","7/22","926/20464",3.56192792200687e-05,0.000122886513309237,4.31180748453463e-05,"5-iodotubercidin/sorafenib/progesterone/alvocidib/pd-184352/canertinib/zstk-474",7
+"61","hsa04666","Fc gamma R-mediated phagocytosis","6/22","643/20464",4.56140319859299e-05,0.000154788600345696,5.43117895949812e-05,"5-iodotubercidin/sorafenib/jnj-7706621/pd-184352/canertinib/zstk-474",6
+"62","hsa05205","Proteoglycans in cancer","9/22","1790/20464",5.09624642486423e-05,0.000169013022898379,5.93028150520629e-05,"5-iodotubercidin/sorafenib/progesterone/alvocidib/axitinib/jnj-7706621/pd-184352/canertinib/zstk-474",9
+"63","hsa04550","Signaling pathways regulating pluripotency of stem cells","6/22","657/20464",5.14387460995067e-05,0.000169013022898379,5.93028150520629e-05,"5-iodotubercidin/sorafenib/progesterone/pd-184352/canertinib/zstk-474",6
+"64","hsa04915","Estrogen signaling pathway","8/22","1374/20464",5.526096687431e-05,0.000178734689734096,6.27139262224899e-05,"5-iodotubercidin/sq-22536/sorafenib/progesterone/alvocidib/pd-184352/canertinib/zstk-474",8
+"65","hsa05169","Epstein-Barr virus infection","8/22","1405/20464",6.47914160753515e-05,0.000206335740424581,7.23985054121337e-05,"withaferin-a/antimycin-a/alvocidib/jnj-7706621/nch-51/terreic-acid/canertinib/zstk-474",8
+"66","hsa05211","Renal cell carcinoma","6/22","695/20464",7.03194591056689e-05,0.00022054739446778,7.7385050690449e-05,"5-iodotubercidin/sorafenib/progesterone/pd-184352/canertinib/zstk-474",6
+"67","hsa04910","Insulin signaling pathway","8/22","1427/20464",7.23625354563205e-05,0.000223567833424751,7.84448538332461e-05,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/alvocidib/pd-184352/canertinib/zstk-474",8
+"68","hsa04916","Melanogenesis","6/22","710/20464",7.91519054207056e-05,0.000240947712089501,8.45430568735091e-05,"5-iodotubercidin/sq-22536/sorafenib/progesterone/axitinib/pd-184352",6
+"69","hsa05222","Small cell lung cancer","6/22","720/20464",8.55192124583731e-05,0.000256557637375119,9.00202236403927e-05,"withaferin-a/antimycin-a/alvocidib/jnj-7706621/canertinib/zstk-474",6
+"70","hsa04929","GnRH secretion","6/22","729/20464",9.15950224651023e-05,0.000270859566432517,9.50384443622866e-05,"5-iodotubercidin/sorafenib/progesterone/pd-184352/canertinib/zstk-474",6
+"71","hsa05208","Chemical carcinogenesis - reactive oxygen species","9/22","1937/20464",9.48710664911427e-05,0.000276595926248824,9.705120219257e-05,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/alvocidib/axitinib/pd-184352/canertinib/zstk-474",9
+"72","hsa04022","cGMP-PKG signaling pathway","8/22","1509/20464",0.000107461141251304,0.000308950781097498,0.000108403782841227,"5-iodotubercidin/sq-22536/sorafenib/progesterone/jnj-7706621/pd-184352/canertinib/zstk-474",8
+"73","hsa05162","Measles","7/22","1120/20464",0.000119054547440085,0.000334900643189193,0.000117508997610243,"withaferin-a/antimycin-a/alvocidib/jnj-7706621/ei-231/canertinib/zstk-474",7
+"74","hsa04611","Platelet activation","7/22","1121/20464",0.000119722935246378,0.000334900643189193,0.000117508997610243,"5-iodotubercidin/sq-22536/progesterone/jnj-7706621/terreic-acid/canertinib/zstk-474",7
+"75","hsa04720","Long-term potentiation","6/22","777/20464",0.000130110919781221,0.000359106138596171,0.000126002153893393,"5-iodotubercidin/sq-22536/sorafenib/progesterone/jnj-7706621/pd-184352",6
+"76","hsa04919","Thyroid hormone signaling pathway","7/22","1175/20464",0.000160677775513479,0.000437635520148554,0.000153556322859142,"5-iodotubercidin/sorafenib/progesterone/nch-51/pd-184352/canertinib/zstk-474",7
+"77","hsa04933","AGE-RAGE signaling pathway in diabetic complications","7/22","1208/20464",0.000190902531334276,0.000513205506314223,0.000180072107478675,"5-iodotubercidin/mitoxantrone/progesterone/alvocidib/jnj-7706621/canertinib/zstk-474",7
+"78","hsa04935","Growth hormone synthesis, secretion and action","7/22","1217/20464",0.000199905204671845,0.000530517658552204,0.000186146546860423,"5-iodotubercidin/sq-22536/sorafenib/progesterone/pd-184352/canertinib/zstk-474",7
+"79","hsa04114","Oocyte meiosis","6/22","871/20464",0.000242548841105172,0.000635539368465452,0.000222996269637001,"5-iodotubercidin/sq-22536/progesterone/alvocidib/jnj-7706621/pd-184352",6
+"80","hsa04360","Axon guidance","6/22","939/20464",0.000363851398826153,0.000941465494462672,0.000330338769986902,"5-iodotubercidin/sorafenib/progesterone/alvocidib/jnj-7706621/zstk-474",6
+"81","hsa04066","HIF-1 signaling pathway","7/22","1400/20464",0.000472558176755033,0.00120764867392953,0.000423736376817379,"5-iodotubercidin/sorafenib/alvocidib/axitinib/pd-184352/canertinib/zstk-474",7
+"82","hsa05202","Transcriptional misregulation in cancer","6/22","1001/20464",0.000512179699506813,0.00129294143655988,0.000453663661950836,"5-iodotubercidin/sorafenib/alvocidib/axitinib/jnj-7706621/nch-51",6
+"83","hsa04917","Prolactin signaling pathway","6/22","1009/20464",0.000534344956687468,0.00133264344619646,0.00046759419164788,"5-iodotubercidin/sorafenib/progesterone/pd-184352/canertinib/zstk-474",6
+"84","hsa04625","C-type lectin receptor signaling pathway","6/22","1019/20464",0.000563104498258922,0.00138765037070949,0.00048689486691561,"5-iodotubercidin/withaferin-a/sorafenib/progesterone/canertinib/zstk-474",6
+"85","hsa04668","TNF signaling pathway","6/22","1032/20464",0.000602294625188281,0.00146676455781146,0.000514654230811039,"5-iodotubercidin/withaferin-a/axitinib/pd-184352/canertinib/zstk-474",6
+"86","hsa04211","Longevity regulating pathway","5/22","694/20464",0.000720309403345049,0.00173376798247006,0.000608339642971951,"sq-22536/progesterone/tenovins/canertinib/zstk-474",5
+"87","hsa04650","Natural killer cell mediated cytotoxicity","5/22","707/20464",0.000783370623146927,0.00186388182748752,0.00065399362367983,"5-iodotubercidin/sorafenib/progesterone/pd-184352/zstk-474",5
+"88","hsa04261","Adrenergic signaling in cardiomyocytes","6/22","1089/20464",0.000800093520703005,0.0018820381680173,0.000660364269479753,"5-iodotubercidin/sq-22536/progesterone/alvocidib/canertinib/zstk-474",6
+"89","hsa05168","Herpes simplex virus 1 infection","6/22","1122/20464",0.000935840902204686,0.00217661872759966,0.000763725869333215,"withaferin-a/antimycin-a/alvocidib/jnj-7706621/canertinib/zstk-474",6
+"90","hsa05142","Chagas disease","6/22","1129/20464",0.00096681298941813,0.00219556611260455,0.000770374074598086,"5-iodotubercidin/sq-22536/withaferin-a/progesterone/canertinib/zstk-474",6
+"91","hsa05131","Shigellosis","7/22","1579/20464",0.000974152232181371,0.00219556611260455,0.000770374074598086,"5-iodotubercidin/withaferin-a/antimycin-a/alvocidib/jnj-7706621/canertinib/zstk-474",7
+"92","hsa05034","Alcoholism","6/22","1131/20464",0.000975807161157576,0.00219556611260455,0.000770374074598086,"5-iodotubercidin/sq-22536/sorafenib/progesterone/nch-51/pd-184352",6
+"93","hsa04144","Endocytosis","5/22","758/20464",0.00107166417666349,0.00238531703838004,0.000836953346800013,"sorafenib/progesterone/alvocidib/axitinib/canertinib",5
+"94","hsa05203","Viral carcinogenesis","6/22","1175/20464",0.00119071804191841,0.00262211313486288,0.000920039696443115,"5-iodotubercidin/progesterone/alvocidib/jnj-7706621/nch-51/zstk-474",6
+"95","hsa05135","Yersinia infection","6/22","1203/20464",0.00134549634131593,0.0029317657121305,0.00102868972355456,"5-iodotubercidin/withaferin-a/jnj-7706621/pd-184352/canertinib/zstk-474",6
+"96","hsa04931","Insulin resistance","6/22","1226/20464",0.00148392022205987,0.0031997029788166,0.00112270279958477,"withaferin-a/alvocidib/jnj-7706621/oleoylethanolamide/canertinib/zstk-474",6
+"97","hsa05216","Thyroid cancer","4/22","475/20464",0.00150415212881665,0.00320989165634069,0.00112627777415463,"5-iodotubercidin/sorafenib/progesterone/pd-184352",4
+"98","hsa04613","Neutrophil extracellular trap formation","6/22","1237/20464",0.00155389233880237,0.00328220116461317,0.00115164953144322,"5-iodotubercidin/sorafenib/nch-51/pd-184352/canertinib/zstk-474",6
+"99","hsa04270","Vascular smooth muscle contraction","6/22","1253/20464",0.0016601866453796,0.00347129934943007,0.00121799977172985,"5-iodotubercidin/sq-22536/sorafenib/progesterone/jnj-7706621/pd-184352",6
+"100","hsa04932","Non-alcoholic fatty liver disease","6/22","1260/20464",0.00170841549713805,0.00353642007907576,0.0012408491505529,"withaferin-a/antimycin-a/jnj-7706621/oleoylethanolamide/canertinib/zstk-474",6
+"101","hsa05152","Tuberculosis","6/22","1298/20464",0.00198936089645638,0.00407720500560862,0.00143059824758197,"5-iodotubercidin/sorafenib/antimycin-a/alvocidib/calcifediol/canertinib",6
+"102","hsa04922","Glucagon signaling pathway","5/22","910/20464",0.00240647355541501,0.00488372574481281,0.00171358798063608,"progesterone/tenovins/alvocidib/oleoylethanolamide/canertinib",5
+"103","hsa05171","Coronavirus disease - COVID-19","6/22","1356/20464",0.0024850280198534,0.00499418252533644,0.00175234474573208,"5-iodotubercidin/withaferin-a/alvocidib/jnj-7706621/canertinib/zstk-474",6
+"104","hsa04726","Serotonergic synapse","6/22","1377/20464",0.00268599410671047,0.00534616134701026,0.00187584608667026,"5-iodotubercidin/sq-22536/sorafenib/progesterone/voriconazole/pd-184352",6
+"105","hsa04620","Toll-like receptor signaling pathway","5/22","981/20464",0.0033350499361624,0.00657481273129159,0.00230695183554091,"5-iodotubercidin/withaferin-a/pd-184352/canertinib/zstk-474",5
+"106","hsa04730","Long-term depression","4/22","616/20464",0.00386163445941472,0.00751406527235348,0.00263651413065034,"5-iodotubercidin/sorafenib/progesterone/pd-184352",4
+"107","hsa05030","Cocaine addiction","4/22","617/20464",0.00388408204899431,0.00751406527235348,0.00263651413065034,"sq-22536/progesterone/alvocidib/jnj-7706621",4
+"108","hsa04923","Regulation of lipolysis in adipocytes","4/22","654/20464",0.00477882737413305,0.00915941913375501,0.00321383127500176,"sq-22536/progesterone/canertinib/zstk-474",4
+"109","hsa05418","Fluid shear stress and atherosclerosis","6/22","1559/20464",0.00498886816085064,0.00947427256234939,0.00332430616222785,"withaferin-a/sorafenib/alvocidib/axitinib/canertinib/zstk-474",6
+"110","hsa05204","Chemical carcinogenesis - DNA adducts","4/22","732/20464",0.00710375719275739,0.0133679794445525,0.00469051910335177,"sorafenib/progesterone/axitinib/voriconazole",4
+"111","hsa04064","NF-kappa B signaling pathway","4/22","747/20464",0.00762399769862401,0.0142177254379745,0.00498867559227176,"withaferin-a/alvocidib/ei-231/terreic-acid",4
+"112","hsa04520","Adherens junction","4/22","749/20464",0.00769522962966338,0.0142224333333957,0.004990327485402,"5-iodotubercidin/alvocidib/ei-231/canertinib",4
+"113","hsa04976","Bile secretion","4/22","810/20464",0.010086143321889,0.0184763864392126,0.00648294261025005,"sq-22536/sorafenib/mitoxantrone/progesterone",4
+"114","hsa04960","Aldosterone-regulated sodium reabsorption","3/22","453/20464",0.0121382842473882,0.0220405687649944,0.00773353289999805,"5-iodotubercidin/progesterone/zstk-474",3
+"115","hsa00980","Metabolism of xenobiotics by cytochrome P450","4/22","869/20464",0.0128209913793385,0.022878838064854,0.00802766247889615,"sorafenib/progesterone/axitinib/voriconazole",4
+"116","hsa04530","Tight junction","4/22","869/20464",0.0128209913793385,0.022878838064854,0.00802766247889615,"alvocidib/jnj-7706621/pd-184352/canertinib",4
+"117","hsa05017","Spinocerebellar ataxia","4/22","906/20464",0.0147600003287783,0.0261138467355309,0.00916275324053716,"antimycin-a/oleoylethanolamide/canertinib/zstk-474",4
+"118","hsa04723","Retrograde endocannabinoid signaling","4/22","914/20464",0.0152026857316331,0.0266398161481733,0.00934730391163976,"5-iodotubercidin/sq-22536/progesterone/oleoylethanolamide",4
+"119","hsa05031","Amphetamine addiction","4/22","916/20464",0.0153146769160996,0.0266398161481733,0.00934730391163976,"sq-22536/progesterone/tenovins/nch-51",4
+"120","hsa04115","p53 signaling pathway","3/22","512/20464",0.0168362246178851,0.0290424874658519,0.0101903464792463,"antimycin-a/alvocidib/jnj-7706621",3
+"121","hsa04714","Thermogenesis","4/22","1003/20464",0.0207102083568607,0.0354298605774394,0.0124315300271717,"sq-22536/progesterone/jnj-7706621/oleoylethanolamide",4
+"122","hsa04911","Insulin secretion","3/22","595/20464",0.0249679468827851,0.0423636475798074,0.0148644377473009,"sq-22536/progesterone/oleoylethanolamide",3
+"123","hsa03022","Basal transcription factors","1/22","24/20464",0.0254990765934999,0.0429130801207682,0.0150572210950064,"alvocidib",1
+"124","hsa05130","Pathogenic Escherichia coli infection","4/22","1155/20464",0.0327210765039123,0.0543957185013632,0.0190862170180222,"5-iodotubercidin/withaferin-a/antimycin-a/jnj-7706621",4
+"125","hsa04658","Th1 and Th2 cell differentiation","3/22","662/20464",0.032847656099857,0.0543957185013632,0.0190862170180222,"5-iodotubercidin/withaferin-a/jnj-7706621",3
+"126","hsa00120","Primary bile acid biosynthesis","2/22","268/20464",0.0332249948231941,0.0545839200666761,0.0191522526549741,"progesterone/voriconazole",2
+"127","hsa05014","Amyotrophic lateral sclerosis","4/22","1174/20464",0.0344631423480156,0.0561722083940097,0.0197095468049157,"antimycin-a/alvocidib/nch-51/canertinib",4
+"128","hsa04670","Leukocyte transendothelial migration","3/22","707/20464",0.0387981504403414,0.0627438839152396,0.0220153978649963,"progesterone/jnj-7706621/zstk-474",3
+"129","hsa04621","NOD-like receptor signaling pathway","4/22","1226/20464",0.0395109508442025,0.0634012932151157,0.0222460677947774,"5-iodotubercidin/withaferin-a/alvocidib/jnj-7706621",4
+"130","hsa04920","Adipocytokine signaling pathway","3/22","718/20464",0.040332509365672,0.0642217649130315,0.0225339526010637,"withaferin-a/oleoylethanolamide/canertinib",3
+"131","hsa04110","Cell cycle","3/22","730/20464",0.0420418707766,0.0663816964622959,0.0232918233201038,"alvocidib/jnj-7706621/nch-51",3
+"132","hsa00830","Retinol metabolism","3/22","732/20464",0.0423303571643626,0.0663816964622959,0.0232918233201038,"sorafenib/axitinib/voriconazole",3
+"133","hsa05012","Parkinson disease","4/22","1257/20464",0.0427167267122736,0.066483928040907,0.0233276940494411,"5-iodotubercidin/sq-22536/progesterone/antimycin-a",4
+"134","hsa05416","Viral myocarditis","2/22","318/20464",0.0453261497709721,0.0700187537506808,0.0245679837721687,"antimycin-a/axitinib",2
+"135","hsa04713","Circadian entrainment","3/22","766/20464",0.047390737265363,0.0726657971402233,0.0254967709263941,"5-iodotubercidin/sq-22536/progesterone",3
+"136","hsa05146","Amoebiasis","3/22","773/20464",0.0484689688536273,0.0737726217110356,0.0258851304249248,"sq-22536/progesterone/zstk-474",3
+"137","hsa04930","Type II diabetes mellitus","3/22","779/20464",0.0494029883919526,0.0745110350745041,0.0261442228331593,"5-iodotubercidin/withaferin-a/zstk-474",3
+"138","hsa04340","Hedgehog signaling pathway","2/22","335/20464",0.0497641819958506,0.0745110350745041,0.0261442228331593,"5-iodotubercidin/alvocidib",2
+"139","hsa04728","Dopaminergic synapse","4/22","1323/20464",0.0500339800741839,0.0745110350745041,0.0261442228331593,"sq-22536/progesterone/jnj-7706621/canertinib",4
+"140","hsa05120","Epithelial cell signaling in Helicobacter pylori infection","3/22","788/20464",0.050820956153737,0.0751424137415969,0.0263657592075778,"withaferin-a/alvocidib/canertinib",3
+"141","hsa04724","Glutamatergic synapse","3/22","824/20464",0.0566943259658676,0.0832320955669121,0.0292042440585656,"5-iodotubercidin/sq-22536/progesterone",3
+"142","hsa05020","Prion disease","4/22","1382/20464",0.0571432398535841,0.0833003566879711,0.0292281953291127,"5-iodotubercidin/antimycin-a/ei-231/zstk-474",4
+"143","hsa00982","Drug metabolism - cytochrome P450","3/22","853/20464",0.0616568972068005,0.0886348114329893,0.0310999338361366,"sorafenib/axitinib/voriconazole",3
+"144","hsa04961","Endocrine and other factor-regulated calcium reabsorption","2/22","378/20464",0.0616589992577317,0.0886348114329893,0.0310999338361366,"progesterone/calcifediol",2
+"145","hsa04215","Apoptosis - multiple species","2/22","392/20464",0.0657260367944535,0.0938295835617371,0.0329226608988551,"antimycin-a/alvocidib",2
+"146","hsa04936","Alcoholic liver disease","4/22","1482/20464",0.0704122184685425,0.0998310220752623,0.0350284287983376,"withaferin-a/tenovins/oleoylethanolamide/canertinib",4
+"147","hsa00140","Steroid hormone biosynthesis","3/22","906/20464",0.0712464757679063,0.100326669958888,0.0352023403364521,"sorafenib/progesterone/axitinib",3
+"148","hsa04927","Cortisol synthesis and secretion","2/22","434/20464",0.0784520070872661,0.109726793696379,0.0385006293671505,"sq-22536/progesterone",2
+"149","hsa04657","IL-17 signaling pathway","3/22","954/20464",0.0804935539069975,0.111826615159386,0.0392374088278546,"5-iodotubercidin/withaferin-a/sorafenib",3
+"150","hsa00591","Linoleic acid metabolism","2/22","443/20464",0.0812755497929913,0.112160258714328,0.0393544767418695,"sorafenib/voriconazole",2
+"151","hsa03420","Nucleotide excision repair","1/22","90/20464",0.0924608432160138,0.12675095725639,0.0444740200899613,"alvocidib",1
+"152","hsa04152","AMPK signaling pathway","3/22","1016/20464",0.0931936675419418,0.126915060402513,0.0445316001412326,"tenovins/canertinib/zstk-474",3
+"153","hsa03008","Ribosome biogenesis in eukaryotes","1/22","92/20464",0.0944197684426332,0.127068298564259,0.0445853679172838,"ei-231",1
+"154","hsa01523","Antifolate resistance","2/22","484/20464",0.0945339032796901,0.127068298564259,0.0445853679172838,"withaferin-a/mitoxantrone",2
+"155","hsa04973","Carbohydrate digestion and absorption","2/22","506/20464",0.101897526427395,0.136082503035295,0.047748246679051,"canertinib/zstk-474",2
+"156","hsa04640","Hematopoietic cell lineage","2/22","509/20464",0.102914282806812,0.136137251226024,0.0477674565705346,"sorafenib/axitinib",2
+"157","hsa04918","Thyroid hormone synthesis","2/22","510/20464",0.103253857210076,0.136137251226024,0.0477674565705346,"sq-22536/progesterone",2
+"158","hsa04971","Gastric acid secretion","2/22","518/20464",0.105982107750691,0.138000911346217,0.0484213724021815,"sq-22536/progesterone",2
+"159","hsa04659","Th17 cell differentiation","3/22","1076/20464",0.106252961735387,0.138000911346217,0.0484213724021815,"5-iodotubercidin/withaferin-a/jnj-7706621",3
+"160","hsa05414","Dilated cardiomyopathy","2/22","520/20464",0.106667371088864,0.138000911346217,0.0484213724021815,"sq-22536/progesterone",2
+"161","hsa04137","Mitophagy - animal","2/22","523/20464",0.107697634113118,0.138468386716866,0.0485853988480233,"progesterone/ei-231",2
+"162","hsa05323","Rheumatoid arthritis","2/22","528/20464",0.109420987657252,0.139815706450933,0.0490581426143626,"sorafenib/axitinib",2
+"163","hsa04913","Ovarian steroidogenesis","2/22","554/20464",0.118503862473016,0.150492635165118,0.0528044333912695,"sq-22536/progesterone",2
+"164","hsa05320","Autoimmune thyroid disease","1/22","125/20464",0.126165128622827,0.15924500990808,0.0558754420730107,"progesterone",1
+"165","hsa04750","Inflammatory mediator regulation of TRP channels","3/22","1195/20464",0.134201735013477,0.168362176653272,0.0590744479485163,"sq-22536/progesterone/zstk-474",3
+"166","hsa04962","Vasopressin-regulated water reabsorption","1/22","136/20464",0.136508778622277,0.1702248022579,0.0597280007922455,"progesterone",1
+"167","hsa04727","GABAergic synapse","2/22","612/20464",0.139431524391667,0.172828296701048,0.0606415076144027,"sq-22536/progesterone",2
+"168","hsa04330","Notch signaling pathway","1/22","146/20464",0.145810590053232,0.179659477029876,0.0630384129929389,"nch-51",1
+"169","hsa04622","RIG-I-like receptor signaling pathway","2/22","636/20464",0.148328296596071,0.181680221274477,0.0637474460612201,"withaferin-a/pd-184352",2
+"170","hsa04744","Phototransduction","1/22","151/20464",0.150425551523753,0.183165230384805,0.0642685018894053,"progesterone",1
+"171","hsa04924","Renin secretion","2/22","740/20464",0.188143593087419,0.227752770579508,0.0799132528349149,"sq-22536/progesterone",2
+"172","hsa02010","ABC transporters","1/22","199/20464",0.193534847561982,0.232916938635641,0.0817252416265408,"mitoxantrone",1
+"173","hsa05133","Pertussis","2/22","757/20464",0.19480927747498,0.233095493857346,0.0817878925815248,"5-iodotubercidin/progesterone",2
+"174","hsa04120","Ubiquitin mediated proteolysis","1/22","205/20464",0.198774322677019,0.234809042608187,0.0823891377572585,"pd-184352",1
+"175","hsa00190","Oxidative phosphorylation","1/22","206/20464",0.199644403377009,0.234809042608187,0.0823891377572585,"antimycin-a",1
+"176","hsa05110","Vibrio cholerae infection","1/22","206/20464",0.199644403377009,0.234809042608187,0.0823891377572585,"progesterone",1
+"177","hsa00590","Arachidonic acid metabolism","2/22","773/20464",0.201114740784683,0.235201984985477,0.082527012275606,"sorafenib/voriconazole",2
+"178","hsa04925","Aldosterone synthesis and secretion","2/22","781/20464",0.204278193763908,0.236888924018174,0.0831189207081313,"sq-22536/progesterone",2
+"179","hsa00562","Inositol phosphate metabolism","1/22","212/20464",0.20484597777417,0.236888924018174,0.0831189207081313,"zstk-474",1
+"180","hsa00510","N-Glycan biosynthesis","1/22","218/20464",0.210015273797841,0.239556875438208,0.0840550440134064,"progesterone",1
+"181","hsa05100","Bacterial invasion of epithelial cells","1/22","218/20464",0.210015273797841,0.239556875438208,0.0840550440134064,"zstk-474",1
+"182","hsa04310","Wnt signaling pathway","2/22","797/20464",0.210624885650985,0.239556875438208,0.0840550440134064,"jnj-7706621/ei-231",2
+"183","hsa05032","Morphine addiction","2/22","825/20464",0.221788371502743,0.250875371044086,0.0880264459803811,"sq-22536/progesterone",2
+"184","hsa05415","Diabetic cardiomyopathy","3/22","1542/20464",0.227861831482826,0.25634456041818,0.0899454597958525,"oleoylethanolamide/canertinib/zstk-474",3
+"185","hsa04977","Vitamin digestion and absorption","1/22","246/20464",0.233717441480459,0.26110981319964,0.0916174783156632,"mitoxantrone",1
+"186","hsa04972","Pancreatic secretion","2/22","857/20464",0.234620411860546,0.26110981319964,0.0916174783156632,"sq-22536/progesterone",2
+"187","hsa04970","Salivary secretion","2/22","884/20464",0.245495316904261,0.271751500530386,0.0953514036948722,"sq-22536/progesterone",2
+"188","hsa04623","Cytosolic DNA-sensing pathway","1/22","264/20464",0.24859442124054,0.272270080406306,0.0955333615460722,"withaferin-a",1
+"189","hsa05340","Primary immunodeficiency","1/22","264/20464",0.24859442124054,0.272270080406306,0.0955333615460722,"terreic-acid",1
+"190","hsa00230","Purine metabolism","2/22","963/20464",0.277463061577998,0.302288703929714,0.106066211905163,"5-iodotubercidin/sq-22536",2
+"191","hsa04978","Mineral absorption","1/22","304/20464",0.2806735376601,0.304185457045239,0.106731739314119,"calcifediol",1
+"192","hsa04070","Phosphatidylinositol signaling system","1/22","306/20464",0.282242678481551,0.304292887737922,0.106769434294008,"zstk-474",1
+"193","hsa00100","Steroid biosynthesis","1/22","318/20464",0.291589128872122,0.312740671899115,0.109733569087409,"voriconazole",1
+"194","hsa00760","Nicotinate and nicotinamide metabolism","1/22","332/20464",0.30234649870713,0.322606831094721,0.113195379331481,"tenovins",1
+"195","hsa00500","Starch and sucrose metabolism","1/22","351/20464",0.316696620494802,0.335259767793786,0.117635006243434,"alvocidib",1
+"196","hsa00564","Glycerophospholipid metabolism","1/22","352/20464",0.317444031340977,0.335259767793786,0.117635006243434,"withaferin-a",1
+"197","hsa04217","Necroptosis","2/22","1107/20464",0.335675376658296,0.35271473587953,0.123759556448958,"alvocidib/jnj-7706621",2
+"198","hsa00310","Lysine degradation","1/22","420/20464",0.366477161051665,0.381575454696857,0.133886124455038,"5-iodotubercidin",1
+"199","hsa05016","Huntington disease","2/22","1185/20464",0.36682857722065,0.381575454696857,0.133886124455038,"antimycin-a/nch-51",2
+"200","hsa04061","Viral protein interaction with cytokine and cytokine receptor","1/22","429/20464",0.372709102636693,0.385753921228977,0.135352253062799,"axitinib",1
+"201","hsa04350","TGF-beta signaling pathway","1/22","433/20464",0.375460031598776,0.386667793736053,0.135672910082826,"5-iodotubercidin",1
+"202","hsa05134","Legionellosis","1/22","448/20464",0.385673808395933,0.395220189791872,0.138673750804166,"antimycin-a",1
+"203","hsa04390","Hippo signaling pathway","1/22","473/20464",0.402343359643748,0.410271307617024,0.143954844777903,"alvocidib",1
+"204","hsa04141","Protein processing in endoplasmic reticulum","1/22","600/20464",0.480569121141521,0.487636314099484,0.171100461087538,"alvocidib",1
+"205","hsa05140","Leishmaniasis","1/22","630/20464",0.497565594831713,0.502419893317876,0.176287681865921,"5-iodotubercidin",1
+"206","hsa04060","Cytokine-cytokine receptor interaction","1/22","720/20464",0.545428049736388,0.548075758715691,0.192307283759892,"axitinib",1
+"207","hsa03320","PPAR signaling pathway","1/22","749/20464",0.559900157280293,0.559900157280293,0.196456195536945,"oleoylethanolamide",1

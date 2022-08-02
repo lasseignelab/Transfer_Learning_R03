@@ -15,40 +15,51 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # START 
     Goal/Purpose of operations: 
-    quick summary 
+    I am taking the latent variables from PLIER for GBM and applying it to the GBM tumor and controls. Also using GTEX controls for this experiment, so i am not only looking at 5 controls 
     
-    Finished psedocode on: Date
+    Finished psedocode on: 
+    220112
     
-    System which operations were done on: my laptop(on cheaha), lab mac etc... 
+    System which operations were done on: 
+    my laptop
     
     GitHub Repo:
+    Transfer_Learning_R03
     
-    Directory of operations: /path
+    Directory of operations:
+    "/home/rstudio"
     
-    Scripts being edited for operations: filename(s)
+    Scripts being edited for operations:
+    using some modified scripts from MultiPLIER paper
     
-    Data being used: description and location
+    Data being used: 
+    TCGA GBM data 
+    PLIER output for GBM
     
-    Papers and tools: deseq with paper 
+    Papers and tools:
+    limma and MultiPLIER
+    PCA analysis
+    DESeq2
 
 # STEPS
-### Set working directory 
+
 ### load in data
 ```{r}
 library(recount3)
+library(SummarizedExperiment)
 ```
 
-```{r eval= FALSE}
+```{r }
 human_projects<- available_projects()
 ```
 
-```{r eval= FALSE}
+```{r }
 #SRP118922
 recount3_rse_GBM <- create_rse(human_projects[(human_projects$project == "GBM"),])
 ```
 tcgabiolinks download done by Avery williams 
 ```{r}
-load("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/TCGA_GBM_GeneExpression_TCGABIOlinks.rda")
+load("/home/rstudio/data/TCGA_GBM_GeneExpression_TCGABIOlinks.rda")
 ```
 
 ```{r}
@@ -75,7 +86,8 @@ IDS<- c(IDS, nt)
 ```
 
 ```{r}
-recount_metadata<- as.data.frame(colData(recount3_rse_GBM))
+recount_metadata<- colData(recount3_rse_GBM)
+recount_metadata<- as.data.frame(recount_metadata)
 ```
 
 ```{r}
@@ -90,13 +102,14 @@ recount3_count_GBM <- as.data.frame(assay(recount3_rse_GBM))
 recount3_count_GBM<- recount3_count_GBM[,colnames(recount3_count_GBM) %in% recount_1ds]
 ```
 
-```{r eval= FALSE}
+```{r}
 #SRP118922
 recount3_rse_BRIAN <- create_rse(human_projects[(human_projects$project == "BRAIN"),])
 ```
 
 ```{r}
-recount3_count_brain <- as.data.frame(assay(recount3_rse_BRIAN))
+recount3_count_brain<- assay(recount3_rse_BRIAN)
+recount3_count_brain <- as.data.frame(recount3_count_brain)
 ```
 
 
@@ -300,12 +313,12 @@ dds_gbm_normal <- DESeqDataSetFromMatrix(countData = count_table,
 ```
 
 
-```{r}
+```{r eval= FALSE}
 deseq2_gbm_normal <- deseq2_function(dds_gbm_normal, "Deseq2_gbm_normal_gtx_res.csv", "status", "Primary Tumor", "Solid Tissue Normal")
 ```
 
 
-```{r}
+```{r eval= FALSE}
 deseq2_gbm_normal
 ```
 
@@ -350,16 +363,16 @@ rownames(tpm_table)<- gene_info$gene_name
 ```
 
 differential latent variable analysis
-```{r}
+```{r eval= FALSE}
 source("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/script/plier_util.R")
 ```
 
-```{r}
+```{r eval= FALSE}
 recount3_plier_gbm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_plier_gbm.rds")
 ```
 
 
-```{r}
+```{r eval= FALSE}
 #There is a issue with handling genes with zero expression. Best thing to do is to remove the genes
 test <- GetOrderedRowNorm(as.matrix(tpm_table),recount3_plier_gbm )
 zeros<- rownames(test)[!complete.cases(test)]
@@ -367,16 +380,16 @@ tpm_table_v2<- tpm_table[!rownames(tpm_table) %in% zeros,]
 ```
 
 create the b.matrix 
-```{r}
+```{r eval= FALSE}
 GBM.GTEx.b.matrix <- GetNewDataB(as.matrix(tpm_table_v2), recount3_plier_gbm)
 ```
 
-```{r}
+```{r eval=FALSE}
 saveRDS(GBM.GTEx.b.matrix, file= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/output/TF_L_GBM/GBM_GTEX_B_MATRIX.rds")
 ```
 
 
-```{r}
+```{r eval= FALSE}
 TestLVDifferencesJLF <- function(b.matrix, phenotype, blocking,
                               use.bonferroni = FALSE) {
   # This function tests for differential expression of PLIER-derived latent
@@ -586,7 +599,7 @@ LVTestWrapperJLF <- function(b.matrix,
 }
 ```
 
-```{r}
+```{r eval= FALSE}
 source("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/script/test_LV_differences.R")
 library(dplyr)
 ```
@@ -602,7 +615,7 @@ LVTestWrapperJLF <- function(b.matrix,
                           use.bonferroni = FALSE,
                           significant.only = FALSE,
                           sig.threshold = 0.05)
-```{r}
+```{r eval= FALSE}
 sampleinfo<- cbind(colnames(GBM.GTEx.b.matrix), as.character(all_metadata$status), as.character(all_metadata$database))
 colnames(sampleinfo) <- c("Sample", "Tumor","database")
 sampleinfo<- as.data.frame(sampleinfo)
@@ -612,30 +625,29 @@ names(database)<- colnames(GBM.GTEx.b.matrix)
 LV_test_TCGA_BH <- LVTestWrapperJLF(b.matrix=GBM.GTEx.b.matrix , sample.info.df= sampleinfo, phenotype.col= "Tumor", blocking= database, file.lead= "LV_TCGA_GTEX_T_vs_NT", plot.dir= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/output/TF_L_GBM/", results.dir= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/output/TF_L_GBM/", use.bonferroni= FALSE, sig.threshold = 0.05)
 ```
 
-```{r}
+```{r eval=FALSE}
 saveRDS(LV_test_TCGA_BH , file= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/output/TF_L_GBM/GBM_GTEX_limma_res.rds")
 ```
-```{r}
+```{r eval=FALSE}
 saveRDS(all_metadata , file= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/output/TF_L_GBM/GBM_GTEX_metadata.rds")
 ```
 
 are genes and heatmaps and pathway analysis
 
-```{r}
+```{r eval= FALSE}
 sig_LVs <- LV_test_TCGA_BH$limma[LV_test_TCGA_BH$limma$adj.P.Val < 0.05,]
 ```
 
 
-
-### Save Data
-### Save Figures
-    
 # END
     Location of final scripts:
+    scripts
     
     Location of data produced:
+    output 
     
     Dates when operations were done:
+    220112
     
 ## Versions
 ```{r}

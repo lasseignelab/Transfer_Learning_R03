@@ -1,0 +1,525 @@
+---
+title: "220523_pca_analysis_other_cancers"
+author: "Jennifer Fisher"
+date: "5/23/2022"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# START 
+    Goal/Purpose of operations: 
+    PCA analysis of the the new new cancers (lung, pancreas, liver) to evulate and determine any covariate. Panceratic cancer had a less common subtype driving the PC1. However, it did not slove the issue that most cancers the tumor and normal are split in PC1, PC2, PC3. I checked 10 PCs and double checked the sample labels. The lowest weighted genes in PC1 looked to be related to appendix, endorcine and goblet cells. also the microvillus membrane while the highest genes were related to digestion and pancreatitis. might be interesting subtype within the disease. the metadata did not show anything interesting. 
+    liver cancer shows split between tumor and normal. However, deseq2 doesn't like the liver gtex data. not sure why many the gene expression distrubtuation is off, but used the prcomp scale parameter to scale data for PCA analysis. Liver and lung seems to be infulence by the time the tissue was removed to RNA prep (also seen in the RIN score). There is not a good/easy way to use this a covariate because the samples between GTEX and TCGA will vary, but important to note here and other place to highlight a limitation. 
+    
+    Finished psedocode on: 
+    220524
+    
+    System which operations were done on:
+    my laptop
+    
+    GitHub Repo:
+    Transfer_Learning_R03
+    
+    Docker:
+    rstudio_tf_dr_v3
+    
+    Directory of operations: 
+    /home
+    
+    Scripts being edited for operations:
+    NA
+    
+    Data being used: 
+    Recount3
+    
+    Papers and tools:
+    DESeq2
+    prcomp
+
+# STEPS
+### Set working directory 
+### load in data
+```{r}
+library(recount3)
+library(SummarizedExperiment)
+```
+
+```{r }
+human_projects<- available_projects()
+```
+
+### Analysis
+
+PAAD
+```{r }
+#SRP118922
+recount3_rse_PANCREAS <- create_rse(human_projects[(human_projects$project == "PANCREAS"),])
+```
+
+```{r }
+#SRP118922
+recount3_rse_PAAD <- create_rse(human_projects[(human_projects$project == "PAAD"),])
+```
+
+```{r}
+library(DESeq2)
+#colData(recount3_rse_PANCREAS)
+vst_table <- vst(as.matrix(assay(recount3_rse_PANCREAS)))
+vst_table_df <- t(vst_table)
+pca.tumor <- prcomp(vst_table_df)
+```
+
+```{r}
+summary(pca.tumor)
+```
+
+
+
+```{r}
+sex<- rownames(recount3_rse_PANCREAS@colData)[recount3_rse_PANCREAS$gtex.sex == "2"]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_PANCREAS@colData)[rownames(recount3_rse_PANCREAS@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_PANCREAS@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of Gtex pancreas", xlab = "PC1 (10.84%)", ylab = "PC2 (7.17%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("female", "male/normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+sex<- rownames(recount3_rse_PANCREAS@colData)[recount3_rse_PANCREAS$gtex.age == "70-79"]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_PANCREAS@colData)[rownames(recount3_rse_PANCREAS@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_PANCREAS@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of Gtex pancreas", xlab = "PC1 (10.84%)", ylab = "PC2 (7.17%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c(">39", "<= 39"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+```{r}
+sex<- rownames(recount3_rse_PANCREAS@colData)[recount3_rse_PANCREAS$gtex.age == "20-29"]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_PANCREAS@colData)[rownames(recount3_rse_PANCREAS@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_PANCREAS@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of Gtex pancreas", xlab = "PC1 (10.84%)", ylab = "PC2 (7.17%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c(">39", "<= 39"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+sex<- rownames(recount3_rse_PANCREAS@colData)[recount3_rse_PANCREAS$gtex.smrin >= 7]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_PANCREAS@colData)[rownames(recount3_rse_PANCREAS@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_PANCREAS@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of Gtex pancreas", xlab = "PC1 (10.84%)", ylab = "PC2 (7.17%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c(">= 7", "< 7"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+SMTSISCH
+```{r}
+sex<- rownames(recount3_rse_PANCREAS@colData)[recount3_rse_PANCREAS$gtex.smtsisch>= 500]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_PANCREAS@colData)[rownames(recount3_rse_PANCREAS@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_PANCREAS@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of Gtex pancreas", xlab = "PC1 (10.84%)", ylab = "PC2 (7.17%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c(">= 500", "< 500"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+library(DESeq2)
+vst_table <- vst(as.matrix(assay(recount3_rse_PAAD)))
+vst_table_df <- t(vst_table)
+pca.tumor <- prcomp(vst_table_df)
+```
+
+```{r}[]
+summary(pca.tumor)
+```
+
+
+```{r}
+nt <- rownames(recount3_rse_PAAD@colData)[recount3_rse_PAAD$tcga.cgc_sample_sample_type == "Solid Tissue Normal"] 
+normal_ids<- rownames(recount3_rse_PAAD@colData)[rownames(recount3_rse_PAAD@colData) %in% nt]
+
+tumor_norm <- ifelse(rownames(recount3_rse_PAAD@colData) %in% normal_ids, "black", "red")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of PAAD", xlab = "PC1 (12.7%)", ylab = "PC2 (10.74%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("tumor", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+test <- as.data.frame(recount3_rse_PAAD@colData[pca.tumor$x[, 1] >150,])
+```
+
+
+```{r}
+nt <- rownames(recount3_rse_PAAD@colData)[grep("NEUROENDOCRINE",recount3_rse_PAAD@colData$tcga.cgc_case_other_histological_diagnosis, ignore.case = TRUE) ] 
+normal_ids<- rownames(recount3_rse_PAAD@colData)[rownames(recount3_rse_PAAD@colData) %in% nt]
+
+tumor_norm <- ifelse(rownames(recount3_rse_PAAD@colData) %in% normal_ids, "black", "red")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of PAAD", xlab = "PC1 (12.7%)", ylab = "PC2 (10.74%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("other", "NEUROENDOCRINE tumors"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+remove neuroendocrine tumors
+```{r}
+nt <- rownames(recount3_rse_PAAD@colData)[grep("NEUROENDOCRINE",recount3_rse_PAAD@colData$tcga.cgc_case_other_histological_diagnosis, ignore.case = TRUE) ] 
+metadata<- as.data.frame(recount3_rse_PAAD@colData)[! rownames(recount3_rse_PAAD@colData) %in% nt]
+
+vst_table_v2 <- vst_table[,!colnames(vst_table) %in% nt]
+```
+
+
+```{r}
+vst_table_df <- t(vst_table_v2)
+pca.tumor <- prcomp(vst_table_df)
+```
+```{r}
+summary(pca.tumor)
+```
+
+```{r}
+nt <- rownames(metadata)[metadata$tcga.cgc_sample_sample_type == "Solid Tissue Normal"] 
+normal_ids<- rownames(metadata)[rownames(metadata) %in% nt]
+
+tumor_norm <- ifelse(rownames(metadata) %in% normal_ids, "black", "red")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of PAAD", xlab = "PC1 (13.67%)", ylab = "PC2 (7.716%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("tumor", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+```{r}
+names(pca.tumor$x[, 1])[pca.tumor$x[, 1] < -130]
+```
+
+```{r}
+list <- names(pca.tumor$x[, 1])[pca.tumor$x[, 1] < -130]
+metadata_test <- metadata[rownames(metadata) %in% list,]
+```
+
+```{r}
+plot(pca.tumor$x[, 3], pca.tumor$x[, 4], pch = 20, col = tumor_norm  , main = "PCA of PAAD", xlab = "PC3", ylab = "PC4", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("tumor", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+plot(pca.tumor$x[, 5], pca.tumor$x[, 6], pch = 20, col = tumor_norm  , main = "PCA of PAAD", xlab = "PC5", ylab = "PC6", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("tumor", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+plot(pca.tumor$x[, 6], pca.tumor$x[, 7], pch = 20, col = tumor_norm  , main = "PCA of PAAD", xlab = "PC6", ylab = "PC7", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("tumor", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+```{r}
+plot(pca.tumor$x[, 8], pca.tumor$x[, 9], pch = 20, col = tumor_norm  , main = "PCA of PAAD", xlab = "PC8", ylab = "PC9", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("tumor", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+```{r}
+plot(pca.tumor$x[, 10], pca.tumor$x[, 11], pch = 20, col = tumor_norm  , main = "PCA of PAAD", xlab = "PC10", ylab = "PC11", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("tumor", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+```{r}
+metadata_test <- metadata[rownames(metadata) %in% nt,]
+```
+correctly label 
+
+Liver cancer 
+```{r }
+#SRP118922
+recount3_rse_liver <- create_rse(human_projects[(human_projects$project == "LIVER"),])
+```
+
+```{r}
+library(DESeq2)
+#colData(recount3_rse_PANCREAS)
+counts_liver <- assay(recount3_rse_liver)
+#counts_liver[is.na(counts_liver)] <- 0
+#something odd with the integer conversion at these two locations in this sample everything else is
+counts_liver[ c(60905, 60917), colnames(counts_liver)== "GTEX-WK11-1326-SM-4OOSI.1"] <- c(2727483904,2475008286 )
+counts_liver<- counts_liver[!rowSums( counts_liver) == 0, ]
+
+#vst_table <- vst(as.matrix(counts_liver))
+
+vst_table_df <- t(counts_liver)
+pca.tumor <- prcomp(vst_table_df, scale =TRUE)
+```
+
+
+```{r}
+summary(pca.tumor)
+```
+
+
+
+```{r}
+sex<- rownames(recount3_rse_liver@colData)[recount3_rse_liver$gtex.sex == "2"]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_liver@colData)[rownames(recount3_rse_liver@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_liver@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GTEx Liver", xlab = "PC1 (15.19%)", ylab = "PC2 (6.787%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("female", "male/normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+sex<- rownames(recount3_rse_liver@colData)[recount3_rse_liver@colData$gtex.age ==  "70-79"]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_liver@colData)[rownames(recount3_rse_liver@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_liver@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GTEx Liver", xlab = "PC1 (15.19%)", ylab = "PC2 (6.787%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c(">39", "<= 39"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+```{r}
+sex<- rownames(recount3_rse_liver@colData)[recount3_rse_liver@colData$gtex.age ==  "20-29"]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_liver@colData)[rownames(recount3_rse_liver@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_liver@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GTEx Liver", xlab = "PC1 (15.19%)", ylab = "PC2 (6.787%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c(">39", "<= 39"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+sex<- rownames(recount3_rse_liver@colData)[recount3_rse_liver@colData$gtex.smrin >= 7]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_liver@colData)[rownames( recount3_rse_liver@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_liver@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GTEx Liver", xlab = "PC1 (15.19%)", ylab = "PC2 (6.787%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c(">= 7", "< 7"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+SMTSISCH
+```{r}
+sex<- rownames(recount3_rse_liver@colData)[recount3_rse_liver@colData$gtex.smtsisch>= 500]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_liver@colData)[rownames(recount3_rse_liver@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_liver@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GTEx Liver", xlab = "PC1 (15.19%)", ylab = "PC2 (6.787%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("bottomleft", legend = c(">= 500", "< 500"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+```{r }
+#SRP118922
+recount3_rse_LIHC <- create_rse(human_projects[(human_projects$project == "LIHC"),])
+```
+
+```{r}
+library(DESeq2)
+#colData(recount3_rse_PANCREAS)
+counts_liver <- assay(recount3_rse_LIHC)
+#counts_liver[is.na(counts_liver)] <- 0
+#something odd with the integer conversion at these two locations in this sample everything else is
+#counts_liver[ c(60905, 60917), colnames(counts_liver)== "GTEX-WK11-1326-SM-4OOSI.1"] <- c(2727483904,2475008286 )
+#counts_liver<- counts_liver[!rowSums( counts_liver) == 0, ]
+
+vst_table <- vst(as.matrix(counts_liver))
+
+vst_table_df <- t(vst_table)
+pca.tumor <- prcomp(vst_table_df)
+```
+
+
+```{r}
+summary(pca.tumor)
+```
+
+```{r}
+#recount3_rse_LIHC@colData
+nt <- rownames(recount3_rse_LIHC@colData)[recount3_rse_LIHC@colData$tcga.cgc_sample_sample_type == "Solid Tissue Normal"] 
+normal_ids<- rownames(recount3_rse_LIHC@colData)[rownames(recount3_rse_LIHC@colData) %in% nt]
+
+tumor_norm <- ifelse(rownames(recount3_rse_LIHC@colData) %in% normal_ids, "black", "red")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of LIHC", xlab = "PC1 (11.24%)", ylab = "PC2 (9.38%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("tumor", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+#recount3_rse_LIHC@colData
+nt <- rownames(recount3_rse_LIHC@colData)[recount3_rse_LIHC@colData$tcga.xml_days_to_birth < -20000] 
+normal_ids<- rownames(recount3_rse_LIHC@colData)[rownames(recount3_rse_LIHC@colData) %in% nt]
+
+tumor_norm <- ifelse(rownames(recount3_rse_LIHC@colData) %in% normal_ids, "black", "red")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of LIHC", xlab = "PC1 (11.24%)", ylab = "PC2 (9.38%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c(">-2000 day until birth", ">-2000 day until birth"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+
+lung cancer 
+
+```{r }
+#SRP118922
+recount3_rse_lung<- create_rse(human_projects[(human_projects$project == "LUNG"),])
+```
+
+```{r}
+library(DESeq2)
+#colData(recount3_rse_PANCREAS)
+counts_liver <- assay(recount3_rse_lung)
+#counts_liver[is.na(counts_liver)] <- 0
+#something odd with the integer conversion at these two locations in this sample everything else is
+#counts_liver[ c(60905, 60917), colnames(counts_liver)== "GTEX-WK11-1326-SM-4OOSI.1"] <- c(2727483904,2475008286 )
+#counts_liver<- counts_liver[!rowSums( counts_liver) == 0, ]
+
+vst_table <- vst(as.matrix(counts_liver))
+
+vst_table_df <- t(vst_table)
+pca.tumor <- prcomp(vst_table_df)
+```
+
+```{r}
+x<- summary(pca.tumor)
+y<- x$importance
+```
+
+```{r}
+y[,1:10]
+```
+
+
+
+
+
+```{r}
+sex<- rownames(recount3_rse_lung@colData)[recount3_rse_lung$gtex.sex == "2"]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_lung@colData)[rownames(recount3_rse_lung@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_lung@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GTEx Lung", xlab = "PC1 (14.496%)", ylab = "PC2 (8.195%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("female", "male/normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+sex<- rownames(recount3_rse_lung@colData)[recount3_rse_lung@colData$gtex.age ==  "70-79"]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_lung@colData)[rownames(recount3_rse_lung@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_lung@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  ,  main = "PCA of GTEx Lung", xlab = "PC1 (14.496%)", ylab = "PC2 (8.195%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c(">39", "<= 39"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+sex<- rownames(recount3_rse_lung@colData)[recount3_rse_lung@colData$gtex.age ==  "20-29"]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_lung@colData)[rownames(recount3_rse_lung@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_lung@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  ,  main = "PCA of GTEx Lung", xlab = "PC1 (14.496%)", ylab = "PC2 (8.195%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c(">39", "<= 39"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+sex<- rownames(recount3_rse_lung@colData)[recount3_rse_lung@colData$gtex.smrin >= 7]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_lung@colData)[rownames( recount3_rse_lung@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_lung@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  ,  main = "PCA of GTEx Lung", xlab = "PC1 (14.496%)", ylab = "PC2 (8.195%)",cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c(">= 7", "< 7"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+SMTSISCH
+```{r}
+sex<- rownames(recount3_rse_lung@colData)[recount3_rse_lung@colData$gtex.smtsisch>= 500]
+sex<- sex[!is.na(sex)]
+normal_ids<-  rownames(recount3_rse_lung@colData)[rownames(recount3_rse_lung@colData) %in% sex]
+
+tumor_norm <- ifelse( rownames(recount3_rse_lung@colData) %in% normal_ids, "red", "black")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  ,  main = "PCA of GTEx Lung", xlab = "PC1 (14.496%)", ylab = "PC2 (8.195%)",cex.axis = "1.5", cex.lab = "1.5")
+legend("bottomleft", legend = c(">= 500", "< 500"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+
+```{r }
+#SRP118922
+recount3_rse_LUAD<- create_rse(human_projects[(human_projects$project == "LUAD"),])
+```
+
+```{r}
+library(DESeq2)
+#colData(recount3_rse_PANCREAS)
+counts_liver <- assay(recount3_rse_LUAD)
+#counts_liver[is.na(counts_liver)] <- 0
+#something odd with the integer conversion at these two locations in this sample everything else is
+#counts_liver[ c(60905, 60917), colnames(counts_liver)== "GTEX-WK11-1326-SM-4OOSI.1"] <- c(2727483904,2475008286 )
+#counts_liver<- counts_liver[!rowSums( counts_liver) == 0, ]
+
+vst_table <- vst(as.matrix(counts_liver))
+
+vst_table_df <- t(vst_table)
+pca.tumor <- prcomp(vst_table_df)
+```
+
+```{r}
+x<- summary(pca.tumor)
+y<- x$importance
+```
+
+```{r}
+y[,1:10]
+```
+
+
+
+```{r}
+#recount3_rse_LIHC@colData
+nt <- rownames(recount3_rse_LUAD@colData)[recount3_rse_LUAD@colData$tcga.cgc_sample_sample_type == "Solid Tissue Normal"] 
+normal_ids<- rownames(recount3_rse_LUAD@colData)[rownames(recount3_rse_LUAD@colData) %in% nt]
+
+tumor_norm <- ifelse(rownames(recount3_rse_LUAD@colData) %in% normal_ids, "black", "red")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of LUAD", xlab = "PC1 (11.42%)", ylab = "PC2 (9.414%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("tumor", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+#recount3_rse_LIHC@colData
+nt <- rownames(recount3_rse_LIHC@colData)[recount3_rse_LIHC@colData$tcga.cgc_case_gender == "FEMALE"] 
+normal_ids<- rownames(recount3_rse_LIHC@colData)[rownames(recount3_rse_LIHC@colData) %in% nt]
+
+tumor_norm <- ifelse(rownames(recount3_rse_LIHC@colData) %in% normal_ids, "black", "red")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of LIHC", xlab = "PC1 (11.24%)", ylab = "PC2 (9.38%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("male", "female"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+
+```{r}
+#recount3_rse_LIHC@colData
+nt <- rownames(recount3_rse_LIHC@colData)[recount3_rse_LIHC@colData$tcga.xml_days_to_birth < -20000] 
+normal_ids<- rownames(recount3_rse_LIHC@colData)[rownames(recount3_rse_LIHC@colData) %in% nt]
+
+tumor_norm <- ifelse(rownames(recount3_rse_LIHC@colData) %in% normal_ids, "black", "red")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of LIHC", xlab = "PC1 (11.24%)", ylab = "PC2 (9.38%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c(">-2000 day until birth", ">-2000 day until birth"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+
+```{r}
+list <- names(pca.tumor$x[, 2] )[pca.tumor$x[, 2] > 50]
+metadata <- as.data.frame(recount3_rse_LUAD@colData)
+metadata_test <- metadata[rownames(metadata) %in% list, ]
+```
+
+I don' see a reason for the PC2 in the metadata
+### Save Data
+### Save Figures
+    
+# END
+    Location of final scripts:
+    /scripts 
+    
+    Location of data produced:
+    na
+    
+    Dates when operations were done:
+    220524
+    
+## Versions
+```{r}
+sessionInfo()
+```
+

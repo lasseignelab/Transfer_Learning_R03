@@ -1,0 +1,260 @@
+"","ID","Description","GeneRatio","BgRatio","pvalue","p.adjust","qvalue","itemID","Count"
+"1","hsa05206","MicroRNAs in cancer","17/41","1500/20464",1.29669142251526e-09,3.35843078431453e-07,1.37858772288465e-07,"entinostat/fludarabine/az-628/vemurafenib/vorinostat/piceatannol/pi-103/dasatinib/ly-294002/panobinostat/ku-0063794/vandetanib/obatoclax/sgx-523/lapatinib/as-605240/erlotinib",17
+"2","hsa01521","EGFR tyrosine kinase inhibitor resistance","14/41","1052/20464",7.90528319311081e-09,5.97318196797762e-07,2.45190562392091e-07,"fludarabine/az-628/vemurafenib/pi-103/dasatinib/ly-294002/ku-0063794/vandetanib/obatoclax/sgx-523/lapatinib/pentoxifylline/as-605240/erlotinib",14
+"3","hsa04630","JAK-STAT signaling pathway","13/41","880/20464",9.06105036804923e-09,5.97318196797762e-07,2.45190562392091e-07,"fludarabine/az-628/vemurafenib/pi-103/dasatinib/ly-294002/ku-0063794/vandetanib/obatoclax/lapatinib/pentoxifylline/as-605240/erlotinib",13
+"4","hsa05165","Human papillomavirus infection","16/41","1478/20464",9.22499145633609e-09,5.97318196797762e-07,2.45190562392091e-07,"entinostat/fludarabine/az-628/vemurafenib/vorinostat/piceatannol/pi-103/dasatinib/ly-294002/panobinostat/ku-0063794/vandetanib/lapatinib/pentoxifylline/as-605240/erlotinib",16
+"5","hsa05214","Glioma","12/41","816/20464",4.05310129826036e-08,2.09950647249887e-06,8.6181732868273e-07,"fludarabine/az-628/vemurafenib/pi-103/dasatinib/ly-294002/nifedipine/ku-0063794/vandetanib/lapatinib/as-605240/erlotinib",12
+"6","hsa05218","Melanoma","11/41","700/20464",8.59261353265338e-08,3.70914484159538e-06,1.52255081894385e-06,"fludarabine/az-628/vemurafenib/pi-103/dasatinib/ly-294002/vandetanib/sgx-523/lapatinib/as-605240/erlotinib",11
+"7","hsa04915","Estrogen signaling pathway","14/41","1374/20464",2.23549766619484e-07,7.72217290448794e-06,3.16984134669084e-06,"ly-456236/az-628/vemurafenib/pi-103/dasatinib/ly-294002/nifedipine/spironolactone/vandetanib/obatoclax/lapatinib/as-605240/gabapentin/erlotinib",14
+"8","hsa05014","Amyotrophic lateral sclerosis","13/41","1174/20464",2.6627150338727e-07,7.72217290448794e-06,3.16984134669084e-06,"fludarabine/vorinostat/piceatannol/pi-103/dasatinib/ly-294002/panobinostat/ku-0063794/obatoclax/l-693403/lapatinib/pentoxifylline/gabapentin",13
+"9","hsa05230","Central carbon metabolism in cancer","12/41","971/20464",2.68338054596106e-07,7.72217290448794e-06,3.16984134669084e-06,"az-628/vemurafenib/piceatannol/pi-103/dasatinib/ly-294002/ku-0063794/vandetanib/sgx-523/lapatinib/as-605240/erlotinib",12
+"10","hsa05220","Chronic myeloid leukemia","11/41","822/20464",4.30087580137177e-07,1.05121003268329e-05,4.31506658406879e-06,"entinostat/fludarabine/az-628/vemurafenib/vorinostat/pi-103/dasatinib/ly-294002/panobinostat/obatoclax/as-605240",11
+"11","hsa05226","Gastric cancer","12/41","1023/20464",4.69233215670565e-07,1.05121003268329e-05,4.31506658406879e-06,"fludarabine/az-628/vemurafenib/pi-103/ly-294002/ku-0063794/vandetanib/obatoclax/sgx-523/lapatinib/as-605240/erlotinib",12
+"12","hsa04725","Cholinergic synapse","12/41","1042/20464",5.70930157247655e-07,1.05121003268329e-05,4.31506658406879e-06,"thioridazine/flupirtine/pi-103/dasatinib/ly-294002/nifedipine/spironolactone/obatoclax/ambenonium/pentoxifylline/as-605240/gabapentin",12
+"13","hsa01522","Endocrine resistance","13/41","1259/20464",5.9254245458432e-07,1.05121003268329e-05,4.31506658406879e-06,"fludarabine/az-628/vemurafenib/pi-103/dasatinib/ly-294002/ku-0063794/spironolactone/vandetanib/obatoclax/lapatinib/as-605240/erlotinib",13
+"14","hsa05224","Breast cancer","12/41","1048/20464",6.06901036980039e-07,1.05121003268329e-05,4.31506658406879e-06,"fludarabine/az-628/vemurafenib/pi-103/dasatinib/ly-294002/ku-0063794/spironolactone/vandetanib/lapatinib/as-605240/erlotinib",12
+"15","hsa05160","Hepatitis C","13/41","1262/20464",6.08808899237428e-07,1.05121003268329e-05,4.31506658406879e-06,"fludarabine/az-628/vemurafenib/piceatannol/pi-103/dasatinib/ly-294002/vandetanib/lapatinib/pentoxifylline/as-605240/icosapent/erlotinib",13
+"16","hsa05152","Tuberculosis","13/41","1298/20464",8.37788001601097e-07,1.35616932759178e-05,5.56688080011255e-06,"ski-ii/fludarabine/thioridazine/bi-2536/az-628/vemurafenib/pi-103/dasatinib/ly-294002/nifedipine/vandetanib/obatoclax/pentoxifylline",13
+"17","hsa04068","FoxO signaling pathway","13/41","1326/20464",1.06637842980975e-06,1.5745695656734e-05,6.46338248864107e-06,"ly-456236/bi-2536/az-628/vemurafenib/piceatannol/pi-103/dasatinib/ly-294002/vandetanib/lapatinib/pentoxifylline/as-605240/erlotinib",13
+"18","hsa04015","Rap1 signaling pathway","14/41","1566/20464",1.09429545104715e-06,1.5745695656734e-05,6.46338248864107e-06,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/rimonabant/nifedipine/vandetanib/sgx-523/lapatinib/pentoxifylline/as-605240/gabapentin/erlotinib",14
+"19","hsa05031","Amphetamine addiction","11/41","916/20464",1.25089241866837e-06,1.67608295956784e-05,6.88008042740709e-06,"entinostat/thioridazine/vorinostat/piceatannol/ly-294002/panobinostat/nifedipine/spironolactone/as-605240/gabapentin/tetrindole",11
+"20","hsa05034","Alcoholism","12/41","1131/20464",1.35898618343338e-06,1.67608295956784e-05,6.88008042740709e-06,"entinostat/fludarabine/thioridazine/az-628/vemurafenib/vorinostat/panobinostat/nifedipine/pentoxifylline/as-605240/gabapentin/tetrindole",12
+"21","hsa05225","Hepatocellular carcinoma","12/41","1131/20464",1.35898618343338e-06,1.67608295956784e-05,6.88008042740709e-06,"fludarabine/az-628/vemurafenib/pi-103/ly-294002/ku-0063794/vandetanib/obatoclax/sgx-523/lapatinib/as-605240/erlotinib",12
+"22","hsa04921","Oxytocin signaling pathway","12/41","1148/20464",1.58950189878612e-06,1.87127723538911e-05,7.68132496542575e-06,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/nifedipine/spironolactone/vandetanib/lapatinib/as-605240/gabapentin/erlotinib",12
+"23","hsa04213","Longevity regulating pathway - multiple species","9/41","578/20464",1.68036131833292e-06,1.89223296281837e-05,7.76734522433065e-06,"entinostat/vorinostat/piceatannol/pi-103/dasatinib/ly-294002/panobinostat/ku-0063794/as-605240",9
+"24","hsa05210","Colorectal cancer","11/41","949/20464",1.76724644110678e-06,1.90715345102774e-05,7.82859169086777e-06,"fludarabine/az-628/vemurafenib/pi-103/ly-294002/ku-0063794/vandetanib/obatoclax/lapatinib/as-605240/erlotinib",11
+"25","hsa04072","Phospholipase D signaling pathway","12/41","1177/20464",2.06385891719422e-06,2.13815783821321e-05,8.77683160575224e-06,"ly-456236/ski-ii/az-628/vemurafenib/pi-103/dasatinib/ly-294002/ku-0063794/vandetanib/lapatinib/as-605240/erlotinib",12
+"26","hsa05223","Non-small cell lung cancer","11/41","973/20464",2.25287968211616e-06,2.24421476026187e-05,9.21218007666932e-06,"fludarabine/az-628/vemurafenib/pi-103/dasatinib/ly-294002/vandetanib/sgx-523/lapatinib/as-605240/erlotinib",11
+"27","hsa05235","PD-L1 expression and PD-1 checkpoint pathway in cancer","11/41","1027/20464",3.79672453534542e-06,3.6420431653869e-05,1.4950065421828e-05,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/ku-0063794/vandetanib/lapatinib/pentoxifylline/as-605240/erlotinib",11
+"28","hsa05213","Endometrial cancer","9/41","647/20464",4.22799744299315e-06,3.91089763476866e-05,1.60536745015905e-05,"fludarabine/az-628/vemurafenib/pi-103/ly-294002/vandetanib/lapatinib/as-605240/erlotinib",9
+"29","hsa05215","Prostate cancer","12/41","1274/20464",4.69404780072401e-06,4.19227027719834e-05,1.72086688883167e-05,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/ku-0063794/spironolactone/vandetanib/obatoclax/lapatinib/as-605240/erlotinib",12
+"30","hsa05212","Pancreatic cancer","11/41","1067/20464",5.47756639282529e-06,4.7289656524725e-05,1.94117265149247e-05,"fludarabine/az-628/vemurafenib/pi-103/ly-294002/ku-0063794/vandetanib/obatoclax/lapatinib/as-605240/erlotinib",11
+"31","hsa04261","Adrenergic signaling in cardiomyocytes","11/41","1089/20464",6.65577809150163e-06,5.56079524419007e-05,2.28262678180531e-05,"thioridazine/flupirtine/pi-103/dasatinib/ly-294002/nifedipine/spironolactone/obatoclax/as-605240/gabapentin/icosapent",11
+"32","hsa04014","Ras signaling pathway","14/41","1836/20464",7.16470721258909e-06,5.7989349001893e-05,2.3803796989194e-05,"thioridazine/az-628/vemurafenib/pi-103/dasatinib/ly-294002/nifedipine/vandetanib/obatoclax/sgx-523/lapatinib/as-605240/gabapentin/erlotinib",14
+"33","hsa05131","Shigellosis","13/41","1579/20464",7.41484420646516e-06,5.81952924083175e-05,2.38883338071126e-05,"fludarabine/thioridazine/piceatannol/pi-103/dasatinib/ly-294002/ku-0063794/vandetanib/obatoclax/lapatinib/pentoxifylline/as-605240/erlotinib",13
+"34","hsa05231","Choline metabolism in cancer","10/41","912/20464",9.35454436155817e-06,7.12596173424578e-05,2.92510520284017e-05,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/ku-0063794/vandetanib/lapatinib/as-605240/erlotinib",10
+"35","hsa05163","Human cytomegalovirus infection","14/41","1904/20464",1.09103340260561e-05,8.07364717928152e-05,3.31411650114787e-05,"fludarabine/az-628/vemurafenib/piceatannol/pi-103/dasatinib/ly-294002/nifedipine/ku-0063794/vandetanib/lapatinib/pentoxifylline/as-605240/erlotinib",14
+"36","hsa05169","Epstein-Barr virus infection","12/41","1405/20464",1.27489454243664e-05,8.97142432923268e-05,3.68264115932738e-05,"entinostat/fludarabine/vorinostat/piceatannol/pi-103/dasatinib/ly-294002/panobinostat/vandetanib/obatoclax/pentoxifylline/as-605240",12
+"37","hsa04371","Apelin signaling pathway","11/41","1167/20464",1.28163204703324e-05,8.97142432923268e-05,3.68264115932738e-05,"ski-ii/az-628/vemurafenib/vorinostat/pi-103/ly-294002/panobinostat/nifedipine/ku-0063794/as-605240/icosapent",11
+"38","hsa05170","Human immunodeficiency virus 1 infection","13/41","1673/20464",1.38836187842742e-05,9.46278227665006e-05,3.88433655737312e-05,"fludarabine/az-628/vemurafenib/piceatannol/pi-103/dasatinib/ly-294002/nifedipine/ku-0063794/vandetanib/obatoclax/pentoxifylline/as-605240",13
+"39","hsa05016","Huntington disease","11/41","1185/20464",1.47994753409486e-05,9.82836952129666e-05,4.03440488376738e-05,"entinostat/fludarabine/vorinostat/piceatannol/pi-103/ly-294002/panobinostat/ku-0063794/spironolactone/gabapentin/icosapent",11
+"40","hsa04012","ErbB signaling pathway","10/41","987/20464",1.86038081772485e-05,0.000120459657947684,4.94469638395288e-05,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/ku-0063794/vandetanib/lapatinib/as-605240/erlotinib",10
+"41","hsa04613","Neutrophil extracellular trap formation","11/41","1237/20464",2.21098918462212e-05,0.000139669804589544,5.73324538246044e-05,"entinostat/az-628/vemurafenib/vorinostat/pi-103/dasatinib/ly-294002/panobinostat/ku-0063794/pentoxifylline/as-605240",11
+"42","hsa04218","Cellular senescence","11/41","1248/20464",2.40073168105921e-05,0.000144657478666901,5.9379822578163e-05,"az-628/vemurafenib/piceatannol/pi-103/dasatinib/ly-294002/nifedipine/ku-0063794/spironolactone/pentoxifylline/as-605240",11
+"43","hsa04625","C-type lectin receptor signaling pathway","10/41","1019/20464",2.44916582702294e-05,0.000144657478666901,5.9379822578163e-05,"thioridazine/bi-2536/az-628/vemurafenib/pi-103/dasatinib/ly-294002/nifedipine/pentoxifylline/as-605240",10
+"44","hsa04928","Parathyroid hormone synthesis, secretion and action","9/41","806/20464",2.45750156808635e-05,0.000144657478666901,5.9379822578163e-05,"papaverine/az-628/vemurafenib/ly-294002/vandetanib/obatoclax/lapatinib/pentoxifylline/erlotinib",9
+"45","hsa04022","cGMP-PKG signaling pathway","12/41","1509/20464",2.61002615273358e-05,0.00015022150523511,6.16637757721852e-05,"thioridazine/papaverine/az-628/vemurafenib/pi-103/ly-294002/nifedipine/spironolactone/pentoxifylline/as-605240/gabapentin/icosapent",12
+"46","hsa05221","Acute myeloid leukemia","9/41","827/20464",3.00866630715421e-05,0.000169400994250639,6.9536681240864e-05,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/ku-0063794/pentoxifylline/as-605240/icosapent",9
+"47","hsa04666","Fc gamma R-mediated phagocytosis","8/41","643/20464",3.47311913897106e-05,0.000191391033402873,7.85632772757172e-05,"ski-ii/az-628/vemurafenib/pi-103/dasatinib/ly-294002/vandetanib/as-605240",8
+"48","hsa05167","Kaposi sarcoma-associated herpesvirus infection","12/41","1557/20464",3.56080723243336e-05,0.000192135223583383,7.88687566832828e-05,"fludarabine/az-628/vemurafenib/piceatannol/pi-103/dasatinib/ly-294002/nifedipine/ku-0063794/vandetanib/pentoxifylline/as-605240",12
+"49","hsa05164","Influenza A","11/41","1317/20464",3.9473193138646e-05,0.0002086440208757,8.56453814608645e-05,"fludarabine/az-628/vemurafenib/piceatannol/pi-103/dasatinib/ly-294002/vandetanib/pentoxifylline/as-605240/pamidronate",11
+"50","hsa04914","Progesterone-mediated oocyte maturation","10/41","1085/20464",4.18688690402585e-05,0.000216880741628539,8.90264373277075e-05,"bi-2536/az-628/vemurafenib/pi-103/dasatinib/ly-294002/spironolactone/vandetanib/as-605240/erlotinib",10
+"51","hsa05168","Herpes simplex virus 1 infection","10/41","1122/20464",5.56134846278879e-05,0.000282429265071039,0.000115933167129343,"fludarabine/piceatannol/pi-103/dasatinib/ly-294002/ku-0063794/vandetanib/obatoclax/pentoxifylline/as-605240",10
+"52","hsa04071","Sphingolipid signaling pathway","11/41","1401/20464",6.93984251372336e-05,0.000345657540587375,0.000141887468397988,"ski-ii/fludarabine/az-628/vemurafenib/pi-103/dasatinib/ly-294002/obatoclax/pentoxifylline/as-605240/gabapentin",11
+"53","hsa05100","Bacterial invasion of epithelial cells","5/41","218/20464",7.18572317299632e-05,0.000351151377699254,0.000144142609825745,"pi-103/dasatinib/ly-294002/sgx-523/as-605240",5
+"54","hsa04722","Neurotrophin signaling pathway","10/41","1164/20464",7.57430738732738e-05,0.00036328622468848,0.000149123790666679,"fludarabine/az-628/vemurafenib/pi-103/dasatinib/ly-294002/nifedipine/vandetanib/obatoclax/as-605240",10
+"55","hsa04919","Thyroid hormone signaling pathway","10/41","1175/20464",8.19438719189352e-05,0.000385881142309168,0.000158398680647128,"entinostat/az-628/vemurafenib/vorinostat/pi-103/dasatinib/ly-294002/panobinostat/ku-0063794/as-605240",10
+"56","hsa04929","GnRH secretion","8/41","729/20464",8.4066432836028e-05,0.000388807251866629,0.000159599806699978,"az-628/vemurafenib/pi-103/ly-294002/nifedipine/spironolactone/as-605240/gabapentin",8
+"57","hsa04810","Regulation of actin cytoskeleton","10/41","1187/20464",8.91983786652038e-05,0.000405304913583996,0.000166371860483575,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/vandetanib/lapatinib/pentoxifylline/as-605240/erlotinib",10
+"58","hsa04662","B cell receptor signaling pathway","8/41","752/20464",0.000104345127278505,0.000465954964916081,0.000191267837661143,"thioridazine/az-628/vemurafenib/pi-103/dasatinib/ly-294002/vandetanib/as-605240",8
+"59","hsa04540","Gap junction","9/41","994/20464",0.000124642099953488,0.00054715769301616,0.000224600394206999,"ly-456236/thioridazine/az-628/vemurafenib/dasatinib/ly-294002/vandetanib/lapatinib/erlotinib",9
+"60","hsa05202","Transcriptional misregulation in cancer","9/41","1001/20464",0.00013146206672272,0.000565497502588931,0.000232128623293973,"entinostat/fludarabine/vorinostat/dasatinib/panobinostat/obatoclax/sgx-523/pentoxifylline/icosapent",9
+"61","hsa04930","Type II diabetes mellitus","8/41","779/20464",0.000133186670493918,0.000565497502588931,0.000232128623293973,"pi-103/ly-294002/nifedipine/ku-0063794/spironolactone/pentoxifylline/as-605240/gabapentin",8
+"62","hsa05205","Proteoglycans in cancer","12/41","1790/20464",0.000137991545653646,0.000574288634677127,0.000235737257071286,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/ku-0063794/vandetanib/sgx-523/lapatinib/pentoxifylline/as-605240/erlotinib",12
+"63","hsa04926","Relaxin signaling pathway","10/41","1253/20464",0.000139691830056599,0.000574288634677127,0.000235737257071286,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/nifedipine/vandetanib/lapatinib/as-605240/erlotinib",10
+"64","hsa05161","Hepatitis B","11/41","1566/20464",0.000187769902190551,0.000759881322927385,0.000311920396731014,"fludarabine/az-628/vemurafenib/piceatannol/pi-103/dasatinib/ly-294002/vandetanib/obatoclax/pentoxifylline/as-605240",11
+"65","hsa04727","GABAergic synapse","7/41","612/20464",0.000191913453119186,0.000764701297813371,0.000313898927369033,"tiagabine/nnc-05-2090/dasatinib/ly-294002/nifedipine/spironolactone/gabapentin",7
+"66","hsa04510","Focal adhesion","11/41","1575/20464",0.000197488965674214,0.000774994577418506,0.000318124171181748,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/vandetanib/obatoclax/sgx-523/lapatinib/as-605240/erlotinib",11
+"67","hsa05208","Chemical carcinogenesis - reactive oxygen species","12/41","1937/20464",0.000290347527610482,0.00112238820374798,0.000460724277905086,"az-628/vemurafenib/piceatannol/pi-103/dasatinib/ly-294002/vandetanib/sgx-523/lapatinib/as-605240/erlotinib/ebpc",12
+"68","hsa04726","Serotonergic synapse","10/41","1377/20464",0.000301336362110464,0.00112910791915673,0.000463482624811336,"thioridazine/az-628/vemurafenib/suprofen/ly-294002/nifedipine/spironolactone/as-605240/gabapentin/tetrindole",10
+"69","hsa04664","Fc epsilon RI signaling pathway","8/41","879/20464",0.000303613407068591,0.00112910791915673,0.000463482624811336,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/vandetanib/pentoxifylline/as-605240",8
+"70","hsa05162","Measles","9/41","1120/20464",0.000305164302474791,0.00112910791915673,0.000463482624811336,"fludarabine/piceatannol/pi-103/dasatinib/ly-294002/vandetanib/obatoclax/pentoxifylline/as-605240",9
+"71","hsa05020","Prion disease","10/41","1382/20464",0.000310255156374901,0.00113177585212816,0.000464577773074351,"fludarabine/piceatannol/pi-103/dasatinib/ly-294002/nifedipine/spironolactone/pentoxifylline/as-605240/gabapentin",10
+"72","hsa04370","VEGF signaling pathway","8/41","885/20464",0.000317858639004239,0.00114340815975136,0.00046935266870509,"ski-ii/az-628/vemurafenib/pi-103/dasatinib/ly-294002/vandetanib/as-605240",8
+"73","hsa04912","GnRH signaling pathway","9/41","1132/20464",0.000330189729717107,0.00117149506844837,0.000480881942342146,"az-628/vemurafenib/dasatinib/ly-294002/nifedipine/spironolactone/vandetanib/lapatinib/erlotinib",9
+"74","hsa04066","HIF-1 signaling pathway","10/41","1400/20464",0.000344228920664133,0.00120480122232446,0.000494553641352453,"pi-103/ly-294002/nifedipine/ku-0063794/vandetanib/obatoclax/lapatinib/pentoxifylline/as-605240/erlotinib",10
+"75","hsa04211","Longevity regulating pathway","7/41","694/20464",0.00041183007903097,0.00141566665356209,0.000581110879942171,"fludarabine/piceatannol/pi-103/ly-294002/ku-0063794/as-605240/icosapent",7
+"76","hsa05211","Renal cell carcinoma","7/41","695/20464",0.000415407975562621,0.00141566665356209,0.000581110879942171,"az-628/vemurafenib/pi-103/ly-294002/vandetanib/sgx-523/as-605240",7
+"77","hsa05203","Viral carcinogenesis","9/41","1175/20464",0.000434344070458499,0.00146097550972404,0.000599709516285829,"entinostat/fludarabine/vorinostat/piceatannol/pi-103/dasatinib/ly-294002/panobinostat/as-605240",9
+"78","hsa04650","Natural killer cell mediated cytotoxicity","7/41","707/20464",0.00046032581813977,0.00152851778074616,0.000627434650905759,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/pentoxifylline/as-605240",7
+"79","hsa04360","Axon guidance","8/41","939/20464",0.000472540140001786,0.00154921387671472,0.000635930101801204,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/vandetanib/sgx-523/as-605240",8
+"80","hsa04136","Autophagy - other","3/41","77/20464",0.000492616629495559,0.00157632169111088,0.00064705747125462,"pi-103/ly-294002/ku-0063794",3
+"81","hsa04934","Cushing syndrome","8/41","945/20464",0.000492980914980624,0.00157632169111088,0.00064705747125462,"az-628/vemurafenib/ly-294002/nifedipine/spironolactone/vandetanib/lapatinib/erlotinib",8
+"82","hsa04933","AGE-RAGE signaling pathway in diabetic complications","9/41","1208/20464",0.000531614885938609,0.00167912506656219,0.000689256784079583,"fludarabine/pi-103/dasatinib/ly-294002/nifedipine/vandetanib/obatoclax/pentoxifylline/as-605240",9
+"83","hsa04110","Cell cycle","7/41","730/20464",0.00055729190717173,0.0017299501337841,0.000710119746036148,"entinostat/bi-2536/vorinostat/pi-103/dasatinib/ly-294002/panobinostat",7
+"84","hsa04935","Growth hormone synthesis, secretion and action","9/41","1217/20464",0.000561064908254303,0.0017299501337841,0.000710119746036148,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/nifedipine/ku-0063794/spironolactone/as-605240",9
+"85","hsa04064","NF-kappa B signaling pathway","7/41","747/20464",0.000638959351720083,0.00194694673053531,0.00079919374023193,"rucaparib/thioridazine/dasatinib/ly-294002/vandetanib/obatoclax/pentoxifylline",7
+"86","hsa05012","Parkinson disease","9/41","1257/20464",0.000708775912103489,0.00213456931668376,0.000876210123897826,"fludarabine/thioridazine/piceatannol/ly-294002/nifedipine/obatoclax/pentoxifylline/as-605240/tetrindole",9
+"87","hsa05132","Salmonella infection","10/41","1549/20464",0.000765683243548369,0.00227944781700032,0.000935680672696736,"fludarabine/az-628/vemurafenib/pi-103/dasatinib/ly-294002/vandetanib/obatoclax/pentoxifylline/as-605240",10
+"88","hsa04720","Long-term potentiation","7/41","777/20464",0.000806203746850803,0.00237280420948134,0.000974002134353243,"ly-456236/az-628/vemurafenib/ly-294002/nifedipine/spironolactone/gabapentin",7
+"89","hsa05412","Arrhythmogenic right ventricular cardiomyopathy","4/41","228/20464",0.00110001262452006,0.00320116033427747,0.00131403045625696,"nifedipine/spironolactone/gabapentin/icosapent",4
+"90","hsa05171","Coronavirus disease - COVID-19","9/41","1356/20464",0.00121612137039612,0.0034997270548066,0.00143658781766091,"piceatannol/pi-103/dasatinib/ly-294002/vandetanib/lapatinib/pentoxifylline/as-605240/erlotinib",9
+"91","hsa04150","mTOR signaling pathway","7/41","841/20464",0.00127929738456135,0.00364107717144384,0.00149461001550834,"az-628/vemurafenib/pi-103/ly-294002/ku-0063794/pentoxifylline/as-605240",7
+"92","hsa04730","Long-term depression","6/41","616/20464",0.00133109947767258,0.00374733439909997,0.00153822708518227,"ly-456236/az-628/vemurafenib/dasatinib/ly-294002/spironolactone",6
+"93","hsa04660","T cell receptor signaling pathway","8/41","1113/20464",0.00143259082442286,0.00395474087289038,0.00162336447129416,"thioridazine/az-628/vemurafenib/pi-103/dasatinib/ly-294002/pentoxifylline/as-605240",8
+"94","hsa05410","Hypertrophic cardiomyopathy","5/41","419/20464",0.00143531135927296,0.00395474087289038,0.00162336447129416,"nifedipine/spironolactone/pentoxifylline/gabapentin/icosapent",5
+"95","hsa05219","Bladder cancer","6/41","656/20464",0.00183305508949863,0.00498365336025725,0.00204571830679123,"az-628/vemurafenib/dasatinib/vandetanib/lapatinib/erlotinib",6
+"96","hsa04550","Signaling pathways regulating pluripotency of stem cells","6/41","657/20464",0.00184722286712238,0.00498365336025725,0.00204571830679123,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/as-605240",6
+"97","hsa05340","Primary immunodeficiency","4/41","264/20464",0.00188425086923939,0.00503114407353611,0.00206521256422332,"fludarabine/dasatinib/ly-294002/vandetanib",4
+"98","hsa05017","Spinocerebellar ataxia","7/41","906/20464",0.00196069235336331,0.00517478068142428,0.00212417333397217,"ly-456236/pi-103/ly-294002/ku-0063794/spironolactone/as-605240/gabapentin",7
+"99","hsa04210","Apoptosis","9/41","1454/20464",0.00197800497089191,0.00517478068142428,0.00212417333397217,"fludarabine/rucaparib/az-628/vemurafenib/pi-103/ly-294002/obatoclax/pentoxifylline/as-605240",9
+"100","hsa04723","Retrograde endocannabinoid signaling","7/41","914/20464",0.00206107248210366,0.00533817772864848,0.00219124548097337,"ly-456236/dasatinib/ly-294002/rimonabant/nifedipine/spironolactone/gabapentin",7
+"101","hsa04140","Autophagy - animal","7/41","926/20464",0.00221911494312146,0.00569060168582633,0.00233591046644365,"az-628/vemurafenib/pi-103/ly-294002/ku-0063794/obatoclax/as-605240",7
+"102","hsa05216","Thyroid cancer","5/41","475/20464",0.0024828726926794,0.00630454928827415,0.0025879271616163,"fludarabine/az-628/vemurafenib/vandetanib/icosapent",5
+"103","hsa04916","Melanogenesis","6/41","710/20464",0.00272562981088444,0.00685376816523368,0.00281337364230279,"az-628/vemurafenib/piceatannol/dasatinib/ly-294002/nifedipine",6
+"104","hsa04620","Toll-like receptor signaling pathway","7/41","981/20464",0.00306796351290666,0.00764040913310409,0.0031362784899147,"piceatannol/pi-103/dasatinib/ly-294002/vandetanib/pentoxifylline/as-605240",7
+"105","hsa04330","Notch signaling pathway","3/41","146/20464",0.00310965529076413,0.00767048305055151,0.00314862340217721,"entinostat/vorinostat/panobinostat",3
+"106","hsa04070","Phosphatidylinositol signaling system","4/41","306/20464",0.00321175736072546,0.00784759581535749,0.00322132565474947,"pi-103/ly-294002/nifedipine/as-605240",4
+"107","hsa04973","Carbohydrate digestion and absorption","5/41","506/20464",0.00325906119036931,0.0078887555916416,0.00323822115324447,"pi-103/ly-294002/nifedipine/spironolactone/as-605240",5
+"108","hsa04714","Thermogenesis","7/41","1003/20464",0.00347021655418392,0.00832209340308921,0.00341610011669177,"piceatannol/pi-103/dasatinib/ly-294002/rimonabant/ku-0063794/icosapent",7
+"109","hsa05414","Dilated cardiomyopathy","5/41","520/20464",0.00366175938564417,0.00870087780625541,0.00357158568759113,"nifedipine/spironolactone/pentoxifylline/gabapentin/icosapent",5
+"110","hsa04152","AMPK signaling pathway","7/41","1016/20464",0.00372628962504104,0.00870648853633932,0.00357388881190925,"thioridazine/piceatannol/pi-103/ly-294002/ku-0063794/as-605240/icosapent",7
+"111","hsa05133","Pertussis","6/41","757/20464",0.00374068099393968,0.00870648853633932,0.00357388881190925,"piceatannol/dasatinib/ly-294002/nifedipine/vandetanib/pentoxifylline",6
+"112","hsa01524","Platinum drug resistance","6/41","758/20464",0.0037649680157143,0.00870648853633932,0.00357388881190925,"fludarabine/pi-103/ly-294002/obatoclax/lapatinib/as-605240",6
+"113","hsa04728","Dopaminergic synapse","8/41","1323/20464",0.00420693800474902,0.00964245082504422,0.00395808792249326,"thioridazine/dasatinib/ly-294002/nifedipine/spironolactone/as-605240/gabapentin/tetrindole",8
+"114","hsa05120","Epithelial cell signaling in Helicobacter pylori infection","6/41","788/20464",0.00454997852073113,0.0103372319023628,0.00424328560105119,"dasatinib/ly-294002/vandetanib/sgx-523/lapatinib/erlotinib",6
+"115","hsa04721","Synaptic vesicle cycle","4/41","357/20464",0.00554555237396506,0.0124895483900604,0.0051267806843979,"tiagabine/nnc-05-2090/spironolactone/gabapentin",4
+"116","hsa05032","Morphine addiction","6/41","825/20464",0.00567857637968332,0.0126788903649826,0.00520450285252282,"thioridazine/papaverine/ly-294002/spironolactone/pentoxifylline/gabapentin",6
+"117","hsa00982","Drug metabolism - cytochrome P450","6/41","853/20464",0.00666083119252075,0.0147449169133579,0.00605257715199816,"vemurafenib/suprofen/nifedipine/lapatinib/as-605240/tetrindole",6
+"118","hsa04114","Oocyte meiosis","6/41","871/20464",0.00735474595675156,0.016143044091514,0.00662648832856296,"bi-2536/dasatinib/ly-294002/nifedipine/spironolactone/erlotinib",6
+"119","hsa05145","Toxoplasmosis","7/41","1175/20464",0.00817227509841005,0.0177867163906572,0.00730119225952601,"pi-103/dasatinib/ly-294002/vandetanib/obatoclax/pentoxifylline/as-605240",7
+"120","hsa04260","Cardiac muscle contraction","4/41","401/20464",0.00830330270775728,0.0179212950109095,0.00735643485511829,"nifedipine/spironolactone/gabapentin/icosapent",4
+"121","hsa00562","Inositol phosphate metabolism","3/41","212/20464",0.00874821403971852,0.0187255160023727,0.00768655605055738,"pi-103/ly-294002/as-605240",3
+"122","hsa04750","Inflammatory mediator regulation of TRP channels","7/41","1195/20464",0.00893147931786507,0.0189610913387463,0.00778325635120252,"thioridazine/pi-103/dasatinib/ly-294002/nifedipine/as-605240/icosapent",7
+"123","hsa04922","Glucagon signaling pathway","6/41","910/20464",0.00903731024104748,0.0190297833531,0.00781145343898841,"piceatannol/dasatinib/ly-294002/nifedipine/vandetanib/icosapent",6
+"124","hsa05135","Yersinia infection","7/41","1203/20464",0.00924940413506977,0.0193193199272828,0.00793030405468631,"piceatannol/pi-103/dasatinib/ly-294002/vandetanib/pentoxifylline/as-605240",7
+"125","hsa04923","Regulation of lipolysis in adipocytes","5/41","654/20464",0.00950990379418298,0.0197045206615471,0.00808842343757879,"pi-103/ly-294002/pentoxifylline/as-605240/gabapentin",5
+"126","hsa05166","Human T-cell leukemia virus 1 infection","8/41","1523/20464",0.00967969553033043,0.019897151923457,0.00816749581088867,"fludarabine/pi-103/dasatinib/ly-294002/obatoclax/pentoxifylline/as-605240/pamidronate",8
+"127","hsa05415","Diabetic cardiomyopathy","8/41","1542/20464",0.010394781245827,0.0211988058477889,0.00870180609886885,"rucaparib/piceatannol/pi-103/dasatinib/ly-294002/ku-0063794/as-605240/icosapent",8
+"128","hsa05418","Fluid shear stress and atherosclerosis","8/41","1559/20464",0.0110677279466468,0.0223948557670432,0.00919276745568528,"pi-103/dasatinib/ly-294002/nifedipine/vandetanib/obatoclax/pentoxifylline/as-605240",8
+"129","hsa04380","Osteoclast differentiation","7/41","1250/20464",0.0112896345594828,0.0226667856659383,0.00930439078341707,"pi-103/dasatinib/ly-294002/vandetanib/pentoxifylline/as-605240/icosapent",7
+"130","hsa04270","Vascular smooth muscle contraction","7/41","1253/20464",0.0114302275147758,0.0227725302025149,0.00934779740074783,"thioridazine/az-628/vemurafenib/ly-294002/nifedipine/spironolactone/pentoxifylline",7
+"131","hsa04932","Non-alcoholic fatty liver disease","7/41","1260/20464",0.0117632795798147,0.023257171077649,0.00954673553685245,"fludarabine/pi-103/dasatinib/ly-294002/pentoxifylline/as-605240/icosapent",7
+"132","hsa04960","Aldosterone-regulated sodium reabsorption","4/41","453/20464",0.012574163337499,0.0246720326091836,0.0101275159257368,"pi-103/ly-294002/spironolactone/as-605240",4
+"133","hsa04670","Leukocyte transendothelial migration","5/41","707/20464",0.0130096244219817,0.0253345317691223,0.0103994623396925,"pi-103/dasatinib/ly-294002/pentoxifylline/as-605240",5
+"134","hsa04920","Adipocytokine signaling pathway","5/41","718/20464",0.0138327987357745,0.0267365288997433,0.0109749620763019,"pi-103/ly-294002/ku-0063794/pentoxifylline/icosapent",5
+"135","hsa05222","Small cell lung cancer","5/41","720/20464",0.0139861844926009,0.0268327539524713,0.0110144610818923,"fludarabine/pi-103/ly-294002/obatoclax/as-605240",5
+"136","hsa04917","Prolactin signaling pathway","6/41","1009/20464",0.0145349981179872,0.0276806214158727,0.0113624985287671,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/as-605240",6
+"137","hsa03450","Non-homologous end-joining","2/41","94/20464",0.0152388194102552,0.0288091549434752,0.0118257453740744,"pi-103/ly-294002",2
+"138","hsa04668","TNF signaling pathway","6/41","1032/20464",0.0160900457500572,0.0301979844149625,0.0123958399752539,"pi-103/dasatinib/ly-294002/nifedipine/pentoxifylline/as-605240",6
+"139","hsa04740","Olfactory transduction","3/41","267/20464",0.0162514405704307,0.0302323197948072,0.0124099341567792,"ly-294002/nifedipine/icosapent",3
+"140","hsa04520","Adherens junction","5/41","749/20464",0.0163417944836796,0.0302323197948072,0.0124099341567792,"dasatinib/vandetanib/sgx-523/lapatinib/erlotinib",5
+"141","hsa04742","Taste transduction","5/41","756/20464",0.0169479869626982,0.0311314086761619,0.0127789972619075,"ly-456236/thioridazine/nifedipine/spironolactone/gabapentin",5
+"142","hsa04062","Chemokine signaling pathway","7/41","1400/20464",0.0200194293733515,0.0365143113218172,0.0149886016805671,"az-628/vemurafenib/pi-103/dasatinib/ly-294002/vandetanib/as-605240",7
+"143","hsa04217","Necroptosis","6/41","1107/20464",0.0219664643820419,0.039554838863956,0.0162366946769338,"fludarabine/rucaparib/dasatinib/ly-294002/obatoclax/pentoxifylline",6
+"144","hsa04910","Insulin signaling pathway","7/41","1427/20464",0.0219918795228172,0.039554838863956,0.0162366946769338,"az-628/vemurafenib/pi-103/ly-294002/nifedipine/ku-0063794/as-605240",7
+"145","hsa04724","Glutamatergic synapse","5/41","824/20464",0.0236353290486585,0.0422175877489832,0.0173297149467478,"ly-456236/ly-294002/nifedipine/spironolactone/gabapentin",5
+"146","hsa05142","Chagas disease","6/41","1129/20464",0.0239368250437252,0.0424632718241426,0.0174305647398431,"pi-103/dasatinib/ly-294002/vandetanib/pentoxifylline/as-605240",6
+"147","hsa05416","Viral myocarditis","3/41","318/20464",0.0256503396033855,0.0451934554916792,0.0185512660217826,"dasatinib/vandetanib/pentoxifylline",3
+"148","hsa04530","Tight junction","5/41","869/20464",0.0288956346669882,0.0505673606672294,0.020757177107865,"dasatinib/ly-294002/nifedipine/spironolactone/lapatinib",5
+"149","hsa04911","Insulin secretion","4/41","595/20464",0.0306567811380537,0.0532893041258787,0.0218744959021083,"ly-294002/nifedipine/spironolactone/icosapent",4
+"150","hsa04141","Protein processing in endoplasmic reticulum","4/41","600/20464",0.0314782076322328,0.0543523718449887,0.0223108699709159,"fludarabine/dasatinib/ly-294002/obatoclax",4
+"151","hsa04621","NOD-like receptor signaling pathway","6/41","1226/20464",0.0340578740288172,0.0580328248254187,0.0238216431919012,"piceatannol/dasatinib/ly-294002/vandetanib/obatoclax/pentoxifylline",6
+"152","hsa04931","Insulin resistance","6/41","1226/20464",0.0340578740288172,0.0580328248254187,0.0238216431919012,"pi-103/ly-294002/ku-0063794/pentoxifylline/as-605240/icosapent",6
+"153","hsa05030","Cocaine addiction","4/41","617/20464",0.0343687057097586,0.058179704436781,0.0238819351681157,"thioridazine/as-605240/gabapentin/tetrindole",4
+"154","hsa05140","Leishmaniasis","4/41","630/20464",0.0366813734544093,0.0616914008096884,0.0253234362193803,"dasatinib/ly-294002/vandetanib/pentoxifylline",4
+"155","hsa04622","RIG-I-like receptor signaling pathway","4/41","636/20464",0.0377787727994381,0.0631271106777708,0.0259127745517368,"piceatannol/dasatinib/ly-294002/pentoxifylline",4
+"156","hsa00230","Purine metabolism","5/41","963/20464",0.0421671258062683,0.0700082409219455,0.028737379935446,"fludarabine/papaverine/dasatinib/ly-294002/pentoxifylline",5
+"157","hsa04215","Apoptosis - multiple species","3/41","392/20464",0.0435137084423121,0.0713294334592331,0.0292797105441274,"fludarabine/ly-294002/obatoclax",3
+"158","hsa05033","Nicotine addiction","3/41","392/20464",0.0435137084423121,0.0713294334592331,0.0292797105441274,"thioridazine/spironolactone/gabapentin",3
+"159","hsa04350","TGF-beta signaling pathway","3/41","433/20464",0.0555098601161284,0.0904217218243853,0.0371168213950941,"dasatinib/ly-294002/pentoxifylline",3
+"160","hsa00830","Retinol metabolism","4/41","732/20464",0.0579265870370436,0.0931862487117657,0.0382516200767663,"vemurafenib/suprofen/nifedipine/lapatinib",4
+"161","hsa05204","Chemical carcinogenesis - DNA adducts","4/41","732/20464",0.0579265870370436,0.0931862487117657,0.0382516200767663,"vemurafenib/suprofen/nifedipine/lapatinib",4
+"162","hsa00591","Linoleic acid metabolism","3/41","443/20464",0.0586543438706158,0.0937745374227747,0.0384931041646017,"vemurafenib/suprofen/nifedipine",3
+"163","hsa04924","Renin secretion","4/41","740/20464",0.059825048606376,0.0950594330616649,0.0390205354164932,"nifedipine/spironolactone/pentoxifylline/gabapentin",4
+"164","hsa04659","Th17 cell differentiation","5/41","1076/20464",0.0623966185210278,0.0985410012008915,0.0404496692594596,"pi-103/dasatinib/ly-294002/ku-0063794/pentoxifylline",5
+"165","hsa05110","Vibrio cholerae infection","2/41","206/20464",0.0640146897162587,0.10019680923972,0.0411293547377025,"flupirtine/ly-294002",2
+"166","hsa04144","Endocytosis","4/41","758/20464",0.0642188043775811,0.10019680923972,0.0411293547377025,"dasatinib/vandetanib/lapatinib/erlotinib",4
+"167","hsa04713","Circadian entrainment","4/41","766/20464",0.0662256427429827,0.102709230361871,0.0421606676145052,"ly-294002/nifedipine/spironolactone/gabapentin",4
+"168","hsa05146","Amoebiasis","4/41","773/20464",0.0680087718746766,0.104846856640126,0.043038132577333,"pi-103/ly-294002/pentoxifylline/as-605240",4
+"169","hsa00290","Valine, leucine and isoleucine biosynthesis","1/41","36/20464",0.0697118359150545,0.10683648226035,0.0438548453903488,"gabapentin",1
+"170","hsa04611","Platelet activation","5/41","1121/20464",0.0717768827596462,0.109354191969108,0.0448883291561874,"pi-103/dasatinib/ly-294002/vandetanib/as-605240",5
+"171","hsa04936","Alcoholic liver disease","6/41","1482/20464",0.0730611052641027,0.110659802709957,0.045424263660661,"piceatannol/dasatinib/ly-294002/vandetanib/pentoxifylline/icosapent",6
+"172","hsa05130","Pathogenic Escherichia coli infection","5/41","1155/20464",0.0793627789610479,0.119505579947159,0.0490553284887751,"fludarabine/dasatinib/ly-294002/vandetanib/pentoxifylline",5
+"173","hsa04115","p53 signaling pathway","3/41","512/20464",0.0825676552069348,0.123612847968764,0.0507413031694579,"fludarabine/ly-294002/obatoclax",3
+"174","hsa00340","Histidine metabolism","2/41","240/20464",0.0833738719582307,0.12410248757001,0.0509422932110182,"as-605240/tetrindole",2
+"175","hsa05217","Basal cell carcinoma","2/41","242/20464",0.0845635397597882,0.12482335976429,0.0512382009192982,"fludarabine/ly-294002",2
+"176","hsa04971","Gastric acid secretion","3/41","518/20464",0.0848220514228382,0.12482335976429,0.0512382009192982,"flupirtine/ly-294002/nifedipine",3
+"177","hsa04137","Mitophagy - animal","3/41","523/20464",0.0867211157153966,0.126896999832134,0.0520894004594413,"dasatinib/ly-294002/obatoclax",3
+"178","hsa04974","Protein digestion and absorption","3/41","531/20464",0.0897977272687574,0.130660737992181,0.0536343610534861,"flupirtine/saxagliptin/icosapent",3
+"179","hsa00980","Metabolism of xenobiotics by cytochrome P450","4/41","869/20464",0.0949595547743082,0.137399579254446,0.0564005588486041,"vemurafenib/suprofen/nifedipine/lapatinib",4
+"180","hsa04623","Cytosolic DNA-sensing pathway","2/41","264/20464",0.0979850159549748,0.140989550735214,0.0578741907102483,"piceatannol/pentoxifylline",2
+"181","hsa05322","Systemic lupus erythematosus","2/41","266/20464",0.099234135941639,0.141998017728644,0.0582881519633937,"pentoxifylline/gabapentin",2
+"182","hsa00140","Steroid hormone biosynthesis","4/41","906/20464",0.106542142114073,0.151187133733231,0.0620601524367256,"vemurafenib/nifedipine/spironolactone/lapatinib",4
+"183","hsa00040","Pentose and glucuronate interconversions","2/41","278/20464",0.106823341595295,0.151187133733231,0.0620601524367256,"ranirestat/ebpc",2
+"184","hsa00360","Phenylalanine metabolism","2/41","295/20464",0.117835109985041,0.165865725468074,0.0680855040531415,"as-605240/tetrindole",2
+"185","hsa00051","Fructose and mannose metabolism","2/41","314/20464",0.130468810922298,0.182656335291217,0.0749778088372809,"ranirestat/ebpc",2
+"186","hsa00760","Nicotinate and nicotinamide metabolism","2/41","332/20464",0.142719218628608,0.198732675402202,0.0815769161374613,"piceatannol/pentoxifylline",2
+"187","hsa04340","Hedgehog signaling pathway","2/41","335/20464",0.14478517297968,0.200531335838166,0.0823152404781744,"ly-294002/obatoclax",2
+"188","hsa04658","Th1 and Th2 cell differentiation","3/41","662/20464",0.146191709211849,0.201402407903558,0.0826728030817288,"dasatinib/ly-294002/pentoxifylline",3
+"189","hsa03030","DNA replication","1/41","81/20464",0.150210375382928,0.205843847746975,0.0844959505078012,"fludarabine",1
+"190","hsa00790","Folate biosynthesis","2/41","348/20464",0.153811098250093,0.209668812877759,0.0860660438961741,"ranirestat/ebpc",2
+"191","hsa00564","Glycerophospholipid metabolism","2/41","352/20464",0.156611107932042,0.212367942169628,0.0871739978017981,"ambenonium/pentoxifylline",2
+"192","hsa03040","Spliceosome","1/41","88/20464",0.162105497857155,0.217971948834785,0.089474362252848,"dasatinib",1
+"193","hsa00350","Tyrosine metabolism","3/41","696/20464",0.162426973456037,0.217971948834785,0.089474362252848,"piceatannol/as-605240/tetrindole",3
+"194","hsa04961","Endocrine and other factor-regulated calcium reabsorption","2/41","378/20464",0.175043931709134,0.233692671714772,0.0959274937744035,"ly-294002/icosapent",2
+"195","hsa00052","Galactose metabolism","2/41","384/20464",0.179349260556407,0.238212607610817,0.0977828627055174,"ranirestat/ebpc",2
+"196","hsa05143","African trypanosomiasis","2/41","388/20464",0.182229082890377,0.24080271667657,0.0988460653701831,"ly-294002/pentoxifylline",2
+"197","hsa00561","Glycerolipid metabolism","2/41","395/20464",0.187286252919056,0.246229134548404,0.101073532165774,"ranirestat/ebpc",2
+"198","hsa04612","Antigen processing and presentation","2/41","415/20464",0.201845451027584,0.264030160687598,0.108380598372068,"dasatinib/pentoxifylline",2
+"199","hsa04925","Aldosterone synthesis and secretion","3/41","781/20464",0.205219569663465,0.267094816798178,0.109638595800105,"ly-294002/nifedipine/spironolactone",3
+"200","hsa00260","Glycine, serine and threonine metabolism","2/41","428/20464",0.211384140118447,0.273742461453388,0.112367358694543,"as-605240/tetrindole",2
+"201","hsa04310","Wnt signaling pathway","3/41","797/20464",0.213568910229919,0.27495847140447,0.11286651335847,"dasatinib/ly-294002/icosapent",3
+"202","hsa03050","Proteasome","1/41","120/20464",0.214446375381093,0.27495847140447,0.11286651335847,"pentoxifylline",1
+"203","hsa04927","Cortisol synthesis and secretion","2/41","434/20464",0.215803538787305,0.275335549487252,0.113021298509297,"nifedipine/spironolactone",2
+"204","hsa05144","Malaria","2/41","437/20464",0.218016853251337,0.276795906824001,0.113620754274433,"sgx-523/pentoxifylline",2
+"205","hsa05320","Autoimmune thyroid disease","1/41","125/20464",0.222331079130361,0.280896338998846,0.115303922937953,"pentoxifylline",1
+"206","hsa00983","Drug metabolism - other enzymes","3/41","820/20464",0.225705551189503,0.282961849150539,0.116151785263989,"fludarabine/vemurafenib/pentoxifylline",3
+"207","hsa05134","Legionellosis","2/41","448/20464",0.226150975962014,0.282961849150539,0.116151785263989,"dasatinib/pentoxifylline",2
+"208","hsa00240","Pyrimidine metabolism","2/41","462/20464",0.236539728790329,0.294537450753342,0.120903403885745,"fludarabine/pentoxifylline",2
+"209","hsa04390","Hippo signaling pathway","2/41","473/20464",0.244724817066092,0.303271424019702,0.124488574785572,"dasatinib/ly-294002",2
+"210","hsa04145","Phagosome","2/41","480/20464",0.249941478139121,0.308261156371583,0.126536788431335,"pi-103/pentoxifylline",2
+"211","hsa01523","Antifolate resistance","2/41","484/20464",0.252924666672586,0.310462031602843,0.127440216183244,"nifedipine/pentoxifylline",2
+"212","hsa04970","Salivary secretion","3/41","884/20464",0.260168561539008,0.317847440748128,0.13047182083138,"thioridazine/ly-294002/nifedipine",3
+"213","hsa04744","Phototransduction","1/41","151/20464",0.262103140504776,0.318707574604399,0.130824893456794,"nifedipine",1
+"214","hsa05332","Graft-versus-host disease","1/41","157/20464",0.270995536524087,0.326555344729256,0.134046290663096,"pentoxifylline",1
+"215","hsa04640","Hematopoietic cell lineage","2/41","509/20464",0.271592465380998,0.326555344729256,0.134046290663096,"dasatinib/pentoxifylline",2
+"216","hsa04918","Thyroid hormone synthesis","2/41","510/20464",0.272339592515519,0.326555344729256,0.134046290663096,"diflunisal/ly-294002",2
+"217","hsa05330","Allograft rejection","1/41","164/20464",0.281237906313691,0.334925527216226,0.13748213065978,"pentoxifylline",1
+"218","hsa05310","Asthma","1/41","165/20464",0.282689593300939,0.334925527216226,0.13748213065978,"pentoxifylline",1
+"219","hsa00061","Fatty acid biosynthesis","1/41","166/20464",0.284138419680301,0.334925527216226,0.13748213065978,"icosapent",1
+"220","hsa01210","2-Oxocarboxylic acid metabolism","1/41","167/20464",0.285584390948066,0.334925527216226,0.13748213065978,"gabapentin",1
+"221","hsa05323","Rheumatoid arthritis","2/41","528/20464",0.285785874574463,0.334925527216226,0.13748213065978,"vandetanib/pentoxifylline",2
+"222","hsa00770","Pantothenate and CoA biosynthesis","1/41","173/20464",0.294200567709225,0.343233995660762,0.140892637926182,"gabapentin",1
+"223","hsa04657","IL-17 signaling pathway","3/41","954/20464",0.298676628831514,0.346893483710144,0.142394805343323,"dasatinib/ly-294002/pentoxifylline",3
+"224","hsa04672","Intestinal immune network for IgA production","1/41","183/20464",0.308336081361072,0.35651359407374,0.146343722826449,"pentoxifylline",1
+"225","hsa04940","Type I diabetes mellitus","1/41","192/20464",0.320821629164161,0.369301342015634,0.151592910154762,"pentoxifylline",1
+"226","hsa00330","Arginine and proline metabolism","2/41","584/20464",0.327454244327848,0.375268359650056,0.15404228540807,"as-605240/tetrindole",2
+"227","hsa02010","ABC transporters","1/41","199/20464",0.330380329641416,0.376953768181175,0.154734121464331,"nifedipine",1
+"228","hsa00190","Oxidative phosphorylation","1/41","206/20464",0.339807737813401,0.386009667077503,0.158451438223239,"piceatannol",1
+"229","hsa04514","Cell adhesion molecules","1/41","209/20464",0.343808300767175,0.388848689513967,0.159616816260559,"pentoxifylline",1
+"230","hsa00380","Tryptophan metabolism","2/41","619/20464",0.353229934641514,0.397767622052835,0.163277910291958,"as-605240/tetrindole",2
+"231","hsa00510","N-Glycan biosynthesis","1/41","218/20464",0.355668607941003,0.398779954358094,0.163693458200234,"spironolactone",1
+"232","hsa00053","Ascorbate and aldarate metabolism","1/41","223/20464",0.362167026503663,0.404315775277796,0.165965833379628,"ebpc",1
+"233","hsa00600","Sphingolipid metabolism","1/41","230/20464",0.371157502172864,0.412574219153527,0.169355806277205,"ski-ii",1
+"234","hsa00900","Terpenoid backbone biosynthesis","1/41","233/20464",0.374972606041519,0.415033781900656,0.170365421548329,"pamidronate",1
+"235","hsa03410","Base excision repair","1/41","240/20464",0.383786911524278,0.422982170573566,0.173628121227109,"rucaparib",1
+"236","hsa04060","Cytokine-cytokine receptor interaction","2/41","720/20464",0.42559757310642,0.467075302688825,0.191727720266496,"dasatinib/pentoxifylline",2
+"237","hsa01040","Biosynthesis of unsaturated fatty acids","1/41","293/20464",0.446701015936694,0.487339692219478,0.200045961853962,"icosapent",1
+"238","hsa00520","Amino sugar and nucleotide sugar metabolism","1/41","294/20464",0.447825663120602,0.487339692219478,0.200045961853962,"pentoxifylline",1
+"239","hsa05150","Staphylococcus aureus infection","1/41","300/20464",0.454526859818276,0.492562580305161,0.202189882588178,"pentoxifylline",1
+"240","hsa04978","Mineral absorption","1/41","304/20464",0.458950175374862,0.495283730925372,0.203306875933601,"icosapent",1
+"241","hsa00590","Arachidonic acid metabolism","2/41","773/20464",0.46199288969767,0.496498582704135,0.203805555184384,"suprofen/nifedipine",2
+"242","hsa04216","Ferroptosis","1/41","320/20464",0.476296115062004,0.509754933062227,0.20924709709118,"icosapent",1
+"243","hsa04976","Bile secretion","2/41","810/20464",0.486637251392787,0.517899660863852,0.212590391169474,"vemurafenib/nifedipine",2
+"244","hsa00250","Alanine, aspartate and glutamate metabolism","1/41","331/20464",0.487905472010733,0.517899660863852,0.212590391169474,"dasatinib",1
+"245","hsa04972","Pancreatic secretion","2/41","857/20464",0.516964928566791,0.54650578162775,0.224332793921572,"flupirtine/ly-294002",2
+"246","hsa05321","Inflammatory bowel disease","1/41","373/20464",0.529966758635019,0.557973132058821,0.229039976988177,"pentoxifylline",1
+"247","hsa01240","Biosynthesis of cofactors","2/41","947/20464",0.571792089957209,0.599373052791727,0.246034051339014,"gabapentin/ebpc",2
+"248","hsa00270","Cysteine and methionine metabolism","1/41","421/20464",0.573917054410611,0.599373052791727,0.246034051339014,"gabapentin",1
+"249","hsa04061","Viral protein interaction with cytokine and cytokine receptor","1/41","429/20464",0.580841305288559,0.604168265340308,0.248002417392283,"pentoxifylline",1
+"250","hsa00480","Glutathione metabolism","1/41","472/20464",0.616219462758878,0.638403363418198,0.262055434689039,"fludarabine",1
+"251","hsa00071","Fatty acid degradation","1/41","485/20464",0.626329343972928,0.646292032227045,0.265293620219189,"icosapent",1
+"252","hsa00620","Pyruvate metabolism","1/41","507/20464",0.64284951326217,0.660706444186119,0.271210529822386,"ebpc",1
+"253","hsa00280","Valine, leucine and isoleucine degradation","1/41","516/20464",0.649400432817177,0.66218390590413,0.271817006690986,"gabapentin",1
+"254","hsa01212","Fatty acid metabolism","1/41","516/20464",0.649400432817177,0.66218390590413,0.271817006690986,"icosapent",1
+"255","hsa01230","Biosynthesis of amino acids","1/41","528/20464",0.657952911624627,0.668273741610896,0.274316797003457,"gabapentin",1
+"256","hsa00010","Glycolysis / Gluconeogenesis","1/41","632/20464",0.724031104882386,0.732515844392726,0.300687259840135,"ebpc",1
+"257","hsa04146","Peroxisome","1/41","642/20464",0.729684877158188,0.735363358692493,0.301856123665685,"icosapent",1
+"258","hsa04610","Complement and coagulation cascades","1/41","721/20464",0.770548459456416,0.773535081392294,0.317525068972248,"pentoxifylline",1
+"259","hsa03320","PPAR signaling pathway","1/41","749/20464",0.783531655286508,0.783531655286508,0.321628519341342,"icosapent",1

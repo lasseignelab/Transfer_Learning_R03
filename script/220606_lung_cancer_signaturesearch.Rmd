@@ -1,0 +1,2168 @@
+---
+title: "220606_lung_cancer_signaturesearch"
+author: "Jennifer Fisher"
+date: "6/6/2022"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# START 
+    Goal/Purpose of operations: 
+    quick summary 
+    
+    Finished psedocode on: Date
+    
+    System which operations were done on: my laptop(on cheaha), lab mac etc... 
+    
+    GitHub Repo:
+    
+    Directory of operations: /path
+    
+    Scripts being edited for operations: filename(s)
+    
+    Data being used: description and location
+    
+    Papers and tools: deseq with paper 
+
+# STEPS
+### Set working directory 
+### load in data
+```{r}
+library(recount3)
+library(SummarizedExperiment)
+```
+
+```{r }
+human_projects<- available_projects()
+```
+
+```{r }
+#SRP118922
+recount3_rse_LUAD<- create_rse(human_projects[(human_projects$project == "LUAD"),])
+```
+```{r}
+#SRP118922
+recount3_rse_LUNG<- create_rse(human_projects[(human_projects$project == "LUNG"),])
+```
+```{r}
+LUAD_counts<- assay(recount3_rse_LUAD)
+LUAD_metadata<- as.data.frame(colData(recount3_rse_LUAD))
+LUNG_counts<- assay(recount3_rse_LUNG)
+LUNG_metadata<- as.data.frame(colData(recount3_rse_LUNG))
+```
+
+
+
+LUNG cancer vs normal 
+things to add to metadata- database, tumor/normal, subtype, sex
+
+```{r}
+#order the tcga data to match recount3 order
+recount3_ids <- colnames(LUAD_counts)
+recount_metadata_sub <-LUAD_metadata[rownames(LUAD_metadata) %in% recount3_ids,]
+identical(rownames(recount_metadata_sub),recount3_ids)
+ids <- recount_metadata_sub$tcga.tcga_barcode 
+
+nam <- c()
+status<- c()
+sex<- c()
+for (i in 1:length(ids)){
+  
+nam[i]<- ids[i]
+#create tumor/normal col
+status[i] <-LUAD_metadata$tcga.cgc_sample_sample_type[LUAD_metadata$tcga.tcga_barcode == ids[i]]
+#create sex col 
+sex[i]<- LUAD_metadata$tcga.cgc_case_gender[LUAD_metadata$tcga.tcga_barcode == ids[i]]
+}
+#create database col
+database <- rep("TCGA", length(sex))
+#create metadata 
+tcga_luad_metadata<- as.data.frame(cbind(nam, database, status,  sex))
+rownames(tcga_luad_metadata) <- recount3_ids
+tcga_luad_metadata[1:5,]
+```
+```{r}
+#order the metadata to match recount3 order
+
+#create sex col 
+identical (rownames(LUNG_metadata), colnames( LUNG_counts))
+nam<- LUNG_metadata$external_id
+sex<- ifelse(LUNG_metadata$gtex.sex == 1, "male", "female")
+#create database col
+database<- rep ("GTEx",length(sex) )
+#create normal col
+status<- rep ("Solid Tissue Normal", length(sex))
+
+
+#create metadata 
+gtex_metadata<- as.data.frame(cbind(nam, database, status, sex))
+rownames(gtex_metadata)<- rownames(LUNG_metadata)
+#combine count and metadata
+gtex_metadata[1:5,]
+```
+
+```{r}
+all_metadata <- rbind(tcga_luad_metadata, gtex_metadata)
+rownames(all_metadata)<- c(rownames(tcga_luad_metadata), rownames(gtex_metadata))
+count_table<- cbind(LUAD_counts, LUNG_counts)
+```
+
+```{r}
+identical(rownames(all_metadata), colnames(count_table))
+```
+```{r}
+library(signatureSearch)
+library(HDF5Array)
+se <- SummarizedExperiment(HDF5Array("~/data/lincs_2020.h5", name="assay"))
+```
+
+```{r}
+rownames(se) <- HDF5Array("~/data/lincs_2020.h5", name="rownames")
+colnames(se) <- HDF5Array("~/data/lincs_2020.h5", name="colnames")
+```
+
+```{r}
+db_path <- "~/data/lincs_2020.h5"
+```
+
+remove recurrent tumors
+```{r}
+all_metadata_v3<- all_metadata[!all_metadata$status == "Recurrent Tumor",]
+count_table_v3<- count_table[, !all_metadata$status == "Recurrent Tumor"]
+```
+
+
+### Analysis
+#### Deseq2
+deseq2 with raw counts
+DESEq2 (make into a function )
+
+```{r}
+library(DESeq2)
+```
+
+```{r eval= FALSE}
+dds_luad_normal <- DESeqDataSetFromMatrix(countData = count_table,
+                              colData = all_metadata,
+                              design= ~ database + status)
+```
+https://stackoverflow.com/questions/64553944/deseq2-na-values-are-not-allowed-error-when-anyis-nacounts-false
+scale the matrix down because the integer conversion cannot convert the large numbers to integers
+
+```{r}
+# remove the sample with the high gene counts 
+#count_table_v2 <- count_table[,!colnames(count_table) == "GTEX-WK11-1326-SM-4OOSI.1"]
+#all_metadata_v2 <- all_metadata[!rownames(all_metadata) == "GTEX-WK11-1326-SM-4OOSI.1",]
+```
+
+
+```{r}
+dds_luad_normal <- DESeqDataSetFromMatrix(countData = count_table_v3,
+                              colData = all_metadata_v3,
+                              design= ~ database + status)
+```
+
+
+```{r}
+
+  #count-matrix with just counts
+  #metadata
+  #dds <- DESeqDataSetFromMatrix(countData = GLUT_COUNTS2,
+                         #     colData = colD,
+                             # design= ~ batch + group)
+deseq2_function <- function(dds, file_name, condition,  B, A){
+  #dds deseq2 object
+  #condition b-TUMOR a-CONTROL 
+  dds <- DESeq(dds)
+  #resultsNames(dds) # lists the coefficients
+  dds_res <- results(dds, c(condition,B,A))
+  res_df <- as.data.frame(dds_res)
+  #head(EV_GLUT_res_df_ENS)
+  file_name <- paste0("~/output/lung_cancer/deseq2_res/",file_name, sep="")
+  write.table(res_df, file=file_name, sep=",", row.names =TRUE)
+  return(res_df)
+}
+```
+
+```{r eval= FALSE}
+deseq2_luad_normal <- deseq2_function(dds_luad_normal, "Deseq2_luad_normal_gtx_res.csv", "status", "Primary Tumor", "Solid Tissue Normal")
+```
+signaturesearch 
+Genes
+```{r}
+#SRP118922
+library(recount3)
+human_projects<- available_projects()
+test<- create_rse(human_projects[(human_projects$project == "SRP118922"),])
+gene_info <- test@rowRanges
+rm(test)
+```
+
+```{r}
+dim(as.data.frame(gene_info))
+```
+
+```{r}
+identical(gene_info$gene_id, rownames(deseq2_luad_normal))
+```
+
+```{r}
+deseq2_luad_normal$Symbol<- gene_info$gene_name
+```
+
+```{r}
+deseq2_luad_normal<- deseq2_luad_normal[complete.cases(deseq2_luad_normal),]
+deseq_results_sig <- deseq2_luad_normal[deseq2_luad_normal$padj < 0.05 & abs(deseq2_luad_normal$log2FoldChange) > 2,]
+```
+
+```{r}
+downset<- deseq_results_sig$Symbol[order(deseq_results_sig$log2FoldChange)] [1:500]
+upset<- deseq_results_sig$Symbol[order(-deseq_results_sig$log2FoldChange)] [1:500]
+```
+
+
+
+```{r}
+#upset<-deseq_results_sig$Symbol[deseq_results_sig$log2FoldChange >0]
+#downset<- deseq_results_sig$Symbol[deseq_results_sig$log2FoldChange <0]
+```
+```{r}
+gene_info_LINCS<- read.table("~/data/LINCS_210914_LEVEL3/geneinfo_beta.txt", sep="\t", header=TRUE)
+```
+
+```{r}
+upset_v2<- c()
+for (i in 1:length(upset)){
+  possibleError <- tryCatch(
+      gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol],
+      error=function(e) e
+  )
+  if(length(possibleError)> 0){
+    #REAL WORK
+    upset_v2[i]<- gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol]
+  }else{
+    upset_v2[i]<- NA
+  }
+  
+}
+names(upset_v2)<- upset
+```
+
+```{r}
+downset_v2<- c()
+for (i in 1:length(downset)){
+  possibleError <- tryCatch(
+      gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol],
+      error=function(e) e
+  )
+  if(length(possibleError)> 0){
+    #REAL WORK
+    downset_v2[i]<- gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol]
+  }else{
+    downset_v2[i]<- NA
+  }
+  
+}
+names(downset_v2)<- downset
+```
+
+```{r}
+downset_v2<- downset_v2[complete.cases(downset_v2)]
+upset_v2<- upset_v2[complete.cases(upset_v2)]
+```
+
+```{r}
+#double check that they didn't overlap 
+ intersect(downset_v2, upset_v2)
+```
+
+
+```{r}
+names(upset_v2)<- NULL
+names(downset_v2)<- NULL
+```
+
+```{r}
+deseq_lung_list<- list(up= upset_v2, down= downset_v2)
+```
+
+```{r}
+saveRDS(deseq_lung_list,"~/output/lung_cancer/deseq2_res/SR_gene_list_luad_deseq2.rds")
+```
+
+
+```{r}
+set.seed(101)
+qsig_lincs_deseq2_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
+                   gess_method="LINCS", refdb=db_path)
+```
+
+
+```{r}
+set.seed(101)
+lincs_deseq_gbm <- gess_lincs(qsig_lincs_deseq2_res, sortby="NCS", workers=2)
+#result(lincs)
+```
+
+
+
+```{r}
+lincs_deseq_luad_res <- result(lincs_deseq_gbm)
+```
+
+```{r}
+write.csv(lincs_deseq_luad_res, file= "~/output/lung_cancer/deseq2_res/220602_SR_LINCS_LUAD_DESEQ2_RES.csv" )
+```
+
+```{r}
+lincs_deseq_luad_res_A549 <- lincs_deseq_luad_res[lincs_deseq_luad_res$cell == "A549",]
+```
+tau 
+```{r}
+A549_taudf <- readRDS("~/data/A549_taudf.rds")
+```
+
+
+```{r}
+tau_scores<- function(results_df, tau_score_df){
+  #download the tau values 
+  #scores <- readRDS(tau_score_file)
+  results_df$id <- paste(results_df$pert, results_df$cell, results_df$type, sep= "__")
+  #print(results_df$id)
+  tau_list<- c()
+  for (i in 1:nrow(results_df)){
+    #print( results_df$id[i])
+    #print(colnames(tau_score_df) == results_df$id[i])
+    index <- grepl(results_df$pert[i], colnames(tau_score_df))
+   scores <- tau_score_df[,colnames(tau_score_df) == results_df$id[i]]
+   #print(scores)
+      tmpsum <- sum( abs(scores) < abs(results_df$NCS[i]))
+      secd<- (tmpsum/length(scores)) *100
+      tau<- secd* sign( results_df$NCS[i])
+      #print(tau)
+   tau_list[i]<- tau
+  }
+  return(tau_list)
+}
+```
+
+```{r}
+tau_test<- tau_scores(lincs_deseq_luad_res_A549 , A549_taudf)
+```
+
+```{r}
+lincs_deseq_luad_res_A549$jlf_tau<- tau_test
+```
+
+```{r}
+lincs_deseq_luad_res_A549_top <- lincs_deseq_luad_res_A549[lincs_deseq_luad_res_A549$NCS < 0 & lincs_deseq_luad_res_A549$WTCS_FDR < 0.05 & lincs_deseq_luad_res_A549$jlf_tau< -80,]
+```
+
+clinical trials
+```{r}
+fda_info <- read.table("~/data/fda_product_info_df.csv" )
+fda_approve <- fda_info[fda_info$market_status_v2 %in% c("Over-the-Counter", "Prescription" ),]
+```
+
+```{r}
+FDA_APPROVAL_CHECK<- function(drug_list){
+  return_list <- c()
+  for (i in 1:length(drug_list)){
+    test <- grep( drug_list[i], fda_approve$ActiveIngredient, ignore.case= TRUE)
+    if (length(test)>0 ){
+      return_list[i] <- TRUE
+    }else{
+      return_list[i] <- FALSE
+    }
+    if (nchar(drug_list[i])< 3){
+      return_list[i] <- FALSE
+    }
+  }
+  names(return_list)<- drug_list
+  return(return_list)
+}
+```
+```{r}
+lincs_deseq_luad_res_A549_top$fda_approved<- FDA_APPROVAL_CHECK(lincs_deseq_luad_res_A549_top$pert)
+```
+
+double checking the direction of signature
+
+
+```{r}
+clinical_trial_LUAD <- read_tsv("~/data/SearchResults_LUAD_A.tsv")
+```
+
+```{r}
+clinical_trial_check<- function(drug_list, clinical_trial_info){
+    return_list <- c()
+  for (i in 1:length(drug_list)){
+    test <- grep( drug_list[i], clinical_trial_info$Interventions, ignore.case= TRUE)
+    if (length(test)>0 ){
+      return_list[i] <- TRUE
+    }else{
+      return_list[i] <- FALSE
+    }
+    if (nchar(drug_list[i])< 3){
+      return_list[i] <- FALSE
+    }
+  }
+  names(return_list)<- drug_list
+  return(return_list)
+}
+```
+
+```{r}
+lincs_deseq_luad_res_A549_top$clinical_trial_LUAD <- clinical_trial_check(lincs_deseq_luad_res_A549_top$pert, clinical_trial_LUAD)
+```
+
+iq is wrongly classified as approved in clinical trail 
+
+```{r}
+lincs_deseq_luad_res_A549_top_fda<- lincs_deseq_luad_res_A549_top[lincs_deseq_luad_res_A549_top$fda_approved,]
+#lincs_deseq_luad_res_A549_top_fda$clinical_trial_LUAD<- ifelse(lincs_deseq_luad_res_A549_top_fda$clinical_trial_LUAD, "star", "")
+
+lincs_deseq_luad_res_A549_top_fda_order <- lincs_deseq_luad_res_A549_top_fda[order(-lincs_deseq_luad_res_A549_top_fda$NCS),]
+lincs_deseq_luad_res_A549_top_fda$pert <- factor(lincs_deseq_luad_res_A549_top_fda$pert, levels = lincs_deseq_luad_res_A549_top_fda_order$pert)
+p<-ggplot(data=lincs_deseq_luad_res_A549_top_fda, aes(x=pert, y=NCS, fill=jlf_tau, shape= clinical_trial_LUAD)) +
+  geom_bar(stat="identity")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
+p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]", shape= "Clinical Trials")
+
+ggsave("~/output/lung_cancer/deseq2_res/220421_ggplot_deseq2_tau_luad_approved_candidates.png")
+```
+
+```{r}
+#lincs_deseq_luad_res_A549_top 
+write.csv(lincs_deseq_luad_res_A549_top , file= "~/output/lung_cancer/deseq2_res/220602_SR_LINCS_LUAD_DESEQ2_RES_tau.csv" )
+```
+
+pathways
+
+```{r}
+
+hyperG_k_res <- dsea_hyperG(drugs = lincs_deseq_luad_res_A549_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
+hyperG_k_res_v2<- result(hyperG_k_res)
+```
+
+```{r}
+#false discovery rate
+hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
+```
+
+```{r}
+hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
+```
+
+```{r}
+library(viridis)
+```
+
+```{r}
+gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
+  geom_bar(stat="identity") + scale_fill_viridis()
+gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
+```
+no kegg pathways are signficant
+
+```{r}
+write.csv(hyperG_k_res_v2 , file= "~/output/lung_cancer/deseq2_res/220602_SR_LINCS_LUAD_DESEQ2_PATHWAY.csv" )
+```
+
+
+LINCS pathway & Drug targets
+```{r}
+drug_analysis <- function(drug_name, target_list,  tpm_df, sample_vector, deseq_results, se, cell_lincs= "__GI1__trt_cp", result_path){
+  #drug target expression
+  tpm_sub <- tpm_df[rownames(tpm_df) %in% target_list,]
+  tpm_sub$genes<- rownames(tpm_sub)
+  tpm_sub_v2 <- tpm_sub %>%
+  pivot_longer(!genes, names_to = "sample", values_to = "tpm")
+  tpm_sub_v2$type <- rep(sample_vector, nrow(tpm_sub))
+  name<- drug_name
+  y_max<- max(tpm_sub_v2$tpm) +5
+  
+  
+  deseq_sub <-  deseq_results[ deseq_results$Symbol %in% unique( tpm_sub$genes),]
+  stat_table <- deseq_sub[,c(7,6)]
+  stat_table$group1 <- rep("Primary Tumor" ,  nrow(tpm_sub))
+  stat_table$group2 <- rep("Solid Tissue Normal" ,  nrow(tpm_sub))
+  stat_table$padj <- ifelse(stat_table$padj < 0.05, formatC(stat_table$padj, format = "e", digits = 2), "")
+  colnames(stat_table)<- c("genes", "padj" ,  "group1" ,"group2")
+  
+  
+  file_name<- paste0(result_path, "/", drug_name, "_drug_target_expression_deseq2_padj.png")
+  
+  ggplot(tpm_sub_v2, aes(x=genes, y=tpm, color=type)) + geom_boxplot()+ stat_pvalue_manual(stat_table, x="genes" , label = "{padj}", y.position= y_max,  size = 3) + labs(title=name,x="Drug Targets", y = "Gene Expression (TPM)", color= "Sample Type") + scale_colour_manual(values =  c("#440154FF","#228C8DFF"), aesthetics = c("colour", "fill"))+theme_classic()
+  ggsave(file_name, width = 20, height = 8)
+  
+  #pathway enrichment
+  lincs_name<- paste0(drug_name, cell_lincs)
+  sub <- se[,grep(lincs_name, colnames(se))]
+  up <- sub[sub >= 2  ]
+  up<- names(up[order(-up)])
+  down<- sub[ sub <= -2 ]
+  down <- names(down[order(down)])
+  #print(down)
+  downset_pathway_results <- gost(query = down, 
+                organism = "hsapiens", ordered_query = TRUE, 
+                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                measure_underrepresentation = FALSE, evcodes = FALSE, 
+                user_threshold = 0.05, correction_method = "g_SCS", 
+                domain_scope = "annotated", custom_bg = NULL, 
+                numeric_ns = "", sources = NULL, as_short_link = FALSE)
+  downset_pathway_results<- downset_pathway_results$result
+  
+  upset_pathway_results <- gost(query = up, 
+                organism = "hsapiens", ordered_query = TRUE, 
+                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                measure_underrepresentation = FALSE, evcodes = FALSE, 
+                user_threshold = 0.05, correction_method = "g_SCS", 
+                domain_scope = "annotated", custom_bg = NULL, 
+                numeric_ns = "", sources = NULL, as_short_link = FALSE)
+  upset_pathway_results<- upset_pathway_results$result
+  
+  pathway_results<- rbind(upset_pathway_results, downset_pathway_results)
+  pathway_results$set<- c(rep("Up", nrow(upset_pathway_results)), rep("Down", nrow(downset_pathway_results)))
+  file_name<- paste0(result_path, "/", drug_name, "_drug_pathways.csv")
+  write.csv2(as.data.frame(pathway_results[,-14]), file_name )
+  
+  file_name<- paste0(result_path, "/", drug_name, "_drug_pathways.png")
+  
+  #making adjustments here
+  #pathway_results$set <- factor(pathway_results$set, levels = c("up", "down"))
+  
+  if(nrow(pathway_results)<50){
+    ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value))+geom_tile()+scale_fill_viridis(direction=-1)+theme_classic()+ labs(title=name,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
+    
+  }else{
+    pathway_results<- pathway_results[pathway_results$source %in% c("KEGG","REAC","GO:MF" ),]
+    ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value)) + geom_tile()+ scale_fill_viridis(direction=-1)+ theme_classic() + labs(title=name,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
+  }
+  ggsave(file_name, width = 12, height = 14)
+  
+}
+```
+
+```{r}
+Counts_to_tpm <- function(counts, featureLength) {
+  # Ensure valid arguments.
+  stopifnot(length(featureLength) == nrow(counts))
+  # Compute effective lengths of features in each library.
+  effLen <- featureLength
+  # Process one column at a time.
+  tpm <- do.call(cbind, lapply(1:ncol(counts), function(i) {
+    rate = log(counts[,i]) - log(effLen)
+    denom = log(sum(exp(rate)))
+    exp(rate - denom + log(1e6))
+  }))
+  # Copy the row and column names from the original matrix.
+  colnames(tpm) <- colnames(counts)
+  rownames(tpm) <- rownames(counts)
+  return(tpm)
+}
+```
+
+
+```{r}
+gene_info <- as.data.frame(recount3_rse_LUNG@rowRanges)
+```
+
+```{r}
+tpm_table<- Counts_to_tpm(count_table_v3, gene_info$bp_length)
+```
+
+```{r}
+rownames(tpm_table)<- gene_info$gene_name
+```
+
+```{r}
+tpm_df <- as.data.frame(tpm_table)
+```
+
+```{r}
+library(tidyr)
+```
+```{r}
+se_asssay<- assay(se)
+```
+
+```{r}
+library(gprofiler2)
+```
+
+```{r}
+
+drug_analysis( "moxifloxacin", c("TOP2A"),  tpm_df, all_metadata_v3$status , deseq2_luad_normal, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/deseq2_res/220602_candidate_plot/")
+
+drug_analysis( "zaleplon", c("GABRA1"),  tpm_df, all_metadata_v3$status , deseq2_luad_normal, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/deseq2_res/220602_candidate_plot/")
+
+drug_analysis( "pseudoephedrine", c("SLC6A2", "SLC6A3", ),  tpm_df, all_metadata_v3$status , deseq2_luad_normal, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/deseq2_res/220602_candidate_plot/")
+
+```
+
+
+PRISM
+
+```{r}
+library(readr)
+primary_screen <- read_csv("~/data/DEPMAP_PRISM_220228/primary-screen-replicate-collapsed-logfold-change.csv")
+sample_info <- read_csv("~/data/DEPMAP_PRISM_220228/sample_info.csv")
+primary_screen_treatment_info <- read_csv("~/data/DEPMAP_PRISM_220228/primary-screen-replicate-collapsed-treatment-info.csv")
+```
+different order
+
+```{r}
+names_vector<- c()
+for ( i in 2:ncol(primary_screen)){
+  names_vector[i] <- primary_screen_treatment_info$name[ grep(colnames(primary_screen)[i], primary_screen_treatment_info$column_name)]
+}
+```
+
+```{r}
+good_id <- c()
+for (i in 1:nrow(primary_screen)){
+  good_id[i]<- nchar(primary_screen[i,1]) == 10 
+}
+
+```
+
+```{r}
+table(good_id)
+```
+```{r}
+primary_screen_v2 <- primary_screen[good_id,]
+```
+
+
+```{r}
+cell_vector<- c()
+for ( i in 1:nrow(primary_screen_v2)){
+  cell_vector[i] <-sample_info$stripped_cell_line_name[ grep(as.character(primary_screen_v2[i,1]), sample_info$DepMap_ID)]
+}
+```
+
+```{r}
+primary_screen_v3<-  as.matrix(primary_screen_v2[,-1])
+rownames(primary_screen_v3)<- cell_vector
+```
+
+
+```{r}
+colnames(primary_screen_v3) <- names_vector[-1]
+```
+
+```{r}
+test2<- as.data.frame.table(primary_screen_v3, responseName = "log_fold_change")
+```
+
+```{r}
+test2$Sensitive <- test2$log_fold_change < 0.3
+```
+
+filter by LUNG cancer cell lines
+
+```{r}
+#table(sample_info$Subtype)
+luad_sample_info <- sample_info[sample_info$Subtype == "Non-Small Cell Lung Cancer (NSCLC), Adenocarcinoma",]
+```
+
+
+```{r}
+primary_luad_res <- test2[test2$Var1 %in% as.vector(luad_sample_info$stripped_cell_line_name),]
+```
+
+
+```{r}
+primary_luad_res_sub <-primary_luad_res[ primary_luad_res$Var2 %in% lincs_deseq_luad_res_A549_top_fda$pert,]
+```
+
+
+```{r}
+write.csv(primary_luad_res_sub , file= "~/output/lung_cancer/deseq2_res/220602_prism_deseq2_candidates.csv" )
+```
+
+
+```{r}
+library(ggplot2)
+library(viridis)
+```
+
+
+```{r}
+primary_luad_res_sub$Var2 <- factor(primary_luad_res_sub$Var2, levels=unique(primary_luad_res_sub$Var2[order(-primary_luad_res_sub$log_fold_change)]))
+ggplot(primary_luad_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() +geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
+ggsave("~/output/lung_cancer/deseq2_res/220602_ggplot_deseq2_candidates_prism_screen1.png")
+```
+```{r}
+drug_list <- as.vector(unique(primary_luad_res_sub$Var2))
+drug_fraction<- c()
+for (i in 1:length(drug_list)){
+  cells <-primary_luad_res_sub$Sensitive[primary_luad_res_sub$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
+drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_all_drugs$drug_list, levels= unique(drug_senstive_precentage_all_drugs$drug_list[order(drug_senstive_precentage_all_drugs$drug_fraction)]))
+ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
+ggsave("~/output/lung_cancer/deseq2_res/220602_ggplot_deseq2_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+
+```{r}
+#clinical trials -testing
+
+clinical_trial_testing<- function(seed, cell_line,number_sig_drugs, fraction_clinical_drugs, CT_DATA){
+  FDA_CT_table<- CT_DATA
+  library(HDF5Array)
+  lincs_samples<- HDF5Array("~/data/lincs_2020.h5", name="colnames")
+  lincs_samples<- as.vector(lincs_samples)
+
+  lincs_samples_GBM <- lincs_samples[grep(cell_line,lincs_samples )]
+  library(stringr)
+  gbm_lincs_drugs <- as.vector(str_split(lincs_samples_GBM,  "__", simplify = TRUE)[,1])
+  
+  gbm_lincs_drugs<- gbm_lincs_drugs[FDA_APPROVAL_CHECK(gbm_lincs_drugs)]
+  set.seed(seed)
+  fraction<-c()
+  for (i in 1:10000){
+    test <- gbm_lincs_drugs[ sample(x = 1:length(gbm_lincs_drugs),size = number_sig_drugs ,replace = FALSE)]
+    value2 <- c()
+    
+    #tables<- list()
+    for (k in 1:number_sig_drugs){
+      res <- grep(test[k], FDA_CT_table$Interventions, ignore.case=TRUE )
+      res <- as.logical(length(res) > 0 )
+     # print(res)
+      #if (res == TRUE){
+        #print(test[j])
+      #}
+      #print(j)
+      #print(res)
+      #print(length(res))
+      #print(res)
+      value2[k] <- res
+    }
+    res_table <- cbind(test, value2)
+    fraction[i]<- table(res_table[,2])["TRUE"]
+    #tables[i]<- res_table
+    
+  }
+  fraction <- ifelse(is.na(fraction), 0, fraction)
+  fraction_adj <- fraction/number_sig_drugs
+  #hist(fraction_adj)
+  #print(fraction_adj)
+  
+  plot_data<- as.data.frame(cbind(1:10000, fraction_adj))
+  plot <- ggplot(plot_data, aes(x=fraction_adj)) + geom_histogram() + geom_vline(xintercept = fraction_clinical_drugs)
+  
+  print(plot)
+
+  return(wilcox.test(fraction_adj,mu= fraction_clinical_drugs , alternative="less" ))
+  #return(fraction_adj)
+}
+```
+
+```{r}
+x<- 4/31
+deseq2_CT_test_res <- clinical_trial_testing(101, "A549", 31, x , clinical_trial_LUAD)
+```
+
+
+```{r}
+drug_list <- as.vector(unique(primary_luad_res$Var2))
+drug_fraction<- c()
+for (i in 1:length(drug_list)){
+  cells <-primary_luad_res$Sensitive[primary_luad_res$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
+```
+
+
+```{r}
+#Prism testing
+PRISM_testing<- function(seed, cell_line, drugs, drug_senstive_precentage_all_drugs){
+  
+  #check all drugs for fda approval
+  library(HDF5Array)
+  lincs_samples<- HDF5Array("~/data/lincs_2020.h5", name="colnames")
+  lincs_samples<- as.vector(lincs_samples)
+
+  lincs_samples_GBM <- lincs_samples[grep(cell_line,lincs_samples )]
+  library(stringr)
+  gbm_lincs_drugs <- as.vector(str_split(lincs_samples_GBM,  "__", simplify = TRUE)[,1])
+  
+  gbm_lincs_drugs<- gbm_lincs_drugs[FDA_APPROVAL_CHECK(gbm_lincs_drugs)]
+  
+   #get the median number of cell lines senestive to drugs for sigficant drug list 
+  test_median <- median(drug_senstive_precentage_all_drugs$drug_fraction[ drug_senstive_precentage_all_drugs$drug_list %in% drugs ] )
+  
+  print(test_median)
+  
+  number_sig_drugs<- length(drugs)
+  # do that again 10,000 times 
+  set.seed(seed)
+  fraction<-c()
+  for (i in 1:10000){
+    test <- gbm_lincs_drugs[ sample(x = 1:length(gbm_lincs_drugs),size = number_sig_drugs ,replace = FALSE)]
+    fraction[i] <- median(drug_senstive_precentage_all_drugs$drug_fraction[ drug_senstive_precentage_all_drugs$drug_list %in% test ] )
+
+    }
+  #fraction <- ifelse(is.na(fraction), 0, fraction)
+  #fraction_adj <- fraction
+  #hist(fraction_adj)
+  #print(fraction_adj)
+  
+  plot_data<- as.data.frame(cbind(1:10000, fraction))
+  plot <- ggplot(plot_data, aes(x=fraction)) + geom_histogram() + geom_vline(xintercept = test_median)+ labs( x = "median fraction of sensitive cell lines") + annotate("text", x=(test_median + 0.1) , y=800, label= test_median)
+  
+  print(plot)
+
+  return(wilcox.test(fraction, mu= test_median , alternative="less" ))
+  #return(fraction_adj)
+}
+```
+
+```{r}
+deseq2_PRISM_test<- PRISM_testing(101,"A549", lincs_deseq_luad_res_A549_top_fda$pert, drug_senstive_precentage_all_drugs)
+```
+```{r}
+deseq2_PRISM_test
+```
+
+
+#### limma
+limma with tpm counts
+normalize count data by tpm
+
+```{r}
+TPM <- log2(as.matrix(tpm_df) + 1)
+
+```
+
+
+```{r}
+TestLVDifferencesJLF <- function(b.matrix, phenotype, blocking,
+                              use.bonferroni = FALSE) {
+  # This function tests for differential expression of PLIER-derived latent
+  # variables between groups specified by the phenotype argument
+  # using limma. Examples include different disease groups or disease v. 
+  # control. It takes the B matrix from a PLIER model and a factor vector with 
+  # the group labels. It will reorder the phenotype vector if control.phenotype
+  # is specified. The resulting p-values are Benjamini-Hochberg corrected by 
+  # default or Bonferroni corrected if use.bonferroni = TRUE
+  # 
+  # Args:
+  #   b.matrix: a B matrix (latent variables are rows, samples are columns) 
+  #             from a PLIER model. Can be the B element of the list 
+  #             returned by PLIER::PLIER or the output of GetNewDataB
+  #   phenotype: a named factor vector that contains group labels to be used
+  #              for contrasts
+  #   blocking: a names facotor vector that contains group labels to be used for blocking
+  #   use.bonferroni: logical - should bonferroni correction be used? if FALSE
+  #                   (default), will use "BH"
+  #   
+  # Returns:
+  #   A limma::topTable, where the first column is the latent variable name and
+  #   all pathways are returned (without filtering or sorting)
+  
+  ## error-handling ##
+  
+  if (is.null(names(phenotype))) {
+    stop("phenotype should be a named factor vector -- the names ensure that
+         the vector is correctly ordered")
+  }
+  if (is.null(names(blocking))) {
+    stop("blocking should be a named factor vector -- the names ensure that
+         the vector is correctly ordered")
+  }  
+  # no names should be "missing"
+  check.names <- all(colnames(b.matrix) %in% names(phenotype)) & 
+    all(names(phenotype) %in% colnames(b.matrix)) 
+  
+  if (!check.names) {
+    stop("Some sample(s) is missing from colnames(b.matrix) or 
+         names(phenotype)")
+  }
+  
+  # the phenotype labels should be in the same order as the b.matrix samples
+  ordered.phenotype <- as.factor(phenotype[colnames(b.matrix)])
+  
+  # the blocking labels should be in the same order as the b.matrix samples
+  ordered.blocking <- as.factor(blocking[colnames(b.matrix)])
+  
+  # get contrasts (all pairwise)  
+  num.levels <- length(levels(ordered.phenotype))
+  contrast.vector <- c()
+  for (lvl in levels(ordered.phenotype)[1:(num.levels - 1)]) {
+    for (lvl.2 in levels(ordered.phenotype)[2:num.levels]) {
+      if (lvl != lvl.2) {
+        contrast.vector <- append(contrast.vector, paste(lvl, lvl.2, sep = "-"))
+      }
+    }
+  }
+  contrast.vector <- paste(contrast.vector, collapse = ", ")
+  
+  # prep design matrix
+  design <- model.matrix(~ 0+ ordered.phenotype+ ordered.blocking )
+  colnames(design)[seq_len(nlevels(ordered.phenotype))] <- levels(ordered.phenotype)
+  
+  
+  
+  
+  #colnames(design) <- levels(ordered.phenotype)
+  
+  # fit linear model
+  fit <- limma::lmFit(b.matrix, design)
+  contrast.matrix <-
+    eval(parse(
+      text = paste0(
+        'limma::makeContrasts(', contrast.vector, ', levels = design)')))
+  fit2 <- limma::contrasts.fit(fit, contrast.matrix)
+  fit2 <- limma::eBayes(fit2)
+  
+  # extract results as a data.frame
+  if (use.bonferroni) {  # if specified, use Bonferroni correction
+    limma.result <- limma::topTable(fit2, number = nrow(b.matrix),
+                                    adjust.method = "bonferroni", 
+                                    sort.by = "none")
+  } else {  # calculate FDR
+    limma.result <- limma::topTable(fit2, number = nrow(b.matrix),
+                                    adjust.method = "BH", sort.by = "none")
+  }
+  
+  # want feature (latent variable) names as column
+  limma.result <- tibble::rownames_to_column(limma.result, var = "LV")
+  
+  return(limma.result)
+  
+}
+```
+
+
+
+```{r}
+LVTestWrapperJLF_v2 <- function(b.matrix,
+                          sample.info.df,
+                          phenotype.col,
+                          blocking,
+                          file.lead,
+                          plot.dir = "plots",
+                          results.dir = "results",
+                          use.bonferroni = FALSE,
+                          significant.only = FALSE,
+                          sig.threshold = 0.05) {
+  # A wrapper function for TestLVDifferences and BoxplotDiffLV; does the 
+  # reshaping required for plotting. Produces the following files: 1) tsv of the
+  # differential expression results 2) a long form of the B matrix joined with
+  # the sample information (sample.info.df) and 3) a PDF of boxplots
+  # 
+  # Args:
+  #   b.matrix: a B matrix (latent variables are rows, samples are columns) 
+  #             from a PLIER model. Can be the B element of the list 
+  #             returned by PLIER::PLIER or the output of GetNewDataB
+  #   sample.info.df: a long form data.frame that contains sample information,
+  #                   sample names that match the B matrix sample identifiers
+  #                   must be in a "Sample" column & it also must contain
+  #                   the factor to group by for testing differential expression
+  #                   (DE) and plotting
+  #   phenotype.col: the column name of the column in sample.info.df to be used
+  #                  for DE and plotting; character
+  #   file.lead: string that designates the "beginning" of filenames
+  #   plot.dir: plot directory where the boxplots PDF should be saved
+  #   results.dir: results directory for DE results and reshaped B data.frame
+  #   use.bonferroni: logical - should bonferroni correction be used for DE? 
+  #                   if FALSE (default), will use "BH"
+  #   significant.only: logical - should only differentially expressed LVs be
+  #                     plotted? if FALSE (default), all will be plotted
+  #   sig.threshold: the adj. P cutoff to be used if only plotting significant 
+  #                  results; default is 0.05
+  #                  
+  # Returns:
+  #   A list with the following elements
+  #       limma: the results from TestLVDifferences 
+  #       b.df: sample.b.df, prior to any filtering for plotting (if applicable)
+  # 
+  #   the following files are written by this function (see above):
+  #     1) <results.dir>/<file.lead>_LV_limma_results.tsv
+  #     2) <results.dir>/<file.lead>_B_long_sample_info.tsv
+  #     3) <plot.dir>/<file.lead>_LV_boxplots.pdf
+  
+  `%>%` <- dplyr::`%>%`
+  
+  # error-handling
+  # we need to join by "Sample" column for boxplots
+  if (!("Sample" %in% colnames(sample.info.df))) {
+    stop("'Sample' must be a column in sample.info.df")
+  }
+  # phenotype.col needs to be in column names
+  if (!(phenotype.col %in% colnames(sample.info.df))) {
+    stop("phenotype.col must be a column name in sample.info.df")
+  }
+  
+  # initialize list to hold results to be returned
+  return.list <- list()
+  
+  #### Differential Expression ####
+  # get the named vector to use as the phenotype for testing differential 
+  # expression
+  phenotype.vector <- as.factor(make.names(sample.info.df[[phenotype.col]]))
+  names(phenotype.vector) <- sample.info.df$Sample
+  # test itself
+  limma.df <- TestLVDifferencesJLF(b.matrix = b.matrix,
+                                phenotype = phenotype.vector,
+                                blocking= blocking,
+                                use.bonferroni = use.bonferroni)
+  # write to file
+  dlve.file <- file.path(results.dir, 
+                         paste0(file.lead, "_limma_results.tsv"))
+  readr::write_tsv(limma.df, path = dlve.file)
+  # add to list to be returned
+  return.list[["limma"]] <- limma.df
+  
+  #### Reshape & join with sample information ####
+  b.df <- reshape2::melt(b.matrix)
+  #print(b.df)
+  colnames(b.df) <- c("LV", "Sample", "Value")
+  sample.b.df <- dplyr::inner_join(b.df, sample.info.df, by = "Sample")
+  #long.file <- file.path(results.dir, 
+                         #paste0(file.lead, "_B_long_sample_info.tsv"))
+  #readr::write_tsv(sample.b.df, long.file)
+  # add to list to be returned
+  return.list[["b.df"]] <- sample.b.df
+  
+  #### Plotting ####
+  plot.file <- file.path(plot.dir,
+                         paste0(file.lead, "_boxplots.pdf"))
+  
+  # if we only want significant LVs plotted, filter sample.b.df using the
+  # adj.P.Val cutoff sig.threshold
+  if (significant.only) {
+    sig.lvs <- limma.df$LV[which(limma.df$adj.P.Val < sig.threshold)]
+    sample.b.df <- sample.b.df %>%
+      dplyr::filter(LV %in% sig.lvs)
+  }
+  
+ # BoxplotDiffLV(tidy.b.df = sample.b.df, 
+              #  phenotype.column = phenotype.col,
+             #   pdf.path = plot.file)
+  
+  
+  return(return.list)
+}
+```
+
+```{r}
+source("~/script/test_LV_differences.R")
+library(dplyr)
+```
+
+
+LVTestWrapperJLF <- function(b.matrix,
+                          sample.info.df,
+                          phenotype.col,
+                          blocking,
+                          file.lead,
+                          plot.dir = "plots",
+                          results.dir = "results",
+                          use.bonferroni = FALSE,
+                          significant.only = FALSE,
+                          sig.threshold = 0.05)
+                          
+
+                          
+```{r}
+sampleinfo<- cbind(colnames(TPM), as.character(all_metadata_v3$status), as.character(all_metadata_v3$database))
+colnames(sampleinfo) <- c("Sample", "Tumor","database")
+sampleinfo<- as.data.frame(sampleinfo)
+database<- all_metadata_v3$database
+names(database)<- colnames(TPM)
+
+limma_gene_TCGA_BH <- LVTestWrapperJLF_v2(b.matrix=TPM , sample.info.df= sampleinfo, phenotype.col= "Tumor", blocking= database, file.lead= "220601_limma_TCGA_GTEX_T_vs_NT_lung_cancer", plot.dir= "~/output/limma_gbm/", results.dir= "~/output/lung_cancer/limma_res/", use.bonferroni= FALSE, sig.threshold = 0.05)
+```
+
+
+```{r eval=FALSE}
+saveRDS(limma_gene_TCGA_BH , file= "~/output/lung_cancer/limma_res/220601_LUAD_GTEX_gene_limma_res.rds")
+```
+
+signaturesearch 
+
+```{r}
+limma_res <- limma_gene_TCGA_BH$limma
+```
+
+```{r}
+limma_results<- limma_res[complete.cases(limma_res),]
+limma_results_sig <- limma_results[limma_results$adj.P.Val < 0.05 & abs(limma_results$logFC) > 1.8,]
+```
+
+```{r}
+downset<- limma_results_sig$LV[ limma_results_sig$logFC < -2.4]
+upset<- limma_results_sig$LV[limma_results_sig$logFC > 2.4]
+```
+
+
+```{r}
+upset_v2<- c()
+for (i in 1:length(upset)){
+  possibleError <- tryCatch(
+      gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol],
+      error=function(e) e
+  )
+  if(length(possibleError)> 0){
+    #REAL WORK
+    upset_v2[i]<- gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol]
+  }else{
+    upset_v2[i]<- NA
+  }
+  
+}
+names(upset_v2)<- upset
+```
+
+```{r}
+downset_v2<- c()
+for (i in 1:length(downset)){
+  possibleError <- tryCatch(
+      gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol],
+      error=function(e) e
+  )
+  if(length(possibleError)> 0){
+    #REAL WORK
+    downset_v2[i]<- gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol]
+  }else{
+    downset_v2[i]<- NA
+  }
+  
+}
+names(downset_v2)<- downset
+```
+
+```{r}
+downset_v2<- downset_v2[complete.cases(downset_v2)]
+upset_v2<- upset_v2[complete.cases(upset_v2)]
+```
+
+```{r}
+#double check that they didn't overlap 
+ intersect(downset_v2, upset_v2)
+```
+
+```{r}
+length(downset_v2)
+length(upset_v2)
+```
+
+```{r}
+names(upset_v2)<- NULL
+names(downset_v2)<- NULL
+```
+
+```{r}
+limma_lung_list<- list(up= upset_v2, down= downset_v2)
+```
+
+```{r}
+saveRDS(limma_lung_list,"~/output/lung_cancer/deseq2_res/SR_gene_list_lung_limma.rds")
+```
+
+
+```{r}
+set.seed(101)
+qsig_lincs_limma_lung_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
+                   gess_method="LINCS", refdb=db_path)
+```
+
+
+```{r}
+set.seed(101)
+library(parallel)
+lincs_limma_lung <- gess_lincs(qsig_lincs_limma_lung_res, sortby="NCS", tau=FALSE,workers=2)
+#result(lincs)
+```
+
+
+
+```{r}
+lincs_limma_lung_res <- result(lincs_limma_lung)
+```
+
+```{r}
+write.csv(lincs_limma_lung_res, file= "~/output/lung_cancer/limma_res/220601_SR_LINCS_LUNG_LIMMA_RES.csv" )
+```
+
+```{r}
+lincs_limma_lung_res_A549 <- lincs_limma_lung_res[lincs_limma_lung_res$cell == "A549",]
+```
+tau 
+
+
+```{r}
+tau_test<- tau_scores(lincs_limma_lung_res_A549, A549_taudf)
+```
+
+```{r}
+lincs_limma_lung_res_A549$jlf_tau<- tau_test
+```
+
+```{r}
+write.csv(lincs_limma_lung_res_A549, file= "~/output/lung_cancer/limma_res/220601_lincs_limma_lung_res_A549_tau.csv" )
+```
+
+```{r}
+lincs_limma_lung_res_A549_top <- lincs_limma_lung_res_A549[lincs_limma_lung_res_A549$NCS < 0 & lincs_limma_lung_res_A549$WTCS_FDR < 0.05 & lincs_limma_lung_res_A549$jlf_tau< -80,]
+```
+
+clinical trials
+
+```{r}
+lincs_limma_lung_res_A549_top$fda_approved<- FDA_APPROVAL_CHECK(lincs_limma_lung_res_A549_top$pert)
+```
+
+
+```{r}
+lincs_limma_lung_res_A549_top$clinical_trial_LUAD <- clinical_trial_check(lincs_limma_lung_res_A549_top$pert, clinical_trial_LUAD)
+```
+
+
+```{r}
+lincs_limma_lung_res_A549_top_fda<- lincs_limma_lung_res_A549_top[lincs_limma_lung_res_A549_top$fda_approved,]
+#lincs_deseq_luad_res_A549_top_fda$clinical_trial_LUAD<- ifelse(lincs_deseq_luad_res_A549_top_fda$clinical_trial_LUAD, "star", "")
+
+lincs_limma_lung_res_A549_top_fda_order <- lincs_limma_lung_res_A549_top_fda[order(-lincs_limma_lung_res_A549_top_fda$NCS),]
+lincs_limma_lung_res_A549_top_fda$pert <- factor(lincs_limma_lung_res_A549_top_fda$pert, levels = lincs_limma_lung_res_A549_top_fda_order$pert)
+p<-ggplot(data=lincs_limma_lung_res_A549_top_fda[1:30,], aes(x=pert, y=NCS, fill=jlf_tau, shape= clinical_trial_LUAD)) +
+  geom_bar(stat="identity")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
+p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]", shape= "Clinical Trials")
+
+ggsave("~/output/lung_cancer/limma_res/220421_ggplot_limma_tau_luad_approved_candidates_top_30.png")
+```
+
+```{r}
+#lincs_deseq_luad_res_A549_top 
+write.csv(lincs_limma_lung_res_A549_top , file= "~/output/lung_cancer/limma_res/220602_SR_LINCS_LUAD_limma_RES_tau.csv" )
+```
+
+pathways
+
+```{r}
+
+hyperG_k_res <- dsea_hyperG(drugs = lincs_limma_lung_res_A549_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
+hyperG_k_res_v2<- result(hyperG_k_res)
+```
+
+```{r}
+#false discovery rate
+hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
+```
+
+```{r}
+hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
+```
+
+```{r}
+gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
+  geom_bar(stat="identity") + scale_fill_viridis()
+gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
+```
+no kegg pathways are signficant
+
+```{r}
+write.csv(hyperG_k_res_v2 , file= "~/output/lung_cancer/limma_res/220602_SR_LINCS_LUAD_limma_PATHWAY.csv" )
+```
+
+
+LINCS pathway & Drug targets
+
+
+```{r}
+#drug_analysis(drug_name, target_list,  tpm_df, sample_vector, deseq_results, se, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/deseq2_res/220602_candidate_plot/")
+
+drug_analysis( "tigecycline", c("Y_RNA" ),  tpm_df, all_metadata_v3$status , deseq2_luad_normal, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/limma_res/220602_candidate_plot/")
+
+
+```
+
+
+PRISM
+
+```{r}
+primary_luad_res_sub <-primary_luad_res[ primary_luad_res$Var2 %in% lincs_limma_lung_res_A549_top_fda$pert,]
+```
+
+
+```{r}
+write.csv(primary_luad_res_sub , file= "~/output/lung_cancer/limma_res/220602_prism_limma_candidates.csv" )
+```
+
+```{r}
+primary_luad_res_sub <-primary_luad_res[ primary_luad_res$Var2 %in% lincs_limma_lung_res_A549_top_fda$pert[1:30],]
+```
+
+```{r}
+primary_luad_res_sub$Var2 <- factor(primary_luad_res_sub$Var2, levels=unique(primary_luad_res_sub$Var2[order(-primary_luad_res_sub$log_fold_change)]))
+#primary_luad_res_sub$Var2 <- factor(primary_luad_res_sub$Var2, levels=unique(primary_luad_res_sub$Var2))
+ggplot(primary_luad_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() +geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
+ggsave("~/output/lung_cancer/limma_res/220602_ggplot_limma_candidates_prism_screen1.png")
+```
+
+```{r}
+drug_list <- as.vector(unique(primary_luad_res_sub$Var2))
+drug_fraction<- c()
+for (i in 1:length(drug_list)){
+  cells <-primary_luad_res_sub$Sensitive[primary_luad_res_sub$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
+drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_all_drugs$drug_list, levels= unique(drug_senstive_precentage_all_drugs$drug_list[order(drug_senstive_precentage_all_drugs$drug_fraction)]))
+ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
+ggsave("~/output/lung_cancer/limma_res/220602_ggplot_limma_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+
+
+
+```{r}
+drug_list <- as.vector(unique(primary_luad_res$Var2))
+drug_fraction<- c()
+for (i in 1:length(drug_list)){
+  cells <-primary_luad_res$Sensitive[primary_luad_res$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
+```
+
+
+```{r}
+limma_PRISM_test<- PRISM_testing(101,"A549", lincs_limma_lung_res_A549_top_fda$pert, drug_senstive_precentage_all_drugs)
+```
+```{r}
+limma_PRISM_test
+```
+
+```{r}
+table(lincs_limma_lung_res_A549_top_fda$clinical_trial_LUAD)
+```
+
+
+```{r}
+limma_CT_test_res <- clinical_trial_testing(101, "A549", 85, 0.07058824, clinical_trial_LUAD)
+```
+
+```{r}
+limma_CT_test_res
+```
+
+
+#### Transfer Learning
+
+```{r eval= FALSE}
+recount3_plier_luad <- readRDS("~/data/recount3_plier_luad.rds")
+```
+```{r eval= FALSE}
+source("~/script/plier_util.R")
+```
+
+```{r eval= FALSE}
+#There is a issue with handling genes with zero expression. Best thing to do is to remove the genes
+test <- GetOrderedRowNorm(as.matrix(tpm_table),recount3_plier_luad )
+zeros<- rownames(test)[!complete.cases(test)]
+tpm_table_v2<- tpm_table[!rownames(tpm_table) %in% zeros,]
+```
+
+create the b.matrix 
+```{r eval= FALSE}
+LUAD.GTEx.b.matrix <- GetNewDataB(as.matrix(tpm_table_v2), recount3_plier_luad)
+```
+
+```{r eval=FALSE}
+saveRDS(LUAD.GTEx.b.matrix, file= "~/output/lung_cancer/TFL_res/LUAD_GTEX_B_MATRIX.rds")
+```
+
+
+```{r eval= FALSE}
+TestLVDifferencesJLF <- function(b.matrix, phenotype, blocking,
+                              use.bonferroni = FALSE) {
+  # This function tests for differential expression of PLIER-derived latent
+  # variables between groups specified by the phenotype argument
+  # using limma. Examples include different disease groups or disease v. 
+  # control. It takes the B matrix from a PLIER model and a factor vector with 
+  # the group labels. It will reorder the phenotype vector if control.phenotype
+  # is specified. The resulting p-values are Benjamini-Hochberg corrected by 
+  # default or Bonferroni corrected if use.bonferroni = TRUE
+  # 
+  # Args:
+  #   b.matrix: a B matrix (latent variables are rows, samples are columns) 
+  #             from a PLIER model. Can be the B element of the list 
+  #             returned by PLIER::PLIER or the output of GetNewDataB
+  #   phenotype: a named factor vector that contains group labels to be used
+  #              for contrasts
+  #   blocking: a names facotor vector that contains group labels to be used for blocking
+  #   use.bonferroni: logical - should bonferroni correction be used? if FALSE
+  #                   (default), will use "BH"
+  #   
+  # Returns:
+  #   A limma::topTable, where the first column is the latent variable name and
+  #   all pathways are returned (without filtering or sorting)
+  
+  ## error-handling ##
+  
+  if (is.null(names(phenotype))) {
+    stop("phenotype should be a named factor vector -- the names ensure that
+         the vector is correctly ordered")
+  }
+  if (is.null(names(blocking))) {
+    stop("blocking should be a named factor vector -- the names ensure that
+         the vector is correctly ordered")
+  }  
+  # no names should be "missing"
+  check.names <- all(colnames(b.matrix) %in% names(phenotype)) & 
+    all(names(phenotype) %in% colnames(b.matrix)) 
+  
+  if (!check.names) {
+    stop("Some sample(s) is missing from colnames(b.matrix) or 
+         names(phenotype)")
+  }
+  
+  # the phenotype labels should be in the same order as the b.matrix samples
+  ordered.phenotype <- as.factor(phenotype[colnames(b.matrix)])
+  
+  # the blocking labels should be in the same order as the b.matrix samples
+  ordered.blocking <- as.factor(blocking[colnames(b.matrix)])
+  
+  # get contrasts (all pairwise)  
+  num.levels <- length(levels(ordered.phenotype))
+  contrast.vector <- c()
+  for (lvl in levels(ordered.phenotype)[1:(num.levels - 1)]) {
+    for (lvl.2 in levels(ordered.phenotype)[2:num.levels]) {
+      if (lvl != lvl.2) {
+        contrast.vector <- append(contrast.vector, paste(lvl, lvl.2, sep = "-"))
+      }
+    }
+  }
+  contrast.vector <- paste(contrast.vector, collapse = ", ")
+  
+  # prep design matrix
+  design <- model.matrix(~ 0+ ordered.phenotype+ ordered.blocking )
+  colnames(design)[seq_len(nlevels(ordered.phenotype))] <- levels(ordered.phenotype)
+  
+  
+  
+  
+  #colnames(design) <- levels(ordered.phenotype)
+  
+  # fit linear model
+  fit <- limma::lmFit(b.matrix, design)
+  contrast.matrix <-
+    eval(parse(
+      text = paste0(
+        'limma::makeContrasts(', contrast.vector, ', levels = design)')))
+  fit2 <- limma::contrasts.fit(fit, contrast.matrix)
+  fit2 <- limma::eBayes(fit2)
+  
+  # extract results as a data.frame
+  if (use.bonferroni) {  # if specified, use Bonferroni correction
+    limma.result <- limma::topTable(fit2, number = nrow(b.matrix),
+                                    adjust.method = "bonferroni", 
+                                    sort.by = "none")
+  } else {  # calculate FDR
+    limma.result <- limma::topTable(fit2, number = nrow(b.matrix),
+                                    adjust.method = "BH", sort.by = "none")
+  }
+  
+  # want feature (latent variable) names as column
+  limma.result <- tibble::rownames_to_column(limma.result, var = "LV")
+  
+  return(limma.result)
+  
+}
+```
+
+
+
+```{r}
+LVTestWrapperJLF <- function(b.matrix,
+                          sample.info.df,
+                          phenotype.col,
+                          blocking,
+                          file.lead,
+                          plot.dir = "plots",
+                          results.dir = "results",
+                          use.bonferroni = FALSE,
+                          significant.only = FALSE,
+                          sig.threshold = 0.05) {
+  # A wrapper function for TestLVDifferences and BoxplotDiffLV; does the 
+  # reshaping required for plotting. Produces the following files: 1) tsv of the
+  # differential expression results 2) a long form of the B matrix joined with
+  # the sample information (sample.info.df) and 3) a PDF of boxplots
+  # 
+  # Args:
+  #   b.matrix: a B matrix (latent variables are rows, samples are columns) 
+  #             from a PLIER model. Can be the B element of the list 
+  #             returned by PLIER::PLIER or the output of GetNewDataB
+  #   sample.info.df: a long form data.frame that contains sample information,
+  #                   sample names that match the B matrix sample identifiers
+  #                   must be in a "Sample" column & it also must contain
+  #                   the factor to group by for testing differential expression
+  #                   (DE) and plotting
+  #   phenotype.col: the column name of the column in sample.info.df to be used
+  #                  for DE and plotting; character
+  #   file.lead: string that designates the "beginning" of filenames
+  #   plot.dir: plot directory where the boxplots PDF should be saved
+  #   results.dir: results directory for DE results and reshaped B data.frame
+  #   use.bonferroni: logical - should bonferroni correction be used for DE? 
+  #                   if FALSE (default), will use "BH"
+  #   significant.only: logical - should only differentially expressed LVs be
+  #                     plotted? if FALSE (default), all will be plotted
+  #   sig.threshold: the adj. P cutoff to be used if only plotting significant 
+  #                  results; default is 0.05
+  #                  
+  # Returns:
+  #   A list with the following elements
+  #       limma: the results from TestLVDifferences 
+  #       b.df: sample.b.df, prior to any filtering for plotting (if applicable)
+  # 
+  #   the following files are written by this function (see above):
+  #     1) <results.dir>/<file.lead>_LV_limma_results.tsv
+  #     2) <results.dir>/<file.lead>_B_long_sample_info.tsv
+  #     3) <plot.dir>/<file.lead>_LV_boxplots.pdf
+  
+  `%>%` <- dplyr::`%>%`
+  
+  # error-handling
+  # we need to join by "Sample" column for boxplots
+  if (!("Sample" %in% colnames(sample.info.df))) {
+    stop("'Sample' must be a column in sample.info.df")
+  }
+  # phenotype.col needs to be in column names
+  if (!(phenotype.col %in% colnames(sample.info.df))) {
+    stop("phenotype.col must be a column name in sample.info.df")
+  }
+  
+  # initialize list to hold results to be returned
+  return.list <- list()
+  
+  #### Differential Expression ####
+  # get the named vector to use as the phenotype for testing differential 
+  # expression
+  phenotype.vector <- as.factor(make.names(sample.info.df[[phenotype.col]]))
+  names(phenotype.vector) <- sample.info.df$Sample
+  # test itself
+  limma.df <- TestLVDifferencesJLF(b.matrix = b.matrix,
+                                phenotype = phenotype.vector,
+                                blocking= blocking,
+                                use.bonferroni = use.bonferroni)
+  # write to file
+  dlve.file <- file.path(results.dir, 
+                         paste0(file.lead, "_LV_limma_results.tsv"))
+  readr::write_tsv(limma.df, path = dlve.file)
+  # add to list to be returned
+  return.list[["limma"]] <- limma.df
+  
+  #### Reshape & join with sample information ####
+  b.df <- reshape2::melt(b.matrix)
+  colnames(b.df) <- c("LV", "Sample", "Value")
+  sample.b.df <- dplyr::inner_join(b.df, sample.info.df, by = "Sample")
+  long.file <- file.path(results.dir, 
+                         paste0(file.lead, "_B_long_sample_info.tsv"))
+  readr::write_tsv(sample.b.df, long.file)
+  # add to list to be returned
+  return.list[["b.df"]] <- sample.b.df
+  
+  #### Plotting ####
+  plot.file <- file.path(plot.dir,
+                         paste0(file.lead, "_LV_boxplots.pdf"))
+  
+  # if we only want significant LVs plotted, filter sample.b.df using the
+  # adj.P.Val cutoff sig.threshold
+  if (significant.only) {
+    sig.lvs <- limma.df$LV[which(limma.df$adj.P.Val < sig.threshold)]
+    sample.b.df <- sample.b.df %>%
+      dplyr::filter(LV %in% sig.lvs)
+  }
+  
+  BoxplotDiffLV(tidy.b.df = sample.b.df, 
+                phenotype.column = phenotype.col,
+                pdf.path = plot.file)
+  
+  
+  return(return.list)
+}
+```
+
+```{r eval= FALSE}
+source("~/script/test_LV_differences.R")
+library(dplyr)
+```
+
+
+LVTestWrapperJLF <- function(b.matrix,
+                          sample.info.df,
+                          phenotype.col,
+                          blocking,
+                          file.lead,
+                          plot.dir = "plots",
+                          results.dir = "results",
+                          use.bonferroni = FALSE,
+                          significant.only = FALSE,
+                          sig.threshold = 0.05)
+```{r eval= FALSE}
+sampleinfo<- cbind(colnames(LUAD.GTEx.b.matrix), as.character(all_metadata_v3$status), as.character(all_metadata$database))
+colnames(sampleinfo) <- c("Sample", "Tumor","database")
+sampleinfo<- as.data.frame(sampleinfo)
+database<- all_metadata_v3$database
+names(database)<- colnames(LUAD.GTEx.b.matrix)
+
+LV_test_TCGA_BH <- LVTestWrapperJLF(b.matrix=LUAD.GTEx.b.matrix , sample.info.df= sampleinfo, phenotype.col= "Tumor", blocking= database, file.lead= "LV_TCGA_GTEX_T_vs_NT_LUAD", plot.dir= "~/output/lung_cancer/TFL_res/", results.dir= "~/output/lung_cancer/TFL_res/", use.bonferroni= FALSE, sig.threshold = 0.05)
+```
+
+```{r eval=FALSE}
+saveRDS(LV_test_TCGA_BH , file= "~/output/lung_cancer/TFL_res/LUAD_GTEX_limma_TFL_res.rds")
+```
+```{r eval=FALSE}
+saveRDS(all_metadata_v3 , file= "~/output/lung_cancer/TFL_res/LUAD_GTEX_metadata.rds")
+```
+
+are genes and heatmaps and pathway analysis
+
+```{r eval= FALSE}
+sig_LVs <- LV_test_TCGA_BH$limma[LV_test_TCGA_BH$limma$adj.P.Val < 0.05,]
+```
+```{r}
+hist(LV_test_TCGA_BH$limma$logFC)
+```
+going with .10 for this analysis 
+
+```{r eval= FALSE}
+sig_LVs <- LV_test_TCGA_BH$limma[LV_test_TCGA_BH$limma$adj.P.Val < 0.05 & abs(LV_test_TCGA_BH$limma$logFC) > .075 ,]
+```
+
+```{r}
+SIG_LVs <- sig_LVs$LV
+```
+
+```{r}
+SIG_LVs
+```
+
+plot latent variable heatmap 
+Latent Variable heatmap 
+```{r}
+library(ComplexHeatmap)
+library(dplyr)
+library(gplots)
+library(circlize)
+```
+```{r}
+LUAD_GTEX_B_MATRIX <- readRDS("~/output/lung_cancer/TFL_res/LUAD_GTEX_B_MATRIX.rds")
+```
+
+```{r}
+colSideColors<- ifelse(all_metadata_v3$status =="Primary Tumor","#440154FF","#228C8DFF" )
+LUAD_GTEX_B_MATRIX_SIG<- LUAD_GTEX_B_MATRIX [rownames(LUAD_GTEX_B_MATRIX ) %in% SIG_LVs, ]
+heatmap.2(x=LUAD_GTEX_B_MATRIX_SIG, hclustfun=function(d) hclust(d, method="ward.D2"), labCol = FALSE, trace="none",ColSideColors=colSideColors, col=colorRampPalette(colors=c("blue", "black", "yellow")),cexRow= .5, dendrogram="both", cexCol = 0.5,main = "Significant Latent Varibles")
+
+```
+```{r}
+column_ha = HeatmapAnnotation(Sample=all_metadata_v3$status, col = list(Sample = c("Primary Tumor" = "#440154FF", "Solid Tissue Normal" = "#228C8DFF")))
+col_fun = colorRamp2(c(-1, 0, 1), c("blue", "black", "yellow"))
+Heatmap(LUAD_GTEX_B_MATRIX_SIG, nam= "LV Score",  col = col_fun, show_column_names = FALSE, clustering_distance_rows= "euclidean",
+             clustering_distance_columns=  "euclidean",
+             clustering_method_rows = "ward.D2" ,
+             clustering_method_columns="ward.D2", top_annotation = column_ha, row_names_gp = gpar(fontsize = 8))
+```
+
+
+
+```{r}
+sig_Z_mt <- recount3_plier_luad$Z[,LV_test_TCGA_BH$limma$adj.P.Val < 0.05 & abs(LV_test_TCGA_BH$limma$logFC)> .075 ]
+colnames(sig_Z_mt) <- SIG_LVs
+```
+
+
+top 100 
+```{r}
+topgene_1 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,1])][1:30]
+topgene_2 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,2])][1:30]
+topgene_3 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,3])][1:30]
+topgene_4 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,4])][1:30]
+topgene_5 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,5])][1:30]
+topgene_6 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,6])][1:30]
+topgene_7 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,7])][1:30]
+```
+
+```{r}
+topgenes<- unique(c(topgene_1, topgene_2,topgene_3, topgene_4, topgene_5, topgene_6, topgene_7))
+```
+
+
+```{r}
+deseq2_luad_tfl <- deseq2_luad_normal[deseq2_luad_normal$Symbol %in% topgenes,]
+```
+
+
+```{r}
+downset<- deseq2_luad_tfl$Symbol[deseq2_luad_tfl$log2FoldChange < 0]
+upset<- deseq2_luad_tfl$Symbol[deseq2_luad_tfl$log2FoldChange > 0]
+```
+
+
+
+```{r}
+upset_v2<- c()
+for (i in 1:length(upset)){
+  possibleError <- tryCatch(
+      gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol],
+      error=function(e) e
+  )
+  if(length(possibleError)> 0){
+    #REAL WORK
+    upset_v2[i]<- gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol]
+  }else{
+    upset_v2[i]<- NA
+  }
+  
+}
+names(upset_v2)<- upset
+```
+
+```{r}
+downset_v2<- c()
+for (i in 1:length(downset)){
+  possibleError <- tryCatch(
+      gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol],
+      error=function(e) e
+  )
+  if(length(possibleError)> 0){
+    #REAL WORK
+    downset_v2[i]<- gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol]
+  }else{
+    downset_v2[i]<- NA
+  }
+  
+}
+names(downset_v2)<- downset
+```
+
+```{r}
+downset_v2<- downset_v2[complete.cases(downset_v2)]
+upset_v2<- upset_v2[complete.cases(upset_v2)]
+```
+
+```{r}
+#double check that they didn't overlap 
+ intersect(downset_v2, upset_v2)
+```
+
+```{r}
+length(downset_v2)
+length(upset_v2)
+```
+
+```{r}
+names(upset_v2)<- NULL
+names(downset_v2)<- NULL
+```
+
+```{r}
+tfl_lung_list<- list(up= upset_v2, down= downset_v2)
+```
+
+```{r}
+saveRDS(tfl_lung_list,"~/output/lung_cancer/deseq2_res/SR_gene_list_lung_tfl.rds")
+```
+
+
+```{r}
+set.seed(101)
+qsig_lincs_tfl_lung_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
+                   gess_method="LINCS", refdb=db_path)
+```
+
+
+```{r}
+set.seed(101)
+library(parallel)
+lincs_tfl_lung <- gess_lincs(qsig_lincs_tfl_lung_res, sortby="NCS", tau=FALSE)
+#result(lincs)
+```
+
+
+
+```{r}
+lincs_tfl_lung_res <- result(lincs_tfl_lung)
+```
+
+```{r}
+write.csv(lincs_tfl_lung_res, file= "~/output/lung_cancer/220601_SR_LINCS_LUNG_TFL_RES.csv" )
+```
+
+```{r}
+lincs_tfl_lung_res_A549 <- lincs_tfl_lung_res[lincs_tfl_lung_res$cell == "A549",]
+```
+tau 
+
+
+```{r}
+tau_test<- tau_scores(lincs_tfl_lung_res_A549, A549_taudf)
+```
+
+```{r}
+lincs_tfl_lung_res_A549$jlf_tau<- tau_test
+```
+
+```{r}
+write.csv(lincs_tfl_lung_res_A549, file= "~/output/lung_cancer/TFL_res/220601_lincs_tfl_lung_res_A549_tau.csv" )
+```
+
+```{r}
+lincs_tfl_lung_res_A549_top <- lincs_tfl_lung_res_A549[lincs_tfl_lung_res_A549$NCS < 0 & lincs_tfl_lung_res_A549$WTCS_FDR < 0.05 & lincs_tfl_lung_res_A549$jlf_tau< -80,]
+```
+
+clinical trials
+
+```{r}
+lincs_tfl_lung_res_A549_top$fda_approved<- FDA_APPROVAL_CHECK(lincs_tfl_lung_res_A549_top$pert)
+```
+
+
+```{r}
+lincs_tfl_lung_res_A549_top$clinical_trial_LUAD <- clinical_trial_check(lincs_tfl_lung_res_A549_top$pert, clinical_trial_LUAD)
+```
+
+
+```{r}
+lincs_tfl_lung_res_A549_top_fda<- lincs_tfl_lung_res_A549_top[lincs_tfl_lung_res_A549_top$fda_approved== TRUE,]
+#lincs_deseq_luad_res_A549_top_fda$clinical_trial_LUAD<- ifelse(lincs_deseq_luad_res_A549_top_fda$clinical_trial_LUAD, "star", "")
+
+lincs_tfl_lung_res_A549_top_fda_order <- lincs_tfl_lung_res_A549_top_fda[order(-lincs_tfl_lung_res_A549_top_fda$NCS),]
+lincs_tfl_lung_res_A549_top_fda$pert <- factor(lincs_tfl_lung_res_A549_top_fda$pert, levels = lincs_tfl_lung_res_A549_top_fda_order$pert)
+p<-ggplot(data=lincs_tfl_lung_res_A549_top_fda[1:30,], aes(x=pert, y=NCS, fill=jlf_tau, shape= clinical_trial_LUAD)) +
+  geom_bar(stat="identity")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
+p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]", shape= "Clinical Trials")
+
+ggsave("~/output/lung_cancer/TFL_res/220421_ggplot_tfl_tau_luad_approved_candidates.png")
+```
+
+```{r}
+#lincs_deseq_luad_res_A549_top 
+write.csv(lincs_tfl_lung_res_A549_top , file= "~/output/lung_cancer/TFL_res/220602_SR_LINCS_LUAD_TFL_RES_tau.csv" )
+```
+
+pathways
+
+```{r}
+
+hyperG_k_res <- dsea_hyperG(drugs = lincs_tfl_lung_res_A549_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
+hyperG_k_res_v2<- result(hyperG_k_res)
+```
+
+```{r}
+#false discovery rate
+hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
+```
+
+```{r}
+hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
+```
+
+```{r}
+gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
+  geom_bar(stat="identity") + scale_fill_viridis()
+gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
+```
+no kegg pathways are signficant
+
+```{r}
+write.csv(hyperG_k_res_v2 , file= "~/output/lung_cancer/TFL_res/220602_SR_LINCS_LUAD_TFL_PATHWAY.csv" )
+```
+
+
+
+
+PRISM
+
+```{r}
+primary_luad_res_sub <-primary_luad_res[ primary_luad_res$Var2 %in% lincs_tfl_lung_res_A549_top_fda$pert,]
+```
+
+
+```{r}
+write.csv(primary_luad_res_sub , file= "~/output/lung_cancer/TFL_res/220602_prism_tfl_candidates.csv" )
+```
+
+```{r}
+#primary_luad_res_sub$Var2 <- factor(primary_luad_res_sub$Var2, levels=unique(primary_luad_res_sub$Var2))
+primary_luad_res_sub$Var2 <- factor(primary_luad_res_sub$Var2, levels=unique(primary_luad_res_sub$Var2[order(primary_luad_res_sub$log_fold_change)]))
+ggplot(primary_luad_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() +geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
+ggsave("~/output/lung_cancer/TFL_res/220602_ggplot_TFL_candidates_prism_screen1.png")
+```
+
+```{r}
+drug_list <- as.vector(unique(primary_luad_res_sub$Var2))
+drug_fraction<- c()
+for (i in 1:length(drug_list)){
+  cells <-primary_luad_res_sub$Sensitive[primary_luad_res_sub$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
+drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_all_drugs$drug_list, levels= unique(drug_senstive_precentage_all_drugs$drug_list[order(drug_senstive_precentage_all_drugs$drug_fraction)]))
+ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
+ggsave("~/output/lung_cancer/TFL_res/220602_ggplot_TFL_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+LINCS pathway & Drug targets
+
+
+```{r}
+#drug_analysis(drug_name, target_list,  tpm_df, sample_vector, deseq_results, se, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/deseq2_res/220602_candidate_plot/")
+
+drug_analysis( "dabrafenib", c("BRAF" , "RAF1", "SIK1", "NEK11", "LIMK1"),  tpm_df, all_metadata_v3$status , deseq2_luad_normal, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/TFL_res/220602_candidate_plot")
+
+drug_analysis( "toremifene", c("ESR1" , "SHBG"),  tpm_df, all_metadata_v3$status , deseq2_luad_normal, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/TFL_res/220602_candidate_plot")
+
+drug_analysis( "trametinib", c("MAP2K1" , "MAP2K2"),  tpm_df, all_metadata_v3$status , deseq2_luad_normal, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/TFL_res/220602_candidate_plot")
+
+drug_analysis( "atorvastatin", c("HMGCR" , "DPP4", "AHR", "HDAC2", "NR1I3"),  tpm_df, all_metadata_v3$status , deseq2_luad_normal, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/TFL_res/220602_candidate_plot")
+
+drug_analysis( "sirolimus", c("MTOR"),  tpm_df, all_metadata_v3$status , deseq2_luad_normal, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/TFL_res/220602_candidate_plot")
+
+drug_analysis( "trifluoperazine", c("DRD2", "CALY", "ADRA1A", "CALM1", "TNNC1", "S100A4"),  tpm_df, all_metadata_v3$status , deseq2_luad_normal, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/TFL_res/220602_candidate_plot")
+
+drug_analysis( "selumetinib", c("MAP2K1", "MAP2K2"),  tpm_df, all_metadata_v3$status , deseq2_luad_normal, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/TFL_res/220602_candidate_plot")
+
+drug_analysis( "simvastatin", c("HMGCR", "ITGAL", "HDAC2"),  tpm_df, all_metadata_v3$status , deseq2_luad_normal, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/TFL_res/220602_candidate_plot")
+
+drug_analysis( "itraconazole", c("ERG11", "CYP51A1"),  tpm_df, all_metadata_v3$status , deseq2_luad_normal, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/TFL_res/220602_candidate_plot")
+
+drug_analysis( "erlotinib", c("NR1I2", "EGFR"),  tpm_df, all_metadata_v3$status , deseq2_luad_normal, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/TFL_res/220602_candidate_plot")
+```
+
+
+```{r}
+drug_list <- as.vector(unique(primary_luad_res$Var2))
+drug_fraction<- c()
+for (i in 1:length(drug_list)){
+  cells <-primary_luad_res$Sensitive[primary_luad_res$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
+```
+
+```{r}
+tfl_PRISM_test<- PRISM_testing(101,"A549", lincs_tfl_lung_res_A549_top_fda$pert, drug_senstive_precentage_all_drugs)
+```
+
+```{r}
+tfl_PRISM_test
+```
+
+```{r}
+table(lincs_tfl_lung_res_A549_top_fda$clinical_trial_LUAD)
+```
+
+```{r}
+tfl_CT_test_res <- clinical_trial_testing(101, "A549", 81, 0.1975309, clinical_trial_LUAD)
+```
+
+```{r}
+tfl_CT_test_res
+```
+
+
+
+compare gene list across the different methods
+```{r}
+library(VennDiagram)
+```
+```{r}
+# Prepare a palette of 3 colors with R colorbrewer:
+myCol <- c("#440154FF" , "#31688EFF" ,"#35B779FF")
+```
+```{r}
+venn_dia_methods <- function(limma_list, deseq2_list, tfl_list, file_name='~/output/liver_cancer/SR_liver_all_gene_venn_diagram.png' ){
+venn.diagram(
+        x = list(limma_list, deseq2_list, tfl_list),
+        category.names = c("limma" , "DESeq2" , "Transfer Learning"),
+        filename = file_name,
+        output=TRUE,
+        
+        # Output features
+        imagetype="png" ,
+        height = 1000 , 
+        width = 1000 , 
+        resolution = 300,
+        compression = "lzw",
+        
+        # Circles
+        lwd = 2,
+        lty = 'blank',
+        fill = myCol,
+        
+        # Numbers
+        cex = .4,
+        fontface = "bold",
+        fontfamily = "sans",
+        
+        # Set names
+        cat.cex = 0.3,
+        cat.fontface = "bold",
+        #cat.default.pos = "outer",
+        cat.pos = c(-27, 27, 135),
+        cat.dist = c(0.04, 0.04, 0.04),
+        cat.fontfamily = "sans",
+        rotation = 1
+)
+}
+```
+
+```{r}
+venn_dia_methods(limma_lung_list$up, deseq_lung_list$up, tfl_lung_list$up, file_name='~/output/lung_cancer/SR_up_genes_venn_diagram.png' )
+```
+
+```{r}
+venn_dia_methods(limma_lung_list$down, deseq_lung_list$down, tfl_lung_list$down, file_name='~/output/lung_cancer/SR_down_genes_venn_diagram.png' )
+```
+
+```{r}
+venn_dia_methods(unlist(limma_lung_list), unlist(deseq_lung_list), unlist(tfl_lung_list), file_name='~/output/lung_cancer/SR_all_genes_venn_diagram.png' )
+```
+
+
+```{r}
+method_up_down_gene_set_analysis<- function(up, down,result_path, method, name){
+  library(gprofiler2)
+  downset_pathway_results <- gost(query = down, 
+                organism = "hsapiens", ordered_query = TRUE, 
+                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                measure_underrepresentation = FALSE, evcodes = FALSE, 
+                user_threshold = 0.05, correction_method = "g_SCS", 
+                domain_scope = "annotated", custom_bg = NULL, 
+                numeric_ns = "", sources = NULL, as_short_link = FALSE)
+  downset_pathway_results<- downset_pathway_results$result
+  
+  upset_pathway_results <- gost(query = up, 
+                organism = "hsapiens", ordered_query = TRUE, 
+                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                measure_underrepresentation = FALSE, evcodes = FALSE, 
+                user_threshold = 0.05, correction_method = "g_SCS", 
+                domain_scope = "annotated", custom_bg = NULL, 
+                numeric_ns = "", sources = NULL, as_short_link = FALSE)
+  upset_pathway_results<- upset_pathway_results$result
+  
+  pathway_results<- rbind(upset_pathway_results, downset_pathway_results)
+  pathway_results$set<- c(rep("Up", nrow(upset_pathway_results)), rep("Down", nrow(downset_pathway_results)))
+  file_name<- paste0(result_path, "/", method, "_pathways.csv")
+  write.csv2(as.data.frame(pathway_results[,-14]), file_name )
+  
+  file_name<- paste0(result_path, "/", method, "_pathways.png")
+  
+  #making adjustments here
+  #pathway_results$set <- factor(pathway_results$set, levels = c("up", "down"))
+  if(nrow(pathway_results)<50){
+    ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value))+geom_tile()+scale_fill_viridis(direction=-1)+theme_classic()+ labs(title=name,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
+    
+  }else{
+    pathway_results<- pathway_results[pathway_results$source %in% c("KEGG","REAC","GO:MF" ),]
+    ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value)) + geom_tile()+ scale_fill_viridis(direction=-1)+ theme_classic() + labs(title=name,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
+  }
+  ggsave(file_name, width = 12, height = 14)
+  return(as.data.frame(pathway_results[,-14]))
+}
+```
+
+```{r}
+limma_lung_pathway_res <- method_up_down_gene_set_analysis(limma_lung_list$up, limma_lung_list$down, "~/output/lung_cancer/", "limma", "LUNG_cancer_limma_input_genes_SR")
+```
+
+```{r}
+deseq2_lung_pathway_res<- method_up_down_gene_set_analysis(deseq_lung_list$up, deseq_lung_list$down, "~/output/lung_cancer/", "DESEq2", "Lung_cancer_deseq2_input_genes_SR")
+```
+
+```{r}
+tfl_lung_pathway_res<- method_up_down_gene_set_analysis(tfl_lung_list$up, tfl_lung_list$down, "~/output/lung_cancer/", "TFL", "LUNG_cancer_tfl_input_genes_SR")
+```
+
+
+```{r}
+limma<- limma_lung_pathway_res$term_id[ limma_lung_pathway_res$set == "Up"]
+deseq2<- deseq2_lung_pathway_res$term_id[ deseq2_lung_pathway_res$set == "Up"]
+tfl<-tfl_lung_pathway_res$term_id[ tfl_lung_pathway_res$set == "Up"]
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/lung_cancer/SR_lung_Up_pathway_venn_diagram.png' )
+```
+
+```{r}
+limma<- limma_lung_pathway_res$term_id[ limma_lung_pathway_res$set == "Down"]
+deseq2<- deseq2_lung_pathway_res$term_id[ deseq2_lung_pathway_res$set == "Down"]
+tfl<-tfl_lung_pathway_res$term_id[ tfl_lung_pathway_res$set == "Down"]
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/lung_cancer/SR_lung_Down_pathway_venn_diagram.png' )
+```
+
+```{r}
+limma<- limma_lung_pathway_res$term_id
+deseq2<- deseq2_lung_pathway_res$term_id
+tfl<-tfl_lung_pathway_res$term_id
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/lung_cancer/SR_lung_all_pathway_venn_diagram.png' )
+```
+
+
+```{r eval=FALSE}
+#comment.   
+lincs_limma_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/limma_res/220602_SR_LINCS_LUAD_limma_RES_tau.csv")
+lincs_limma_gbm_res_A549_fda_approved<- lincs_limma_gbm_res_A549_fda_approved[lincs_limma_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
+lincs_deseq_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/deseq2_res/220602_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_A549_fda_approved<- lincs_deseq_gbm_res_A549_fda_approved[lincs_deseq_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
+lincs_tfl_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/TFL_res/220602_SR_LINCS_LUAD_TFL_RES_tau.csv")
+lincs_tfl_gbm_res_A549_fda_approved<- lincs_tfl_gbm_res_A549_fda_approved[lincs_tfl_gbm_res_A549_fda_approved$fda_approved==TRUE,]
+```
+
+```{r}
+venn_dia_methods(lincs_limma_gbm_res_A549_fda_approved$pert, lincs_deseq_gbm_res_A549_fda_approved$pert, lincs_tfl_gbm_res_A549_fda_approved$pert, file_name='~/output/lung_cancer/SR_drug_candidates_venn_diagram.png' )
+```
+
+
+
+
+
+
+

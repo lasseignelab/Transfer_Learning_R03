@@ -1,0 +1,357 @@
+"","ont","ID","Description","GeneRatio","BgRatio","pvalue","p.adjust","qvalue","itemID","Count"
+"GO:0061000","BP","GO:0061000","negative regulation of dendritic spine development","4/14","91/22568",2.40061569438127e-07,0.000227353473775033,0.000137097572125648,"vorinostat/panobinostat/entinostat/bi-2536",4
+"GO:0060996","BP","GO:0060996","dendritic spine development","6/14","487/22568",2.53884392825274e-07,0.000227353473775033,0.000137097572125648,"vorinostat/panobinostat/entinostat/bi-2536/icosapent/ly-294002",6
+"GO:0035851","MF","GO:0035851","Krueppel-associated box domain binding","3/14","27/22568",5.50991698061217e-07,0.000320891250481074,0.000193502261596628,"vorinostat/panobinostat/entinostat",3
+"GO:0051059","MF","GO:0051059","NF-kappaB binding","5/14","299/22568",7.16675042950472e-07,0.000320891250481074,0.000193502261596628,"vorinostat/panobinostat/entinostat/icosapent/ly-294002",5
+"GO:0046329","BP","GO:0046329","negative regulation of JNK cascade","4/14","132/22568",1.06958477351768e-06,0.000348489267117834,0.000210144281679096,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0048714","BP","GO:0048714","positive regulation of oligodendrocyte differentiation","5/14","335/22568",1.2546487563414e-06,0.000348489267117834,0.000210144281679096,"vorinostat/panobinostat/entinostat/icosapent/ly-294002",5
+"GO:0032873","BP","GO:0032873","negative regulation of stress-activated MAPK cascade","4/14","145/22568",1.55662430873404e-06,0.000348489267117834,0.000210144281679096,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0070303","BP","GO:0070303","negative regulation of stress-activated protein kinase signaling cascade","4/14","145/22568",1.55662430873404e-06,0.000348489267117834,0.000210144281679096,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:2000171","BP","GO:2000171","negative regulation of dendrite development","4/14","155/22568",2.03081972261015e-06,0.000401265850933015,0.000241969357346542,"vorinostat/panobinostat/entinostat/bi-2536",4
+"GO:0060998","BP","GO:0060998","regulation of dendritic spine development","5/14","377/22568",2.24045701246798e-06,0.000401265850933015,0.000241969357346542,"vorinostat/panobinostat/entinostat/bi-2536/ly-294002",5
+"GO:0032008","BP","GO:0032008","positive regulation of TOR signaling","4/14","172/22568",3.07267654791528e-06,0.000458596974776356,0.000276540889312375,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:1901984","BP","GO:1901984","negative regulation of protein acetylation","4/14","172/22568",3.07267654791528e-06,0.000458596974776356,0.000276540889312375,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0014910","BP","GO:0014910","regulation of smooth muscle cell migration","5/14","420/22568",3.80002504486028e-06,0.000523526527334212,0.000315694388342239,"vorinostat/panobinostat/icosapent/trandolapril/ly-294002",5
+"GO:0048713","BP","GO:0048713","regulation of oligodendrocyte differentiation","5/14","427/22568",4.11933719828797e-06,0.000526980923009553,0.000317777441010786,"vorinostat/panobinostat/entinostat/icosapent/ly-294002",5
+"GO:0002042","BP","GO:0002042","cell migration involved in sprouting angiogenesis","5/14","444/22568",4.98322218346099e-06,0.000565940851961522,0.000341270865504435,"vorinostat/panobinostat/entinostat/bi-2536/ly-294002",5
+"GO:0070888","MF","GO:0070888","E-box binding","4/14","195/22568",5.05586467413978e-06,0.000565940851961522,0.000341270865504435,"vorinostat/panobinostat/entinostat/icosapent",4
+"GO:0043922","BP","GO:0043922","negative regulation by host of viral transcription","3/14","59/22568",6.05255320744665e-06,0.000603681789345925,0.000364029219706085,"vorinostat/panobinostat/entinostat",3
+"GO:0045687","BP","GO:0045687","positive regulation of glial cell differentiation","5/14","467/22568",6.37237303426363e-06,0.000603681789345925,0.000364029219706085,"vorinostat/panobinostat/entinostat/icosapent/ly-294002",5
+"GO:0071168","BP","GO:0071168","protein localization to chromatin","4/14","207/22568",6.40421775408854e-06,0.000603681789345925,0.000364029219706085,"vorinostat/panobinostat/bi-2536/ly-294002",4
+"GO:0014909","BP","GO:0014909","smooth muscle cell migration","5/14","477/22568",7.06385535289394e-06,0.000632568246851652,0.000381448189056273,"vorinostat/panobinostat/icosapent/trandolapril/ly-294002",5
+"GO:0001103","MF","GO:0001103","RNA polymerase II repressing transcription factor binding","4/14","218/22568",7.85870729811658e-06,0.000670235465282228,0.000404162089617424,"vorinostat/panobinostat/entinostat/icosapent",4
+"GO:0002039","MF","GO:0002039","p53 binding","5/14","500/22568",8.87880752560092e-06,0.000692488041680903,0.000417580728651801,"vorinostat/panobinostat/entinostat/bi-2536/ly-294002",5
+"GO:0032897","BP","GO:0032897","negative regulation of viral transcription","3/14","67/22568",8.89292292499206e-06,0.000692488041680903,0.000417580728651801,"vorinostat/panobinostat/entinostat",3
+"GO:0048742","BP","GO:0048742","regulation of skeletal muscle fiber development","3/14","73/22568",1.15205330756928e-05,0.00084365831238409,0.000508738680834627,"vorinostat/panobinostat/entinostat",3
+"GO:0045347","BP","GO:0045347","negative regulation of MHC class II biosynthetic process","3/14","77/22568",1.35297168360001e-05,0.00084365831238409,0.000508738680834627,"vorinostat/panobinostat/entinostat",3
+"GO:0060766","BP","GO:0060766","negative regulation of androgen receptor signaling pathway","3/14","78/22568",1.40657568775356e-05,0.00084365831238409,0.000508738680834627,"vorinostat/panobinostat/entinostat",3
+"GO:0060789","BP","GO:0060789","hair follicle placode formation","3/14","79/22568",1.46156341559207e-05,0.00084365831238409,0.000508738680834627,"vorinostat/panobinostat/entinostat",3
+"GO:0061197","BP","GO:0061197","fungiform papilla morphogenesis","3/14","79/22568",1.46156341559207e-05,0.00084365831238409,0.000508738680834627,"vorinostat/panobinostat/entinostat",3
+"GO:0061198","BP","GO:0061198","fungiform papilla formation","3/14","79/22568",1.46156341559207e-05,0.00084365831238409,0.000508738680834627,"vorinostat/panobinostat/entinostat",3
+"GO:0048641","BP","GO:0048641","regulation of skeletal muscle tissue development","4/14","257/22568",1.5033241878148e-05,0.00084365831238409,0.000508738680834627,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0060788","BP","GO:0060788","ectodermal placode formation","3/14","80/22568",1.51795180146496e-05,0.00084365831238409,0.000508738680834627,"vorinostat/panobinostat/entinostat",3
+"GO:0071697","BP","GO:0071697","ectodermal placode morphogenesis","3/14","80/22568",1.51795180146496e-05,0.00084365831238409,0.000508738680834627,"vorinostat/panobinostat/entinostat",3
+"GO:0007062","BP","GO:0007062","sister chromatid cohesion","4/14","262/22568",1.6216092886233e-05,0.00084365831238409,0.000508738680834627,"vorinostat/panobinostat/bi-2536/ly-294002",4
+"GO:0043587","BP","GO:0043587","tongue morphogenesis","3/14","82/22568",1.63499815502574e-05,0.00084365831238409,0.000508738680834627,"vorinostat/panobinostat/entinostat",3
+"GO:0071696","BP","GO:0071696","ectodermal placode development","3/14","83/22568",1.69568986179671e-05,0.00084365831238409,0.000508738680834627,"vorinostat/panobinostat/entinostat",3
+"GO:0010830","BP","GO:0010830","regulation of myotube differentiation","4/14","265/22568",1.69579560278209e-05,0.00084365831238409,0.000508738680834627,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0061196","BP","GO:0061196","fungiform papilla development","3/14","84/22568",1.75784970481499e-05,0.000850894276033419,0.000513102076000052,"vorinostat/panobinostat/entinostat",3
+"GO:0010718","BP","GO:0010718","positive regulation of epithelial to mesenchymal transition","4/14","271/22568",1.85164363036837e-05,0.000872708879470989,0.000526256610736275,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0031492","MF","GO:0031492","nucleosomal DNA binding","3/14","88/22568",2.02150614960355e-05,0.000928337824087169,0.000559801702967137,"vorinostat/panobinostat/entinostat",3
+"GO:0006346","BP","GO:0006346","methylation-dependent chromatin silencing","3/14","92/22568",2.3099925213465e-05,0.00103429915143289,0.000623697980763554,"vorinostat/panobinostat/entinostat",3
+"GO:0001046","MF","GO:0001046","core promoter sequence-specific DNA binding","3/14","94/22568",2.46387993591569e-05,0.00105119005397366,0.000633883449632359,"vorinostat/panobinostat/entinostat",3
+"GO:0033613","MF","GO:0033613","activating transcription factor binding","4/14","292/22568",2.48116215087361e-05,0.00105119005397366,0.000633883449632359,"vorinostat/panobinostat/entinostat/icosapent",4
+"GO:0034405","BP","GO:0034405","response to fluid shear stress","4/14","295/22568",2.58248812813183e-05,0.00105119005397366,0.000633883449632359,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0090090","BP","GO:0090090","negative regulation of canonical Wnt signaling pathway","4/14","295/22568",2.58248812813183e-05,0.00105119005397366,0.000633883449632359,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0006344","BP","GO:0006344","maintenance of chromatin silencing","3/14","98/22568",2.79160564257592e-05,0.00111105904574522,0.000669985354218222,"vorinostat/panobinostat/entinostat",3
+"GO:0090050","BP","GO:0090050","positive regulation of cell migration involved in sprouting angiogenesis","4/14","311/22568",3.17518873938906e-05,0.00123625283309691,0.000745479095334823,"vorinostat/panobinostat/entinostat/bi-2536",4
+"GO:0016581","CC","GO:0016581","NuRD complex","3/14","104/22568",3.33504638564709e-05,0.00124438918264457,0.000750385436770596,"vorinostat/panobinostat/entinostat",3
+"GO:0090545","CC","GO:0090545","CHD-type complex","3/14","104/22568",3.33504638564709e-05,0.00124438918264457,0.000750385436770596,"vorinostat/panobinostat/entinostat",3
+"GO:0035098","CC","GO:0035098","ESC/E(Z) complex","3/14","105/22568",3.43187941533033e-05,0.00125070802417117,0.000754195793470054,"vorinostat/panobinostat/entinostat",3
+"GO:0031491","MF","GO:0031491","nucleosome binding","3/14","106/22568",3.53054435869872e-05,0.00125070802417117,0.000754195793470054,"vorinostat/panobinostat/entinostat",3
+"GO:0030178","BP","GO:0030178","negative regulation of Wnt signaling pathway","4/14","322/22568",3.63692347657354e-05,0.00125070802417117,0.000754195793470054,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0016580","CC","GO:0016580","Sin3 complex","3/14","108/22568",3.73343492951765e-05,0.00125070802417117,0.000754195793470054,"vorinostat/panobinostat/entinostat",3
+"GO:0070822","CC","GO:0070822","Sin3-type complex","3/14","108/22568",3.73343492951765e-05,0.00125070802417117,0.000754195793470054,"vorinostat/panobinostat/entinostat",3
+"GO:0033045","BP","GO:0033045","regulation of sister chromatid segregation","4/14","325/22568",3.77097896735027e-05,0.00125070802417117,0.000754195793470054,"vorinostat/panobinostat/bi-2536/ly-294002",4
+"GO:2000756","BP","GO:2000756","regulation of peptidyl-lysine acetylation","4/14","327/22568",3.86234339383496e-05,0.00125771945788335,0.000758423793698501,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0010592","BP","GO:0010592","positive regulation of lamellipodium assembly","3/14","110/22568",3.9438477311389e-05,0.00126132701544103,0.000760599205291073,"vorinostat/panobinostat/ly-294002",3
+"GO:0070491","MF","GO:0070491","repressing transcription factor binding","4/14","331/22568",4.04993845937932e-05,0.00126539217681037,0.000763050558880625,"vorinostat/panobinostat/entinostat/icosapent",4
+"GO:0032006","BP","GO:0032006","regulation of TOR signaling","4/14","332/22568",4.09786411250706e-05,0.00126539217681037,0.000763050558880625,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0010717","BP","GO:0010717","regulation of epithelial to mesenchymal transition","4/14","346/22568",4.81346132678223e-05,0.0014277354522492,0.000860946001356299,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:2000757","BP","GO:2000757","negative regulation of peptidyl-lysine acetylation","3/14","118/22568",4.86329977072163e-05,0.0014277354522492,0.000860946001356299,"vorinostat/panobinostat/entinostat",3
+"GO:1904837","BP","GO:1904837","beta-catenin-TCF complex assembly","3/14","119/22568",4.98724842986442e-05,0.0014277354522492,0.000860946001356299,"vorinostat/panobinostat/entinostat",3
+"GO:0032965","BP","GO:0032965","regulation of collagen biosynthetic process","4/14","350/22568",5.03374550746667e-05,0.0014277354522492,0.000860946001356299,"vorinostat/panobinostat/entinostat/icosapent",4
+"GO:0043044","BP","GO:0043044","ATP-dependent chromatin remodeling","3/14","120/22568",5.11325409651611e-05,0.0014277354522492,0.000860946001356299,"vorinostat/panobinostat/entinostat",3
+"GO:0043921","BP","GO:0043921","modulation by host of viral transcription","3/14","121/22568",5.24133266042867e-05,0.0014277354522492,0.000860946001356299,"vorinostat/panobinostat/entinostat",3
+"GO:0052472","BP","GO:0052472","modulation by host of symbiont transcription","3/14","121/22568",5.24133266042867e-05,0.0014277354522492,0.000860946001356299,"vorinostat/panobinostat/entinostat",3
+"GO:0010712","BP","GO:0010712","regulation of collagen metabolic process","4/14","354/22568",5.26133667495516e-05,0.0014277354522492,0.000860946001356299,"vorinostat/panobinostat/entinostat/icosapent",4
+"GO:0031000","BP","GO:0031000","response to caffeine","4/14","366/22568",5.9894621740479e-05,0.00157751864025291,0.000951267521760549,"vorinostat/panobinostat/entinostat/icosapent",4
+"GO:0036270","BP","GO:0036270","response to diuretic","4/14","366/22568",5.9894621740479e-05,0.00157751864025291,0.000951267521760549,"vorinostat/panobinostat/entinostat/icosapent",4
+"GO:0090049","BP","GO:0090049","regulation of cell migration involved in sprouting angiogenesis","4/14","368/22568",6.11763047929801e-05,0.00158792408527866,0.000957542161977079,"vorinostat/panobinostat/entinostat/bi-2536",4
+"GO:0055093","BP","GO:0055093","response to hyperoxia","4/14","379/22568",6.85879535629355e-05,0.00175487178330311,0.00105821414068529,"vorinostat/panobinostat/entinostat/icosapent",4
+"GO:1901983","BP","GO:1901983","regulation of protein acetylation","4/14","381/22568",7.00030037672721e-05,0.00176585041897443,0.00106483442350217,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0070603","CC","GO:0070603","SWI/SNF superfamily-type complex","3/14","136/22568",7.4219875306493e-05,0.00182477079927717,0.00110036430107166,"vorinostat/panobinostat/entinostat",3
+"GO:0036296","BP","GO:0036296","response to increased oxygen levels","4/14","387/22568",7.43764759057698e-05,0.00182477079927717,0.00110036430107166,"vorinostat/panobinostat/entinostat/icosapent",4
+"GO:0031929","BP","GO:0031929","TOR signaling","4/14","389/22568",7.58777369783367e-05,0.00183644630984056,0.0011074048099541,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0045652","BP","GO:0045652","regulation of megakaryocyte differentiation","3/14","139/22568",7.91917742472634e-05,0.00189109956902465,0.00114036154916059,"vorinostat/panobinostat/entinostat",3
+"GO:0033144","BP","GO:0033144","negative regulation of intracellular steroid hormone receptor signaling pathway","3/14","145/22568",8.97796389183369e-05,0.00211572806977291,0.0012758159214711,"vorinostat/panobinostat/entinostat",3
+"GO:0006338","BP","GO:0006338","chromatin remodeling","4/14","409/22568",9.21365511399919e-05,0.00214307224794449,0.00129230487313235,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0045342","BP","GO:0045342","MHC class II biosynthetic process","3/14","149/22568",9.73285850744122e-05,0.00218488676429579,0.00131751965686179,"vorinostat/panobinostat/entinostat",3
+"GO:0045346","BP","GO:0045346","regulation of MHC class II biosynthetic process","3/14","149/22568",9.73285850744122e-05,0.00218488676429579,0.00131751965686179,"vorinostat/panobinostat/entinostat",3
+"GO:0010591","BP","GO:0010591","regulation of lamellipodium assembly","3/14","150/22568",9.92785149337445e-05,0.00218488676429579,0.00131751965686179,"vorinostat/panobinostat/ly-294002",3
+"GO:0010869","BP","GO:0010869","regulation of receptor biosynthetic process","4/14","418/22568",0.000100226677958928,0.00218488676429579,0.00131751965686179,"vorinostat/panobinostat/entinostat/icosapent",4
+"GO:0019083","BP","GO:0019083","viral transcription","3/14","151/22568",0.000101253825481045,0.00218488676429579,0.00131751965686179,"vorinostat/panobinostat/entinostat",3
+"GO:0046782","BP","GO:0046782","regulation of viral transcription","3/14","151/22568",0.000101253825481045,0.00218488676429579,0.00131751965686179,"vorinostat/panobinostat/entinostat",3
+"GO:0014874","BP","GO:0014874","response to stimulus involved in regulation of muscle adaptation","3/14","156/22568",0.000111516373931352,0.00232237425735131,0.00140042668785004,"vorinostat/panobinostat/ly-294002",3
+"GO:0090568","CC","GO:0090568","nuclear transcriptional repressor complex","3/14","156/22568",0.000111516373931352,0.00232237425735131,0.00140042668785004,"vorinostat/panobinostat/entinostat",3
+"GO:0010677","BP","GO:0010677","negative regulation of cellular carbohydrate metabolic process","4/14","430/22568",0.000111805179255251,0.00232237425735131,0.00140042668785004,"vorinostat/panobinostat/icosapent/ly-294002",4
+"GO:0032964","BP","GO:0032964","collagen biosynthetic process","4/14","431/22568",0.000112812149854586,0.00232237425735131,0.00140042668785004,"vorinostat/panobinostat/entinostat/icosapent",4
+"GO:1903672","BP","GO:1903672","positive regulation of sprouting angiogenesis","4/14","433/22568",0.000114845918146046,0.00233737544772237,0.00140947263179238,"vorinostat/panobinostat/entinostat/bi-2536",4
+"GO:1902894","BP","GO:1902894","negative regulation of pri-miRNA transcription by RNA polymerase II","3/14","160/22568",0.000120198628214995,0.00241882857452872,0.0014585900951932,"vorinostat/panobinostat/icosapent",3
+"GO:0045912","BP","GO:0045912","negative regulation of carbohydrate metabolic process","4/14","444/22568",0.000126513129321884,0.00251761127350549,0.00151815755186261,"vorinostat/panobinostat/icosapent/ly-294002",4
+"GO:0034983","BP","GO:0034983","peptidyl-lysine deacetylation","3/14","167/22568",0.000136433249568714,0.00263224832530812,0.00158728542229636,"vorinostat/panobinostat/entinostat",3
+"GO:0052312","BP","GO:0052312","modulation of transcription in other organism involved in symbiotic interaction","3/14","167/22568",0.000136433249568714,0.00263224832530812,0.00158728542229636,"vorinostat/panobinostat/entinostat",3
+"GO:0051983","BP","GO:0051983","regulation of chromosome segregation","4/14","453/22568",0.000136682911364408,0.00263224832530812,0.00158728542229636,"vorinostat/panobinostat/bi-2536/ly-294002",4
+"GO:0061029","BP","GO:0061029","eyelid development in camera-type eye","3/14","168/22568",0.000138862976106709,0.00264578287454379,0.0015954469595239,"vorinostat/panobinostat/entinostat",3
+"GO:0000792","CC","GO:0000792","heterochromatin","3/14","169/22568",0.0001413207689136,0.00266426839078165,0.00160659400449145,"vorinostat/panobinostat/entinostat",3
+"GO:0007492","BP","GO:0007492","endoderm development","3/14","173/22568",0.000151435537539357,0.00279609327559782,0.00168608639734542,"vorinostat/panobinostat/entinostat",3
+"GO:0071498","BP","GO:0071498","cellular response to fluid shear stress","3/14","173/22568",0.000151435537539357,0.00279609327559782,0.00168608639734542,"vorinostat/panobinostat/entinostat",3
+"GO:0060765","BP","GO:0060765","regulation of androgen receptor signaling pathway","3/14","174/22568",0.000154035860633887,0.0028150839428091,0.00169753805596529,"vorinostat/panobinostat/entinostat",3
+"GO:0001837","BP","GO:0001837","epithelial to mesenchymal transition","4/14","469/22568",0.000156214495391986,0.00282606223481866,0.00170415813154894,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0070933","BP","GO:0070933","histone H4 deacetylation","3/14","176/22568",0.000159323484836124,0.00285348361341499,0.00172069363623014,"vorinostat/panobinostat/entinostat",3
+"GO:0030332","MF","GO:0030332","cyclin binding","3/14","179/22568",0.00016747454486953,0.00295081394352388,0.00177938529257721,"vorinostat/panobinostat/entinostat",3
+"GO:0018394","BP","GO:0018394","peptidyl-lysine acetylation","4/14","478/22568",0.00016805305541007,0.00295081394352388,0.00177938529257721,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0000819","BP","GO:0000819","sister chromatid segregation","4/14","484/22568",0.000176299274169534,0.00306555339842365,0.0018485749136223,"vorinostat/panobinostat/bi-2536/ly-294002",4
+"GO:0005080","MF","GO:0005080","protein kinase C binding","4/14","490/22568",0.000184835702576191,0.00316869840348824,0.00191077290662608,"vorinostat/panobinostat/entinostat/ly-294002",4
+"GO:0010714","BP","GO:0010714","positive regulation of collagen metabolic process","3/14","186/22568",0.000187538822317004,0.00316869840348824,0.00191077290662608,"vorinostat/panobinostat/entinostat",3
+"GO:0032967","BP","GO:0032967","positive regulation of collagen biosynthetic process","3/14","186/22568",0.000187538822317004,0.00316869840348824,0.00191077290662608,"vorinostat/panobinostat/entinostat",3
+"GO:1903670","BP","GO:1903670","regulation of sprouting angiogenesis","4/14","495/22568",0.000192175522904563,0.00321669496749601,0.00193971555828905,"vorinostat/panobinostat/entinostat/bi-2536",4
+"GO:0045820","BP","GO:0045820","negative regulation of glycolytic process","3/14","189/22568",0.000196595047695789,0.00326020120762183,0.00196595047695789,"vorinostat/panobinostat/icosapent",3
+"GO:0030812","BP","GO:0030812","negative regulation of nucleotide catabolic process","3/14","191/22568",0.000202787801840173,0.00330175411905227,0.00199100750897624,"vorinostat/panobinostat/icosapent",3
+"GO:0051198","BP","GO:0051198","negative regulation of coenzyme metabolic process","3/14","191/22568",0.000202787801840173,0.00330175411905227,0.00199100750897624,"vorinostat/panobinostat/icosapent",3
+"GO:0043586","BP","GO:0043586","tongue development","3/14","193/22568",0.000209106096678091,0.00337395512748164,0.00203454580551657,"vorinostat/panobinostat/entinostat",3
+"GO:0031519","CC","GO:0031519","PcG protein complex","3/14","194/22568",0.000212312675394774,0.00339510715742893,0.00204730079844961,"vorinostat/panobinostat/entinostat",3
+"GO:0035097","CC","GO:0035097","histone methyltransferase complex","3/14","195/22568",0.000215551063062285,0.00340020321484861,0.00205037379789866,"vorinostat/panobinostat/entinostat",3
+"GO:0001047","MF","GO:0001047","core promoter binding","3/14","196/22568",0.000218821400452923,0.00340020321484861,0.00205037379789866,"vorinostat/panobinostat/entinostat",3
+"GO:0030219","BP","GO:0030219","megakaryocyte differentiation","3/14","196/22568",0.000218821400452923,0.00340020321484861,0.00205037379789866,"vorinostat/panobinostat/entinostat",3
+"GO:0071889","MF","GO:0071889","14-3-3 protein binding","3/14","197/22568",0.000222123828105688,0.00340020321484861,0.00205037379789866,"vorinostat/panobinostat/ly-294002",3
+"GO:1990841","MF","GO:1990841","promoter-specific chromatin binding","3/14","197/22568",0.000222123828105688,0.00340020321484861,0.00205037379789866,"vorinostat/panobinostat/entinostat",3
+"GO:0031078","MF","GO:0031078","histone deacetylase activity (H3-K14 specific)","3/14","199/22568",0.000228825515188362,0.0034439201487593,0.00207673576809606,"vorinostat/panobinostat/entinostat",3
+"GO:0032041","MF","GO:0032041","NAD-dependent histone deacetylase activity (H3-K14 specific)","3/14","199/22568",0.000228825515188362,0.0034439201487593,0.00207673576809606,"vorinostat/panobinostat/entinostat",3
+"GO:0051154","BP","GO:0051154","negative regulation of striated muscle cell differentiation","3/14","200/22568",0.000232225054531688,0.00346595893888544,0.00209002549078519,"vorinostat/panobinostat/icosapent",3
+"GO:0030032","BP","GO:0030032","lamellipodium assembly","3/14","205/22568",0.000249715286624663,0.00369619899458489,0.00222886371532757,"vorinostat/panobinostat/ly-294002",3
+"GO:1902745","BP","GO:1902745","positive regulation of lamellipodium organization","3/14","207/22568",0.000256943821249429,0.00377201953981744,0.00227458464712609,"vorinostat/panobinostat/ly-294002",3
+"GO:0034708","CC","GO:0034708","methyltransferase complex","3/14","208/22568",0.000260608450850479,0.00379471329653014,0.00228826932454079,"vorinostat/panobinostat/entinostat",3
+"GO:0048149","BP","GO:0048149","behavioral response to ethanol","3/14","211/22568",0.000271805441191464,0.0039258350417251,0.00236733771360307,"vorinostat/panobinostat/entinostat",3
+"GO:0030809","BP","GO:0030809","negative regulation of nucleotide biosynthetic process","3/14","214/22568",0.000283309964628532,0.00399533973739921,0.00240925009290405,"vorinostat/panobinostat/icosapent",3
+"GO:1900372","BP","GO:1900372","negative regulation of purine nucleotide biosynthetic process","3/14","214/22568",0.000283309964628532,0.00399533973739921,0.00240925009290405,"vorinostat/panobinostat/icosapent",3
+"GO:2001170","BP","GO:2001170","negative regulation of ATP biosynthetic process","3/14","214/22568",0.000283309964628532,0.00399533973739921,0.00240925009290405,"vorinostat/panobinostat/icosapent",3
+"GO:0006342","BP","GO:0006342","chromatin silencing","3/14","216/22568",0.000291152320817977,0.00404227757042633,0.00243755431382492,"vorinostat/panobinostat/entinostat",3
+"GO:0010870","BP","GO:0010870","positive regulation of receptor biosynthetic process","3/14","216/22568",0.000291152320817977,0.00404227757042633,0.00243755431382492,"vorinostat/panobinostat/entinostat",3
+"GO:0045814","BP","GO:0045814","negative regulation of gene expression, epigenetic","3/14","219/22568",0.00030317758660446,0.00417685428929682,0.00251870610409859,"vorinostat/panobinostat/entinostat",3
+"GO:0002076","BP","GO:0002076","osteoblast development","3/14","224/22568",0.000323926666237135,0.00439509590326294,0.00265030908739474,"rivastigmine/vorinostat/panobinostat",3
+"GO:0019080","BP","GO:0019080","viral gene expression","3/14","224/22568",0.000323926666237135,0.00439509590326294,0.00265030908739474,"vorinostat/panobinostat/entinostat",3
+"GO:0043537","BP","GO:0043537","negative regulation of blood vessel endothelial cell migration","3/14","231/22568",0.000354488222257022,0.0047735970380626,0.00287855097772619,"vorinostat/panobinostat/icosapent",3
+"GO:0042733","BP","GO:0042733","embryonic digit morphogenesis","3/14","235/22568",0.000372760044894631,0.00498218836124093,0.00300433469019554,"vorinostat/panobinostat/entinostat",3
+"GO:0010596","BP","GO:0010596","negative regulation of endothelial cell migration","3/14","244/22568",0.000416071809316057,0.00551988600359303,0.00332857447452846,"vorinostat/panobinostat/icosapent",3
+"GO:0070932","BP","GO:0070932","histone H3 deacetylation","3/14","251/22568",0.000451913529061846,0.00595130243051299,0.00358872508372643,"vorinostat/panobinostat/entinostat",3
+"GO:0017053","CC","GO:0017053","transcriptional repressor complex","3/14","252/22568",0.000457190615785913,0.00597684958301146,0.00360413040181596,"vorinostat/panobinostat/entinostat",3
+"GO:0033235","BP","GO:0033235","positive regulation of protein sumoylation","2/14","52/22568",0.000465533087387479,0.0060418098515288,0.00364330242303244,"vorinostat/panobinostat",2
+"GO:1902743","BP","GO:1902743","regulation of lamellipodium organization","3/14","256/22568",0.000478696184547833,0.00615002113945262,0.00370855546097645,"vorinostat/panobinostat/ly-294002",3
+"GO:0000118","CC","GO:0000118","histone deacetylase complex","3/14","257/22568",0.00048417251851637,0.00615002113945262,0.00370855546097645,"vorinostat/panobinostat/entinostat",3
+"GO:0048741","BP","GO:0048741","skeletal muscle fiber development","3/14","257/22568",0.00048417251851637,0.00615002113945262,0.00370855546097645,"vorinostat/panobinostat/entinostat",3
+"GO:0014888","BP","GO:0014888","striated muscle adaptation","3/14","258/22568",0.000489689082948599,0.00617628977155592,0.00372439584214428,"vorinostat/panobinostat/ly-294002",3
+"GO:0017136","MF","GO:0017136","NAD-dependent histone deacetylase activity","3/14","261/22568",0.000506481422834966,0.00625591881584431,0.00377241335628802,"vorinostat/panobinostat/entinostat",3
+"GO:0051148","BP","GO:0051148","negative regulation of muscle cell differentiation","3/14","261/22568",0.000506481422834966,0.00625591881584431,0.00377241335628802,"vorinostat/panobinostat/icosapent",3
+"GO:1904949","CC","GO:1904949","ATPase complex","3/14","261/22568",0.000506481422834966,0.00625591881584431,0.00377241335628802,"vorinostat/panobinostat/entinostat",3
+"GO:0014904","BP","GO:0014904","myotube cell development","3/14","266/22568",0.000535285027845021,0.00652173799231587,0.00393270632702465,"vorinostat/panobinostat/entinostat",3
+"GO:0034979","MF","GO:0034979","NAD-dependent protein deacetylase activity","3/14","266/22568",0.000535285027845021,0.00652173799231587,0.00393270632702465,"vorinostat/panobinostat/entinostat",3
+"GO:0014911","BP","GO:0014911","positive regulation of smooth muscle cell migration","3/14","268/22568",0.000547095122013402,0.00662059029409462,0.00399231575523294,"vorinostat/panobinostat/ly-294002",3
+"GO:1901223","BP","GO:1901223","negative regulation of NIK/NF-kappaB signaling","2/14","58/22568",0.000579103890315854,0.00696090649366238,0.00419753155396727,"vorinostat/panobinostat",2
+"GO:0010633","BP","GO:0010633","negative regulation of epithelial cell migration","3/14","275/22568",0.000589747658572068,0.00704158704335049,0.00424618314171889,"vorinostat/panobinostat/icosapent",3
+"GO:0031490","MF","GO:0031490","chromatin DNA binding","3/14","276/22568",0.000596009788920029,0.00706922868844883,0.0042628514704214,"vorinostat/panobinostat/entinostat",3
+"GO:0032732","BP","GO:0032732","positive regulation of interleukin-1 production","3/14","279/22568",0.000615052247377219,0.00724709588850395,0.00437010807346972,"vorinostat/panobinostat/entinostat",3
+"GO:0034085","BP","GO:0034085","establishment of sister chromatid cohesion","2/14","61/22568",0.000640432027157765,0.00740008877831973,0.00446236509245411,"vorinostat/panobinostat",2
+"GO:0071921","BP","GO:0071921","cohesin loading","2/14","61/22568",0.000640432027157765,0.00740008877831973,0.00446236509245411,"vorinostat/panobinostat",2
+"GO:0071922","BP","GO:0071922","regulation of cohesin loading","2/14","61/22568",0.000640432027157765,0.00740008877831973,0.00446236509245411,"vorinostat/panobinostat",2
+"GO:0043124","BP","GO:0043124","negative regulation of I-kappaB kinase/NF-kappaB signaling","3/14","288/22568",0.00067451270719093,0.00774203123991563,0.00466856155170792,"vorinostat/panobinostat/entinostat",3
+"GO:1902893","BP","GO:1902893","regulation of pri-miRNA transcription by RNA polymerase II","3/14","289/22568",0.000681338071795584,0.00774203123991563,0.00466856155170792,"vorinostat/panobinostat/icosapent",3
+"GO:1905634","BP","GO:1905634","regulation of protein localization to chromatin","2/14","63/22568",0.000682993264046159,0.00774203123991563,0.00466856155170792,"vorinostat/panobinostat",2
+"GO:1900543","BP","GO:1900543","negative regulation of purine nucleotide metabolic process","3/14","291/22568",0.000695121430820424,0.00778101551624612,0.00469206965803786,"vorinostat/panobinostat/icosapent",3
+"GO:1903579","BP","GO:1903579","negative regulation of ATP metabolic process","3/14","291/22568",0.000695121430820424,0.00778101551624612,0.00469206965803786,"vorinostat/panobinostat/icosapent",3
+"GO:1903351","BP","GO:1903351","cellular response to dopamine","3/14","302/22568",0.000774130594010773,0.00861160182529997,0.00519292572379898,"vorinostat/panobinostat/entinostat",3
+"GO:1903350","BP","GO:1903350","response to dopamine","3/14","304/22568",0.000789085514020397,0.00872377873833661,0.00526057009346931,"vorinostat/panobinostat/entinostat",3
+"GO:0097581","BP","GO:0097581","lamellipodium organization","3/14","306/22568",0.000804224198142359,0.00883659839799364,0.00532860204904139,"vorinostat/panobinostat/ly-294002",3
+"GO:0120034","BP","GO:0120034","positive regulation of plasma membrane bounded cell projection assembly","3/14","307/22568",0.000811862742549248,0.00886613519454697,0.00534641318264139,"vorinostat/panobinostat/ly-294002",3
+"GO:0019789","MF","GO:0019789","SUMO transferase activity","2/14","69/22568",0.000818688899438722,0.0088864958720894,0.00535869097814436,"vorinostat/panobinostat",2
+"GO:0036474","BP","GO:0036474","cell death in response to hydrogen peroxide","3/14","309/22568",0.000827278815822611,0.00892564071770058,0.0053822959101712,"l-693403/vorinostat/panobinostat",3
+"GO:0051195","BP","GO:0051195","negative regulation of cofactor metabolic process","3/14","312/22568",0.000850752119889206,0.0091239344115064,0.00550186999688828,"vorinostat/panobinostat/icosapent",3
+"GO:0045980","BP","GO:0045980","negative regulation of nucleotide metabolic process","3/14","313/22568",0.000858670133688676,0.00915403696093106,0.00552002228799863,"vorinostat/panobinostat/icosapent",3
+"GO:0004407","MF","GO:0004407","histone deacetylase activity","3/14","318/22568",0.000898967202674084,0.00952692461532121,0.00574487916501781,"vorinostat/panobinostat/entinostat",3
+"GO:0000980","MF","GO:0000980","RNA polymerase II distal enhancer sequence-specific DNA binding","3/14","322/22568",0.000932060092750657,0.00976210307670425,0.00588669532263573,"vorinostat/panobinostat/entinostat",3
+"GO:0001158","MF","GO:0001158","enhancer sequence-specific DNA binding","3/14","322/22568",0.000932060092750657,0.00976210307670425,0.00588669532263573,"vorinostat/panobinostat/entinostat",3
+"GO:0033558","MF","GO:0033558","protein deacetylase activity","3/14","323/22568",0.00094045304242165,0.00979274069172776,0.0059051702663685,"vorinostat/panobinostat/entinostat",3
+"GO:0003714","MF","GO:0003714","transcription corepressor activity","3/14","325/22568",0.000957383403395485,0.00991140852879372,0.00597672876108164,"vorinostat/panobinostat/entinostat",3
+"GO:0010832","BP","GO:0010832","negative regulation of myotube differentiation","2/14","75/22568",0.000966341570938146,0.00994665375603574,0.00599798216444367,"vorinostat/panobinostat",2
+"GO:0090051","BP","GO:0090051","negative regulation of cell migration involved in sprouting angiogenesis","2/14","76/22568",0.000992107360843822,0.0101131227794946,0.00609836549517263,"vorinostat/panobinostat",2
+"GO:0061734","BP","GO:0061734","parkin-mediated stimulation of mitophagy in response to mitochondrial depolarization","2/14","78/22568",0.0010446274227842,0.0101131227794946,0.00609836549517263,"vorinostat/panobinostat",2
+"GO:0070843","BP","GO:0070843","misfolded protein transport","2/14","78/22568",0.0010446274227842,0.0101131227794946,0.00609836549517263,"vorinostat/panobinostat",2
+"GO:0070844","BP","GO:0070844","polyubiquitinated protein transport","2/14","78/22568",0.0010446274227842,0.0101131227794946,0.00609836549517263,"vorinostat/panobinostat",2
+"GO:0070845","BP","GO:0070845","polyubiquitinated misfolded protein transport","2/14","78/22568",0.0010446274227842,0.0101131227794946,0.00609836549517263,"vorinostat/panobinostat",2
+"GO:0070846","BP","GO:0070846","Hsp90 deacetylation","2/14","78/22568",0.0010446274227842,0.0101131227794946,0.00609836549517263,"vorinostat/panobinostat",2
+"GO:0090034","BP","GO:0090034","regulation of chaperone-mediated protein complex assembly","2/14","78/22568",0.0010446274227842,0.0101131227794946,0.00609836549517263,"vorinostat/panobinostat",2
+"GO:0090035","BP","GO:0090035","positive regulation of chaperone-mediated protein complex assembly","2/14","78/22568",0.0010446274227842,0.0101131227794946,0.00609836549517263,"vorinostat/panobinostat",2
+"GO:0098779","BP","GO:0098779","positive regulation of mitophagy in response to mitochondrial depolarization","2/14","78/22568",0.0010446274227842,0.0101131227794946,0.00609836549517263,"vorinostat/panobinostat",2
+"GO:1901300","BP","GO:1901300","positive regulation of hydrogen peroxide-mediated programmed cell death","2/14","78/22568",0.0010446274227842,0.0101131227794946,0.00609836549517263,"vorinostat/panobinostat",2
+"GO:1901526","BP","GO:1901526","positive regulation of mitophagy","2/14","78/22568",0.0010446274227842,0.0101131227794946,0.00609836549517263,"vorinostat/panobinostat",2
+"GO:1901524","BP","GO:1901524","regulation of mitophagy","2/14","79/22568",0.00107138097573558,0.0103163619760346,0.00622092179459372,"vorinostat/panobinostat",2
+"GO:0048525","BP","GO:0048525","negative regulation of viral process","3/14","348/22568",0.00116620380948983,0.0111099522489164,0.00669946869281391,"vorinostat/panobinostat/entinostat",3
+"GO:0061614","BP","GO:0061614","pri-miRNA transcription by RNA polymerase II","3/14","348/22568",0.00116620380948983,0.0111099522489164,0.00669946869281391,"vorinostat/panobinostat/icosapent",3
+"GO:0048747","BP","GO:0048747","muscle fiber development","3/14","352/22568",0.00120522997502162,0.0114209888109192,0.00688702842869498,"vorinostat/panobinostat/entinostat",3
+"GO:0000423","BP","GO:0000423","mitophagy","2/14","85/22568",0.0012387889918831,0.0114364488889826,0.00689635108883374,"vorinostat/panobinostat",2
+"GO:0000942","CC","GO:0000942","condensed nuclear chromosome outer kinetochore","2/14","85/22568",0.0012387889918831,0.0114364488889826,0.00689635108883374,"bi-2536/ly-294002",2
+"GO:0030286","CC","GO:0030286","dynein complex","2/14","85/22568",0.0012387889918831,0.0114364488889826,0.00689635108883374,"vorinostat/panobinostat",2
+"GO:0070193","BP","GO:0070193","synaptonemal complex organization","2/14","85/22568",0.0012387889918831,0.0114364488889826,0.00689635108883374,"bi-2536/ly-294002",2
+"GO:0070194","BP","GO:0070194","synaptonemal complex disassembly","2/14","85/22568",0.0012387889918831,0.0114364488889826,0.00689635108883374,"bi-2536/ly-294002",2
+"GO:0000778","CC","GO:0000778","condensed nuclear chromosome kinetochore","2/14","86/22568",0.00126783476764382,0.0115851636165821,0.00698602831150678,"bi-2536/ly-294002",2
+"GO:0043162","BP","GO:0043162","ubiquitin-dependent protein catabolic process via the multivesicular body sorting pathway","2/14","86/22568",0.00126783476764382,0.0115851636165821,0.00698602831150678,"vorinostat/panobinostat",2
+"GO:0032418","BP","GO:0032418","lysosome localization","3/14","361/22568",0.00129604983263986,0.0115957179101997,0.00699239270966817,"vorinostat/panobinostat/ly-294002",3
+"GO:0007026","BP","GO:0007026","negative regulation of microtubule depolymerization","2/14","87/22568",0.00129720657253639,0.0115957179101997,0.00699239270966817,"vorinostat/panobinostat",2
+"GO:0045143","BP","GO:0045143","homologous chromosome segregation","2/14","87/22568",0.00129720657253639,0.0115957179101997,0.00699239270966817,"bi-2536/ly-294002",2
+"GO:1903671","BP","GO:1903671","negative regulation of sprouting angiogenesis","2/14","87/22568",0.00129720657253639,0.0115957179101997,0.00699239270966817,"vorinostat/panobinostat",2
+"GO:0060632","BP","GO:0060632","regulation of microtubule-based movement","2/14","88/22568",0.00132690404953732,0.0115957179101997,0.00699239270966817,"vorinostat/panobinostat",2
+"GO:0070840","MF","GO:0070840","dynein complex binding","2/14","88/22568",0.00132690404953732,0.0115957179101997,0.00699239270966817,"vorinostat/panobinostat",2
+"GO:1905206","BP","GO:1905206","positive regulation of hydrogen peroxide-induced cell death","2/14","88/22568",0.00132690404953732,0.0115957179101997,0.00699239270966817,"vorinostat/panobinostat",2
+"GO:0035326","MF","GO:0035326","enhancer binding","3/14","364/22568",0.00132725972729812,0.0115957179101997,0.00699239270966817,"vorinostat/panobinostat/entinostat",3
+"GO:0043392","BP","GO:0043392","negative regulation of DNA binding","3/14","364/22568",0.00132725972729812,0.0115957179101997,0.00699239270966817,"vorinostat/panobinostat/entinostat",3
+"GO:0070842","BP","GO:0070842","aggresome assembly","2/14","89/22568",0.00135692684188742,0.0117931254996727,0.00711143246211417,"vorinostat/panobinostat",2
+"GO:0031397","BP","GO:0031397","negative regulation of protein ubiquitination","3/14","368/22568",0.00136960921492569,0.0117931254996727,0.00711143246211417,"vorinostat/panobinostat/ly-294002",3
+"GO:0042531","BP","GO:0042531","positive regulation of tyrosine phosphorylation of STAT protein","3/14","368/22568",0.00136960921492569,0.0117931254996727,0.00711143246211417,"vorinostat/panobinostat/entinostat",3
+"GO:1901673","BP","GO:1901673","regulation of mitotic spindle assembly","2/14","90/22568",0.00138727459309154,0.0118880803647222,0.00716869167721945,"bi-2536/ly-294002",2
+"GO:0010997","MF","GO:0010997","anaphase-promoting complex binding","2/14","91/22568",0.00141794694691848,0.0120930618187191,0.0072922985841522,"bi-2536/ly-294002",2
+"GO:0000940","CC","GO:0000940","condensed chromosome outer kinetochore","2/14","92/22568",0.00144894354740082,0.0122408391197871,0.00738141052449473,"bi-2536/ly-294002",2
+"GO:0090435","BP","GO:0090435","protein localization to nuclear envelope","2/14","92/22568",0.00144894354740082,0.0122408391197871,0.00738141052449473,"bi-2536/ly-294002",2
+"GO:0140030","MF","GO:0140030","modification-dependent protein binding","3/14","376/22568",0.00145685748286055,0.0122499143277148,0.00738688301168732,"vorinostat/panobinostat/bi-2536",3
+"GO:0071218","BP","GO:0071218","cellular response to misfolded protein","2/14","94/22568",0.00151190806577985,0.0126533988122042,0.00763019023851511,"vorinostat/panobinostat",2
+"GO:0042903","MF","GO:0042903","tubulin deacetylase activity","2/14","95/22568",0.00154387527305912,0.0127423069771838,0.0076838032023219,"vorinostat/panobinostat",2
+"GO:1904668","BP","GO:1904668","positive regulation of ubiquitin protein ligase activity","2/14","95/22568",0.00154387527305912,0.0127423069771838,0.0076838032023219,"bi-2536/ly-294002",2
+"GO:2001040","BP","GO:2001040","positive regulation of cellular response to drug","2/14","95/22568",0.00154387527305912,0.0127423069771838,0.0076838032023219,"vorinostat/panobinostat",2
+"GO:0031672","CC","GO:0031672","A band","2/14","96/22568",0.00157616530575864,0.0129491379018978,0.00780852536797857,"vorinostat/panobinostat",2
+"GO:0034451","CC","GO:0034451","centriolar satellite","2/14","97/22568",0.00160877780922746,0.0131567171521753,0.00793369878523131,"bi-2536/ly-294002",2
+"GO:0090169","BP","GO:0090169","regulation of spindle assembly","2/14","98/22568",0.0016417124290775,0.0133650316385354,0.0080593155609259,"bi-2536/ly-294002",2
+"GO:0001578","BP","GO:0001578","microtubule bundle formation","2/14","99/22568",0.00167496881118332,0.0135129240577897,0.00814849691927019,"bi-2536/ly-294002",2
+"GO:0044539","BP","GO:0044539","long-chain fatty acid import","2/14","99/22568",0.00167496881118332,0.0135129240577897,0.00814849691927019,"icosapent/ly-294002",2
+"GO:0030521","BP","GO:0030521","androgen receptor signaling pathway","3/14","397/22568",0.00170239718452074,0.0136726159528101,0.00824479353938297,"vorinostat/panobinostat/entinostat",3
+"GO:0000795","CC","GO:0000795","synaptonemal complex","2/14","102/22568",0.00177666499371804,0.0141422533499956,0.0085279919698466,"bi-2536/ly-294002",2
+"GO:0099086","CC","GO:0099086","synaptonemal structure","2/14","102/22568",0.00177666499371804,0.0141422533499956,0.0085279919698466,"bi-2536/ly-294002",2
+"GO:0051788","BP","GO:0051788","response to misfolded protein","2/14","103/22568",0.00181120488884073,0.0142901672066685,0.0086171862552775,"vorinostat/panobinostat",2
+"GO:0071374","BP","GO:0071374","cellular response to parathyroid hormone stimulus","2/14","103/22568",0.00181120488884073,0.0142901672066685,0.0086171862552775,"vorinostat/panobinostat",2
+"GO:0060453","BP","GO:0060453","regulation of gastric acid secretion","2/14","104/22568",0.0018460647795267,0.0144978132730726,0.00874239996366187,"icosapent/ly-294002",2
+"GO:1903321","BP","GO:1903321","negative regulation of protein modification by small protein conjugation or removal","3/14","409/22568",0.00185371258488756,0.0144978132730726,0.00874239996366187,"vorinostat/panobinostat/ly-294002",3
+"GO:1903008","BP","GO:1903008","organelle disassembly","3/14","410/22568",0.00186669072910684,0.0145228817456158,0.00875751663052211,"vorinostat/panobinostat/bi-2536",3
+"GO:0006515","BP","GO:0006515","protein quality control for misfolded or incompletely synthesized proteins","2/14","105/22568",0.00188124431322327,0.0145228817456158,0.00875751663052211,"vorinostat/panobinostat",2
+"GO:1904666","BP","GO:1904666","regulation of ubiquitin protein ligase activity","2/14","105/22568",0.00188124431322327,0.0145228817456158,0.00875751663052211,"bi-2536/ly-294002",2
+"GO:0008013","MF","GO:0008013","beta-catenin binding","3/14","412/22568",0.00189281854462042,0.0145495193708806,0.00877357952012898,"vorinostat/panobinostat/ly-294002",3
+"GO:0072686","CC","GO:0072686","mitotic spindle","3/14","413/22568",0.00190596840605139,0.0145879889540087,0.00879677725869871,"vorinostat/panobinostat/entinostat",3
+"GO:0042509","BP","GO:0042509","regulation of tyrosine phosphorylation of STAT protein","3/14","415/22568",0.00193244051018038,0.0147276636329066,0.00888100319572258,"vorinostat/panobinostat/entinostat",3
+"GO:0033233","BP","GO:0033233","regulation of protein sumoylation","2/14","107/22568",0.00195256090074527,0.0148051699006472,0.00892774064360638,"vorinostat/panobinostat",2
+"GO:0010882","BP","GO:0010882","regulation of cardiac muscle contraction by calcium ion signaling","3/14","417/22568",0.00195914308568029,0.0148051699006472,0.00892774064360638,"vorinostat/panobinostat/icosapent",3
+"GO:0007260","BP","GO:0007260","tyrosine phosphorylation of STAT protein","3/14","423/22568",0.00204064115501366,0.0153232632021983,0.00924015871489347,"vorinostat/panobinostat/entinostat",3
+"GO:0014877","BP","GO:0014877","response to muscle inactivity involved in regulation of muscle adaptation","2/14","110/22568",0.00206192430582345,0.0153232632021983,0.00924015871489347,"vorinostat/panobinostat",2
+"GO:0014894","BP","GO:0014894","response to denervation involved in regulation of muscle adaptation","2/14","110/22568",0.00206192430582345,0.0153232632021983,0.00924015871489347,"vorinostat/panobinostat",2
+"GO:0016321","BP","GO:0016321","female meiosis chromosome segregation","2/14","110/22568",0.00206192430582345,0.0153232632021983,0.00924015871489347,"bi-2536/ly-294002",2
+"GO:0120032","BP","GO:0120032","regulation of plasma membrane bounded cell projection assembly","3/14","427/22568",0.00209613928212082,0.0155131630342082,0.00935467117640694,"vorinostat/panobinostat/ly-294002",3
+"GO:0019213","MF","GO:0019213","deacetylase activity","3/14","432/22568",0.00216683418549499,0.0159703704782779,0.00963037415775553,"vorinostat/panobinostat/entinostat",3
+"GO:0032703","BP","GO:0032703","negative regulation of interleukin-2 production","2/14","114/22568",0.00221218601013669,0.0162378079678476,0.009791642995687,"vorinostat/panobinostat",2
+"GO:0071107","BP","GO:0071107","response to parathyroid hormone","2/14","116/22568",0.0022892150540494,0.0167346292318469,0.0100912337076463,"vorinostat/panobinostat",2
+"GO:0003299","BP","GO:0003299","muscle hypertrophy in response to stress","2/14","118/22568",0.00236750582917026,0.017028927470056,0.0102686999819433,"vorinostat/panobinostat",2
+"GO:0014887","BP","GO:0014887","cardiac muscle adaptation","2/14","118/22568",0.00236750582917026,0.017028927470056,0.0102686999819433,"vorinostat/panobinostat",2
+"GO:0014898","BP","GO:0014898","cardiac muscle hypertrophy in response to stress","2/14","118/22568",0.00236750582917026,0.017028927470056,0.0102686999819433,"vorinostat/panobinostat",2
+"GO:0031114","BP","GO:0031114","regulation of microtubule depolymerization","2/14","118/22568",0.00236750582917026,0.017028927470056,0.0102686999819433,"vorinostat/panobinostat",2
+"GO:0051787","MF","GO:0051787","misfolded protein binding","2/14","119/22568",0.00240712349318515,0.0172446327051784,0.0103987734905599,"vorinostat/panobinostat",2
+"GO:0031594","CC","GO:0031594","neuromuscular junction","3/14","449/22568",0.00241833363252728,0.0172559184695472,0.0104055789766114,"rivastigmine/vorinostat/panobinostat",3
+"GO:0006110","BP","GO:0006110","regulation of glycolytic process","3/14","452/22568",0.00246452494676326,0.0175157308716389,0.0105622497718426,"vorinostat/panobinostat/icosapent",3
+"GO:0030811","BP","GO:0030811","regulation of nucleotide catabolic process","3/14","454/22568",0.0024956239073776,0.0176666498739655,0.0106532562054064,"vorinostat/panobinostat/icosapent",3
+"GO:0030326","BP","GO:0030326","embryonic limb morphogenesis","3/14","457/22568",0.00254273122010531,0.017858947510622,0.0107692145792695,"vorinostat/panobinostat/entinostat",3
+"GO:0035113","BP","GO:0035113","embryonic appendage morphogenesis","3/14","457/22568",0.00254273122010531,0.017858947510622,0.0107692145792695,"vorinostat/panobinostat/entinostat",3
+"GO:1901298","BP","GO:1901298","regulation of hydrogen peroxide-mediated programmed cell death","2/14","126/22568",0.00269323045843228,0.0188420927775477,0.0113620659965112,"vorinostat/panobinostat",2
+"GO:0070841","BP","GO:0070841","inclusion body assembly","2/14","127/22568",0.00273535347031664,0.019062327102479,0.0114948706145602,"vorinostat/panobinostat",2
+"GO:0043388","BP","GO:0043388","positive regulation of DNA binding","3/14","470/22568",0.00275327978394337,0.0191128840815604,0.0115253572351118,"vorinostat/panobinostat/icosapent",3
+"GO:1901880","BP","GO:1901880","negative regulation of protein depolymerization","2/14","128/22568",0.00277778808838088,0.0192085655069118,0.0115830545770322,"vorinostat/panobinostat",2
+"GO:0060236","BP","GO:0060236","regulation of mitotic spindle organization","2/14","130/22568",0.00286359075803603,0.0196466490147814,0.0118472255365516,"bi-2536/ly-294002",2
+"GO:0060491","BP","GO:0060491","regulation of cell projection assembly","3/14","479/22568",0.00290522274080723,0.0196466490147814,0.0118472255365516,"vorinostat/panobinostat/ly-294002",3
+"GO:0010421","BP","GO:0010421","hydrogen peroxide-mediated programmed cell death","2/14","131/22568",0.00290695811776498,0.0196466490147814,0.0118472255365516,"vorinostat/panobinostat",2
+"GO:0017081","MF","GO:0017081","chloride channel regulator activity","2/14","131/22568",0.00290695811776498,0.0196466490147814,0.0118472255365516,"icosapent/ly-294002",2
+"GO:0072425","BP","GO:0072425","signal transduction involved in G2 DNA damage checkpoint","2/14","131/22568",0.00290695811776498,0.0196466490147814,0.0118472255365516,"bi-2536/ly-294002",2
+"GO:0097468","BP","GO:0097468","programmed cell death in response to reactive oxygen species","2/14","131/22568",0.00290695811776498,0.0196466490147814,0.0118472255365516,"vorinostat/panobinostat",2
+"GO:0000780","CC","GO:0000780","condensed nuclear chromosome, centromeric region","2/14","134/22568",0.00303892015079391,0.0203846666294827,0.0122922612841102,"bi-2536/ly-294002",2
+"GO:0051525","MF","GO:0051525","NFAT protein binding","2/14","134/22568",0.00303892015079391,0.0203846666294827,0.0122922612841102,"icosapent/ly-294002",2
+"GO:0090224","BP","GO:0090224","regulation of spindle organization","2/14","136/22568",0.00312844135135754,0.0209068599264229,0.0126071517144259,"bi-2536/ly-294002",2
+"GO:2001169","BP","GO:2001169","regulation of ATP biosynthetic process","3/14","497/22568",0.0032245436708596,0.0214689877862809,0.0129461232882096,"vorinostat/panobinostat/icosapent",3
+"GO:0010763","BP","GO:0010763","positive regulation of fibroblast migration","2/14","139/22568",0.00326503603226658,0.0215781532612156,0.0130119517153059,"icosapent/ly-294002",2
+"GO:0031593","MF","GO:0031593","polyubiquitin modification-dependent protein binding","2/14","139/22568",0.00326503603226658,0.0215781532612156,0.0130119517153059,"vorinostat/panobinostat",2
+"GO:0000281","BP","GO:0000281","mitotic cytokinesis","2/14","140/22568",0.00331118298534558,0.0218026791424777,0.0131473442065192,"bi-2536/ly-294002",2
+"GO:0014870","BP","GO:0014870","response to muscle inactivity","2/14","141/22568",0.0033576370625431,0.0219471824051631,0.0132344818523597,"vorinostat/panobinostat",2
+"GO:0016925","BP","GO:0016925","protein sumoylation","2/14","141/22568",0.0033576370625431,0.0219471824051631,0.0132344818523597,"vorinostat/panobinostat",2
+"GO:0045736","BP","GO:0045736","negative regulation of cyclin-dependent protein serine/threonine kinase activity","2/14","142/22568",0.00340439792088156,0.0220915821605031,0.0133215570817104,"bi-2536/ly-294002",2
+"GO:1904030","BP","GO:1904030","negative regulation of cyclin-dependent protein kinase activity","2/14","142/22568",0.00340439792088156,0.0220915821605031,0.0133215570817104,"bi-2536/ly-294002",2
+"GO:1904923","BP","GO:1904923","regulation of autophagy of mitochondrion in response to mitochondrial depolarization","2/14","148/22568",0.00369138630034617,0.0237815570644604,0.0143406374258053,"vorinostat/panobinostat",2
+"GO:1904925","BP","GO:1904925","positive regulation of autophagy of mitochondrion in response to mitochondrial depolarization","2/14","148/22568",0.00369138630034617,0.0237815570644604,0.0143406374258053,"vorinostat/panobinostat",2
+"GO:0007019","BP","GO:0007019","microtubule depolymerization","2/14","150/22568",0.00378948783571539,0.0242391882634509,0.0146165959377594,"vorinostat/panobinostat",2
+"GO:0010727","BP","GO:0010727","negative regulation of hydrogen peroxide metabolic process","2/14","150/22568",0.00378948783571539,0.0242391882634509,0.0146165959377594,"vorinostat/panobinostat",2
+"GO:0007063","BP","GO:0007063","regulation of sister chromatid cohesion","2/14","153/22568",0.00393891708212489,0.0251053398366038,0.015138898393932,"vorinostat/panobinostat",2
+"GO:0098780","BP","GO:0098780","response to mitochondrial depolarisation","2/14","154/22568",0.0039893326548821,0.0253365063294108,0.0152782952740166,"vorinostat/panobinostat",2
+"GO:0051546","BP","GO:0051546","keratinocyte migration","2/14","155/22568",0.00404005057329901,0.025567952568122,0.0154178608450987,"icosapent/ly-294002",2
+"GO:0007094","BP","GO:0007094","mitotic spindle assembly checkpoint","2/14","157/22568",0.00414239208972766,0.0258502586505305,0.0155880956686616,"bi-2536/ly-294002",2
+"GO:0031577","BP","GO:0031577","spindle checkpoint","2/14","157/22568",0.00414239208972766,0.0258502586505305,0.0155880956686616,"bi-2536/ly-294002",2
+"GO:0071173","BP","GO:0071173","spindle assembly checkpoint","2/14","157/22568",0.00414239208972766,0.0258502586505305,0.0155880956686616,"bi-2536/ly-294002",2
+"GO:0071174","BP","GO:0071174","mitotic spindle checkpoint","2/14","157/22568",0.00414239208972766,0.0258502586505305,0.0155880956686616,"bi-2536/ly-294002",2
+"GO:0000777","CC","GO:0000777","condensed chromosome kinetochore","2/14","159/22568",0.00424593891917864,0.025953845065696,0.0156505598386107,"bi-2536/ly-294002",2
+"GO:0006333","BP","GO:0006333","chromatin assembly or disassembly","2/14","159/22568",0.00424593891917864,0.025953845065696,0.0156505598386107,"vorinostat/panobinostat",2
+"GO:0045841","BP","GO:0045841","negative regulation of mitotic metaphase/anaphase transition","2/14","159/22568",0.00424593891917864,0.025953845065696,0.0156505598386107,"bi-2536/ly-294002",2
+"GO:1902100","BP","GO:1902100","negative regulation of metaphase/anaphase transition of cell cycle","2/14","159/22568",0.00424593891917864,0.025953845065696,0.0156505598386107,"bi-2536/ly-294002",2
+"GO:1905819","BP","GO:1905819","negative regulation of chromosome separation","2/14","159/22568",0.00424593891917864,0.025953845065696,0.0156505598386107,"bi-2536/ly-294002",2
+"GO:2000816","BP","GO:2000816","negative regulation of mitotic sister chromatid separation","2/14","159/22568",0.00424593891917864,0.025953845065696,0.0156505598386107,"bi-2536/ly-294002",2
+"GO:0031111","BP","GO:0031111","negative regulation of microtubule polymerization or depolymerization","2/14","163/22568",0.004456637688487,0.0271491091839463,0.0163713221209726,"vorinostat/panobinostat",2
+"GO:0007091","BP","GO:0007091","metaphase/anaphase transition of mitotic cell cycle","2/14","169/22568",0.00478165811719357,0.0288348474339855,0.0173878476988857,"bi-2536/ly-294002",2
+"GO:0010965","BP","GO:0010965","regulation of mitotic sister chromatid separation","2/14","169/22568",0.00478165811719357,0.0288348474339855,0.0173878476988857,"bi-2536/ly-294002",2
+"GO:0030071","BP","GO:0030071","regulation of mitotic metaphase/anaphase transition","2/14","169/22568",0.00478165811719357,0.0288348474339855,0.0173878476988857,"bi-2536/ly-294002",2
+"GO:0051443","BP","GO:0051443","positive regulation of ubiquitin-protein transferase activity","2/14","172/22568",0.00494818616617163,0.029639469644192,0.0178730470216233,"bi-2536/ly-294002",2
+"GO:0061640","BP","GO:0061640","cytoskeleton-dependent cytokinesis","2/14","172/22568",0.00494818616617163,0.029639469644192,0.0178730470216233,"bi-2536/ly-294002",2
+"GO:0044784","BP","GO:0044784","metaphase/anaphase transition of cell cycle","2/14","174/22568",0.00506068679935734,0.0301119271018239,0.0181579459910496,"bi-2536/ly-294002",2
+"GO:1902099","BP","GO:1902099","regulation of metaphase/anaphase transition of cell cycle","2/14","174/22568",0.00506068679935734,0.0301119271018239,0.0181579459910496,"bi-2536/ly-294002",2
+"GO:0032461","BP","GO:0032461","positive regulation of protein oligomerization","2/14","177/22568",0.00523165395512951,0.0309237367446764,0.018647479444026,"vorinostat/panobinostat",2
+"GO:1901879","BP","GO:1901879","regulation of protein depolymerization","2/14","177/22568",0.00523165395512951,0.0309237367446764,0.018647479444026,"vorinostat/panobinostat",2
+"GO:0010310","BP","GO:0010310","regulation of hydrogen peroxide metabolic process","2/14","179/22568",0.00534710563165143,0.0313989055288122,0.0189340133842084,"vorinostat/panobinostat",2
+"GO:0014003","BP","GO:0014003","oligodendrocyte development","2/14","179/22568",0.00534710563165143,0.0313989055288122,0.0189340133842084,"vorinostat/panobinostat",2
+"GO:0014854","BP","GO:0014854","response to inactivity","2/14","183/22568",0.00558153355582189,0.0325619758908046,0.0196353623462138,"vorinostat/panobinostat",2
+"GO:0030955","MF","GO:0030955","potassium ion binding","2/14","183/22568",0.00558153355582189,0.0325619758908046,0.0196353623462138,"vorinostat/panobinostat",2
+"GO:0051306","BP","GO:0051306","mitotic sister chromatid separation","2/14","186/22568",0.00576042801942858,0.0334965148792097,0.0201989034447496,"bi-2536/ly-294002",2
+"GO:2000773","BP","GO:2000773","negative regulation of cellular senescence","2/14","187/22568",0.00582064316883163,0.0337371259397329,0.0203439955415475,"bi-2536/ly-294002",2
+"GO:0016235","CC","GO:0016235","aggresome","2/14","188/22568",0.00588114959651834,0.0339778675076269,0.0204891663362575,"vorinostat/panobinostat",2
+"GO:0055022","BP","GO:0055022","negative regulation of cardiac muscle tissue growth","2/14","189/22568",0.00594194697137206,0.0341090609798954,0.0205682779778263,"icosapent/ly-294002",2
+"GO:0061117","BP","GO:0061117","negative regulation of heart growth","2/14","189/22568",0.00594194697137206,0.0341090609798954,0.0205682779778263,"icosapent/ly-294002",2
+"GO:1901033","BP","GO:1901033","positive regulation of response to reactive oxygen species","2/14","192/22568",0.00612608147149913,0.0350537121899519,0.0211379168984635,"vorinostat/panobinostat",2
+"GO:0006656","BP","GO:0006656","phosphatidylcholine biosynthetic process","2/14","194/22568",0.00625028648146701,0.0355373431374839,0.0214295536507441,"rivastigmine/icosapent",2
+"GO:0055026","BP","GO:0055026","negative regulation of cardiac muscle tissue development","2/14","194/22568",0.00625028648146701,0.0355373431374839,0.0214295536507441,"icosapent/ly-294002",2
+"GO:0030544","MF","GO:0030544","Hsp70 protein binding","2/14","195/22568",0.00631282259979246,0.0356664519754836,0.0215074082264223,"vorinostat/panobinostat",2
+"GO:1903599","BP","GO:1903599","positive regulation of autophagy of mitochondrion","2/14","195/22568",0.00631282259979246,0.0356664519754836,0.0215074082264223,"vorinostat/panobinostat",2
+"GO:0099604","MF","GO:0099604","ligand-gated calcium channel activity","2/14","198/22568",0.00650216145633431,0.0366206640512414,0.0220828124932109,"co-101244/icosapent",2
+"GO:0031572","BP","GO:0031572","G2 DNA damage checkpoint","2/14","201/22568",0.0066940891612703,0.0375834284885113,0.0226633739629214,"bi-2536/ly-294002",2
+"GO:0045668","BP","GO:0045668","negative regulation of osteoblast differentiation","2/14","202/22568",0.00675863883065437,0.0378272567053187,0.0228104060534585,"vorinostat/panobinostat",2
+"GO:0043242","BP","GO:0043242","negative regulation of protein complex disassembly","2/14","205/22568",0.00695400455495195,0.0387994459748254,0.0233966508390907,"vorinostat/panobinostat",2
+"GO:0033046","BP","GO:0033046","negative regulation of sister chromatid segregation","2/14","209/22568",0.00721848565147321,0.0399021845734214,0.024061618838244,"bi-2536/ly-294002",2
+"GO:0033048","BP","GO:0033048","negative regulation of mitotic sister chromatid segregation","2/14","209/22568",0.00721848565147321,0.0399021845734214,0.024061618838244,"bi-2536/ly-294002",2
+"GO:0051985","BP","GO:0051985","negative regulation of chromosome segregation","2/14","209/22568",0.00721848565147321,0.0399021845734214,0.024061618838244,"bi-2536/ly-294002",2
+"GO:0000779","CC","GO:0000779","condensed chromosome, centromeric region","2/14","210/22568",0.00728531686808919,0.0400245475789808,0.0241354055752648,"bi-2536/ly-294002",2
+"GO:0048487","MF","GO:0048487","beta-tubulin binding","2/14","210/22568",0.00728531686808919,0.0400245475789808,0.0241354055752648,"vorinostat/panobinostat",2
+"GO:1903209","BP","GO:1903209","positive regulation of oxidative stress-induced cell death","2/14","211/22568",0.00735243180997338,0.0401520817033014,0.0242123105748551,"vorinostat/panobinostat",2
+"GO:0030506","MF","GO:0030506","ankyrin binding","2/14","212/22568",0.00741983015169247,0.0401520817033014,0.0242123105748551,"icosapent/linopirdine",2
+"GO:0038038","CC","GO:0038038","G protein-coupled receptor homodimeric complex","1/14","12/22568",0.00742062481507133,0.0401520817033014,0.0242123105748551,"phccc",1
+"GO:0047676","MF","GO:0047676","arachidonate-CoA ligase activity","1/14","12/22568",0.00742062481507133,0.0401520817033014,0.0242123105748551,"icosapent",1
+"GO:0098872","MF","GO:0098872","G protein-coupled neurotransmitter receptor activity involved in regulation of postsynaptic cytosolic calcium ion concentration","1/14","12/22568",0.00742062481507133,0.0401520817033014,0.0242123105748551,"phccc",1
+"GO:0009820","BP","GO:0009820","alkaloid metabolic process","2/14","213/22568",0.00748751156805846,0.0402706703255036,0.0242838213018112,"rivastigmine/maraviroc",2
+"GO:0090042","BP","GO:0090042","tubulin deacetylation","2/14","213/22568",0.00748751156805846,0.0402706703255036,0.0242838213018112,"vorinostat/panobinostat",2
+"GO:0031145","BP","GO:0031145","anaphase-promoting complex-dependent catabolic process","2/14","214/22568",0.00755547573412856,0.040393603103953,0.0243579516204742,"bi-2536/ly-294002",2
+"GO:0032095","BP","GO:0032095","regulation of response to food","2/14","214/22568",0.00755547573412856,0.040393603103953,0.0243579516204742,"icosapent/ly-294002",2
+"GO:0001696","BP","GO:0001696","gastric acid secretion","2/14","215/22568",0.00762372232520496,0.0405165776986412,0.0244321071549595,"icosapent/ly-294002",2
+"GO:0001893","BP","GO:0001893","maternal placenta development","2/14","215/22568",0.00762372232520496,0.0405165776986412,0.0244321071549595,"icosapent/ly-294002",2
+"GO:0010762","BP","GO:0010762","regulation of fibroblast migration","2/14","216/22568",0.00769225101683474,0.0407598271335829,0.0245787902313063,"icosapent/ly-294002",2
+"GO:0051233","CC","GO:0051233","spindle midzone","2/14","219/22568",0.00789952645418531,0.0417346663110498,0.0251666329513868,"bi-2536/ly-294002",2
+"GO:0007113","BP","GO:0007113","endomitotic cell cycle","1/14","13/22568",0.00803669642584393,0.0422230332211095,0.025461125560468,"bi-2536",1
+"GO:0007077","BP","GO:0007077","mitotic nuclear envelope disassembly","2/14","221/22568",0.00803911464455518,0.0422230332211095,0.025461125560468,"bi-2536/ly-294002",2
+"GO:0000776","CC","GO:0000776","kinetochore","2/14","222/22568",0.00810932913968855,0.0423412249614128,0.0255323969616559,"bi-2536/ly-294002",2
+"GO:0030397","BP","GO:0030397","membrane disassembly","2/14","223/22568",0.00817982347104903,0.0423412249614128,0.0255323969616559,"bi-2536/ly-294002",2
+"GO:0032104","BP","GO:0032104","regulation of response to extracellular stimulus","2/14","223/22568",0.00817982347104903,0.0423412249614128,0.0255323969616559,"icosapent/ly-294002",2
+"GO:0032107","BP","GO:0032107","regulation of response to nutrient levels","2/14","223/22568",0.00817982347104903,0.0423412249614128,0.0255323969616559,"icosapent/ly-294002",2
+"GO:0051081","BP","GO:0051081","nuclear envelope disassembly","2/14","223/22568",0.00817982347104903,0.0423412249614128,0.0255323969616559,"bi-2536/ly-294002",2
+"GO:0033047","BP","GO:0033047","regulation of mitotic sister chromatid segregation","2/14","225/22568",0.00832165035269807,0.0429512270365483,0.0259002374089738,"bi-2536/ly-294002",2
+"GO:0051438","BP","GO:0051438","regulation of ubiquitin-protein transferase activity","2/14","227/22568",0.0084645927124303,0.0435634642182835,0.0262694256592664,"bi-2536/ly-294002",2
+"GO:0051131","BP","GO:0051131","chaperone-mediated protein complex assembly","2/14","234/22568",0.00897363824617888,0.0460509630341157,0.0277694249451954,"vorinostat/panobinostat",2
+"GO:0061050","BP","GO:0061050","regulation of cell growth involved in cardiac muscle cell development","2/14","235/22568",0.0090474655268766,0.0462971735961029,0.0279178936257907,"icosapent/ly-294002",2
+"GO:0010761","BP","GO:0010761","fibroblast migration","2/14","240/22568",0.00942073048748345,0.0480698812053643,0.0289868630384106,"icosapent/ly-294002",2
+"GO:0005881","CC","GO:0005881","cytoplasmic microtubule","2/14","241/22568",0.00949620695899817,0.048317348476039,0.0291360895332898,"vorinostat/panobinostat",2
+"GO:1905818","BP","GO:1905818","regulation of chromosome separation","2/14","242/22568",0.00957195718075998,0.0485648025800032,0.0292853080884441,"bi-2536/ly-294002",2
+"GO:0045132","BP","GO:0045132","meiotic chromosome segregation","2/14","244/22568",0.00972427760367825,0.0491982519440332,0.0296672876044421,"bi-2536/ly-294002",2
+"GO:0031998","BP","GO:0031998","regulation of fatty acid beta-oxidation","2/14","246/22568",0.00987768921595219,0.0497192743781023,0.0299814719867954,"icosapent/ly-294002",2
+"GO:0060136","BP","GO:0060136","embryonic process involved in female pregnancy","1/14","16/22568",0.00988278150675848,0.0497192743781023,0.0299814719867954,"icosapent",1

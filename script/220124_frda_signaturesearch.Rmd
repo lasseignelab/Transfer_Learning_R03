@@ -1,0 +1,738 @@
+---
+title: "220124_frda_signaturesearch"
+author: "Jennifer Fisher"
+date: "1/24/2022"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# START 
+    Goal/Purpose of operations: 
+    quick summary 
+    
+    Finished psedocode on: Date
+    
+    System which operations were done on: my laptop(on cheaha), lab mac etc... 
+    
+    GitHub Repo:
+    
+    Directory of operations: /path
+    
+    Scripts being edited for operations: filename(s)
+    
+    Data being used: description and location
+    
+    Papers and tools: deseq with paper 
+
+# STEPS
+### Set working directory 
+### load in data
+
+```{r}
+library(recount3)
+```
+
+```{r}
+human_projects<- available_projects()
+```
+
+
+```{r }
+#SRP118922
+recount3_rse_FRDA <- create_rse(human_projects[(human_projects$project == "SRP118922"),])
+```
+
+```{r}
+metadata<- as.data.frame(colData(recount3_rse_FRDA))
+```
+
+```{r}
+metadata$sra.sample_attributes
+```
+
+```{r}
+metadata$sra.experiment_title
+```
+
+```{r}
+metadata$sra.experiment_attributes
+```
+```{r}
+hist(metadata$recount_qc.aligned_reads..chry)
+```
+
+```{r}
+metadata_v2 <- cbind(metadata$rail_id, metadata$external_id, metadata$sra.sample_title)
+```
+
+```{r}
+#write.csv(metadata_v2, "~/data/FRDA_metadata_recount_Study_info.csv")
+```
+added more info from https://cob.silverchair-cdn.com/cob/content_public/journal/dmm/10/11/10.1242_dmm.030536/5/dmm030536supp.pdf?Expires=1644405857&Signature=VE~up6~W89~N0bN23Rc9shD12MS2I6gWSlttEyXMFl~q1e3LbvKye3qCfvVYL2pmM8vAxAlFiz2Rj8~b4Pa0aYRot08IYNWmAnTNb6CFAfjtH2wcA6oJMBD2lOEeVJmNlcwSQ7QzbJlZm79tsjxrz8~38hW1auyVDWVK0wtEdmOn8bGpCyqTwWgh~m05Y5pbILJX3RbcFyg4mLsZ0~1PzTxeHhX9rmlf8KANRaDnfUdN3TaLx3f35OonqpOKN1qRj3uw8WukssEHh1qP~dWoS77Ccd~9wl8VLN42nwNCj6jXD8fE-CMxBVsMmEJHNO61EJx07rnBIfbf5~AKPYNsAw__&Key-Pair-Id=APKAIE5G5CRDK6RD3PGA
+
+```{r}
+metadata_v3 <- read.csv("~/data/FRDA_metadata_recount_Study_info.csv")
+```
+
+
+
+
+### Analysis
+quick PCA 
+```{r}
+counts_FRDA<- assay(recount3_rse_FRDA)
+```
+
+```{r}
+library(DESeq2)
+vst_table <- vst(as.matrix(counts_FRDA))
+vst_table_df <- t(vst_table)
+pca.FRDA <- prcomp(vst_table_df)
+```
+
+```{r}
+summary(pca.FRDA )
+```
+
+plot disease vs normal 
+
+```{r}
+tumor_norm <- ifelse(metadata_v3$disease == "control", "black", "red")
+plot(pca.FRDA$x[, 1], pca.FRDA$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GBM", xlab = "PC1 (13.94%)", ylab = "PC2 (12.52%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("FRDA", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+tumor_norm <- ifelse(metadata_v3$sex == "F", "black", "red")
+plot(pca.FRDA$x[, 1], pca.FRDA$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GBM", xlab = "PC1 (13.94%)", ylab = "PC2 (12.52%)", cex.axis = "1.5", cex.lab = "1.5")
+legend("topleft", legend = c("Male", "Female"), pch = 21, pt.bg = c("red", "black"), col = "black")
+```
+
+```{r}
+PC1_samples <- metadata_v3[pca.FRDA$x[,1]> 40,]
+PC1_na_samples <- metadata_v3[pca.FRDA$x[,1] < 40,]
+```
+
+```{r}
+PC1_samples
+```
+
+```{r}
+PC1_na_samples
+```
+
+nothing is standing out as a reason for the large spread beside FRDA which is expected 
+
+DESEq2 (make into a function )
+```{r}
+
+  #count-matrix with just counts
+  #metadata
+  #dds <- DESeqDataSetFromMatrix(countData = GLUT_COUNTS2,
+                         #     colData = colD,
+                             # design= ~ batch + group)
+deseq2_function <- function(dds, file_name, condition,  B, A){
+  #dds deseq2 object
+  #condition b-TUMOR a-CONTROL 
+  set.seed(101)
+  dds <- DESeq(dds)
+  #resultsNames(dds) # lists the coefficients
+  dds_res <- results(dds, c(condition,B,A))
+  res_df <- as.data.frame(dds_res)
+  #head(EV_GLUT_res_df_ENS)
+  file_name <- paste0("~/output/deseq2_frda/",file_name, sep="")
+  write.table(res_df, file=file_name, sep=",", row.names =TRUE)
+  return(res_df)
+}
+```
+
+```{r}
+dds <- DESeqDataSetFromMatrix(countData = counts_FRDA,
+                             colData = metadata_v3,
+                              design= ~ disease)
+
+dds_results<- deseq2_function(dds, "deseq2_frda_disease.csv","disease" ,"FRDA", "control")
+```
+
+```{r}
+dds_results_df<- as.data.frame(dds_results)
+```
+
+```{r}
+identical(rownames(dds_results_df), recount3_rse_FRDA@rowRanges$gene_id)
+```
+
+```{r}
+dds_results_mx <- as.matrix(dds_results_df)
+```
+
+
+```{r}
+rownames(dds_results_mx)<- recount3_rse_FRDA@rowRanges$gene_name
+```
+
+
+
+```{r}
+dds_results_mx<- dds_results_mx[complete.cases(dds_results_mx),]
+```
+
+```{r}
+dds_results_mx_sig <- dds_results_mx[dds_results_mx[,6] <0.05 & abs(dds_results_mx[,2]) > 1.5,]
+```
+
+#ENSG00000165060.11 FXN
+
+```{r}
+dds_results_df[rownames(dds_results_df) == "ENSG00000165060.11",]
+```
+
+add pathway analysis here 
+
+Signaturerevesion FRDA genes
+
+
+```{r}
+db_path <- "/home/rstudio/data/lincs_2020.h5"
+```
+
+```{r}
+upset<-rownames(dds_results_mx_sig)[dds_results_mx_sig[,2] >0]
+downset<- rownames(dds_results_mx_sig)[dds_results_mx_sig[,2] <0]
+```
+```{r}
+gene_info_LINCS<- read.table("~/data/LINCS_210914_LEVEL3/geneinfo_beta.txt", sep="\t", header=TRUE)
+```
+
+```{r}
+upset_v2<- c()
+for (i in 1:length(upset)){
+  possibleError <- tryCatch(
+      gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol],
+      error=function(e) e
+  )
+  if(length(possibleError)> 0){
+    #REAL WORK
+    upset_v2[i]<- gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol]
+  }else{
+    upset_v2[i]<- NA
+  }
+  
+}
+names(upset_v2)<- upset
+```
+
+```{r}
+downset_v2<- c()
+for (i in 1:length(downset)){
+  possibleError <- tryCatch(
+      gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol],
+      error=function(e) e
+  )
+  if(length(possibleError)> 0){
+    #REAL WORK
+    downset_v2[i]<- gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol]
+  }else{
+    downset_v2[i]<- NA
+  }
+  
+}
+names(downset_v2)<- downset
+```
+
+```{r}
+downset_v2<- downset_v2[complete.cases(downset_v2)]
+upset_v2<- upset_v2[complete.cases(upset_v2)]
+```
+
+```{r}
+names(upset_v2)<- NULL
+names(downset_v2)<- NULL
+```
+
+
+```{r}
+set.seed(101)
+qsig_lincs_deseq2_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
+                   gess_method="LINCS", refdb=db_path)
+```
+
+```{r}
+set.seed(101)
+lincs_deseq_FRDA <- gess_lincs(qsig_lincs_deseq2_res, sortby="NCS", tau=FALSE, workers=1)
+#result(lincs)
+```
+```{r}
+lincs_deseq_FRDA <- result(lincs_deseq_FRDA)
+```
+
+```{r}
+write.csv(lincs_deseq_FRDA , "~/output/deseq2_frda/lincs_deseq_gbm_FRDA.csv")
+```
+
+```{r}
+lincs_deseq_FRDA_res_1HAE <- lincs_deseq_FRDA[lincs_deseq_FRDA$cell == "1HAE",]
+```
+
+```{r}
+HAE1_taudf <- readRDS("~/data/1HAE_taudf.rds")
+```
+
+
+```{r}
+tau_scores<- function(results_df, tau_score_df){
+  #download the tau values 
+  #scores <- readRDS(tau_score_file)
+  results_df$id <- paste(results_df$pert, results_df$cell, results_df$type, sep= "__")
+  #print(results_df$id)
+  tau_list<- c()
+  for (i in 1:nrow(results_df)){
+    #print( results_df$id[i])
+    #print(colnames(tau_score_df) == results_df$id[i])
+    index <- grepl(results_df$pert[i], colnames(tau_score_df))
+   scores <- tau_score_df[,colnames(tau_score_df) == results_df$id[i]]
+   #print(scores)
+      tmpsum <- sum( abs(scores) < abs(results_df$NCS[i]))
+      secd<- (tmpsum/length(scores)) *100
+      tau<- secd* sign( results_df$NCS[i])
+      #print(tau)
+   tau_list[i]<- tau
+  }
+  return(tau_list)
+}
+```
+
+```{r}
+lincs_deseq_FRDA_res_1HAE$jlf_tau <- tau_scores(lincs_deseq_FRDA_res_1HAE , HAE1_taudf)
+```
+#Tau (τ) that ranges from -100 to +100 
+
+
+```{r}
+lincs_deseq_FRDA_res_1HAE_top <- lincs_deseq_FRDA_res_1HAE[lincs_deseq_FRDA_res_1HAE$WTCS_FDR <0.05 & lincs_deseq_FRDA_res_1HAE$NCS <0,]
+```
+```{r}
+lincs_deseq_FRDA_res_1HAE_top_order <- lincs_deseq_FRDA_res_1HAE_top[order(-lincs_deseq_FRDA_res_1HAE_top$NCS),]
+lincs_deseq_FRDA_res_1HAE_top$pert <- factor(lincs_deseq_FRDA_res_1HAE_top$pert, levels = lincs_deseq_FRDA_res_1HAE_top_order$pert)
+```
+
+```{r}
+library(ggplot2)
+ library(viridis)
+```
+
+```{r}
+p<-ggplot(data=lincs_deseq_FRDA_res_1HAE_top[1:30,] , aes(x=pert, y=NCS, fill=jlf_tau)) +
+  geom_bar(stat="identity")+ scale_fill_viridis(direction=-1)
+p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]")
+ggsave("~/output/deseq2_frda/220208_ggplot_deseq2_tau_frda_candidates.pdf")
+```
+```{r}
+lincs_deseq_frda_res_brain_cells <- lincs_deseq_FRDA[lincs_deseq_FRDA$cell %in% c("1HAE","NEU", "NPC") ,]
+```
+
+```{r}
+lincs_deseq_frda_res_brain_cells_top <- lincs_deseq_frda_res_brain_cells[lincs_deseq_frda_res_brain_cells$WTCS_FDR <0.05 & lincs_deseq_frda_res_brain_cells$NCS <0,]
+```
+
+```{r}
+lincs_deseq_frda_res_brain_cells_top_order <- lincs_deseq_frda_res_brain_cells_top [order(-lincs_deseq_frda_res_brain_cells_top$NCS),]
+lincs_deseq_frda_res_brain_cells_top$pert <- factor(lincs_deseq_frda_res_brain_cells_top$pert, levels = unique(lincs_deseq_frda_res_brain_cells_top_order$pert))
+```
+```{r}
+top_drugs<- unique(lincs_deseq_FRDA_res_1HAE_top_order$pert)
+```
+
+```{r}
+lincs_deseq_frda_res_brain_cells_top_order_v2<- lincs_deseq_frda_res_brain_cells_top_order[lincs_deseq_frda_res_brain_cells_top_order$pert %in% top_drugs,]
+```
+
+```{r}
+g.2<-ggplot(data= lincs_deseq_frda_res_brain_cells_top_order_v2, aes(x=pert, y=NCS, color=cell)) +
+  geom_point(stat="identity", size = 3)
+g.2 + coord_flip()
+```
+
+-79 is the cut off
+```{r}
+lincs_deseq_FRDA_res_1HAE_top_v2 <- lincs_deseq_FRDA_res_1HAE_top[ abs(lincs_deseq_FRDA_res_1HAE_top$jlf_tau) > 79,]
+```
+
+Fibro cell line
+```{r}
+hyperG_k_res <- dsea_hyperG(drugs = lincs_deseq_FRDA_res_1HAE_top_v2$pert, type = "KEGG", 
+                            pvalueCutoff = 1, qvalueCutoff = 1, 
+                            minGSSize = 10, maxGSSize = 2000)
+hyperG_k_res_v2<- result(hyperG_k_res)
+```
+
+```{r}
+write.csv(hyperG_k_res_v2, file= "~/output/deseq2_frda/220127_SR_LINCS_FDRA_fibro_cell_drug_pathway_RES.csv" )
+```
+
+```{r}
+#false discovery rate
+hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
+```
+
+```{r}
+hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
+```
+
+```{r}
+gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
+  geom_bar(stat="identity")
+gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
+```
+
+latent variable analysis 
+  with singature reversion 
+  and pathway of drug
+normalize count data by tpm
+```{r}
+Counts_to_tpm <- function(counts, featureLength) {
+  # Ensure valid arguments.
+  stopifnot(length(featureLength) == nrow(counts))
+  # Compute effective lengths of features in each library.
+  effLen <- featureLength
+  # Process one column at a time.
+  tpm <- do.call(cbind, lapply(1:ncol(counts), function(i) {
+    rate = log(counts[,i]) - log(effLen)
+    denom = log(sum(exp(rate)))
+    exp(rate - denom + log(1e6))
+  }))
+  # Copy the row and column names from the original matrix.
+  colnames(tpm) <- colnames(counts)
+  rownames(tpm) <- rownames(counts)
+  return(tpm)
+}
+```
+
+```{r}
+tpm_table<- Counts_to_tpm(counts_FRDA, recount3_rse_FRDA@rowRanges$bp_length)
+```
+
+
+```{r}
+rownames(tpm_table)<- recount3_rse_FRDA@rowRanges$gene_name
+```
+
+```{r eval= FALSE}
+source("~/script/plier_util.R")
+source("~/script/test_LV_differences.R")
+```
+
+```{r}
+#recount2_gtex_plier <- readRDS("~/data/recount2_gtex_plier.rds")
+recount3_plier_frda <- readRDS("~/data/recount3/recount3_plier_frda.rds")
+```
+
+```{r eval= FALSE}
+#There is a issue with handling genes with zero expression. Best thing to do is to remove the genes
+test <- GetOrderedRowNorm(as.matrix(tpm_table),recount3_plier_frda  )
+zeros<- rownames(test)[!complete.cases(test)]
+tpm_table_v2<- tpm_table[!rownames(tpm_table) %in% zeros,]
+```
+
+create the b.matrix 
+```{r eval= FALSE}
+FRDA.b.matrix <- GetNewDataB(as.matrix(tpm_table_v2), recount3_plier_frda )
+```
+
+```{r eval=FALSE}
+#saveRDS(FRDA.b.matrix, file= "~/output/TF_L_FRDA/FRDA_recount2_B_MATRIX.rds")
+saveRDS(FRDA.b.matrix, file= "~/output/TF_L_FRDA/FRDA_recount3_B_MATRIX.rds")
+```
+```{r}
+library(dplyr )
+```
+
+I dont need to use my own function. I can use the mutliplier function because of no covariates 
+```{r}
+#sampleinfo<- cbind(colnames(GBM.GTEx.b.matrix), as.character(all_metadata$status), as.character(all_metadata$database))
+#colnames(sampleinfo) <- c("Sample", "Tumor","database")
+#sampleinfo<- as.data.frame(sampleinfo)
+#database<- all_metadata$database
+#names(database)<- colnames(GBM.GTEx.b.matrix)
+colnames(metadata_v3) <- c("X"  ,   "V1"     , "Sample",   "V3" ,     "disease")
+
+LV_test_FRDA_BH <- LVTestWrapper(b.matrix=FRDA.b.matrix , sample.info.df= metadata_v3[,1:5], phenotype.col= "disease", , file.lead= "LV_TCGA_GTEX_T_vs_NT_recount3", plot.dir= "~/output/TF_L_FRDA/", results.dir= "~/output/TF_L_FRDA/", use.bonferroni= FALSE, sig.threshold = 0.05)
+#LVTestWrapper()
+```
+```{r eval=FALSE}
+#saveRDS(LV_test_FRDA_BH, file= "~/output/TF_L_FRDA/FRDA_recount2_limma_res.rds")
+saveRDS(LV_test_FRDA_BH, file= "~/output/TF_L_FRDA/FRDA_recount3_limma_res.rds")
+```
+
+```{r eval=FALSE}
+saveRDS(metadata_v3 , file= "~/output/TF_L_FRDA/FRDA_metadata.rds")
+```
+
+```{r eval= FALSE}
+sig_LVs <- LV_test_FRDA_BH$limma[LV_test_FRDA_BH$limma$adj.P.Val < 0.05,]
+```
+
+```{r}
+hist(LV_test_FRDA_BH$limma$logFC)
+```
+.1
+
+```{r}
+FRDA_limma_res_sig <- LV_test_FRDA_BH$limma[LV_test_FRDA_BH$limma$adj.P.Val <0.05 & abs(LV_test_FRDA_BH$limma$logFC)> 0.03,]
+```
+
+```{r}
+FRDA_limma_res_sig$LV
+```
+
+
+```{r}
+sig_Z_mt <- recount3_plier_frda$Z[,c(4, 9, 19, 23, 30, 38, 62, 171, 191, 237,310,315)]
+colnames(sig_Z_mt) <- FRDA_limma_res_sig$LV
+```
+
+```{r}
+sig_Z_mt[rownames(sig_Z_mt) == "FXN",]
+```
+top 100 
+```{r}
+topgene_1 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,1])][1:35]
+topgene_2 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,2])][1:35]
+topgene_3 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,3])][1:35]
+topgene_4 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,4])][1:35]
+topgene_5 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,5])][1:35]
+topgene_6 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,6])][1:35]
+topgene_7 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,7])][1:35]
+topgene_8 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,8])][1:35]
+topgene_9 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,9])][1:35]
+topgene_10 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,10])][1:35]
+topgene_11 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,11])][1:35]
+topgene_12 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,12])][1:35]
+```
+
+```{r}
+topgenes<- unique(c(topgene_1, topgene_2,topgene_3, topgene_4, topgene_5, topgene_6, topgene_7, topgene_8, topgene_9, topgene_10, topgene_11, topgene_12 ))
+```
+#25- 297
+#30-353
+#35- 409
+#40-466
+
+```{r}
+dds_results_mx <- as.matrix(read.csv("~/output/deseq2_frda/deseq2_frda_disease.csv"))
+```
+
+```{r}
+rownames(dds_results_mx)<- recount3_rse_FRDA@rowRanges$gene_name
+```
+
+
+```{r}
+lv_genes_deseq_filtered <- as.data.frame(dds_results_mx[rownames(dds_results_mx) %in% topgenes,])
+```
+
+```{r}
+uplist<- rownames(lv_genes_deseq_filtered)[lv_genes_deseq_filtered$log2FoldChange > 0]
+downlist<- rownames(lv_genes_deseq_filtered)[lv_genes_deseq_filtered$log2FoldChange < 0 ]
+```
+
+```{r}
+upset<- uplist
+upset_v2<- c()
+for (i in 1:length(upset)){
+  possibleError <- tryCatch(
+      gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol],
+      error=function(e) e
+  )
+  if(length(possibleError)> 0){
+    #REAL WORK
+    upset_v2[i]<- gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol]
+  }else{
+    upset_v2[i]<- NA
+  }
+  
+}
+names(upset_v2)<- upset
+```
+
+```{r}
+downset<- downlist
+downset_v2<- c()
+for (i in 1:length(downset)){
+  possibleError <- tryCatch(
+      gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol],
+      error=function(e) e
+  )
+  if(length(possibleError)> 0){
+    #REAL WORK
+    downset_v2[i]<- gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol]
+  }else{
+    downset_v2[i]<- NA
+  }
+  
+}
+names(downset_v2)<- downset
+```
+
+```{r}
+downset_v2<- downset_v2[complete.cases(downset_v2)]
+upset_v2<- upset_v2[complete.cases(upset_v2)]
+```
+
+```{r}
+names(upset_v2)<- NULL
+names(downset_v2)<- NULL
+```
+
+
+```{r}
+set.seed(101)
+qsig_lincs_transfer_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
+                   gess_method="LINCS", refdb=db_path)
+```
+
+```{r}
+set.seed(101)
+lincs_transfer_frda <- gess_lincs(qsig_lincs_transfer_res, sortby="NCS", tau=FALSE, workers=1)
+#result(lincs)
+```
+
+```{r}
+lincs_transfer_frda_res <- result(lincs_transfer_frda)
+```
+
+
+```{r}
+write.csv(lincs_transfer_frda_res , file= "~/output/TF_L_FRDA/220208_SR_LINCS_FRDA_TRL_RES.csv" )
+```
+
+
+```{r}
+lincs_transfer_frda_res_1HAE <- lincs_transfer_frda_res[lincs_transfer_frda_res$cell == "1HAE",]
+```
+
+```{r}
+lincs_transfer_frda_res_1HAE$jlf_tau <- tau_scores(lincs_transfer_frda_res_1HAE, HAE1_taudf)
+```
+
+```{r}
+write.csv(lincs_transfer_frda_res_1HAE , file= "~/output/TF_L_FRDA/220208_lincs_transfer_frda_res_1HAE_tau.csv" )
+```
+
+```{r}
+lincs_transfer_frda_res_1HAE_top <- lincs_transfer_frda_res_1HAE[lincs_transfer_frda_res_1HAE$WTCS_FDR <0.05 & lincs_transfer_frda_res_1HAE$NCS <0,]
+```
+```{r}
+lincs_transfer_frda_res_1HAE_top_order <- lincs_transfer_frda_res_1HAE_top[order(-lincs_transfer_frda_res_1HAE_top$NCS),]
+lincs_transfer_frda_res_1HAE_top$pert <- factor(lincs_transfer_frda_res_1HAE_top$pert, levels = lincs_transfer_frda_res_1HAE_top_order$pert)
+```
+
+
+```{r}
+#p.2<-ggplot(data=lincs_transfer_frda_res_1HAE_top_order[1:30,] , aes(x=pert, y=NCS)) +
+ # geom_bar(stat="identity")
+#p.2 + coord_flip()
+
+p<-ggplot(data=lincs_transfer_frda_res_1HAE_top_order , aes(x=pert, y=NCS, fill=jlf_tau)) +
+  geom_bar(stat="identity")+ scale_fill_viridis(direction=-1)
+p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]")
+ggsave("~/output/TF_L_FRDA/220208_ggplot_transfer_learning_tau_frda_candidates.pdf")
+```
+```{r}
+lincs_transfer_frda_res_1HAE_top_v2 <- lincs_transfer_frda_res_1HAE_top[ abs(lincs_transfer_frda_res_1HAE_top$jlf_tau) > 79,]
+```
+
+```{r}
+hyperG_k_res <- dsea_hyperG(drugs =lincs_transfer_frda_res_1HAE_top_v2$pert, type = "KEGG", 
+                            pvalueCutoff = 1, qvalueCutoff = 1, 
+                            minGSSize = 10, maxGSSize = 2000)
+hyperG_k_res_v2<- result(hyperG_k_res)
+```
+
+```{r}
+write.csv(hyperG_k_res_v2, file= "~/output/TF_L_FRDA/220208_SR_LINCS_FRDA_tfl_cell_drug_pathway_RES.csv" )
+```
+
+```{r}
+#false discovery rate
+hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
+```
+
+```{r}
+hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
+```
+
+```{r}
+gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
+  geom_bar(stat="identity")
+gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
+ggsave("~/output/TF_L_FRDA/220208_ggplot_transfer_learning_tau_frda_candidates_kegg_pathways.pdf")
+```
+
+```{r}
+hyperG_k_res_v2[hyperG_k_res_v2$ID == "hsa04071",]
+```
+
+```{r}
+as.character(hyperG_k_res_v2[hyperG_k_res_v2$ID == "hsa04071",8])
+```
+
+```{r}
+hyperG_go_res <- dsea_hyperG(drugs =lincs_transfer_frda_res_1HAE_top_v2$pert, type = "GO", 
+                            pvalueCutoff = 1, qvalueCutoff = 1, 
+                            minGSSize = 10, maxGSSize = 2000)
+hyperG_go_res_v2<- result(hyperG_go_res)
+```
+
+
+```{r}
+write.csv(hyperG_go_res_v2, file= "~/output/TF_L_FRDA/220208_SR_LINCS_FRDA_tfl_cell_drug_go_pathways_RES.csv" )
+```
+
+Compare DESeq genes and Lv genes
+```{r}
+dds_results_df <- as.data.frame(dds_results_mx)
+upset<-rownames(dds_results_df)[dds_results_df$log2FoldChange >0]
+downset<- rownames(dds_results_df)[dds_results_df$log2FoldChange < 0]
+
+uplist_lv<- rownames(lv_genes_deseq_filtered)[lv_genes_deseq_filtered$log2FoldChange > 0]
+downlist_lv<- rownames(lv_genes_deseq_filtered)[lv_genes_deseq_filtered$log2FoldChange < 0 ]
+```
+
+```{r}
+length(setdiff(upset, uplist_lv)) #13929
+length(setdiff( uplist_lv,upset)) #0
+```
+
+```{r}
+length(setdiff(downset, downlist_lv)) #11434
+length(setdiff( downlist_lv,downset)) #60
+```
+
+```{r}
+length(intersect(upset, uplist_lv))
+length(intersect(downset, downlist_lv))
+```
+
+
+### Save Data
+### Save Figures
+    
+# END
+    Location of final scripts:
+    
+    Location of data produced:
+    
+    Dates when operations were done:
+    
+## Versions
+```{r}
+sessionInfo()
+```

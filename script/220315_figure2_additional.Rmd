@@ -1,0 +1,584 @@
+---
+title: "220315_figure2_additional"
+author: "Jennifer Fisher"
+date: "3/15/2022"
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# START 
+    Goal/Purpose of operations: 
+    quick summary 
+    
+    Finished psedocode on: Date
+    
+    System which operations were done on: my laptop(on cheaha), lab mac etc... 
+    
+    GitHub Repo:
+    
+    Directory of operations: /path
+    
+    Scripts being edited for operations: filename(s)
+    
+    Data being used: description and location
+    
+    Papers and tools: deseq with paper 
+
+# STEPS
+### Set working directory 
+### load in data
+### Analysis
+gbm counts and metadata
+```{r}
+library(recount3)
+library(SummarizedExperiment)
+```
+
+```{r }
+human_projects<- available_projects()
+```
+
+```{r }
+#SRP118922
+recount3_rse_GBM <- create_rse(human_projects[(human_projects$project == "GBM"),])
+```
+tcgabiolinks download done by Avery williams 
+```{r}
+load("/home/rstudio/data/TCGA_GBM_GeneExpression_TCGABIOlinks.rda")
+```
+
+```{r}
+metadata_gbm<- colData(data)
+```
+
+```{r}
+ table(metadata_gbm$paper_IDH.status)
+```
+
+```{r}
+#all primary tumors 
+ metadata_gbm$sample_type[ metadata_gbm$paper_IDH.status == "WT"]
+```
+
+
+141 wildtype GBM. mutant IDH are no longer gbm 
+```{r}
+IDS <- metadata_gbm$barcode[ metadata_gbm$paper_IDH.status == "WT"]
+IDS<- IDS[!is.na(IDS)]
+#inculde the five nromal samples 
+nt<- metadata_gbm$barcode[ metadata_gbm$sample_type == "Solid Tissue Normal"]
+IDS<- c(IDS, nt)
+```
+
+```{r}
+recount_metadata<- colData(recount3_rse_GBM)
+recount_metadata<- as.data.frame(recount_metadata)
+```
+
+```{r}
+recount_1ds<- rownames(recount_metadata)[recount_metadata$tcga.tcga_barcode %in% IDS]
+```
+
+```{r}
+recount3_count_GBM <- as.data.frame(assay(recount3_rse_GBM))
+```
+
+```{r}
+recount3_count_GBM<- recount3_count_GBM[,colnames(recount3_count_GBM) %in% recount_1ds]
+```
+
+```{r}
+#SRP118922
+recount3_rse_BRIAN <- create_rse(human_projects[(human_projects$project == "BRAIN"),])
+```
+
+```{r}
+recount3_count_brain<- assay(recount3_rse_BRIAN)
+recount3_count_brain <- as.data.frame(recount3_count_brain)
+```
+
+```{r}
+#order the tcga data to match recount3 order
+recount3_ids <- colnames(recount3_count_GBM)
+recount_metadata_sub <- recount_metadata[rownames(recount_metadata) %in% recount3_ids,]
+identical(rownames(recount_metadata_sub),recount3_ids)
+ids <- recount_metadata_sub$tcga.tcga_barcode 
+
+nam <- 
+status<- c()
+subtype<- c()
+sex<- c()
+for (i in 1:length(ids)){
+  
+nam[i]<- ids[i]
+#create tumor/normal col
+status[i] <-metadata_gbm$sample_type[metadata_gbm$barcode == ids[i]]
+#create subtype col
+subtype[i] <-as.character(metadata_gbm$paper_Transcriptome.Subtype[metadata_gbm$barcode == ids[i]])
+subtype[i]<- ifelse(is.na(subtype[i]), "NA", subtype[i])
+#create sex col 
+sex[i]<- metadata_gbm$gender[metadata_gbm$barcode == ids[i]]
+}
+#create database col
+database <- rep("TCGA", 146)
+#create metadata 
+tcga_gbm_metadata<- as.data.frame(cbind(nam, database, status, subtype, sex))
+rownames(tcga_gbm_metadata)<- recount3_ids
+tcga_gbm_metadata[1:5,]
+```
+
+```{r}
+#order the metadata to match recount3 order
+metadata_gtex<- as.data.frame(colData(recount3_rse_BRIAN))
+
+#create sex col 
+identical (rownames(metadata_gtex), colnames( recount3_count_brain))
+nam<- metadata_gtex$external_id
+sex<- ifelse(metadata_gtex$gtex.sex == 1, "male", "female")
+#create database col
+database<- rep ("GTEx",2931 )
+#create normal col
+status<- rep ("Solid Tissue Normal", 2931)
+#create subtype col
+subtype<- rep("NA", 2931)
+#create metadata 
+gtex_metadata<- as.data.frame(cbind(nam, database, status, subtype, sex))
+rownames(gtex_metadata)<- rownames(metadata_gtex)
+#combine count and metadata
+gtex_metadata[1:5,]
+```
+
+
+```{r}
+all_metadata <- rbind(tcga_gbm_metadata, gtex_metadata)
+rownames(all_metadata)<- c(rownames(tcga_gbm_metadata), rownames(gtex_metadata))
+count_table<- cbind(recount3_count_GBM, recount3_count_brain)
+```
+
+```{r}
+identical(rownames(all_metadata), colnames(count_table))
+```
+
+```{r}
+saveRDS(all_metadata, "~/output/recount3_gbm_gtex_metadata.rds")
+```
+
+normalize count data by tpm
+```{r}
+Counts_to_tpm <- function(counts, featureLength) {
+  # Ensure valid arguments.
+  stopifnot(length(featureLength) == nrow(counts))
+  # Compute effective lengths of features in each library.
+  effLen <- featureLength
+  # Process one column at a time.
+  tpm <- do.call(cbind, lapply(1:ncol(counts), function(i) {
+    rate = log(counts[,i]) - log(effLen)
+    denom = log(sum(exp(rate)))
+    exp(rate - denom + log(1e6))
+  }))
+  # Copy the row and column names from the original matrix.
+  colnames(tpm) <- colnames(counts)
+  rownames(tpm) <- rownames(counts)
+  return(tpm)
+}
+```
+
+
+```{r}
+gene_info <- as.data.frame(recount3_rse_BRIAN@rowRanges)
+```
+check to make sure things line up 
+```{r}
+identical(gene_info$gene_id, rownames(count_table))
+```
+
+```{r}
+tpm_table<- Counts_to_tpm(count_table, gene_info$bp_length)
+```
+
+```{r}
+rownames(tpm_table)<- gene_info$gene_name
+```
+
+```{r}
+tpm_df <- as.data.frame(tpm_table)
+```
+
+```{r}
+saveRDS(tpm_table, "~/output/recount3_gbm_gtex_tpm_df.rds")
+```
+```{r}
+#cleared env
+gc()
+```
+
+```{r}
+metadata <- readRDS("~/output/recount3_gbm_gtex_metadata.rds")
+tpm_df <- readRDS("~/output/recount3_gbm_gtex_tpm_df.rds")
+```
+
+```{r}
+limma_results<- read.delim(file = '~/output/TF_L_GBM/LV_TCGA_GTEX_T_vs_NT_LV_limma_results.tsv', sep = '\t', header = TRUE)
+```
+
+```{r}
+GBM_GTEX_limma_res_sig <- limma_results[limma_results$adj.P.Val <0.05 & abs(limma_results$logFC)> 0.2,]
+```
+
+```{r}
+GBM_GTEX_B_MATRIX <- readRDS("~/output/TF_L_GBM/GBM_GTEX_B_MATRIX.rds")
+```
+
+
+Latent Variable heatmap 
+```{r}
+library(ComplexHeatmap)
+library(dplyr)
+library(gplots)
+```
+
+```{r}
+colSideColors<- ifelse(metadata$status =="Primary Tumor","#440154FF","#228C8DFF" )
+GBM_GTEX_B_MATRIX_SIG<- GBM_GTEX_B_MATRIX[rownames(GBM_GTEX_B_MATRIX) %in% GBM_GTEX_limma_res_sig$LV, ]
+heatmap.2(x=GBM_GTEX_B_MATRIX_SIG, hclustfun=function(d) hclust(d, method="ward.D2"), labCol = FALSE, trace="none",ColSideColors=colSideColors, col=colorRampPalette(colors=c("blue", "black", "yellow")),cexRow= .5, dendrogram="both", cexCol = 0.5,main = "Significant Latent Varibles")
+
+```
+```{r}
+column_ha = HeatmapAnnotation(Sample=metadata$status, col = list(Sample = c("Primary Tumor" = "#440154FF", "Solid Tissue Normal" = "#228C8DFF")))
+col_fun = colorRamp2(c(-0.5, 0, 0.5), c("blue", "black", "yellow"))
+Heatmap(GBM_GTEX_B_MATRIX_SIG, nam= "LV Score",  col = col_fun, show_column_names = FALSE,clustering_distance_rows= "euclidean",
+             clustering_distance_columns=  "euclidean",
+             clustering_method_rows = "ward.D2" ,
+             clustering_method_columns="ward.D2", top_annotation = column_ha, row_names_gp = gpar(fontsize = 12))
+```
+
+
+update kegg drug pathway based on the top candidates 
+
+
+create upset polt with genes from transfer leanring and different cut offs of deseq2
+```{r}
+recount3_plier_gbm <- readRDS("~/data/recount3/recount3_plier_gbm.rds")
+```
+
+```{r}
+sig_Z_mt <- recount3_plier_gbm$Z[,c(5,11,17,42,43,44,147,187, 216, 223)]
+colnames(sig_Z_mt) <- GBM_GTEX_limma_res_sig$LV
+```
+
+```{r}
+rm(recount3_plier_gbm)
+gc()
+```
+
+
+```{r}
+topgene_1 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,1])][1:25]
+topgene_2 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,2])][1:25]
+topgene_3 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,3])][1:25]
+topgene_4 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,4])][1:25]
+topgene_5 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,5])][1:25]
+topgene_6 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,6])][1:25]
+topgene_7 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,7])][1:25]
+topgene_8 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,8])][1:25]
+topgene_9 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,9])][1:25]
+topgene_10 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,10])][1:25]
+```
+
+```{r}
+topgenes_tf_l<- unique(c(topgene_1, topgene_2,topgene_3, topgene_4, topgene_5, topgene_6, topgene_7, topgene_8, topgene_9, topgene_10 ))
+```
+
+
+```{r}
+deseq_results <- read.csv("~/output/deseq2_gbm/Deseq2_gbm_normal_gtx_res.csv", sep=",")
+```
+
+```{r}
+deseq_results$Symbol <- rownames(tpm_df)
+```
+
+```{r}
+deseq_results<- deseq_results[complete.cases(deseq_results),]
+```
+
+
+deseq2_gene_list- 0.05
+```{r}
+deseq2_gene_list_5 <- deseq_results$Symbol[ deseq_results$padj < 0.05]
+```
+
+deseq2- 0.05 log fold change 1.5
+```{r}
+deseq2_gene_list_5_15 <- deseq_results$Symbol[ deseq_results$padj < 0.05 & abs(deseq_results$log2FoldChange) > 1.5]
+```
+deseq2 0.05 log fold change 2 
+```{r}
+deseq2_gene_list_5_2 <- deseq_results$Symbol[ deseq_results$padj < 0.05 & abs(deseq_results$log2FoldChange) > 2]
+```
+
+deseq2_gene_list- 0.10
+```{r}
+deseq2_gene_list_1 <- deseq_results$Symbol[ deseq_results$padj < 0.10]
+```
+
+deseq2- 0.05 log fold cahnge 1
+```{r}
+deseq2_gene_list_1_15 <- deseq_results$Symbol[ deseq_results$padj < 0.1 & abs(deseq_results$log2FoldChange) > 1.5]
+```
+
+
+deseq2 0.05 log fold change 2 
+```{r}
+deseq2_gene_list_1_2 <- deseq_results$Symbol[ deseq_results$padj < 0.1 & abs(deseq_results$log2FoldChange) > 2]
+```
+
+```{r}
+lt <- list(Transfer = topgenes_tf_l,
+     deseq2_5 = deseq2_gene_list_5,
+     deseq2_1 = deseq2_gene_list_1,
+     deseq2_5_15 = deseq2_gene_list_5_15,
+     deseq2_5_2 = deseq2_gene_list_5_2,
+     deseq2_1_15 = deseq2_gene_list_1_15,
+     deseq2_1_2 = deseq2_gene_list_1_2)
+```
+
+#distinct 
+```{r}
+m = make_comb_mat(lt)
+UpSet(m) # the default mode is `distinct`
+```
+
+```{r}
+lt <- list(Transfer = topgenes_tf_l,
+     deseq2_5_2 = deseq2_gene_list_5_2,
+     deseq2_1_2 = deseq2_gene_list_1_2)
+```
+
+#distinct 
+```{r}
+m = make_comb_mat(lt)
+UpSet(m)# the default mode is `distinct`
+```
+
+```{r}
+lt <- list(Transfer = topgenes_tf_l,
+     deseq2_5_15 = deseq2_gene_list_5_15,
+     deseq2_1_15 = deseq2_gene_list_1_15)
+```
+
+#distinct 
+```{r}
+m = make_comb_mat(lt)
+UpSet(m)# the default mode is `distinct`
+```
+
+
+
+```{r}
+lt <- list(Transfer = topgenes_tf_l,
+     deseq2_5_15 = deseq2_gene_list_5_15,
+     deseq2_5_2 = deseq2_gene_list_5_2)
+```
+
+#distinct 
+```{r}
+m <-  make_comb_mat(lt)
+UpSet(m)# the default mode is `distinct`
+```
+
+```{r}
+lt <- list(Transfer = topgenes_tf_l,
+     deseq2_1_15 = deseq2_gene_list_1_15,
+     deseq2_1_2 = deseq2_gene_list_1_2)
+```
+
+#distinct 
+```{r}
+m <-  make_comb_mat(lt)
+UpSet(m)# the default mode is `distinct`
+```
+volconano plot 
+
+```{r}
+deseq_results$tf_l <- ifelse(deseq_results$Symbol %in% topgenes_tf_l, "yes", "no")
+```
+```{r}
+deseq_results$neg_log_adj_p_value<- -1* log(deseq_results$padj)
+```
+
+```{r}
+library(ggplot2)
+library(cowplot)
+```
+
+
+```{r}
+p1<- ggplot(deseq_results, aes(x=log2FoldChange,y= neg_log_adj_p_value ))+ geom_point(aes(color= tf_l))
+
+```
+
+```{r}
+library(cowplot) 
+# Main plot
+pmain <- ggplot(deseq_results, aes(x=log2FoldChange,y= neg_log_adj_p_value, color= tf_l))+
+  geom_point()
+# Marginal densities along x axis
+xdens <- axis_canvas(pmain, axis = "x")+
+  geom_density(data = deseq_results, aes(x=log2FoldChange, fill = tf_l),
+              alpha = 0.7, size = 0.2)
+# Marginal densities along y axis
+# Need to set coord_flip = TRUE, if you plan to use coord_flip()
+ydens <- axis_canvas(pmain, axis = "y", coord_flip = TRUE)+
+  geom_density(data = deseq_results, aes(x = neg_log_adj_p_value, fill = tf_l),
+                alpha = 0.7, size = 0.2)+
+  coord_flip()
+p1 <- insert_xaxis_grob(pmain, xdens, grid::unit(.2, "null"), position = "top")
+p2<- insert_yaxis_grob(p1, ydens, grid::unit(.2, "null"), position = "right")
+ggdraw(p2)
+```
+
+```{r}
+library(ggpubr)
+```
+
+
+```{r}
+# Scatter plot colored by groups ("Species")
+deseq_results$tf_l <- factor(deseq_results$tf_l, levels= c("no", "yes"))
+deseq_results <- rbind(deseq_results[deseq_results$tf_l == "no",], deseq_results[deseq_results$tf_l == "yes",])
+sp <- ggscatter(deseq_results, x="log2FoldChange" ,y= "neg_log_adj_p_value", color= "tf_l",
+                size = 2,  ggtheme = theme_bw()) + scale_colour_viridis_d()            
+# Marginal boxplot of x (top panel) and y (right panel)
+xplot <- ggboxplot(deseq_results, x = "tf_l", y = "log2FoldChange", 
+                    fill = "tf_l", 
+                   alpha = 0.5, ggtheme = theme_bw())+
+  rotate() + scale_colour_viridis_d()+ scale_fill_viridis_d()     
+yplot <- ggboxplot(deseq_results, x = "tf_l", y = "neg_log_adj_p_value",
+                   fill = "tf_l",
+                   alpha = 0.5, ggtheme = theme_bw()) + scale_colour_viridis_d() + scale_fill_viridis_d()    
+# Cleaning the plots
+sp <- sp + rremove("legend")
+p_value_cut<- -log(0.05)
+sp <-sp + geom_hline(yintercept=p_value_cut, linetype="dashed", color = "black") + geom_vline(xintercept = 2, linetype="dashed",  color = "black") + geom_vline(xintercept = -2, linetype="dashed",  color = "black") + ylab("-log(adj. p-value)") + xlab("log(Fold Change)")
+yplot <- yplot + clean_theme() + rremove("legend")
+xplot <- xplot + clean_theme() + rremove("legend")
+# Arranging the plot using cowplot
+library(cowplot)
+plot_grid(xplot, NULL, sp, yplot, ncol = 2, align = "hv", 
+          rel_widths = c(2, 1), rel_heights = c(1, 2))
+```
+
+```{r}
+limma_results_genes <- read.delim(file = '~/output/limma_gbm/220421_limma_TCGA_GTEX_T_vs_NT_limma_results.tsv', sep = '\t', header = TRUE)
+```
+
+```{r}
+limma_results_genes$neg_log_adj_p_value <- (-log(limma_results_genes$adj.P.Val)) 
+```
+
+
+```{r}
+limma_results_genes$tf_l <- ifelse(limma_results_genes$LV %in% topgenes_tf_l, "yes", "no")
+```
+
+
+
+
+
+```{r}
+# Scatter plot colored by groups ("Species")
+limma_results_genes$tf_l <- factor(limma_results_genes$tf_l, levels= c("no", "yes"))
+limma_results_genes <- rbind(limma_results_genes[limma_results_genes$tf_l == "no",], limma_results_genes[limma_results_genes$tf_l == "yes",])
+sp <- ggscatter(limma_results_genes, x="logFC" ,y= "neg_log_adj_p_value", color= "tf_l",
+                size = 2,  ggtheme = theme_bw()) + scale_colour_viridis_d()            
+# Marginal boxplot of x (top panel) and y (right panel)
+xplot <- ggboxplot(limma_results_genes, x = "tf_l", y = "logFC", 
+                    fill = "tf_l", 
+                   alpha = 0.5, ggtheme = theme_bw())+
+  rotate() + scale_colour_viridis_d()+ scale_fill_viridis_d()     
+yplot <- ggboxplot(limma_results_genes, x = "tf_l", y = "neg_log_adj_p_value",
+                   fill = "tf_l",
+                   alpha = 0.5, ggtheme = theme_bw()) + scale_colour_viridis_d() + scale_fill_viridis_d()    
+# Cleaning the plots
+sp <- sp + rremove("legend")
+p_value_cut<- -log(0.05)
+sp <-sp + geom_hline(yintercept=p_value_cut, linetype="dashed", color = "black") + geom_vline(xintercept = 2, linetype="dashed",  color = "black") + geom_vline(xintercept = -2, linetype="dashed",  color = "black") + ylab("-log(adj. p-value)") + xlab("log(Fold Change)")
+yplot <- yplot + clean_theme() + rremove("legend")
+xplot <- xplot + clean_theme() + rremove("legend")
+# Arranging the plot using cowplot
+library(cowplot)
+plot_grid(xplot, NULL, sp, yplot, ncol = 2, align = "hv", 
+          rel_widths = c(2, 1), rel_heights = c(1, 2))
+```
+
+
+```{r}
+lincs_deseq_gbm_res_GI1_top <- read.csv("~/output/TF_L_GBM/220207_lincs_transfer_gbm_res_GI1_tau.csv")
+```
+
+```{r}
+top_drugs<- lincs_deseq_gbm_res_GI1_top$pert[as.numeric(lincs_deseq_gbm_res_GI1_top$jlf_tau) < -80]
+```
+
+```{r}
+library(signatureSearch)
+```
+
+```{r}
+
+hyperG_k_res <- dsea_hyperG(drugs = c("fludarabine", "rucaparib", "diflunisal", "tiagabine","thioridazine", "vemurafenib", "vorinostat", "dasatinib", "saxagliptin", "nifedipine", "spironolactone", "lapatinib", "pentoxifylline", "icosapent", "pamidronate", "erlotinib"), type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
+hyperG_k_res_v2<- result(hyperG_k_res)
+```
+
+```{r}
+#false discovery rate
+hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
+```
+
+```{r}
+hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
+```
+
+```{r}
+library(viridis)
+```
+
+```{r}
+gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
+  geom_bar(stat="identity") + scale_fill_viridis()
+gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
+```
+
+
+top genes heatmap 
+
+upset plot of the limma, deseq2, and transfer leanring genes
+
+pathway analysis of the differences
+
+venn diagram of approval drugs targets (intersect)
+
+know the numbers for drug candidates
+
+### Save Data
+### Save Figures
+    
+# END
+    Location of final scripts:
+    
+    Location of data produced:
+    
+    Dates when operations were done:
+    
+## Versions
+```{r}
+sessionInfo()
+```
+
