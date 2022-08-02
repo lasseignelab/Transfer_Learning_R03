@@ -26,6 +26,9 @@ knitr::opts_chunk$set(echo = TRUE)
     GitHub Repo:
     Transfer_Learning_R03
     
+    Docker/Singularity: 
+    rstudio_tf_dr_v3
+    
     Directory of operations: 
     "/home/rstudio"
     
@@ -33,10 +36,10 @@ knitr::opts_chunk$set(echo = TRUE)
     One SignatureSearch function needed adjust for new LINCS datbase, and Tau values needed to added
     
     Data being used: 
-    GBM gene expressionalaysis output and tHE latent variable output
+    GBM gene expression alaysis output and the latent variable output
     
     Papers and tools:
-    SignatureSearch. lINCS method fro signature reversion 
+    SignatureSearch. LINCS method for signature reversion 
 
 # STEPS
 ### Set working directory 
@@ -44,10 +47,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 GBM_GTEX_limma_res <- readRDS("~/output/TF_L_GBM/GBM_GTEX_limma_res.rds")
 recount3_plier_gbm <- readRDS("~/data/recount3/recount3_plier_gbm.rds")
-```
-
-
-```{r}
 deseq_results <- read.csv("~/output/deseq2_gbm/Deseq2_gbm_normal_gtx_res.csv", sep=",")
 ```
 
@@ -55,75 +54,55 @@ deseq_results <- read.csv("~/output/deseq2_gbm/Deseq2_gbm_normal_gtx_res.csv", s
 ### Analysis
 ```{r}
 library(signatureSearch)
-```
-
-```{r}
 library(signatureSearchData)
+library(HDF5Array)
+library(magrittr)
+library(dplyr)
+library(recount3)
+library(ggplot2)
+ library(viridis)
+source("/home/rstudio/script/functions_cancer_signature_reversion_JLF.R")
+source("/home/rstudio/script/plier_util.R")
+source("/home/rstudio/script/test_LV_differences.R")
 ```
 
+organize the LINCS data
 ```{r}
-
 meta42 <- readr::read_tsv("~/data/LINCS_210914_LEVEL3/siginfo_beta.txt")
 dose <- "10 uM"
 ## filter rows by 'pert_type' as compound, 10uM concentration, and 24h treatment time
 #meta42_filter <- sig_filter(meta42, pert_type="trt_cp", dose=dose, time="24 h") 
 ```
-
+filter the LINCS data to 10uM and 24 hour treatment and save it 
 ```{r}
-sig_filter_JLF<- function (meta, pert_type = "trt_cp", dose, time = "24 h") {
-    meta %<>% dplyr::filter(pert_type == pert_type & pert_idose == 
-        dose & pert_itime == time)
-    meta %<>% bind_cols(alt_id = paste(meta$cmap_name, meta$cell_iname, 
-        sep = "_")) %>% bind_cols(pert_cell_factor = paste(meta$cmap_name, 
-        meta$cell_iname, meta$pert_type, sep = "__")) %>% distinct(alt_id, 
-        .keep_all = TRUE)
-    return(meta)
-}
-```
-
-```{r}
-library(magrittr)
-library(dplyr)
 meta42_filter <- sig_filter_JLF(meta42, pert_type="trt_cp", dose=dose, time="24 h") 
 ```
 
-
 ```{r eval =FALSE}
-library(signatureSearch)
 gctx <- "~/data/LINCS_LEVEL5_220118/level5_beta_trt_cp_n720216x12328.gctx"
 gctx2h5(gctx, cid=meta42_filter$sig_id, new_cid=meta42_filter$pert_cell_factor,
         h5file="~/data/lincs_2020.h5", by_ncol=5000, overwrite=TRUE)
 ```
 
 ```{r}
-library(signatureSearch)
-library(HDF5Array)
 se <- SummarizedExperiment(HDF5Array("~/data/lincs_2020.h5", name="assay"))
-```
-
-
-```{r}
 rownames(se) <- HDF5Array("~/data/lincs_2020.h5", name="rownames")
 colnames(se) <- HDF5Array("~/data/lincs_2020.h5", name="colnames")
 ```
-
+set this path for downstream analysis
 ```{r}
 db_path <- "~/data/lincs_2020.h5"
 ```
 
-
-
-
-Genes
+## signature reversion for DESeq2 GBM vs control 
+add genes symbols to the DESeq2 output
 ```{r}
-#SRP118922
-library(recount3)
 human_projects<- available_projects()
+#get a random project data
 test<- create_rse(human_projects[(human_projects$project == "SRP118922"),])
 gene_info <- test@rowRanges
 rm(test)
 ```
-
 ```{r}
 dim(as.data.frame(gene_info))
 ```
@@ -136,6 +115,7 @@ identical(gene_info$gene_id, rownames(deseq_results))
 deseq_results$Symbol<- gene_info$gene_name
 ```
 
+identify the top genes
 ```{r}
 deseq_results<- deseq_results[complete.cases(deseq_results),]
 deseq_results_sig <- deseq_results[deseq_results$padj < 0.05 & abs(deseq_results$log2FoldChange) > 2,]
@@ -146,50 +126,10 @@ downset<- deseq_results_sig$Symbol[order(deseq_results_sig$log2FoldChange)] [1:7
 upset<- deseq_results_sig$Symbol[order(-deseq_results_sig$log2FoldChange)] [1:700]
 ```
 
-
-
+convert gene symbols to LINCS genes
 ```{r}
-#upset<-deseq_results_sig$Symbol[deseq_results_sig$log2FoldChange >0]
-#downset<- deseq_results_sig$Symbol[deseq_results_sig$log2FoldChange <0]
-```
-```{r}
-gene_info_LINCS<- read.table("~/data/LINCS_210914_LEVEL3/geneinfo_beta.txt", sep="\t", header=TRUE)
-```
-
-```{r}
-upset_v2<- c()
-for (i in 1:length(upset)){
-  possibleError <- tryCatch(
-      gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol],
-      error=function(e) e
-  )
-  if(length(possibleError)> 0){
-    #REAL WORK
-    upset_v2[i]<- gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol]
-  }else{
-    upset_v2[i]<- NA
-  }
-  
-}
-names(upset_v2)<- upset
-```
-
-```{r}
-downset_v2<- c()
-for (i in 1:length(downset)){
-  possibleError <- tryCatch(
-      gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol],
-      error=function(e) e
-  )
-  if(length(possibleError)> 0){
-    #REAL WORK
-    downset_v2[i]<- gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol]
-  }else{
-    downset_v2[i]<- NA
-  }
-  
-}
-names(downset_v2)<- downset
+downset_v2 <- match_to_LINCS_genes(upset)
+upset_v2 <- match_to_LINCS_genes(downset)
 ```
 
 ```{r}
@@ -202,7 +142,6 @@ upset_v2<- upset_v2[complete.cases(upset_v2)]
  intersect(downset_v2, upset_v2)
 ```
 
-
 ```{r}
 names(upset_v2)<- NULL
 names(downset_v2)<- NULL
@@ -211,12 +150,12 @@ names(downset_v2)<- NULL
 ```{r}
 deseq_gbm_list<- list(up= upset_v2, down= downset_v2)
 ```
-
+save gene signature
 ```{r}
 saveRDS(deseq_gbm_list,"~/output/deseq2_gbm/SR_gene_list_gbm_deseq2.rds")
 ```
 
-
+signature reversion
 ```{r}
 set.seed(101)
 qsig_lincs_deseq2_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
@@ -224,11 +163,7 @@ qsig_lincs_deseq2_res <- qSig(query=list(upset=as.character(upset_v2), downset=a
 ```
 
 ```{r}
-rm(se)
-gc()
-```
-```{r}
-rm(recount3_plier_gbm)
+rm(se, recount3_plier_gbm)
 gc()
 ```
 
@@ -237,8 +172,6 @@ set.seed(101)
 lincs_deseq_gbm <- gess_lincs(qsig_lincs_deseq2_res, sortby="NCS", workers=1)
 #result(lincs)
 ```
-
-
 
 ```{r}
 lincs_deseq_gbm_res <- result(lincs_deseq_gbm)
@@ -263,34 +196,10 @@ lincs_deseq_gbm_res_GI1 <- lincs_deseq_gbm_res[lincs_deseq_gbm_res$cell == "GI1"
 GI1_taudf <- readRDS("~/data/GI1_taudf.rds")
 ```
 
-
-```{r}
-tau_scores<- function(results_df, tau_score_df){
-  #download the tau values 
-  #scores <- readRDS(tau_score_file)
-  results_df$id <- paste(results_df$pert, results_df$cell, results_df$type, sep= "__")
-  #print(results_df$id)
-  tau_list<- c()
-  for (i in 1:nrow(results_df)){
-    #print( results_df$id[i])
-    #print(colnames(tau_score_df) == results_df$id[i])
-    index <- grepl(results_df$pert[i], colnames(tau_score_df))
-   scores <- tau_score_df[,colnames(tau_score_df) == results_df$id[i]]
-   #print(scores)
-      tmpsum <- sum( abs(scores) < abs(results_df$NCS[i]))
-      secd<- (tmpsum/length(scores)) *100
-      tau<- secd* sign( results_df$NCS[i])
-      #print(tau)
-   tau_list[i]<- tau
-  }
-  return(tau_list)
-}
-```
-
 ```{r}
 tau_test<- tau_scores(lincs_deseq_gbm_res_GI1, GI1_taudf)
 ```
-#Tau (τ) that ranges from -100 to +100 
+Tau (τ) that ranges from -100 to +100 
 
 ```{r}
 lincs_deseq_gbm_res_GI1$jlf_tau<- tau_test
@@ -303,10 +212,6 @@ write.csv(lincs_deseq_gbm_res_GI1, file= "~/output/deseq2_gbm/220427_lincs_deseq
 lincs_deseq_gbm_res_GI1_top <- lincs_deseq_gbm_res_GI1[lincs_deseq_gbm_res_GI1$WTCS_FDR <0.05 & lincs_deseq_gbm_res_GI1$NCS <0,]
 ```
 
-```{r}
-library(ggplot2)
- library(viridis)
-```
 
 ```{r}
 lincs_deseq_gbm_res_GI1_top_order <- lincs_deseq_gbm_res_GI1_top[order(-lincs_deseq_gbm_res_GI1_top$NCS),]
@@ -326,48 +231,13 @@ filter by tau and fda approved
 lincs_deseq_gbm_res_GI1_top_tau<- lincs_deseq_gbm_res_GI1_top[lincs_deseq_gbm_res_GI1_top$jlf_tau < -80, ]
 ```
 
-
-
 ```{r}
-fda_info <- read.table("~/data/fda_product_info_df.csv" )
+lincs_deseq_gbm_res_GI1_top_tau$FDA <-FDA_APPROVAL_CHECK(lincs_deseq_gbm_res_GI1_top_tau$pert)
 ```
 
 ```{r}
 FDA_CT_table<- read.csv("~/data/SearchResults.csv")
-```
-
-
-```{r}
-value <- c()
-for (j in 1:32){
-    res <- grep(lincs_deseq_gbm_res_GI1_top_tau$pert[j], fda_info$ActiveIngredient, ignore.case=TRUE )
-    if ( length(res) >0){
-      #print(test[j])
-      value[j]<- TRUE
-    }else{
-      value[j]<- FALSE
-    }
-    
-}
-table(value)
-lincs_deseq_gbm_res_GI1_top_tau$FDA <-value
-```
-
-
-```{r}
-value <- c()
-for (j in 1:32){
-    res <- grep(lincs_deseq_gbm_res_GI1_top_tau$pert[j], FDA_CT_table$Interventions, ignore.case=TRUE )
-    if ( length(res) >0){
-      #print(test[j])
-      value[j]<- TRUE
-    }else{
-      value[j]<- FALSE
-    }
-    
-}
-table(value)
-lincs_deseq_gbm_res_GI1_top_tau$GBM_CT<- value
+lincs_deseq_gbm_res_GI1_top_tau$GBM_CT<- clinical_trial_check(lincs_deseq_gbm_res_GI1_top_tau$pert, FDA_CT_table)
 ```
 
 ```{r}
@@ -404,7 +274,7 @@ g<-ggplot(data=lincs_deseq_gbm_res_brain_tumor_top , aes(x=pert, y=NCS, color=ce
 g + coord_flip()
 ```
 
-GBM cell line
+GBM cell line drug target enrichment
 ```{r}
 hyperG_k_res <- dsea_hyperG(drugs = lincs_deseq_gbm_res_GI1_top_candidates$pert, type = "KEGG", 
                             pvalueCutoff = 1, qvalueCutoff = 1, 
@@ -431,7 +301,7 @@ gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=log
 gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
 ggsave("~/output/deseq2_gbm/220207_ggplot_deseq2_tau_gbm_candidates_kegg_pathways.pdf")
 ```
-
+drug target enrichment with Go terms
 ```{r}
 hyperG_res_go <- dsea_hyperG(drugs=lincs_deseq_gbm_res_GI1_top$pert, type="GO", ont="ALL")
 hyperG_res_go<- result(hyperG_res_go )
@@ -442,20 +312,17 @@ write.csv(hyperG_res_go, file= "~/output/deseq2_gbm/220207_SR_LINCS_GBM_gbm_cell
 ```
 
 
-LVs 
+## signature reversion for Transfer Learning GBM vs control 
+
+look at the range of the fold change
+```{r}
+hist(GBM_GTEX_limma_res$limma$logFC)
+```
+0.2 seems to be a good cut off 
 
 ```{r}
 GBM_GTEX_limma_res_sig <- GBM_GTEX_limma_res$limma[GBM_GTEX_limma_res$limma$adj.P.Val <0.05 & abs(GBM_GTEX_limma_res$limma$logFC)> 0.2,]
 ```
-
-```{r}
-hist(GBM_GTEX_limma_res$limma$logFC)
-```
-
-```{r}
-rm("hyperG_k_res_v2" ,  "gene_info" , "hyperG_k_res"   )
-```
-
 
 ```{r}
 SIG_LVs <- GBM_GTEX_limma_res_sig$LV
@@ -469,13 +336,15 @@ recount3_plier_gbm <- readRDS("~/data/recount3/recount3_plier_gbm.rds")
 recount3_plier_gbm$Z[1:5,1:5]
 dim(recount3_plier_gbm$Z)
 ```
-5,11,17,42,43,44,147,187, 216, 223
+5,11,17,42,43,44,147,187, 216, 223 are the signficant latent variables. n= 10
 
+how many genes to use the disease signatures?
 ```{r}
 sig_Z_mt <- recount3_plier_gbm$Z[,c(5,11,17,42,43,44,147,187, 216, 223)]
 colnames(sig_Z_mt) <- SIG_LVs
 ```
 
+see if there is a cutt off
 ```{r}
 p <- c(70,80,90,95,98,100)/100
 hist(sig_Z_mt[,1])
@@ -499,7 +368,9 @@ quantile(sig_Z_mt[,9],p)
 hist(sig_Z_mt[,10])
 quantile(sig_Z_mt[,10],p)
 ```
-top 100 
+no cut off 
+
+look at the top genes. Note that some unique features of this dimension reduction approach are its penalties for 1)  latent variables to reflect annotated pathways such as KEGG and 2) most genes have a zero weight meaning that only a fraction of genes has a high and significant gene weight via the L1 and L2 penalties in the loss function of this algorithm. Also the top genes for the latent variables are unique. 
 ```{r}
 topgene_1 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,1])][1:25]
 topgene_2 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,2])][1:25]
@@ -516,6 +387,8 @@ topgene_10 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,10])][1:25]
 ```{r}
 topgenes<- unique(c(topgene_1, topgene_2,topgene_3, topgene_4, topgene_5, topgene_6, topgene_7, topgene_8, topgene_9, topgene_10 ))
 ```
+
+The code above was re ran at 25 genes, 50, 10 genes for each latent variable. Noted below is the total gene and the number of unique genes. 10 genes was not enough genes for signature reversion disease signature (it need to be around 100). 50 genes had a large overlap between genes n= 41. more than 8% while 25 was less than 5 %
 #25
 ```{r}
 250-238
@@ -529,7 +402,7 @@ topgenes<- unique(c(topgene_1, topgene_2,topgene_3, topgene_4, topgene_5, topgen
 100-98
 ```
 
-
+use the shrinkage log fold change from DESeq2 to determine if genes are up or down regulated in disease
 ```{r}
 lv_genes_deseq_filtered <- deseq_results[deseq_results$Symbol %in% topgenes,]
 ```
@@ -538,69 +411,14 @@ lv_genes_deseq_filtered <- deseq_results[deseq_results$Symbol %in% topgenes,]
 write.csv(lv_genes_deseq_filtered , file= "~/output/TF_L_GBM/220207lv_genes_deseq_filtered.csv" )
 ```
 
-
-```{r}
-test<- lv_genes_deseq_filtered[lv_genes_deseq_filtered$padj <0.05,]
-```
-
-```{r}
-238-183
-```
-
-```{r}
-test<- lv_genes_deseq_filtered[lv_genes_deseq_filtered$padj <0.05 & abs(lv_genes_deseq_filtered$log2FoldChange) > 2,]
-```
-
-```{r}
-238-110
-```
-~54% 
-
 ```{r}
 uplist<- lv_genes_deseq_filtered$Symbol[lv_genes_deseq_filtered$log2FoldChange > 0]
 downlist<- lv_genes_deseq_filtered$Symbol[lv_genes_deseq_filtered$log2FoldChange < 0 ]
 ```
 
 ```{r}
-gene_info_LINCS<- read.table("~/data/LINCS_210914_LEVEL3/geneinfo_beta.txt", sep="\t", header=TRUE)
-```
-
-```{r}
-upset<- uplist
-upset_v2<- c()
-for (i in 1:length(upset)){
-  possibleError <- tryCatch(
-      gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol],
-      error=function(e) e
-  )
-  if(length(possibleError)> 0){
-    #REAL WORK
-    upset_v2[i]<- gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol]
-  }else{
-    upset_v2[i]<- NA
-  }
-  
-}
-names(upset_v2)<- upset
-```
-
-```{r}
-downset<- downlist
-downset_v2<- c()
-for (i in 1:length(downset)){
-  possibleError <- tryCatch(
-      gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol],
-      error=function(e) e
-  )
-  if(length(possibleError)> 0){
-    #REAL WORK
-    downset_v2[i]<- gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol]
-  }else{
-    downset_v2[i]<- NA
-  }
-  
-}
-names(downset_v2)<- downset
+downset_v2 <- match_to_LINCS_genes(upset)
+upset_v2 <- match_to_LINCS_genes(downset)
 ```
 
 ```{r}
@@ -621,7 +439,7 @@ tfl_gbm_list<- list(up= upset_v2, down= downset_v2)
 saveRDS(tfl_gbm_list,"~/output/TF_L_GBM/SR_gene_list_gbm_tfl.rds")
 ```
 
-
+signature reversion for GBM transfer learning 
 ```{r}
 set.seed(101)
 qsig_lincs_transfer_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
@@ -659,7 +477,7 @@ tau_test<- tau_scores(lincs_transfer_gbm_res_GI1, GI1_taudf)
 lincs_transfer_gbm_res_GI1$jlf_tau<-tau_test
 ```
 
-
+filter the results
 ```{r}
 lincs_transfer_gbm_res_GI1_top <- lincs_transfer_gbm_res_GI1[lincs_transfer_gbm_res_GI1$WTCS_FDR <0.05 & lincs_transfer_gbm_res_GI1$NCS <0,]
 ```
@@ -668,11 +486,8 @@ lincs_transfer_gbm_res_GI1_top_order <- lincs_transfer_gbm_res_GI1_top[order(-li
 lincs_transfer_gbm_res_GI1_top$pert <- factor(lincs_transfer_gbm_res_GI1_top$pert, levels = lincs_transfer_gbm_res_GI1_top_order$pert)
 ```
 
-
+plotting the results
 ```{r}
-#p.2<-ggplot(data=lincs_transfer_gbm_res_GI1_top[1:30,] , aes(x=pert, y=NCS)) +
- # geom_bar(stat="identity")
-#p.2 + coord_flip()
 p<-ggplot(data=lincs_transfer_gbm_res_GI1_top[1:30,] , aes(x=pert, y=NCS, fill=jlf_tau)) +
   geom_bar(stat="identity")+ scale_fill_viridis(direction=-1)
 p + coord_flip()  + xlab("Normalized Connectivity Score") + ylab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]")
@@ -688,6 +503,7 @@ ggsave("~/output/TF_L_GBM/220207_ggplot_transfer_tau_gbm_candidates.pdf")
 write.csv(lincs_transfer_gbm_res_GI1_top, file= "~/output/TF_L_GBM/220207_lincs_transfer_gbm_res_GI1_tau.csv" )
 ```
 
+look at the brain tumor cell types 
 ```{r}
 lincs_transfer_gbm_res_brain_tumor <- lincs_transfer_gbm_res[lincs_transfer_gbm_res$cell %in% c("GI1","SHSY5Y", "LN229","SKNSH", "U251MG","YH13")   ,]
 ```
@@ -718,19 +534,16 @@ g.2 + coord_flip()
 ```
 
 
-
-
 ```{r}
 write.csv(lincs_transfer_gbm_res , file= "~/output/TF_L_GBM/220127_SR_LINCS_GBM_TRL_RES.csv" )
 ```
 
--79 is the cut off
+-80 is the cut off
 ```{r}
-lincs_transfer_gbm_res_GI1_top_v2 <- lincs_transfer_gbm_res_GI1_top[ abs(lincs_transfer_gbm_res_GI1_top$jlf_tau) > 79,]
+lincs_transfer_gbm_res_GI1_top_v2 <- lincs_transfer_gbm_res_GI1_top[ abs(lincs_transfer_gbm_res_GI1_top$jlf_tau) > 80,]
 ```
 
-
-GBM cell line
+GBM cell line drug target enrichment
 ```{r}
 hyperG_k_res <- dsea_hyperG(drugs = lincs_transfer_gbm_res_GI1_top_v2$pert, type = "KEGG", 
                             pvalueCutoff = 1, qvalueCutoff = 1, 
@@ -765,7 +578,7 @@ hyperG_res_go<- result(hyperG_res_go )
 write.csv(hyperG_res_go, file= "~/output/TF_L_GBM/220207_SR_LINCS_GBM_gbm_cell_drug_Go_terms_RES.csv" )
 ```
 
-brain tumors 
+brain tumors drug target enrichment
 ```{r}
 hyperG_k_res.2 <- dsea_hyperG(drugs = lincs_transfer_gbm_res_brain_tumor_top$pert, type = "KEGG", 
                             pvalueCutoff = 1, qvalueCutoff = 1, 
@@ -793,97 +606,11 @@ gbm.2.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(f
 ```
 
 
-
-Compare DESeq genes and Lv genes
-```{r}
-upset<-deseq_results_sig$Symbol[deseq_results_sig$log2FoldChange >0]
-downset<- deseq_results_sig$Symbol[deseq_results_sig$log2FoldChange <0]
-
-uplist_lv<- lv_genes_deseq_filtered$Symbol[lv_genes_deseq_filtered$log2FoldChange > 0]
-downlist_lv<- lv_genes_deseq_filtered$Symbol[lv_genes_deseq_filtered$log2FoldChange < 0 ]
-```
-
-```{r}
-length(setdiff(upset, uplist_lv)) #5080
-length(setdiff( uplist_lv,upset)) #68
-68/132
-```
-
-```{r}
-length(setdiff(downset, downlist_lv)) #3221
-length(setdiff( downlist_lv,downset)) #60
-```
-
-```{r}
-length(intersect(upset, uplist_lv))
-length(intersect(downset, downlist_lv))
-```
-```{r}
-library(gprofiler2)
-```
-
-```{r}
-deseq2_upset_pathway_results <- gost(query = upset, 
-                organism = "hsapiens", ordered_query = FALSE, 
-                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
-                measure_underrepresentation = FALSE, evcodes = FALSE, 
-                user_threshold = 0.05, correction_method = "g_SCS", 
-                domain_scope = "annotated", custom_bg = NULL, 
-                numeric_ns = "", sources = NULL, as_short_link = FALSE)
-```
-
-```{r}
-gostplot(deseq2_upset_pathway_results, capped = TRUE, interactive = TRUE)
-```
-
-```{r}
-deseq2_downset_pathway_results <- gost(query = downset, 
-                organism = "hsapiens", ordered_query = FALSE, 
-                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
-                measure_underrepresentation = FALSE, evcodes = FALSE, 
-                user_threshold = 0.05, correction_method = "g_SCS", 
-                domain_scope = "annotated", custom_bg = NULL, 
-                numeric_ns = "", sources = NULL, as_short_link = FALSE)
-```
-
-```{r}
-gostplot(deseq2_downset_pathway_results, capped = TRUE, interactive = TRUE)
-```
-
-```{r}
-lv_upset_pathway_results <- gost(query = uplist_lv, 
-                organism = "hsapiens", ordered_query = FALSE, 
-                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
-                measure_underrepresentation = FALSE, evcodes = FALSE, 
-                user_threshold = 0.05, correction_method = "g_SCS", 
-                domain_scope = "annotated", custom_bg = NULL, 
-                numeric_ns = "", sources = NULL, as_short_link = FALSE)
-```
-
-```{r}
-gostplot(lv_upset_pathway_results , capped = TRUE, interactive = TRUE)
-```
-
-```{r}
-lv_downset_pathway_results <- gost(query = downlist_lv, 
-                organism = "hsapiens", ordered_query = FALSE, 
-                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
-                measure_underrepresentation = FALSE, evcodes = FALSE, 
-                user_threshold = 0.05, correction_method = "g_SCS", 
-                domain_scope = "annotated", custom_bg = NULL, 
-                numeric_ns = "", sources = NULL, as_short_link = FALSE)
-```
-
-```{r}
-gostplot(lv_downset_pathway_results , capped = TRUE, interactive = TRUE)
-```
-
-
 ### Save Data
 done within the script 
 
 ### Save Figures
-
+done within the script 
     
 # END
     Location of final scripts:
@@ -893,7 +620,7 @@ done within the script
     output
     
     Dates when operations were done:
-    
+    220118
     
 ## Versions
 ```{r}

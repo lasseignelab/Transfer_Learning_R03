@@ -15,21 +15,32 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # START 
     Goal/Purpose of operations: 
-    quick summary 
+    Apply limma differential gene expression analysis to GBM and GTEx controls to identify genes that differential expressed between tumor and control gene expression profiles. The differential expressed gene were used to signature reversion. 
     
-    Finished psedocode on: Date
+    Finished psedocode on: 
+    220405
     
-    System which operations were done on: my laptop(on cheaha), lab mac etc... 
+    System which operations were done on: 
+    my laptop
     
     GitHub Repo:
+    Transfer_Learning_R03
     
-    Directory of operations: /path
+    Docker/Singularity: 
+    rstudio_tf_dr_v3
     
-    Scripts being edited for operations: filename(s)
+    Directory of operations:
+    "/home/rstudio"
     
-    Data being used: description and location
+    Scripts being edited for operations:
+    using some modified scripts from MultiPLIER paper
     
-    Papers and tools: deseq with paper 
+    Data being used: 
+    TCGA GBM data and GTEx Brain samples
+    
+    Papers and tools: 
+    limma 
+    MultiPLIER
 
 # STEPS
 ### Set working directory 
@@ -37,156 +48,26 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(recount3)
 library(SummarizedExperiment)
+library(dplyr)
 ```
-
-```{r }
-human_projects<- available_projects()
-```
-
-```{r }
-#SRP118922
-recount3_rse_GBM <- create_rse(human_projects[(human_projects$project == "GBM"),])
-```
-tcgabiolinks download done by Avery williams 
+load in function scripts 
 ```{r}
-load("/home/rstudio/data/TCGA_GBM_GeneExpression_TCGABIOlinks.rda")
+source("/home/rstudio/script/functions_cancer_signature_reversion_JLF.R")
+source("/home/rstudio/script/plier_util.R")
+source("/home/rstudio/script/test_LV_differences.R")
 ```
 
 ```{r}
-library(DESeq2)
-metadata_gbm<- colData(data)
-```
-
-```{r}
- table(metadata_gbm$paper_IDH.status)
-```
-
-```{r}
-#all primary tumors 
- metadata_gbm$sample_type[ metadata_gbm$paper_IDH.status == "WT"]
-```
-
-
-141 wildtype GBM. mutant IDH are no longer gbm 
-```{r}
-IDS <- metadata_gbm$barcode[ metadata_gbm$paper_IDH.status == "WT"]
-IDS<- IDS[!is.na(IDS)]
-#inculde the five nromal samples 
-nt<- metadata_gbm$barcode[ metadata_gbm$sample_type == "Solid Tissue Normal"]
-IDS<- c(IDS, nt)
-```
-
-```{r}
-recount_metadata<- colData(recount3_rse_GBM)
-recount_metadata<- as.data.frame(recount_metadata)
-```
-
-```{r}
-recount_1ds<- rownames(recount_metadata)[recount_metadata$tcga.tcga_barcode %in% IDS]
-```
-
-```{r}
-recount3_count_GBM <- as.data.frame(assay(recount3_rse_GBM))
-```
-
-```{r}
-recount3_count_GBM<- recount3_count_GBM[,colnames(recount3_count_GBM) %in% recount_1ds]
-```
-
-```{r}
-#SRP118922
-recount3_rse_BRIAN <- create_rse(human_projects[(human_projects$project == "BRAIN"),])
-```
-
-```{r}
-recount3_count_brain<- assay(recount3_rse_BRIAN)
-recount3_count_brain <- as.data.frame(recount3_count_brain)
-```
-
-```{r}
-#order the tcga data to match recount3 order
-recount3_ids <- colnames(recount3_count_GBM)
-recount_metadata_sub <- recount_metadata[rownames(recount_metadata) %in% recount3_ids,]
-identical(rownames(recount_metadata_sub),recount3_ids)
-ids <- recount_metadata_sub$tcga.tcga_barcode 
-
-nam <- 
-status<- c()
-subtype<- c()
-sex<- c()
-for (i in 1:length(ids)){
-  
-nam[i]<- ids[i]
-#create tumor/normal col
-status[i] <-metadata_gbm$sample_type[metadata_gbm$barcode == ids[i]]
-#create subtype col
-subtype[i] <-as.character(metadata_gbm$paper_Transcriptome.Subtype[metadata_gbm$barcode == ids[i]])
-subtype[i]<- ifelse(is.na(subtype[i]), "NA", subtype[i])
-#create sex col 
-sex[i]<- metadata_gbm$gender[metadata_gbm$barcode == ids[i]]
-}
-#create database col
-database <- rep("TCGA", 146)
-#create metadata 
-tcga_gbm_metadata<- as.data.frame(cbind(nam, database, status, subtype, sex))
-rownames(tcga_gbm_metadata)<- recount3_ids
-tcga_gbm_metadata[1:5,]
-```
-
-```{r}
-#order the metadata to match recount3 order
-metadata_gtex<- as.data.frame(colData(recount3_rse_BRIAN))
-
-#create sex col 
-identical (rownames(metadata_gtex), colnames( recount3_count_brain))
-nam<- metadata_gtex$external_id
-sex<- ifelse(metadata_gtex$gtex.sex == 1, "male", "female")
-#create database col
-database<- rep ("GTEx",2931 )
-#create normal col
-status<- rep ("Solid Tissue Normal", 2931)
-#create subtype col
-subtype<- rep("NA", 2931)
-#create metadata 
-gtex_metadata<- as.data.frame(cbind(nam, database, status, subtype, sex))
-rownames(gtex_metadata)<- rownames(metadata_gtex)
-#combine count and metadata
-gtex_metadata[1:5,]
-```
-
-
-```{r}
-all_metadata <- rbind(tcga_gbm_metadata, gtex_metadata)
-rownames(all_metadata)<- c(rownames(tcga_gbm_metadata), rownames(gtex_metadata))
-count_table<- cbind(recount3_count_GBM, recount3_count_brain)
-```
-
-```{r}
-identical(rownames(all_metadata), colnames(count_table))
+count_table<- readRDS( "/home/rstudio/data/recount3_GBM_GTEx_BRAIN_raw_counts.rds")
+all_metadata<- readRDS("/home/rstudio/data/recount3_GBM_GTEx_BRAIN_metadata.rds")
 ```
 
 normalize count data by tpm
-```{r}
-Counts_to_tpm <- function(counts, featureLength) {
-  # Ensure valid arguments.
-  stopifnot(length(featureLength) == nrow(counts))
-  # Compute effective lengths of features in each library.
-  effLen <- featureLength
-  # Process one column at a time.
-  tpm <- do.call(cbind, lapply(1:ncol(counts), function(i) {
-    rate = log(counts[,i]) - log(effLen)
-    denom = log(sum(exp(rate)))
-    exp(rate - denom + log(1e6))
-  }))
-  # Copy the row and column names from the original matrix.
-  colnames(tpm) <- colnames(counts)
-  rownames(tpm) <- rownames(counts)
-  return(tpm)
-}
-```
 
-
+get the gene lengths from recount3 
 ```{r}
+human_projects<- available_projects()
+recount3_rse_BRIAN <- create_rse(human_projects[(human_projects$project == "BRAIN"),])
 gene_info <- as.data.frame(recount3_rse_BRIAN@rowRanges)
 ```
 check to make sure things line up 
@@ -208,253 +89,21 @@ tpm_df <- as.data.frame(tpm_table)
 
 ### Analysis
 
-limma analysis 
-
-```{r eval= FALSE}
-TestLVDifferencesJLF <- function(b.matrix, phenotype, blocking,
-                              use.bonferroni = FALSE) {
-  # This function tests for differential expression of PLIER-derived latent
-  # variables between groups specified by the phenotype argument
-  # using limma. Examples include different disease groups or disease v. 
-  # control. It takes the B matrix from a PLIER model and a factor vector with 
-  # the group labels. It will reorder the phenotype vector if control.phenotype
-  # is specified. The resulting p-values are Benjamini-Hochberg corrected by 
-  # default or Bonferroni corrected if use.bonferroni = TRUE
-  # 
-  # Args:
-  #   b.matrix: a B matrix (latent variables are rows, samples are columns) 
-  #             from a PLIER model. Can be the B element of the list 
-  #             returned by PLIER::PLIER or the output of GetNewDataB
-  #   phenotype: a named factor vector that contains group labels to be used
-  #              for contrasts
-  #   blocking: a names facotor vector that contains group labels to be used for blocking
-  #   use.bonferroni: logical - should bonferroni correction be used? if FALSE
-  #                   (default), will use "BH"
-  #   
-  # Returns:
-  #   A limma::topTable, where the first column is the latent variable name and
-  #   all pathways are returned (without filtering or sorting)
-  
-  ## error-handling ##
-  
-  if (is.null(names(phenotype))) {
-    stop("phenotype should be a named factor vector -- the names ensure that
-         the vector is correctly ordered")
-  }
-  if (is.null(names(blocking))) {
-    stop("blocking should be a named factor vector -- the names ensure that
-         the vector is correctly ordered")
-  }  
-  # no names should be "missing"
-  check.names <- all(colnames(b.matrix) %in% names(phenotype)) & 
-    all(names(phenotype) %in% colnames(b.matrix)) 
-  
-  if (!check.names) {
-    stop("Some sample(s) is missing from colnames(b.matrix) or 
-         names(phenotype)")
-  }
-  
-  # the phenotype labels should be in the same order as the b.matrix samples
-  ordered.phenotype <- as.factor(phenotype[colnames(b.matrix)])
-  
-  # the blocking labels should be in the same order as the b.matrix samples
-  ordered.blocking <- as.factor(blocking[colnames(b.matrix)])
-  
-  # get contrasts (all pairwise)  
-  num.levels <- length(levels(ordered.phenotype))
-  contrast.vector <- c()
-  for (lvl in levels(ordered.phenotype)[1:(num.levels - 1)]) {
-    for (lvl.2 in levels(ordered.phenotype)[2:num.levels]) {
-      if (lvl != lvl.2) {
-        contrast.vector <- append(contrast.vector, paste(lvl, lvl.2, sep = "-"))
-      }
-    }
-  }
-  contrast.vector <- paste(contrast.vector, collapse = ", ")
-  
-  # prep design matrix
-  design <- model.matrix(~ 0+ ordered.phenotype+ ordered.blocking )
-  colnames(design)[seq_len(nlevels(ordered.phenotype))] <- levels(ordered.phenotype)
-  
-  
-  
-  
-  #colnames(design) <- levels(ordered.phenotype)
-  
-  # fit linear model
-  fit <- limma::lmFit(b.matrix, design)
-  contrast.matrix <-
-    eval(parse(
-      text = paste0(
-        'limma::makeContrasts(', contrast.vector, ', levels = design)')))
-  fit2 <- limma::contrasts.fit(fit, contrast.matrix)
-  fit2 <- limma::eBayes(fit2)
-  
-  # extract results as a data.frame
-  if (use.bonferroni) {  # if specified, use Bonferroni correction
-    limma.result <- limma::topTable(fit2, number = nrow(b.matrix),
-                                    adjust.method = "bonferroni", 
-                                    sort.by = "none")
-  } else {  # calculate FDR
-    limma.result <- limma::topTable(fit2, number = nrow(b.matrix),
-                                    adjust.method = "BH", sort.by = "none")
-  }
-  
-  # want feature (latent variable) names as column
-  limma.result <- tibble::rownames_to_column(limma.result, var = "LV")
-  
-  return(limma.result)
-  
-}
-```
-
-
+## limma analysis 
 
 ```{r}
-LVTestWrapperJLF_v2 <- function(b.matrix,
-                          sample.info.df,
-                          phenotype.col,
-                          blocking,
-                          file.lead,
-                          plot.dir = "plots",
-                          results.dir = "results",
-                          use.bonferroni = FALSE,
-                          significant.only = FALSE,
-                          sig.threshold = 0.05) {
-  # A wrapper function for TestLVDifferences and BoxplotDiffLV; does the 
-  # reshaping required for plotting. Produces the following files: 1) tsv of the
-  # differential expression results 2) a long form of the B matrix joined with
-  # the sample information (sample.info.df) and 3) a PDF of boxplots
-  # 
-  # Args:
-  #   b.matrix: a B matrix (latent variables are rows, samples are columns) 
-  #             from a PLIER model. Can be the B element of the list 
-  #             returned by PLIER::PLIER or the output of GetNewDataB
-  #   sample.info.df: a long form data.frame that contains sample information,
-  #                   sample names that match the B matrix sample identifiers
-  #                   must be in a "Sample" column & it also must contain
-  #                   the factor to group by for testing differential expression
-  #                   (DE) and plotting
-  #   phenotype.col: the column name of the column in sample.info.df to be used
-  #                  for DE and plotting; character
-  #   file.lead: string that designates the "beginning" of filenames
-  #   plot.dir: plot directory where the boxplots PDF should be saved
-  #   results.dir: results directory for DE results and reshaped B data.frame
-  #   use.bonferroni: logical - should bonferroni correction be used for DE? 
-  #                   if FALSE (default), will use "BH"
-  #   significant.only: logical - should only differentially expressed LVs be
-  #                     plotted? if FALSE (default), all will be plotted
-  #   sig.threshold: the adj. P cutoff to be used if only plotting significant 
-  #                  results; default is 0.05
-  #                  
-  # Returns:
-  #   A list with the following elements
-  #       limma: the results from TestLVDifferences 
-  #       b.df: sample.b.df, prior to any filtering for plotting (if applicable)
-  # 
-  #   the following files are written by this function (see above):
-  #     1) <results.dir>/<file.lead>_LV_limma_results.tsv
-  #     2) <results.dir>/<file.lead>_B_long_sample_info.tsv
-  #     3) <plot.dir>/<file.lead>_LV_boxplots.pdf
-  
-  `%>%` <- dplyr::`%>%`
-  
-  # error-handling
-  # we need to join by "Sample" column for boxplots
-  if (!("Sample" %in% colnames(sample.info.df))) {
-    stop("'Sample' must be a column in sample.info.df")
-  }
-  # phenotype.col needs to be in column names
-  if (!(phenotype.col %in% colnames(sample.info.df))) {
-    stop("phenotype.col must be a column name in sample.info.df")
-  }
-  
-  # initialize list to hold results to be returned
-  return.list <- list()
-  
-  #### Differential Expression ####
-  # get the named vector to use as the phenotype for testing differential 
-  # expression
-  phenotype.vector <- as.factor(make.names(sample.info.df[[phenotype.col]]))
-  names(phenotype.vector) <- sample.info.df$Sample
-  # test itself
-  limma.df <- TestLVDifferencesJLF(b.matrix = b.matrix,
-                                phenotype = phenotype.vector,
-                                blocking= blocking,
-                                use.bonferroni = use.bonferroni)
-  # write to file
-  dlve.file <- file.path(results.dir, 
-                         paste0(file.lead, "_limma_results.tsv"))
-  readr::write_tsv(limma.df, path = dlve.file)
-  # add to list to be returned
-  return.list[["limma"]] <- limma.df
-  
-  #### Reshape & join with sample information ####
-  b.df <- reshape2::melt(b.matrix)
-  #print(b.df)
-  colnames(b.df) <- c("LV", "Sample", "Value")
-  sample.b.df <- dplyr::inner_join(b.df, sample.info.df, by = "Sample")
-  #long.file <- file.path(results.dir, 
-                         #paste0(file.lead, "_B_long_sample_info.tsv"))
-  #readr::write_tsv(sample.b.df, long.file)
-  # add to list to be returned
-  return.list[["b.df"]] <- sample.b.df
-  
-  #### Plotting ####
-  plot.file <- file.path(plot.dir,
-                         paste0(file.lead, "_boxplots.pdf"))
-  
-  # if we only want significant LVs plotted, filter sample.b.df using the
-  # adj.P.Val cutoff sig.threshold
-  if (significant.only) {
-    sig.lvs <- limma.df$LV[which(limma.df$adj.P.Val < sig.threshold)]
-    sample.b.df <- sample.b.df %>%
-      dplyr::filter(LV %in% sig.lvs)
-  }
-  
- # BoxplotDiffLV(tidy.b.df = sample.b.df, 
-              #  phenotype.column = phenotype.col,
-             #   pdf.path = plot.file)
-  
-  
-  return(return.list)
-}
-```
-
-```{r eval= FALSE}
-source("~/script/test_LV_differences.R")
-library(dplyr)
-```
-
-
-LVTestWrapperJLF <- function(b.matrix,
-                          sample.info.df,
-                          phenotype.col,
-                          blocking,
-                          file.lead,
-                          plot.dir = "plots",
-                          results.dir = "results",
-                          use.bonferroni = FALSE,
-                          significant.only = FALSE,
-                          sig.threshold = 0.05)
-                          
-```{r}
-rm(count_table, recount3_rse_BRIAN, recount3_rse_GBM)
-gc()
-```
-```{r}
-rm(data, recount3_rse_BRIAN, recount3_rse_GBM, tpm_table)
+rm(count_table, recount3_rse_BRIAN)
 gc()
 ```
 
-
+transfrom TPM for limma differential gene expression
 ```{r}
 TPM <- log2(as.matrix(tpm_df) + 1)
-
 ```
 
                           
 ```{r eval= FALSE}
+#adjust metadata for the function
 sampleinfo<- cbind(colnames(tpm_df), as.character(all_metadata$status), as.character(all_metadata$database))
 colnames(sampleinfo) <- c("Sample", "Tumor","database")
 sampleinfo<- as.data.frame(sampleinfo)
@@ -472,25 +121,22 @@ saveRDS(limma_gene_TCGA_BH , file= "~/output/limma_gbm/220421_GBM_GTEX_gene_limm
 
 
 
-signature search 
-clear the env
+## signaturesearch 
+get the limma results
 ```{r}
 GBM_GTEX_gene_limma_res <- readRDS("~/output/limma_gbm/220421_GBM_GTEX_gene_limma_res.rds")
 ```
 
+get LINCS 2020 Level 5 data
 ```{r}
 library(signatureSearch)
 library(HDF5Array)
 se <- SummarizedExperiment(HDF5Array("~/data/lincs_2020.h5", name="assay"))
 ```
 
-
 ```{r}
 rownames(se) <- HDF5Array("~/data/lincs_2020.h5", name="rownames")
 colnames(se) <- HDF5Array("~/data/lincs_2020.h5", name="colnames")
-```
-
-```{r}
 db_path <- "~/data/lincs_2020.h5"
 ```
 
@@ -498,7 +144,7 @@ db_path <- "~/data/lincs_2020.h5"
 limma_results<- GBM_GTEX_gene_limma_res$limma
 ```
 
-
+get the top up and down regulated genes; use the top ~100 from the up and down regulated genes
 ```{r}
 limma_results<- limma_results[complete.cases(limma_results),]
 limma_results_sig <- limma_results[limma_results$adj.P.Val < 0.05 & abs(limma_results$logFC) > 2,]
@@ -510,44 +156,10 @@ downset<- limma_results_sig$LV[order(limma_results_sig$logFC)]
 upset<- upset[1:200]
 downset<- downset[1:200]
 ```
+convert gene symbols to LINCS genes
 ```{r}
-gene_info_LINCS<- read.table("~/data/LINCS_210914_LEVEL3/geneinfo_beta.txt", sep="\t", header=TRUE)
-```
-
-```{r}
-upset_v2<- c()
-for (i in 1:length(upset)){
-  possibleError <- tryCatch(
-      gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol],
-      error=function(e) e
-  )
-  if(length(possibleError)> 0){
-    #REAL WORK
-    upset_v2[i]<- gene_info_LINCS$gene_id[upset[i] == gene_info_LINCS$gene_symbol]
-  }else{
-    upset_v2[i]<- NA
-  }
-  
-}
-names(upset_v2)<- upset
-```
-
-```{r}
-downset_v2<- c()
-for (i in 1:length(downset)){
-  possibleError <- tryCatch(
-      gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol],
-      error=function(e) e
-  )
-  if(length(possibleError)> 0){
-    #REAL WORK
-    downset_v2[i]<- gene_info_LINCS$gene_id[downset[i] == gene_info_LINCS$gene_symbol]
-  }else{
-    downset_v2[i]<- NA
-  }
-  
-}
-names(downset_v2)<- downset
+downset_v2 <- match_to_LINCS_genes(upset)
+upset_v2 <- match_to_LINCS_genes(downset)
 ```
 
 ```{r}
@@ -563,12 +175,12 @@ names(downset_v2)<- NULL
 ```{r}
 limma_gbm_list<- list(up= upset_v2, down= downset_v2)
 ```
-
+save the input gene signature. 
 ```{r}
 saveRDS(limma_gbm_list,"~/output/limma_gbm/SR_gene_list_gbm_limma.rds")
 ```
 
-
+run signature reversion for limma GBM vs Control
 ```{r}
 set.seed(101)
 qsig_lincs_limma_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
@@ -580,8 +192,6 @@ set.seed(101)
 lincs_limma_gbm <- gess_lincs(qsig_lincs_limma_res, sortby="NCS", tau=TRUE, workers=1)
 #result(lincs)
 ```
-
-
 
 ```{r}
 lincs_limma_gbm_res <- result(lincs_limma_gbm)
@@ -602,29 +212,6 @@ GI1_taudf <- readRDS("~/data/GI1_taudf.rds")
 ```
 
 ```{r}
-tau_scores<- function(results_df, tau_score_df){
-  #download the tau values 
-  #scores <- readRDS(tau_score_file)
-  results_df$id <- paste(results_df$pert, results_df$cell, results_df$type, sep= "__")
-  #print(results_df$id)
-  tau_list<- c()
-  for (i in 1:nrow(results_df)){
-    #print( results_df$id[i])
-    #print(colnames(tau_score_df) == results_df$id[i])
-    index <- grepl(results_df$pert[i], colnames(tau_score_df))
-   scores <- tau_score_df[,colnames(tau_score_df) == results_df$id[i]]
-   #print(scores)
-      tmpsum <- sum( abs(scores) < abs(results_df$NCS[i]))
-      secd<- (tmpsum/length(scores)) *100
-      tau<- secd* sign( results_df$NCS[i])
-      #print(tau)
-   tau_list[i]<- tau
-  }
-  return(tau_list)
-}
-```
-
-```{r}
 tau_test<- tau_scores(lincs_limma_gbm_res_GI1, GI1_taudf)
 ```
 
@@ -636,32 +223,11 @@ lincs_limma_gbm_res_GI1$jlf_tau<-tau_test
 limma_sig_drugs <- lincs_limma_gbm_res_GI1[lincs_limma_gbm_res_GI1$WTCS_Pval <0.05 & lincs_limma_gbm_res_GI1$NCS <0 & as.numeric(lincs_limma_gbm_res_GI1$jlf_tau) < -80, ] 
 ```
 
-
 drug analysis
-```{r}
-fda_info <- read.table("~/data/fda_product_info_df.csv" )
-```
 
 ```{r}
-fda_info_approved <- unique(fda_info$ActiveIngredient[fda_info$market_status ==1])
-```
-
-```{r}
-limma_fda<- rep(NA, 52)
-for (i in 1:nrow(limma_sig_drugs )){
-    res<- grep(limma_sig_drugs$pert[i], fda_info_approved, ignore.case=TRUE )
-    #res <- grep(test[j], FDA_CT_table$Interventions, ignore.case=TRUE )
-    res <- length(res) >0 
-    #if (res == TRUE){
-    #  print(test[j])
-    #}
-     limma_fda[i]<- res
-}
-table(limma_fda)
-```
-
-```{r}
-limma_sig_drugs$fda_database<-limma_fda
+#FDA_APPROVAL_CHECK
+lincs_limma_gbm_res_GI1$fda_database<- FDA_APPROVAL_CHECK(lincs_limma_gbm_res_GI1$pert)
 ```
 
 ```{r}
@@ -694,28 +260,23 @@ ggsave("~/output/limma_gbm/220421_ggplot_limma_tau_gbm_approved_candidates_pathw
 
 check that all the drug can result in pathways== yes
 ```{r}
-#dsea_hyperG(drugs =limma_sig_drugs_fda$pert[16] , type = "KEGG", 
-#                            pvalueCutoff = 1, qvalueCutoff = 1, 
-#                            minGSSize = 10, maxGSSize = 2000)
-```
-
-```{r}
 limma_sig_drugs_fda$pert <- factor(limma_sig_drugs_fda$pert, levels =limma_sig_drugs_fda$pert[order(-limma_sig_drugs_fda$NCS)] )
 p<-ggplot(data=limma_sig_drugs_fda , aes(x=pert, y=NCS, fill=jlf_tau)) +
   geom_bar(stat="identity")+ scale_fill_viridis(direction=-1)
 p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]")
-ggsave("~/output/deseq2_gbm/2200421_ggplot_limma_tau_gbm_approved_candidates.png")
+ggsave("~/output/limma_gbm/2200421_ggplot_limma_tau_gbm_approved_candidates.png")
 ```
 
-### Save Data
-### Save Figures
     
 # END
     Location of final scripts:
+    script
     
     Location of data produced:
+    ~/output/limma_gbm
     
     Dates when operations were done:
+    2200421; updated 220802
     
 ## Versions
 ```{r}
