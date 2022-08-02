@@ -1,0 +1,465 @@
+---
+title: "220418_downsampling_cheaha"
+author: "Jennifer Fisher"
+date: "4/18/2022"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+# START 
+    Goal/Purpose of operations: 
+    quick summary 
+    
+    Finished psedocode on: Date
+    
+    System which operations were done on: my laptop(on cheaha), lab mac etc... 
+    
+    GitHub Repo:
+    
+    Directory of operations: /path
+    
+    Scripts being edited for operations: filename(s)
+    
+    Data being used: description and location
+    
+    Papers and tools: deseq with paper 
+
+# STEPS
+### Set working directory 
+### load in data
+### Analysis
+```{r}
+library(recount3)
+library(SummarizedExperiment)
+```
+
+```{r }
+human_projects<- available_projects()
+```
+
+```{r}
+human_projects<- human_samples
+recount3_rse_BRIAN <- create_rse(human_projects[(human_projects$project == "BRAIN"),])
+```
+
+```{r}
+meta_brain_gtex_data<- colData(recount3_rse_BRIAN)
+```
+
+```{r}
+table(meta_brain_gtex_data$gtex.smtsd)
+```
+```{r}
+# subsampling from  Brain - Frontal Cortex (BA9); Brain - Cerebellar Hemisphere
+#224 & 250 
+meta_brain_tissue_frontal <- as.data.frame(meta_brain_gtex_data[meta_brain_gtex_data$gtex.smtsd == "Brain - Frontal Cortex (BA9)",])
+meta_brain_tissue_cererbellar_hemi <- as.data.frame(meta_brain_gtex_data[meta_brain_gtex_data$gtex.smtsd =="Brain - Cerebellar Hemisphere",])
+```
+total 474 samples 
+
+```{r}
+set.seed(100)
+group1_num <- round(nrow(meta_brain_tissue_cererbellar_hemi) * c(.1, .2, .3, .4, .5, .6,  .7, .8,.9 , 1))
+group2_num <- round(nrow(meta_brain_tissue_frontal)* c(.1, .2, .3, .4, .5, .6,  .7, .8,.9 , 1))
+front_sample_list <- vector(mode = "list", length = 10)
+cererbellar_hem_list <- vector(mode = "list", length = 10)
+for (i in 1:10){
+  front_sample_list[[i]]<- sample(rownames(meta_brain_tissue_frontal), group2_num[i], replace = FALSE)
+  cererbellar_hem_list[[i]]<- sample(rownames(meta_brain_tissue_cererbellar_hemi), group1_num[i], replace = FALSE)
+}
+```
+
+DESEq2 (make into a function )
+```{r}
+
+  #count-matrix with just counts
+  #metadata
+  #dds <- DESeqDataSetFromMatrix(countData = GLUT_COUNTS2,
+                         #     colData = colD,
+                             # design= ~ batch + group)
+deseq2_function <- function(count_df, metadata, sample_list, condition,  B, A){
+  metadata<- metadata[rownames(metadata) %in% sample_list,]
+  count_df<- count_df[, colnames(count_df) %in% rownames(metadata)]
+  #print(head(count_df))
+  condition2 <- as.formula(paste("~",condition, sep= " "))
+  #print(condition2)
+  dds <- DESeqDataSetFromMatrix(countData = count_df,
+                              colData =  metadata,
+                              design= condition2)
+  #dds deseq2 object
+  #condition b-TUMOR a-CONTROL 
+  dds <- DESeq(dds, parallel = TRUE)
+  #resultsNames(dds) # lists the coefficients
+  dds_res <- results(dds, c(condition,B,A))
+  res_df <- as.data.frame(dds_res)
+  res_df <- res_df[complete.cases(res_df),]
+  gene_list <-  rownames(res_df)[ res_df$padj < 0.05 & abs(res_df$log2FoldChange) > 2]
+ # print(gene_list)
+  #head(EV_GLUT_res_df_ENS)
+  #file_name <- paste0("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/output/deseq2_gbm/",file_name, sep="")
+ # write.table(res_df, file=file_name, sep=",", row.names =TRUE)
+  return( gene_list)
+}
+```
+
+```{r}
+library(DESeq2)
+```
+
+```{r}
+brain_count_df <- as.data.frame(assay(recount3_rse_BRIAN))
+metadata_gtex_brain <- as.data.frame(meta_brain_gtex_data )
+brain_count_mtx <- as.matrix(brain_count_df)
+```
+
+```{r}
+rm(recount3_rse_BRIAN, meta_brain_tissue_cererbellar_hemi, meta_brain_tissue_frontal, brain_count_df )
+gc()
+```
+
+```{r}
+#set.seed(100)
+#list_lm_deseq2 <- vector(mode = "list", length= 20)
+deseq2_downsampling<- function(j){
+  seed <- 100 + (j *3)
+  set.seed(seed)
+  group1_num <- round(nrow(meta_brain_tissue_cererbellar_hemi) * c(.1, .2, .3, .4, .5, .6,  .7, .8,.9 , 1))
+group2_num <- round(nrow(meta_brain_tissue_frontal)* c(.1, .2, .3, .4, .5, .6,  .7, .8,.9 , 1))
+front_sample_list <- vector(mode = "list", length = 10)
+cererbellar_hem_list <- vector(mode = "list", length = 10)
+for (i in 1:10){
+  front_sample_list[[i]]<- sample(rownames(meta_brain_tissue_frontal), group2_num[i], replace = FALSE)
+  cererbellar_hem_list[[i]]<- sample(rownames(meta_brain_tissue_cererbellar_hemi), group1_num[i], replace = FALSE)
+}
+  deseq2_list <- vector(mode = "list", length = 10)
+  for (i in 1:10){
+    sample_list <- unlist(c(front_sample_list[i], cererbellar_hem_list[i]))
+    metadata<- metadata_gtex_brain[rownames(metadata_gtex_brain) %in% sample_list,]
+    brain_count_mtx_test <- brain_count_mtx[, colnames(brain_count_mtx) %in% rownames(metadata)]
+    #test_vector <- metadata$gtex.smtsd
+    #names(test_vector) <- colnames(brain_count_mtx_test)
+  metadata$tissue <- ifelse(metadata$gtex.smtsd == "Brain - Cerebellar Hemisphere", "CH", "FC")
+    deseq2_list[[i]]<-deseq2_function(brain_count_mtx_test, metadata, sample_list, "tissue", "FC", "CH")
+   # print(hist( test$logFC[test$adj.P.Val < 0.05]))
+    #limma_sex_list[[i]] <- test$LV[test$adj.P.Val < 0.05 & abs(test$logFC)> 0.02]
+    genes <- rownames(brain_count_mtx_test)
+  deseq2_df <- data.frame(matrix(ncol = 10, nrow = length(genes)))
+  }
+  for (i in 1:10){
+  deseq2_df[,i] <- genes %in% deseq2_list[[i]]
+  }
+#hamming distance normalized to the length of the string
+  dis_deseq2 <- c()
+  for (i in 1:10){
+  dis_deseq2[i]<- sum(deseq2_df[,i] != deseq2_df[,10]) / length(genes)
+  }
+  #print("Done")
+ return(dis_deseq2)
+}
+```
+
+
+```{r}
+#library(parallel)
+#test<- mclapply(1:2, deseq2_downsampling)
+```
+```{r}
+library(BiocParallel)
+register(MulticoreParam(10))
+
+results <-  vector(mode = "list", length = 50)
+for (i in 1:500){
+  print(i)
+  results[[i]] <- deseq2_downsampling(i)
+  saveRDS(results, "220428_results_deseq2_downsmapling.rds")
+}
+```
+
+```{r}
+library(BiocParallel)
+register(MulticoreParam(10))
+
+results <-  vector(mode = "list", length = 50)
+for (i in 16:500){
+  print(i)
+  results[[i]] <- deseq2_downsampling(i)
+  saveRDS(results, "220428_results_deseq2_downsmapling.rds")
+}
+```
+
+```{r}
+library(BiocParallel)
+register(MulticoreParam(10))
+results <-  vector(mode = "list", length = 100)
+for (i in 89:500){
+  print(i)
+  results[[i]] <- deseq2_downsampling(i)
+  saveRDS(results, "220504_results_deseq2_downsmapling.rds")
+}
+```
+
+change the file name on next run
+
+```{r}
+for (i in 130:500){
+  print(i)
+  results[[i]] <- deseq2_downsampling(i)
+  saveRDS(results, "220505_results_deseq2_downsmapling.rds")
+}
+```
+
+
+```{r}
+library(BiocParallel)
+register(MulticoreParam(10))
+results <-  vector(mode = "list", length = 200)
+for (i in 153:500){
+  print(i)
+  results[[i]] <- deseq2_downsampling(i)
+  saveRDS(results, "220509_results_deseq2_downsmapling.rds")
+}
+```
+
+```{r}
+res_mtx<- do.call(rbind.data.frame, results)
+rowSds(as.matrix(res_mtx))
+```
+
+```{r}
+list<- (1:9)*.1
+coeff<- c()
+for (i in 1:7){
+  y<- unlist(res_mtx[i,1:9])
+  test<- lm(y ~list)
+  coeff[i]<- test$coefficients[2]
+  #print(summary(test))
+  #print(sd(y))
+}
+#res_mtx[i,]
+```
+```{r}
+hist(coeff)
+```
+```{r}
+#library(parallel)
+#test<- mclapply(1:2, deseq2_downsampling)
+```
+```{r}
+library(BiocParallel)
+register(MulticoreParam(10))
+
+results <-  vector(mode = "list", length = 50)
+for (i in 8:25){
+  print(i)
+  results[[i]] <- deseq2_downsampling(i)
+  saveRDS(results, "220419_results_deseq2_v2.rds")
+}
+
+```
+
+
+```{r}
+for (i in 26:30){
+  print(i)
+  results[[i]] <- deseq2_downsampling(i)
+  saveRDS(results, "220419_results_deseq2_v3.rds")
+}
+```
+
+
+transfer learning 
+
+
+```{r}
+GBM_GTEX_B_MATRIX <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/output/TF_L_GBM/GBM_GTEX_B_MATRIX.rds")
+```
+
+
+```{r}
+TestLVDifferencesJLF <- function(b.matrix, phenotype,
+                              use.bonferroni = FALSE) {
+  # This function tests for differential expression of PLIER-derived latent
+  # variables between groups specified by the phenotype argument
+  # using limma. Examples include different disease groups or disease v. 
+  # control. It takes the B matrix from a PLIER model and a factor vector with 
+  # the group labels. It will reorder the phenotype vector if control.phenotype
+  # is specified. The resulting p-values are Benjamini-Hochberg corrected by 
+  # default or Bonferroni corrected if use.bonferroni = TRUE
+  # 
+  # Args:
+  #   b.matrix: a B matrix (latent variables are rows, samples are columns) 
+  #             from a PLIER model. Can be the B element of the list 
+  #             returned by PLIER::PLIER or the output of GetNewDataB
+  #   phenotype: a named factor vector that contains group labels to be used
+  #              for contrasts
+  #   blocking: a names facotor vector that contains group labels to be used for blocking
+  #   use.bonferroni: logical - should bonferroni correction be used? if FALSE
+  #                   (default), will use "BH"
+  #   
+  # Returns:
+  #   A limma::topTable, where the first column is the latent variable name and
+  #   all pathways are returned (without filtering or sorting)
+  
+  ## error-handling ##
+  
+  if (is.null(names(phenotype))) {
+    stop("phenotype should be a named factor vector -- the names ensure that
+         the vector is correctly ordered")
+  }
+  # no names should be "missing"
+  check.names <- all(colnames(b.matrix) %in% names(phenotype)) & 
+    all(names(phenotype) %in% colnames(b.matrix)) 
+  
+  if (!check.names) {
+    stop("Some sample(s) is missing from colnames(b.matrix) or 
+         names(phenotype)")
+  }
+  
+  # the phenotype labels should be in the same order as the b.matrix samples
+  ordered.phenotype <- as.factor(phenotype[colnames(b.matrix)])
+  
+  # get contrasts (all pairwise)  
+  num.levels <- length(levels(ordered.phenotype))
+  contrast.vector <- c()
+  for (lvl in levels(ordered.phenotype)[1:(num.levels - 1)]) {
+    for (lvl.2 in levels(ordered.phenotype)[2:num.levels]) {
+      if (lvl != lvl.2) {
+        contrast.vector <- append(contrast.vector, paste(lvl, lvl.2, sep = "-"))
+      }
+    }
+  }
+  contrast.vector <- paste(contrast.vector, collapse = ", ")
+  
+  # prep design matrix
+  design <- model.matrix(~ 0+ ordered.phenotype )
+  colnames(design)[seq_len(nlevels(ordered.phenotype))] <- levels(ordered.phenotype)
+  
+  
+  
+  
+  #colnames(design) <- levels(ordered.phenotype)
+  
+  # fit linear model
+  fit <- limma::lmFit(b.matrix, design)
+  contrast.matrix <-
+    eval(parse(
+      text = paste0('limma::makeContrasts(', contrast.vector, ', levels = design)')))
+  fit2 <- limma::contrasts.fit(fit, contrast.matrix)
+  fit2 <- limma::eBayes(fit2)
+  
+  # extract results as a data.frame
+  if (use.bonferroni) {  # if specified, use Bonferroni correction
+    limma.result <- limma::topTable(fit2, number = nrow(b.matrix),
+                                    adjust.method = "bonferroni", 
+                                    sort.by = "none")
+  } else {  # calculate FDR
+    limma.result <- limma::topTable(fit2, number = nrow(b.matrix),
+                                    adjust.method = "BH", sort.by = "none")
+  }
+  
+  # want feature (latent variable) names as column
+  limma.result <- tibble::rownames_to_column(limma.result, var = "LV")
+  
+  return(limma.result)
+  
+}
+```
+
+```{r}
+set.seed(100)
+list_lm <- vector(mode = "list", length= 20)
+for (j in 1:30){
+  seed <- 100 + j
+  set.seed(seed)
+  group1_num <- round(nrow(meta_brain_tissue_cererbellar_hemi) * c(.1, .2, .3, .4, .5, .6,  .7, .8,.9 , 1))
+group2_num <- round(nrow(meta_brain_tissue_frontal)* c(.1, .2, .3, .4, .5, .6,  .7, .8,.9 , 1))
+front_sample_list <- vector(mode = "list", length = 10)
+cererbellar_hem_list <- vector(mode = "list", length = 10)
+for (i in 1:10){
+  front_sample_list[[i]]<- sample(rownames(meta_brain_tissue_frontal), group2_num[i], replace = FALSE)
+  cererbellar_hem_list[[i]]<- sample(rownames(meta_brain_tissue_cererbellar_hemi), group1_num[i], replace = FALSE)
+}
+  limma_sex_list <- vector(mode = "list", length = 10)
+  for (i in 1:10){
+    sample_list <- unlist(c(front_sample_list[i], cererbellar_hem_list[i]))
+    metadata<- metadata_gtex_brain[rownames(metadata_gtex_brain) %in% sample_list,]
+    GBM.GTEx.b.matrix_test <- GBM_GTEX_B_MATRIX[, colnames(GBM_GTEX_B_MATRIX ) %in% rownames(metadata)]
+    test_vector <- metadata$gtex.smtsd
+    names(test_vector) <- colnames(GBM.GTEx.b.matrix_test)
+  test_vector<- ifelse(test_vector == "Brain - Cerebellar Hemisphere", "CH", "FC")
+    test<- TestLVDifferencesJLF(GBM.GTEx.b.matrix_test, test_vector, use.bonferroni = TRUE)
+   #print(hist( test$logFC[test$adj.P.Val < 0.05]))
+    limma_sex_list[[i]] <- test$LV[test$adj.P.Val < 0.05 & abs(test$logFC)> 0.02]
+    #print(limma_sex_list[[i]] )
+    lvs <- rownames(GBM.GTEx.b.matrix)
+  limma_lvs_sex_df <- data.frame(matrix(ncol = 10, nrow = length(lvs)))
+  }
+  for (i in 1:10){
+  limma_lvs_sex_df[,i] <- lvs %in% limma_sex_list[[i]]
+  }
+#hamming distance normalized to the length of the string
+  dis_tfl_sex <- c()
+  for (i in 1:10){
+  dis_tfl_sex[i]<- sum(limma_lvs_sex_df[,i] != limma_lvs_sex_df[,10]) / length(lvs)
+  }
+list_lm[[j]]<- dis_tfl_sex
+}
+```
+
+```{r}
+res_transfer_mtx<- do.call(rbind.data.frame, list_lm)
+colnames(res_transfer_mtx)<- 1:10
+res_transfer_mtx[,10]<- rep("Transfer Learning")
+```
+
+```{r}
+results_deseq2 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/220419_results_deseq2.rds")
+results_deseq2_mtx<- do.call(rbind.data.frame, results_deseq2)
+results_deseq2_mtx_2<- do.call(rbind.data.frame, results)
+colnames(results_deseq2_mtx)<- 1:10
+colnames(results_deseq2_mtx_2)<- 1:10
+results_deseq2_mtx<- rbind(results_deseq2_mtx, results_deseq2_mtx_2)
+results_deseq2_mtx[,10]<- rep("DESeq2")
+```
+
+
+```{r}
+means_deseq2<- colMeans(results_deseq2_mtx[1:9])
+means_tf <- colMeans(res_transfer_mtx[1:9])
+```
+
+```{r}
+sd_deseq2<- colSds(as.matrix(results_deseq2_mtx[1:9]))
+sd_tf <- colSds(as.matrix(res_transfer_mtx[1:9]))
+```
+
+
+
+```{r}
+list<- (1:9)*.1
+slope<- c()
+RES<- rbind(results_deseq2_mtx, res_transfer_mtx)
+for (i in 1:60){
+  y<- unlist(RES[i,1:9])
+  #print(y)
+  test<- lm(y ~list)
+  slope[i]<- test$coefficients[2]
+  #print(summary(test))
+  #print(sd(y))
+}
+#res_mtx[i,]
+```
+
+
+```{r}
+results_deseq2_mtx_test <- results_deseq2_mtx[1:9] * nrow(brain_count_mtx)
+```
+
+```{r}
+res_transfer_mtx_test<- res_transfer_mtx[1:9]* nrow(GBM_GTEX_B_MATRIX)
+```
+
+
+

@@ -1,7 +1,7 @@
 ---
-title: "220104_plier_gbm"
+title: "220527_plier_LIHC"
 author: "Jennifer Fisher"
-date: "1/4/2022"
+date: "5/27/2022"
 output:
   html_document:
     toc: true
@@ -78,15 +78,9 @@ dim(recount3_tpm[1:4,is.na(recount3_tpm[1,])])
 
 
 ```{r}
-recount3_tpm<- recount3_tpm[,! is.na(recount3_tpm[1,])]
+recount3_tpm_v2 <- recount3_tpm[, !is.na(recount3_tpm[1,])]
 ```
 
-
-
-```{r}
-#recount3_tpm<- as.data.frame(recount3_tpm)
-#gc()
-```
 
 ### Analysis
 ```{r}
@@ -118,45 +112,33 @@ rm(test)
 
 
 ```{r}
-human_samples_not_gbm<- human_samples$external_id[! human_samples$project == "GBM" | human_samples$project  == "BRAIN"]
-
-human_samples_not_gbm_v2 <-gsub("-", ".", human_samples_not_gbm)
+human_samples_not_lihc<- human_samples$external_id[! human_samples$project == "LIHC" | human_samples$project  == "LIVER"]
+human_samples_not_lihc_v2 <-gsub("-", ".", human_samples_not_lihc)
 ```
 
 ```{r}
-recount3_wo_gbm_tpm <- recount3_tpm[, colnames(recount3_tpm) %in% human_samples_not_gbm_v2]
+library(dplyr)
+recount3_wo_lihc_tpm <- recount3_tpm_v2[, colnames(recount3_tpm_v2) %in% human_samples_not_lihc_v2 ]
+
 ```
 
 ```{r}
-rm(human_samples, human_samples_not_gbm, recount3_tpm)
+saveRDS(recount3_wo_lihc_tpm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_lihc_tpm.rds")
+```
+
+
+
+
+```{r}
+rm(human_samples, human_samples_not_lihc, recount3_tpm, recount3_tpm_v2)
 gc()
 ```
 
 
 ```{r}
-recount3_wo_gbm_tpm<- as.matrix(recount3_wo_gbm_tpm)
-rownames(recount3_wo_gbm_tpm) <- gene_info$gene_name
+recount3_wo_lihc_tpm<- as.matrix(recount3_wo_lihc_tpm)
+rownames(recount3_wo_lihc_tpm) <- gene_info$gene_name
 ```
-
-```{r}
-saveRDS(recount3_wo_gbm_tpm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_tpm.rds")
-```
-
-
-```{r}
-#recount3_plier_gbm <- PLIERNewData_JLF(recount3_wo_gbm_tpm)
-```
-
-```{r}
-#saveRDS(recount3_plier_gbm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_plier_gbm.rds")
-```
-
-
-
-```{r}
-recount3_wo_gbm_tpm<- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_wo_gbm_tpm.rds")
-```
-
 
 
 ```{r}
@@ -199,10 +181,8 @@ PLIERNewData_JLF <- function(exprs.mat, seed = 12345) {
   # of PC for the SVD decomposition 
   print("num.pc")
   mtx <- exprs.norm[cm.genes, ]
-  #mtx<- mtx[complete.cases(mtx),]
-  print(class(mtx))
-  print(dim(mtx))
-  set.k <- PLIER::num.pc(mtx)
+  mtx<- mtx[complete.cases(mtx),]
+  set.k <- PLIER::num.pc(mtx )
   
   # PLIER main function + return results
   print("PLIER main function")
@@ -214,29 +194,67 @@ PLIERNewData_JLF <- function(exprs.mat, seed = 12345) {
 }
 ```
 
-```{r}
-recount3_plier_gbm <- PLIERNewData_JLF(recount3_wo_gbm_tpm)
 
-saveRDS(recount3_plier_gbm, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_plier_gbm_V2.rds")
+```{r}
+recount3_plier_lihc <- PLIERNewData_JLF(recount3_wo_lihc_tpm)
+saveRDS(recount3_plier_lihc, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_plier_lihc.rds")
 ```
 
 
-### Save Data
-Done in analysis 
-
-    
-# END
-    Location of final scripts:
-    ./scripts
-    
-    Location of data produced:
-    ./data/recount3
-    
-    Dates when operations were done:
-    211213-220104; redone 220725
-    
-## Versions
 ```{r}
-sessionInfo()
+PLIERNewData_JLF_step1<- function(exprs.mat, seed = 12345) {
+  # A wrapper function for applying PLIER to a data set. We use the following
+  # genesets that come with PLIER: bloodCellMarkersIRISDMAP, svmMarkers, 
+  # and canonicalPathways. We set the k parameter for the PLIER model by
+  # identifying the number of "significant PCs" with PLIER::num.pc and then 
+  # using sig PCs * 0.3. This is consistent with recommendations from the 
+  # PLIER authors.
+  # 
+  # Args:
+  #   exprs.mat: a gene expression matrix, rows are genes, columns are samples
+  #   seed: an integer to be supplied to set.seed() for reproducibility 
+  #         purposes, default is 12345
+  #         
+  # Returns:
+  #   plier.res: output from PLIER::PLIER()
+  #
+  require(PLIER)
+  
+  set.seed(seed)
+  
+  # load PLIER pathway and cell type data
+  data(bloodCellMarkersIRISDMAP)
+  data(svmMarkers)
+  data(canonicalPathways)
+  
+  print("combine the pathway data from PLIER")
+  all.paths <- PLIER::combinePaths(bloodCellMarkersIRISDMAP, svmMarkers, 
+                                   canonicalPathways)
+  
+  # what genes are common to the pathway data and the expression matrix
+  cm.genes <- PLIER::commonRows(all.paths, exprs.mat)
+  
+  print(" row normalize")
+  exprs.norm <- PLIER::rowNorm(exprs.mat)
+  
+  # what should we set the minimum k parameter to in PLIER? estimate the number 
+  # of PC for the SVD decomposition 
+  print("num.pc")
+  mtx <- exprs.norm[cm.genes, ]
+  mtx<- mtx[complete.cases(mtx),]
+  set.k <- PLIER::num.pc(mtx )
+  my_list <- list("mtx" = mtx, "all.paths" = all.paths, "cm.genes" = cm.genes, "set.k"=set.k)
+  return(my_list)
+}
+
+PLIERNewData_JLF_step2<- function(mtx, all.paths, cm.genes, set.k){
+  # PLIER main function + return results
+  print("PLIER main function")
+  plier.res <- PLIER::PLIER(mtx, all.paths[cm.genes, ], scale= F,
+                           k = round((set.k + set.k * 0.3), 0), trace = TRUE)
+  
+  return(plier.res)
+  
+}
 ```
 

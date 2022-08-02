@@ -1,0 +1,176 @@
+---
+title: "220728_plier_recount3_wo_gtex_tcga"
+author: "Jennifer Fisher"
+date: "7/28/2022"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# START 
+    Goal/Purpose of operations: 
+    Conducting Demension reduction for Transfer learning with PLIER without GTEx and TCGA data
+    
+    Finished psedocode on: Date
+    220727
+    
+    System which operations were done on:
+    my laptop(on cheaha)
+    
+    GitHub Repo:
+    Transfer_Learning_R03
+    
+    Docker/Singularity: 
+    rstudio_tf_dr_v3
+    
+    Directory of operations: 
+    /data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03
+    
+    Scripts being edited for operations:
+    NA
+    
+    Data being used:
+    recount3- tpm normalized
+    recount3 is an online resource consisting of RNA-seq gene, exon, and exon-exon junction counts as well as coverage bigWig files for 8,679 and 10,088 different studies for human and mouse respectively. It is the third generation of the ReCount project and part of recount.bio.
+    http://rna.recount.bio/
+    ./data/recount3
+    
+    Papers and tools: 
+    recount3- see details above 
+    PLIER and MultiPLIER wrapper functions for PLIER
+
+# STEPS
+### Set working directory 
+/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03
+
+### load in data
+```{r}
+recount3_group1_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1_tpm.rds")
+recount3_group2_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2_tpm.rds")
+recount3_group3_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group3_tpm.rds")
+recount3_group4_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group4_tpm.rds")
+recount3_group5_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group5_tpm.rds")
+recount3_group6_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group6_tpm.rds")
+recount3_group7_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group7_tpm.rds")
+recount3_group8_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group8_tpm.rds")
+recount3_group9_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group9_tpm.rds")
+```
+
+```{r}
+recount3_tpm <- cbind(recount3_group1_tpm, recount3_group2_tpm, recount3_group3_tpm, recount3_group4_tpm, recount3_group5_tpm, recount3_group6_tpm, recount3_group7_tpm, recount3_group8_tpm, recount3_group9_tpm)
+```
+
+```{r}
+rm(recount3_group1_tpm, recount3_group2_tpm, recount3_group3_tpm, recount3_group4_tpm, recount3_group5_tpm, recount3_group6_tpm, recount3_group7_tpm, recount3_group8_tpm, recount3_group9_tpm)
+gc()
+```
+
+remove Nas
+
+```{r}
+dim(recount3_tpm[1:4,is.na(recount3_tpm[1,])])
+```
+
+```{r}
+recount3_tpm<- recount3_tpm[,! is.na(recount3_tpm[1,])]
+```
+
+
+
+```{r}
+#recount3_tpm<- as.data.frame(recount3_tpm)
+#gc()
+```
+
+### Analysis
+```{r}
+library(PLIER)
+library(recount3)
+```
+
+```{r}
+source("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/script/plier_util.R")
+source("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/script/functions_cancer_signature_reversion_JLF.R")
+```
+
+
+```{r}
+human_samples<- available_samples()
+```
+```{r}
+human_projects<- available_projects()
+```
+```{r}
+#SRP118922
+test<- create_rse(human_projects[(human_projects$project == "DRP000987"),])
+```
+```{r}
+gene_info <- test@rowRanges
+rm(test)
+```
+
+
+```{r}
+table(human_samples$project_home)
+```
+262 was removed for NAs; 316181 should be the total
+
+
+```{r}
+human_samples_not_gtex_tcga <- human_samples$external_id[ human_samples$project_home == "data_sources/sra" ]
+
+```
+
+
+```{r}
+recount3_wo_tpm <- recount3_tpm[, colnames(recount3_tpm) %in% human_samples_not_gtex_tcga]
+```
+
+```{r}
+dim(recount3_wo_tpm )
+```
+
+
+```{r}
+rm(human_samples, human_samples_not_gtex_tcga, recount3_tpm)
+gc()
+```
+
+
+```{r}
+recount3_wo_tpm<- as.matrix(recount3_wo_tpm)
+rownames(recount3_wo_tpm) <- gene_info$gene_name
+```
+
+
+```{r}
+recount3_plier_wo <- PLIERNewData_JLF(recount3_wo_tpm)
+
+saveRDS(recount3_plier_wo, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_plier_wo.rds")
+```
+
+
+### Save Data
+Done in analysis 
+
+    
+# END
+    Location of final scripts:
+    ./scripts
+    
+    Location of data produced:
+    ./data/recount3
+    
+    Dates when operations were done:
+    220725
+    
+## Versions
+```{r}
+sessionInfo()
+```
