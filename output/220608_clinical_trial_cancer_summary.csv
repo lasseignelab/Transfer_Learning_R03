@@ -4,7 +4,7 @@ Liver hepatocellular carcinoma ,limma,6,6,TRUE
 Liver hepatocellular carcinoma ,Transfer Learning,5,5,TRUE
 Glioblastoma,DESeq2,2,10,FALSE
 Glioblastoma,limma,7,8,TRUE
-Glioblastoma,Transfer Learning,7,9,TRUE
+Glioblastoma,Transfer Learning,8,10,TRUE
 Lung adenocarcinoma,DESeq2,4,29,FALSE
 Lung adenocarcinoma,limma,6,79,FALSE
 Lung adenocarcinoma,Transfer Learning,16,65,TRUE
