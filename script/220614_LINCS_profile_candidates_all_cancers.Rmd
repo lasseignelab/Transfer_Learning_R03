@@ -15,784 +15,167 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # START 
     Goal/Purpose of operations: 
-    quick summary 
+    The goal of this script is compare the drug candidates for each method across the different cancers. This is done with cosinine similairty and network analysis 
     
-    Finished psedocode on: Date
+    Finished psedocode on: 
+    220614
     
-    System which operations were done on: my laptop(on cheaha), lab mac etc... 
+    System which operations were done on: 
+    my laptop
     
     GitHub Repo:
+    Transfer_Learning_R03
     
-    Directory of operations: /path
+    Docker/Singularity: 
+    rstudio_tf_dr_v3
     
-    Scripts being edited for operations: filename(s)
+    Directory of operations: 
+    "/home/rstudio"
     
-    Data being used: description and location
+    Scripts being edited for operations: 
+    "/home/rstudio/script/functions_cancer_signature_reversion_JLF.R - functions are stored here
     
-    Papers and tools: deseq with paper 
+    Data being used: 
+    LINCS level 5 data
+    drug candidate for each cancer
+    
+    Papers and tools: 
+    noted within script
 
 # STEPS
 ### Set working directory 
 ### load in data
 ```{r}
+library(recount3)
+library(SummarizedExperiment)
+source("/home/rstudio/script/functions_cancer_signature_reversion_JLF.R")
 library(signatureSearch)
 library(HDF5Array)
-se <- SummarizedExperiment(HDF5Array("~/data/lincs_2020.h5", name="assay"))
+library(viridis)
+library(tidyr)
+library(gprofiler2)
+library(ggplot2)
+library(ggpubr)
+library(VennDiagram)
+library(ComplexHeatmap)
+library(dplyr)
+library(gplots)
+library(circlize)
+library(signatureSearch)
+library(HDF5Array)
+library(igraph)
+library(visNetwork)
 ```
 
+get the LINCS data
 ```{r}
+se <- SummarizedExperiment(HDF5Array("~/data/lincs_2020.h5", name="assay"))
 rownames(se) <- HDF5Array("~/data/lincs_2020.h5", name="rownames")
 colnames(se) <- HDF5Array("~/data/lincs_2020.h5", name="colnames")
-```
-
-```{r}
-db_path <- "~/data/lincs_2020.h5"
-```
-
-```{r}
 se_assay <- as.data.frame(assay(se))
 ```
 
+get drug candidates
 
-heatmap for GBM 
-
-```{r}
-se_assay_GI1<- se_assay[, grep( "GI1", colnames(se_assay)) ]
-```
-
-
-
-```{r}
-#library(lsa)
-#cos_GI1 <- cosine(se_assay_GI1)
-```
-
-```{r}
-#from the lsa r package (package not installed with docker image)
-cosine <- function (x, y = NULL) {
-    if (is.matrix(x) && is.null(y)) {
-        co = array(0, c(ncol(x), ncol(x)))
-        f = colnames(x)
-        dimnames(co) = list(f, f)
-        for (i in 2:ncol(x)) {
-            for (j in 1:(i - 1)) {
-                co[i, j] = cosine(x[, i], x[, j])
-            }
-        }
-        co = co + t(co)
-        diag(co) = 1
-        return(as.matrix(co))
-    }
-    else if (is.vector(x) && is.vector(y)) {
-        return(crossprod(x, y)/sqrt(crossprod(x) * crossprod(y)))
-    }
-    else if (is.vector(x) && is.matrix(y)) {
-        co = vector(mode = "numeric", length = ncol(y))
-        names(co) = colnames(y)
-        for (i in 1:ncol(y)) {
-            co[i] = cosine(x, y[, i])
-        }
-        return(co)
-    }
-    else {
-        stop("argument mismatch. Either one matrix or two vectors needed as input.")
-    }
-}
-```
-
-
-```{r}
-cos_GI1 <- cosine(as.matrix(se_assay_GI1))
-```
-```{r}
-library(ComplexHeatmap)
-```
-
-```{r}
-#Heatmap(x= cos_GI1)
-        #, hclustfun=function(d) hclust(d, method="ward.D2"), labCol = FALSE, labRow = FALSE, trace="none", col=colorRampPalette(colors=c("blue", "black", "yellow")), dendrogram="both", main = "GI1 (GBM) Cosine Similarity")
-col_fun = colorRamp2(c(-1, 0, 1), c("blue", "black", "yellow"))
-Heatmap(cos_GI1, nam= "Cosine Similarity of LINCS Profiles",  col = col_fun, show_column_names = FALSE, show_row_names = FALSE, clustering_distance_rows= "euclidean",
-             clustering_distance_columns=  "euclidean",
-             clustering_method_rows = "ward.D2" ,
-             clustering_method_columns="ward.D2")
-```
-
-
-
-```{r eval=FALSE}
-lincs_limma_gbm_res_GI1_fda_approved<- read_csv( "~/output/limma_gbm/220421_SR_LINCS_GBM_LIMMA_RES_tau_fda_approved.csv")
-lincs_deseq_gbm_res_GI1_fda_approved<- read_csv( "~/output/deseq2_gbm/220427_lincs_deseq_gbm_res_GI1_tau_fda_approved.csv" )
-lincs_tfl_gbm_res_GI1_fda_approved<- read_csv( "~/output/TF_L_GBM/220207_lincs_transfer_gbm_res_GI1_tau_fda_approved.csv")
-```
-
-```{r}
-all_drugs<- c(lincs_limma_gbm_res_GI1_fda_approved$pert, lincs_deseq_gbm_res_GI1_fda_approved$pert, lincs_tfl_gbm_res_GI1_fda_approved$pert)
-```
-
-```{r}
-#grep(all_drugs, colnames(cos_GI1))
-cos_GI1_cand<- cos_GI1[grep(paste(all_drugs,collapse="|"), colnames(cos_GI1)), grep(paste(all_drugs,collapse="|"), colnames(cos_GI1))]
-```
-
-```{r}
-
-tfl_drugs <- grepl(paste(lincs_tfl_gbm_res_GI1_fda_approved$pert,collapse="|"), colnames(cos_GI1_cand)) 
-deseq2_drugs<- grepl(paste(lincs_deseq_gbm_res_GI1_fda_approved$pert,collapse="|"), colnames(cos_GI1_cand)) 
-limma_drugs <- grepl(paste(lincs_limma_gbm_res_GI1_fda_approved$pert,collapse="|"), colnames(cos_GI1_cand)) 
-
-row_ha = HeatmapAnnotation(Transfer_Learning=tfl_drugs,DESeq2= deseq2_drugs, limma= limma_drugs , col = list(Transfer_Learning = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),DESeq2 = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),limma = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF") ))
-
-rownames(cos_GI1_cand) <- str_split(rownames(cos_GI1_cand), "__GI1", simplify = TRUE)[,1]
-Heatmap(cos_GI1_cand, nam= "Cosine Similarity of LINCS Profiles",  col = col_fun, show_column_names = FALSE,  top_annotation = row_ha, 
-            clustering_distance_rows= "euclidean",
-             clustering_distance_columns=  "euclidean",
-             clustering_method_rows = "ward.D2" ,
-             clustering_method_columns="ward.D2")
-```
-
-for each of the drug from the same method what is the average cosine siamilirty
-```{r}
-cos_GI1_cand_tfl <- cos_GI1[grep(paste(lincs_tfl_gbm_res_GI1_fda_approved$pert,collapse="|"), colnames(cos_GI1)), grep(paste(lincs_tfl_gbm_res_GI1_fda_approved$pert,collapse="|"), colnames(cos_GI1))]
-```
-
-```{r}
- cos_GI1_cand_tfl[cos_GI1_cand_tfl == 1] <- NA
-```
-
-```{r}
-rowMedians(cos_GI1_cand_tfl, na.rm=TRUE)
-boxplot(cos_GI1_cand_tfl)
-```
-```{r}
-cos_GI1_cand_tfl<- as.data.frame(cos_GI1_cand_tfl)
-cos_GI1_cand_tfl$names <-  str_split(rownames(cos_GI1_cand_tfl), "__GI1", simplify = TRUE)[,1]
-cos_GI1_cand_tfl_long <- cos_GI1_cand_tfl %>% pivot_longer(!names, names_to = "other")
-```
-
-```{r}
-p <- ggplot(cos_GI1_cand_tfl_long, aes(x=names, y=value)) + 
-  geom_boxplot()+ geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5) +
-  labs(title="Cosine Similarity of Transfer Learning GBM candidates",x="Drug Candidates", y = "Cosine Similarity")
-p
-```
-
-```{r}
-plot_cosine_similarity_boxplot<- function(cos_sim_matrix, drug_list, pattern_cell= "__GI1",  title , method){
-  cos_GI1_cand_tfl <- cos_sim_matrix[grep(paste(drug_list,collapse="|"), colnames(cos_sim_matrix)), grep(paste(drug_list,collapse="|"), colnames(cos_sim_matrix))]
-
-  cos_GI1_cand_tfl[cos_GI1_cand_tfl == 1] <- NA
-  cos_median <- rowMedians(cos_GI1_cand_tfl, na.rm=TRUE)
-  meth<- rep(method, nrow(cos_GI1_cand_tfl))
-  
-  cos_median<- data.frame(drug = str_split(rownames(cos_GI1_cand_tfl), pattern_cell, simplify = TRUE)[,1], cos_sim_med= cos_median, method= meth)
-  
-  cos_GI1_cand_tfl<- as.data.frame(cos_GI1_cand_tfl)
-  cos_GI1_cand_tfl$names <-  str_split(rownames(cos_GI1_cand_tfl), pattern_cell, simplify = TRUE)[,1]
-  cos_GI1_cand_tfl_long <- cos_GI1_cand_tfl %>% pivot_longer(!names, names_to = "other")
-  p <- ggplot(cos_GI1_cand_tfl_long, aes(x=names, y=value)) + 
-  geom_boxplot()+ geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5) +
-  labs(title=title,x="Drug Candidates", y = "Cosine Similarity")
-  print(p)
-  
-  return(cos_median)
-}
-```
-
-```{r}
-cos_median_tfl<- plot_cosine_similarity_boxplot(cos_GI1,lincs_tfl_gbm_res_GI1_fda_approved$pert, "__GI1", "Cosine Similarity of Transfer Learning GBM candidates" , "Transfer Learning")
-```
-```{r}
-cos_median_limma<- plot_cosine_similarity_boxplot(cos_GI1,lincs_limma_gbm_res_GI1_fda_approved$pert, "__GI1", "Cosine Similarity of limma GBM candidates", "limma" )
-```
-
-```{r}
-cos_median_deseq2<- plot_cosine_similarity_boxplot(cos_GI1,lincs_deseq_gbm_res_GI1_fda_approved$pert, "__GI1", "Cosine Similarity of DESeq2 GBM candidates", "DESeq2" )
-```
-
-```{r}
-cos_median_gbm <- rbind(cos_median_deseq2, cos_median_limma, cos_median_tfl)
-```
-
-```{r}
-ggplot(cos_median_gbm, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Median Cosine Similarity of GBM candidates",x="Method", y = "Median Cosine Similarity", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
-```
-```{r}
-kruskal.test(cos_sim_med ~ method, data = cos_median_gbm)
-```
-
-```{r}
-pairwise.wilcox.test(cos_median_gbm$cos_sim_med, cos_median_gbm$method,
-                 p.adjust.method = "BH")
-```
-
-
-```{r}
-cosine_similarity_others <- function(cos_sim_matrix, drug_list, pattern_cell= "__GI1",  title , method){
-  cos_median<- c()
-  for (i in 1:length(drug_list)){
-    drug<- drug_list[i]
-    not_list <- drug_list[-i]
-    #print(not_list)
-    cos_GI1_cand_tfl <- cos_sim_matrix[!grepl(paste(not_list ,collapse="|"), colnames(cos_sim_matrix)), grepl(drug, colnames(cos_sim_matrix))]
-
-  cos_GI1_cand_tfl[cos_GI1_cand_tfl == 1] <- NA
-  cos_median[i] <- median(cos_GI1_cand_tfl, na.rm=TRUE)
-  #print(cos_median[i])
-  }
-  
-
-   meth<- rep(method, length(drug_list))
-  #make a dataframe
-  cos_median<- data.frame(drug =drug_list, cos_sim_med= cos_median, method= meth)
-  
-
-  return(cos_median)
-}
-```
-
-
-```{r}
-cos_median_tfl_v2<- cosine_similarity_others(cos_GI1,lincs_tfl_gbm_res_GI1_fda_approved$pert, "__GI1", "Cosine Similarity of Transfer Learning GBM candidates" , "Transfer Learning")
-```
-
-
-
-```{r}
-cos_median_limma_v2 <- cosine_similarity_others(cos_GI1,lincs_limma_gbm_res_GI1_fda_approved$pert, "__GI1", "Cosine Similarity of limma GBM candidates", "limma" )
-```
-
-```{r}
-cos_median_deseq2_v2<- cosine_similarity_others(cos_GI1,lincs_deseq_gbm_res_GI1_fda_approved$pert, "__GI1", "Cosine Similarity of DESeq2 GBM candidates", "DESeq2" )
-```
-
-```{r}
-cos_median_gbm_v2 <- rbind(cos_median_deseq2_v2, cos_median_limma_v2, cos_median_tfl_v2)
-```
-
-```{r}
-ggplot(cos_median_gbm_v2, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Median Cosine Similarity of GBM candidates",x="Method", y = "Median Cosine Similarity", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
-```
-```{r}
-kruskal.test(cos_sim_med ~ method, data = cos_median_gbm_v2)
-```
-
-```{r}
-pairwise.wilcox.test(cos_median_gbm_v2$cos_sim_med, cos_median_gbm_v2$method,
-                 p.adjust.method = "BH")
-```
-
-
-```{r}
-cos_median_gbm_v3<- cos_median_gbm_v2
-```
-```{r}
-cos_median_gbm_v3$diff_cos <- cos_median_gbm$cos_sim_med - cos_median_gbm_v2$cos_sim_med
-```
-
-```{r}
-ggplot(cos_median_gbm_v3, aes(x=method, y=diff_cos, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Difference of Median Cosine Similarity of GBM candidates",x="Method", y = "Difference of Median Cosine Similarity", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
-```
-
-```{r}
-kruskal.test(diff_cos ~ method, data = cos_median_gbm_v3)
-```
-
-```{r}
-pairwise.wilcox.test(cos_median_gbm_v3$diff_cos, cos_median_gbm_v3$method,
-                 p.adjust.method = "BH")
-```
-
-
-```{r}
-cos_GI1_table<-  as.data.frame.table(cos_GI1)
-```
-
-```{r}
-ggplot(cos_GI1_table, aes(x= Freq)) +geom_histogram()
-```
-
-
-```{r}
-fda_info <- read.table("~/data/fda_product_info_df.csv" )
-fda_approve <- fda_info[fda_info$market_status_v2 %in% c("Over-the-Counter", "Prescription" ),]
-```
-
-```{r}
-FDA_APPROVAL_CHECK<- function(drug_list){
-  return_list <- c()
-  for (i in 1:length(drug_list)){
-    test <- grep( drug_list[i], fda_approve$ActiveIngredient, ignore.case= TRUE)
-    if (length(test)>0 ){
-      return_list[i] <- TRUE
-    }else{
-      return_list[i] <- FALSE
-    }
-    if (nchar(drug_list[i])< 3){
-      return_list[i] <- FALSE
-    }
-  }
-  names(return_list)<- drug_list
-  return(return_list)
-}
-```
-
-
-
-```{r}
-cosine_sim_random_test<- function(med_cos_sim, num_drug, cos_sim_matrix, seed= 101){
-
-  gbm_lincs_drugs <- as.vector(str_split(colnames(cos_sim_matrix),  "__", simplify = TRUE)[,1])
-  
-  gbm_lincs_drugs<- gbm_lincs_drugs[FDA_APPROVAL_CHECK(gbm_lincs_drugs)]
-  number_sig_drugs<- num_drug
-  # do that again 10,000 times 
-  set.seed(seed)
-  fraction<-c()
-  for (i in 1:10000){
-    
-    test <- gbm_lincs_drugs[ sample(x = 1:length(gbm_lincs_drugs),size = number_sig_drugs ,replace = FALSE)]
-    
-    cos_GI1_cand_tfl <- cos_sim_matrix[grep(paste(test,collapse="|"), colnames(cos_sim_matrix)), grep(paste(test,collapse="|"), colnames(cos_sim_matrix))]
-
-  cos_GI1_cand_tfl[cos_GI1_cand_tfl == 1] <- NA
-  cos_median <- rowMedians(cos_GI1_cand_tfl, na.rm=TRUE)
-    
-    
-    fraction[i] <- median( cos_median )
-
-    }
-  
-  plot_data<- as.data.frame(cbind(1:10000, fraction))
-  
-  plot <- ggplot(plot_data, aes(x=fraction)) + geom_histogram() + geom_vline(xintercept = med_cos_sim)+ labs( x = "median cosine similarity of all drugs to the other candidates") + annotate("text", x=(med_cos_sim + 0.1) , y=800, label= med_cos_sim)
-  
-  print(plot)
-
-  return(wilcox.test(fraction, mu= med_cos_sim , alternative="two.sided" ))
-  #return(fraction_adj)
-  
-}
-```
-
-```{r}
-
-cos_tfl_test<- cosine_sim_random_test(median(cos_median_tfl$cos_sim_med), length(cos_median_tfl), cos_GI1)
-```
-
-```{r}
-cos_limma_test<- cosine_sim_random_test(median(cos_median_limma$cos_sim_med), length(cos_median_limma), cos_GI1)
-```
-
-```{r}
-cos_deseq2_test<- cosine_sim_random_test(median(cos_median_deseq2$cos_sim_med), length(cos_median_deseq2), cos_GI1)
-```
-
-```{r}
-remove_list <- ls()[grep("GI1|cos", ls())]
-```
-
-```{r}
-rm( list=remove_list)
-gc()
-```
-
-
-heatmap for lung 
-```{r}
-se_assay_A549<- se_assay[, grep( "A549", colnames(se_assay)) ]
-```
-
-```{r}
-cos_A549  <- cosine(as.matrix(se_assay_A549))
-#<- test
-```
-
-```{r}
-saveRDS(cos_A549, "~/output/lung_cancer/220616_cosine_sim_LINCS_A549.rds")
-```
-
-
-
-```{r eval=FALSE}
-#comment.   
-lincs_limma_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/limma_res/220602_SR_LINCS_LUAD_limma_RES_tau.csv")
-lincs_limma_gbm_res_A549_fda_approved<- lincs_limma_gbm_res_A549_fda_approved[lincs_limma_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
-lincs_deseq_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/deseq2_res/220602_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
-lincs_deseq_gbm_res_A549_fda_approved<- lincs_deseq_gbm_res_A549_fda_approved[lincs_deseq_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
-lincs_tfl_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/TFL_res/220602_SR_LINCS_LUAD_TFL_RES_tau.csv")
-lincs_tfl_gbm_res_A549_fda_approved<- lincs_tfl_gbm_res_A549_fda_approved[lincs_tfl_gbm_res_A549_fda_approved$fda_approved==TRUE,]
-```
-
-```{r}
-all_drugs<- c(lincs_limma_gbm_res_A549_fda_approved$pert, lincs_deseq_gbm_res_A549_fda_approved$pert, lincs_tfl_gbm_res_A549_fda_approved$pert)
-```
-
-```{r}
-#grep(all_drugs, colnames(cos_A549))
-assay_A549_cand<- se_assay_A549[, grep(paste(all_drugs,collapse="|"), colnames(se_assay_A549))]
-```
-
-
-
-```{r}
-cos_A549_cand <- cosine(as.matrix(assay_A549_cand))
-```
-
-
-
-```{r}
-
-tfl_drugs <- grepl(paste(lincs_tfl_gbm_res_A549_fda_approved$pert,collapse="|"), colnames(cos_A549_cand)) 
-deseq2_drugs<- grepl(paste(lincs_deseq_gbm_res_A549_fda_approved$pert,collapse="|"), colnames(cos_A549_cand)) 
-limma_drugs <- grepl(paste(lincs_limma_gbm_res_A549_fda_approved$pert,collapse="|"), colnames(cos_A549_cand)) 
-
-row_ha = HeatmapAnnotation(Transfer_Learning=tfl_drugs,DESeq2= deseq2_drugs, limma= limma_drugs , col = list(Transfer_Learning = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),DESeq2 = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),limma = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF") ))
-col_fun = colorRamp2(c(-1, 0, 1), c("blue", "black", "yellow"))
-rownames(cos_A549_cand) <- str_split(rownames(cos_A549_cand), "__A549", simplify = TRUE)[,1]
-Heatmap(cos_A549_cand, nam= "Cosine Similarity of LINCS Profiles",  col = col_fun, show_column_names = FALSE, show_row_names =FALSE, top_annotation = row_ha, 
-            clustering_distance_rows= "euclidean",
-             clustering_distance_columns=  "euclidean",
-             clustering_method_rows = "ward.D2" ,
-             clustering_method_columns="ward.D2")
-```
-
-for each of the drug from the same method what is the average cosine siamilirty
-```{r}
-cos_A549_cand_tfl <- cos_A549[grep(paste(lincs_tfl_gbm_res_A549_fda_approved$pert,collapse="|"), colnames(cos_A549)), grep(paste(lincs_tfl_gbm_res_A549_fda_approved$pert,collapse="|"), colnames(cos_A549))]
-```
-
-```{r}
- cos_A549_cand_tfl[cos_A549_cand_tfl == 1] <- NA
-```
-
-```{r}
-rowMedians(cos_A549_cand_tfl, na.rm=TRUE)
-boxplot(cos_A549_cand_tfl)
-```
-```{r}
-cos_A549_cand_tfl<- as.data.frame(cos_A549_cand_tfl)
-cos_A549_cand_tfl$names <-  str_split(rownames(cos_A549_cand_tfl), "__A549", simplify = TRUE)[,1]
-cos_A549_cand_tfl_long <- cos_A549_cand_tfl %>% pivot_longer(!names, names_to = "other")
-```
-
-```{r}
-p <- ggplot(cos_A549_cand_tfl_long, aes(x=names, y=value)) + 
-  geom_boxplot()+ geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5) +
-  labs(title="Cosine Similarity of Transfer Learning GBM candidates",x="Drug Candidates", y = "Cosine Similarity")
-p
-```
-
-```{r}
-plot_cosine_similarity_boxplot<- function(cos_sim_matrix, drug_list, pattern_cell= "__A549",  title , method){
-  cos_A549_cand_tfl <- cos_sim_matrix[grep(paste(drug_list,collapse="|"), colnames(cos_sim_matrix)), grep(paste(drug_list,collapse="|"), colnames(cos_sim_matrix))]
-
-  cos_A549_cand_tfl[cos_A549_cand_tfl == 1] <- NA
-  cos_median <- rowMedians(cos_A549_cand_tfl, na.rm=TRUE)
-  meth<- rep(method, nrow(cos_A549_cand_tfl))
-  
-  cos_median<- data.frame(drug = str_split(rownames(cos_A549_cand_tfl), pattern_cell, simplify = TRUE)[,1], cos_sim_med= cos_median, method= meth)
-  
-  cos_A549_cand_tfl<- as.data.frame(cos_A549_cand_tfl)
-  cos_A549_cand_tfl$names <-  str_split(rownames(cos_A549_cand_tfl), pattern_cell, simplify = TRUE)[,1]
-  cos_A549_cand_tfl_long <- cos_A549_cand_tfl %>% pivot_longer(!names, names_to = "other")
-  p <- ggplot(cos_A549_cand_tfl_long, aes(x=names, y=value)) + 
-  geom_boxplot()+ geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5) +
-  labs(title=title,x="Drug Candidates", y = "Cosine Similarity")
-  print(p)
-  
-  return(cos_median)
-}
-```
-
-```{r}
-cos_median_tfl<- plot_cosine_similarity_boxplot(cos_A549,lincs_tfl_gbm_res_A549_fda_approved$pert, "__A549", "Cosine Similarity of Transfer Learning GBM candidates" , "Transfer Learning")
-```
-```{r}
-cos_median_limma<- plot_cosine_similarity_boxplot(cos_A549,lincs_limma_gbm_res_A549_fda_approved$pert, "__A549", "Cosine Similarity of limma GBM candidates", "limma" )
-```
-
-```{r}
-cos_median_deseq2<- plot_cosine_similarity_boxplot(cos_A549,lincs_deseq_gbm_res_A549_fda_approved$pert, "__A549", "Cosine Similarity of DESeq2 GBM candidates", "DESeq2" )
-```
-
-```{r}
-cos_median_gbm <- rbind(cos_median_deseq2, cos_median_limma, cos_median_tfl)
-```
-
-```{r}
-ggplot(cos_median_gbm, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Median Cosine Similarity of GBM candidates",x="Method", y = "Median Cosine Similarity", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
-```
-```{r}
-kruskal.test(cos_sim_med ~ method, data = cos_median_gbm)
-```
-
-```{r}
-pairwise.wilcox.test(cos_median_gbm$cos_sim_med, cos_median_gbm$method,
-                 p.adjust.method = "BH")
-```
-
-
-```{r}
-cosine_sim_random_test<- function(med_cos_sim, num_drug, cos_sim_matrix, seed= 101){
-
-  gbm_lincs_drugs <- as.vector(str_split(colnames(cos_sim_matrix),  "__", simplify = TRUE)[,1])
-  
-  gbm_lincs_drugs<- gbm_lincs_drugs[FDA_APPROVAL_CHECK(gbm_lincs_drugs)]
-  number_sig_drugs<- num_drug
-  # do that again 10,000 times 
-  set.seed(seed)
-  fraction<-c()
-  for (i in 1:10000){
-    
-    test <- gbm_lincs_drugs[ sample(x = 1:length(gbm_lincs_drugs),size = number_sig_drugs ,replace = FALSE)]
-    
-    cos_A549_cand_tfl <- cos_sim_matrix[grep(paste(test,collapse="|"), colnames(cos_sim_matrix)), grep(paste(test,collapse="|"), colnames(cos_sim_matrix))]
-
-  cos_A549_cand_tfl[cos_A549_cand_tfl == 1] <- NA
-  cos_median <- rowMedians(cos_A549_cand_tfl, na.rm=TRUE)
-    
-    
-    fraction[i] <- median( cos_median )
-
-    }
-  
-  plot_data<- as.data.frame(cbind(1:10000, fraction))
-  
-  plot <- ggplot(plot_data, aes(x=fraction)) + geom_histogram() + geom_vline(xintercept = med_cos_sim)+ labs( x = "median cosine similarity of all drugs to the other candidates") + annotate("text", x=(med_cos_sim + 0.1) , y=800, label= med_cos_sim)
-  
-  print(plot)
-
-  return(wilcox.test(fraction, mu= med_cos_sim , alternative="two.sided" ))
-  #return(fraction_adj)
-  
-}
-```
-
-```{r}
-
-cos_tfl_test<- cosine_sim_random_test(median(cos_median_tfl$cos_sim_med), length(cos_median_tfl), cos_A549)
-```
-
-```{r}
-cos_limma_test<- cosine_sim_random_test(median(cos_median_limma$cos_sim_med), length(cos_median_limma), cos_A549)
-```
-
-```{r}
-cos_deseq2_test<- cosine_sim_random_test(median(cos_median_deseq2$cos_sim_med), length(cos_median_deseq2), cos_A549)
+gbm
+```{r }
+lincs_limma_gbm_res_GI1_fda_approved<- read_csv( "~/output/limma_GBM/220808_SR_LINCS_GBM_top_RES_all.csv")
+lincs_deseq_gbm_res_GI1_fda_approved<- read_csv( "~/output/deseq2_gbm/220427_SR_LINCS_GBM_DESEQ2_RES_all.csv")
+lincs_tfl_gbm_res_GI1_fda_approved<- read_csv( "~/output/TF_L_GBM/220808_SR_LINCS_GBM_top_RES_all.csv")
 ```
-
-
-
-heatmap for liver 
 
+liver
 ```{r}
-lincs_deseq_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/deseq2_res/220602_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/deseq2_res/220808_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
 lincs_deseq_gbm_res_HEPG2_fda_approved <- lincs_deseq_gbm_res_HEPG2_fda_approved [lincs_deseq_gbm_res_HEPG2_fda_approved$fda_approved== TRUE,]
 
-lincs_limma_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/limma_res/220602_SR_LINCS_LIHC_limma_RES_tau.csv")
+lincs_limma_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_RES_tau.csv")
 
 lincs_limma_gbm_res_HEPG2_fda_approved<- lincs_limma_gbm_res_HEPG2_fda_approved[ lincs_limma_gbm_res_HEPG2_fda_approved$fda_approved== TRUE,]
-
+#wrong date on file
 lincs_tfl_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/TFL_res/220602_SR_LINCS_LIHC_TFL_RES_tau.csv")
 lincs_tfl_gbm_res_HEPG2_fda_approved<- lincs_tfl_gbm_res_HEPG2_fda_approved[ lincs_tfl_gbm_res_HEPG2_fda_approved$fda_approved == TRUE, ]
 ```
-
-
-
+lung
 ```{r}
-all_drugs<- c(lincs_limma_gbm_res_HEPG2_fda_approved$pert, lincs_deseq_gbm_res_HEPG2_fda_approved$pert, lincs_tfl_gbm_res_HEPG2_fda_approved$pert)
+#comment.   
+lincs_limma_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/limma_res/220808_SR_LINCS_LUAD_limma_RES_tau.csv")
+lincs_limma_gbm_res_A549_fda_approved<- lincs_limma_gbm_res_A549_fda_approved[lincs_limma_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
+lincs_deseq_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/deseq2_res/220808_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_A549_fda_approved<- lincs_deseq_gbm_res_A549_fda_approved[lincs_deseq_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
+lincs_tfl_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/TFL_res/220808_SR_LINCS_LUAD_TFL_RES_tau.csv")
+lincs_tfl_gbm_res_A549_fda_approved<- lincs_tfl_gbm_res_A549_fda_approved[lincs_tfl_gbm_res_A549_fda_approved$fda_approved==TRUE,]
 ```
 
+pancreatic
 ```{r}
-se_assay_HEPG2<- se_assay[ , grep( "HEPG2", colnames(se_assay)) ]
-```
-
-```{r}
-cos_HEPG2<- cosine(as.matrix(se_assay_HEPG2))
-```
-
-```{r}
-saveRDS(cos_HEPG2, "~/output/liver_cancer/220616_cosine_sim_LINCS_HEPG2.rds")
-```
-
-
-```{r}
-#grep(all_drugs, colnames(cos_HEPG2))
-assay_HEPG2_cand<- se_assay_HEPG2[, grep(paste(all_drugs,collapse="|"), colnames(se_assay_HEPG2))]
-```
-
-
-
-```{r}
-cos_HEPG2_cand <- cosine(as.matrix(assay_HEPG2_cand))
-```
-
-
-
-```{r}
-
-tfl_drugs <- grepl(paste(lincs_tfl_gbm_res_HEPG2_fda_approved$pert,collapse="|"), colnames(cos_HEPG2_cand)) 
-deseq2_drugs<- grepl(paste(lincs_deseq_gbm_res_HEPG2_fda_approved$pert,collapse="|"), colnames(cos_HEPG2_cand)) 
-limma_drugs <- grepl(paste(lincs_limma_gbm_res_HEPG2_fda_approved$pert,collapse="|"), colnames(cos_HEPG2_cand)) 
-
-row_ha = HeatmapAnnotation(Transfer_Learning=tfl_drugs,DESeq2= deseq2_drugs, limma= limma_drugs , col = list(Transfer_Learning = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),DESeq2 = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),limma = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF") ))
-col_fun = colorRamp2(c(-1, 0, 1), c("blue", "black", "yellow"))
-rownames(cos_HEPG2_cand) <- str_split(rownames(cos_HEPG2_cand), "__HEPG2", simplify = TRUE)[,1]
-Heatmap(cos_HEPG2_cand, nam= "Cosine Similarity of LINCS Profiles",  col = col_fun, show_column_names = FALSE,  top_annotation = row_ha, 
-            clustering_distance_rows= "euclidean",
-             clustering_distance_columns=  "euclidean",
-             clustering_method_rows = "ward.D2" ,
-             clustering_method_columns="ward.D2")
-```
-```{r}
-cos_median_tfl<- plot_cosine_similarity_boxplot(cos_HEPG2_cand,lincs_tfl_gbm_res_HEPG2_fda_approved$pert, "__HEPG2", "Cosine Similarity of Transfer Learning GBM candidates" , "Transfer Learning")
-```
-```{r}
-cos_median_limma<- plot_cosine_similarity_boxplot(cos_HEPG2_cand,lincs_limma_gbm_res_HEPG2_fda_approved$pert, "__HEPG2", "Cosine Similarity of limma GBM candidates", "limma" )
-```
-
-```{r}
-cos_median_deseq2<- plot_cosine_similarity_boxplot(cos_HEPG2_cand,lincs_deseq_gbm_res_HEPG2_fda_approved$pert, "__HEPG2", "Cosine Similarity of DESeq2 GBM candidates", "DESeq2" )
-```
-
-```{r}
-cos_median_gbm <- rbind(cos_median_deseq2, cos_median_limma, cos_median_tfl)
-```
-
-```{r}
-
-cos_tfl_test<- cosine_sim_random_test(median(cos_median_tfl$cos_sim_med), length(cos_median_tfl), cos_HEPG2)
-```
-
-```{r}
-cos_limma_test<- cosine_sim_random_test(median(cos_median_limma$cos_sim_med), length(cos_median_limma), cos_HEPG2)
-```
-
-```{r}
-cos_deseq2_test<- cosine_sim_random_test(median(cos_median_deseq2$cos_sim_med), length(cos_median_deseq2), cos_HEPG2)
-```
-
-
-```{r}
-ggplot(cos_median_gbm, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Median Cosine Similarity of GBM candidates",x="Method", y = "Median Cosine Similarity", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
-```
-
-```{r}
-kruskal.test(cos_sim_med ~ method, data = cos_median_gbm)
-```
-
-```{r}
-pairwise.wilcox.test(cos_median_gbm$cos_sim_med, cos_median_gbm$method,
-                 p.adjust.method = "BH")
-```
-
-
-heatmap for pancreatic 
-
-
-```{r}
-
-lincs_deseq_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/deseq2_res/220602_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/deseq2_res/220808_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
 lincs_deseq_gbm_res_YAPC_fda_approved<- lincs_deseq_gbm_res_YAPC_fda_approved[lincs_deseq_gbm_res_YAPC_fda_approved$fda_approved == TRUE,]
 
-lincs_limma_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/limma_res/220602_SR_LINCS_PAAD_limma_RES_tau.csv")
+lincs_limma_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/limma_res/220808_SR_LINCS_PAAD_limma_RES_tau.csv")
 lincs_limma_gbm_res_YAPC_fda_approved<- lincs_limma_gbm_res_YAPC_fda_approved[lincs_limma_gbm_res_YAPC_fda_approved$fda_approved ==TRUE, ]
 
-lincs_tfl_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/TFL_res/220602_SR_LINCS_PAAD_TFL_RES_tau.csv")
+lincs_tfl_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/TFL_res/220808_SR_LINCS_PAAD_TFL_RES_tau.csv")
 lincs_tfl_gbm_res_YAPC_fda_approved<- lincs_tfl_gbm_res_YAPC_fda_approved[ lincs_tfl_gbm_res_YAPC_fda_approved$fda_approved ==TRUE,]
 ```
+# Analysis
 
-
-
+heatmap and network stuff for GBM 
 ```{r}
-all_drugs<- c(lincs_limma_gbm_res_YAPC_fda_approved$pert, lincs_deseq_gbm_res_YAPC_fda_approved$pert, lincs_tfl_gbm_res_YAPC_fda_approved$pert)
+col_fun <- colorRamp2(c(-1, 0, 1), c("blue", "black", "yellow"))
+cos_gbm_candidates <- candidate_cosine_data_heatmap(lincs=se_assay, "GI1",lincs_deseq_gbm_res_GI1_fda_approved$pert, lincs_limma_gbm_res_GI1_fda_approved$pert, lincs_tfl_gbm_res_GI1_fda_approved$pert)
 ```
 
 ```{r}
-se_assay_YAPC<- se_assay[ , grep( "YAPC", colnames(se_assay)) ]
+candidate_network_analysis( cos_gbm_candidates, lincs_deseq_gbm_res_GI1_fda_approved$pert, lincs_limma_gbm_res_GI1_fda_approved$pert, lincs_tfl_gbm_res_GI1_fda_approved$pert, quantile= 9, header= "~/output/gbm_plots/220817_network_analysis_gbm")
+```
+
+heatmap and network stuff for liver
+```{r}
+cos_liver_candidates <- candidate_cosine_data_heatmap(lincs=se_assay, "HEPG2",lincs_deseq_gbm_res_HEPG2_fda_approved$pert, lincs_limma_gbm_res_HEPG2_fda_approved$pert, lincs_tfl_gbm_res_HEPG2_fda_approved$pert)
 ```
 
 ```{r}
-cos_YAPC<- cosine(as.matrix(se_assay_YAPC))
-saveRDS(cos_YAPC, "~/output/pancreas_cancer/220616_cosine_sim_LINCS_YAPC.rds")
+candidate_network_analysis( cos_liver_candidates, lincs_deseq_gbm_res_HEPG2_fda_approved$pert, lincs_limma_gbm_res_HEPG2_fda_approved$pert, lincs_tfl_gbm_res_HEPG2_fda_approved$pert, quantile= 9, header= "~/output/liver_cancer/220817_network_analysis_liver")
 ```
 
-
+heatmap and network stuff for lung
 ```{r}
-#grep(all_drugs, colnames(cos_YAPC))
-assay_YAPC_cand<- se_assay_YAPC[, grep(paste(all_drugs,collapse="|"), colnames(se_assay_YAPC))]
-```
-
-
-
-```{r}
-cos_YAPC_cand <- cosine(as.matrix(assay_YAPC_cand))
-```
-
-
-
-```{r}
-
-tfl_drugs <- grepl(paste(lincs_tfl_gbm_res_YAPC_fda_approved$pert,collapse="|"), colnames(cos_YAPC_cand)) 
-deseq2_drugs<- grepl(paste(lincs_deseq_gbm_res_YAPC_fda_approved$pert,collapse="|"), colnames(cos_YAPC_cand)) 
-limma_drugs <- grepl(paste(lincs_limma_gbm_res_YAPC_fda_approved$pert,collapse="|"), colnames(cos_YAPC_cand)) 
-
-row_ha = HeatmapAnnotation(Transfer_Learning=tfl_drugs,DESeq2= deseq2_drugs, limma= limma_drugs , col = list(Transfer_Learning = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),DESeq2 = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),limma = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF") ))
-col_fun = colorRamp2(c(-1, 0, 1), c("blue", "black", "yellow"))
-rownames(cos_YAPC_cand) <- str_split(rownames(cos_YAPC_cand), "__YAPC", simplify = TRUE)[,1]
-Heatmap(cos_YAPC_cand, nam= "Cosine Similarity of LINCS Profiles",  col = col_fun, show_column_names = FALSE,show_row_names= FALSE, top_annotation = row_ha, 
-            clustering_distance_rows= "euclidean",
-             clustering_distance_columns=  "euclidean",
-             clustering_method_rows = "ward.D2" ,
-             clustering_method_columns="ward.D2")
+cos_lung_candidates <- candidate_cosine_data_heatmap(lincs=se_assay, "A549",lincs_deseq_gbm_res_A549_fda_approved$pert, lincs_limma_gbm_res_A549_fda_approved$pert, lincs_tfl_gbm_res_A549_fda_approved$pert)
 ```
 
 ```{r}
-cos_median_tfl<- plot_cosine_similarity_boxplot(cos_YAPC_cand,lincs_tfl_gbm_res_YAPC_fda_approved$pert, "__YAPC", "Cosine Similarity of Transfer Learning GBM candidates" , "Transfer Learning")
+candidate_network_analysis( cos_lung_candidates, lincs_deseq_gbm_res_A549_fda_approved$pert, lincs_limma_gbm_res_A549_fda_approved$pert, lincs_tfl_gbm_res_A549_fda_approved$pert, quantile= 9, header= "~/output/lung_cancer/220817_network_analysis_liver")
 ```
+
+heatmap and network stuff for pancreatic
 ```{r}
-cos_median_limma<- plot_cosine_similarity_boxplot(cos_YAPC_cand,lincs_limma_gbm_res_YAPC_fda_approved$pert, "__YAPC", "Cosine Similarity of limma GBM candidates", "limma" )
+cos_PAAD_candidates <- candidate_cosine_data_heatmap(lincs=se_assay, "YAPC",lincs_deseq_gbm_res_YAPC_fda_approved$pert, lincs_limma_gbm_res_YAPC_fda_approved$pert, lincs_tfl_gbm_res_YAPC_fda_approved$pert)
 ```
 
 ```{r}
-cos_median_deseq2<- plot_cosine_similarity_boxplot(cos_YAPC_cand,lincs_deseq_gbm_res_YAPC_fda_approved$pert, "__YAPC", "Cosine Similarity of DESeq2 GBM candidates", "DESeq2" )
+candidate_network_analysis( cos_PAAD_candidates, lincs_deseq_gbm_res_YAPC_fda_approved$pert, lincs_limma_gbm_res_YAPC_fda_approved$pert, lincs_tfl_gbm_res_YAPC_fda_approved$pert, quantile= 9, header= "~/output/pancreas_cancer/220817_network_analysis_liver")
 ```
+
+### Save Data
+NA
+
+### Save Figures
+done
+    
+# END
+    Location of final scripts:
+    script 
+    
+    Location of data produced:
+    ~/output
+    
+    Dates when operations were done:
+    220817
+    
+## Versions
 ```{r}
-
-cos_tfl_test<- cosine_sim_random_test(median(cos_median_tfl$cos_sim_med), length(cos_median_tfl), cos_YAPC)
+sessionInfo()
 ```
-
-```{r}
-cos_limma_test<- cosine_sim_random_test(median(cos_median_limma$cos_sim_med), length(cos_median_limma), cos_YAPC)
-```
-
-```{r}
-cos_deseq2_test<- cosine_sim_random_test(median(cos_median_deseq2$cos_sim_med), length(cos_median_deseq2), cos_YAPC)
-```
-
-```{r}
-cos_median_gbm <- rbind(cos_median_deseq2, cos_median_limma, cos_median_tfl)
-```
-
-```{r}
-ggplot(cos_median_gbm, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Median Cosine Similarity of GBM candidates",x="Method", y = "Median Cosine Similarity", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
-```
-
-```{r}
-kruskal.test(cos_sim_med ~ method, data = cos_median_gbm)
-```
-
-```{r}
-pairwise.wilcox.test(cos_median_gbm$cos_sim_med, cos_median_gbm$method,
-                 p.adjust.method = "BH")
-```
-
 
 

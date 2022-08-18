@@ -138,7 +138,7 @@ vst_table_df <- t(vst_table)
 pca.tumor <- prcomp(vst_table_df)
 ```
 
-```{r}[]
+```{r}
 summary(pca.tumor)
 ```
 

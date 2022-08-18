@@ -335,23 +335,23 @@ differential latent variable analysis
 
 bring in PLIER object
 ```{r eval= FALSE}
-recount3_plier_gbm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_plier_gbm.rds")
+recount3_plier <- readRDS("~/data/recount3/recount3_plier_wo.rds")
 ```
 
 ```{r eval= FALSE}
 #There is a issue with handling genes with zero expression. Best thing to do is to remove the genes
-test <- GetOrderedRowNorm(as.matrix(tpm_table),recount3_plier_gbm )
+test <- GetOrderedRowNorm(as.matrix(tpm_table),recount3_plier )
 zeros<- rownames(test)[!complete.cases(test)]
 tpm_table_v2<- tpm_table[!rownames(tpm_table) %in% zeros,]
 ```
 
 create the b.matrix 
 ```{r eval= FALSE}
-GBM.GTEx.b.matrix <- GetNewDataB(as.matrix(tpm_table_v2), recount3_plier_gbm)
+GBM.GTEx.b.matrix <- GetNewDataB(as.matrix(tpm_table_v2), recount3_plier)
 ```
 
 ```{r eval=FALSE}
-saveRDS(GBM.GTEx.b.matrix, file= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/output/TF_L_GBM/GBM_GTEX_B_MATRIX.rds")
+saveRDS(GBM.GTEx.b.matrix, file= "~/output/TF_L_GBM/220804_GBM_GTEX_B_MATRIX.rds")
 ```
 
 Run limma for differential latent variable analyis 
@@ -373,15 +373,13 @@ sampleinfo<- as.data.frame(sampleinfo)
 database<- all_metadata$database
 names(database)<- colnames(GBM.GTEx.b.matrix)
 
-LV_test_TCGA_BH <- LVTestWrapperJLF(b.matrix=GBM.GTEx.b.matrix , sample.info.df= sampleinfo, phenotype.col= "Tumor", blocking= database, file.lead= "LV_TCGA_GTEX_T_vs_NT", plot.dir= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/output/TF_L_GBM/", results.dir= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/output/TF_L_GBM/", use.bonferroni= FALSE, sig.threshold = 0.05)
+LV_test_TCGA_BH <- LVTestWrapperJLF(b.matrix=GBM.GTEx.b.matrix , sample.info.df= sampleinfo, phenotype.col= "Tumor", blocking= database, file.lead= "220804_LV_TCGA_GTEX_T_vs_NT", plot.dir= "~/output/TF_L_GBM/", results.dir= "~/output/TF_L_GBM/", use.bonferroni= FALSE, sig.threshold = 0.05)
 ```
 
 ```{r eval=FALSE}
-saveRDS(LV_test_TCGA_BH , file= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/output/TF_L_GBM/GBM_GTEX_limma_res.rds")
+saveRDS(LV_test_TCGA_BH , file= "~/output/TF_L_GBM/220804_GBM_GTEX_limma_res.rds")
 ```
-```{r eval=FALSE}
-saveRDS(all_metadata , file= "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/output/TF_L_GBM/GBM_GTEX_metadata.rds")
-```
+
 
 are genes and heatmaps and pathway analysis
 

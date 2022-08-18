@@ -1,0 +1,161 @@
+---
+title: "220808_PRISM_data"
+author: "Jennifer Fisher"
+date: "8/8/2022"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# START 
+    Goal/Purpose of operations: 
+    Organize and filter PRISM data for downstream analysis. This creates a data frame with the treatment log fold change and cell type for each cancer type.
+    
+    Finished psedocode on:
+    220808
+    
+    System which operations were done on: 
+    my laptop
+    
+    GitHub Repo:
+    Transfer_Learning_R03
+    
+    Docker/Singularity: 
+    rstudio_tf_dr_v3
+    
+    Directory of operations: 
+    "/home/rstudio"
+    
+    Scripts being edited for operations:
+    NA
+    
+    Data being used: 
+    PRISM primary screen from DepMAP
+    
+    Papers and tools:
+    PRISM
+    
+# STEPS
+
+### load in data
+```{r}
+library(recount3)
+library(SummarizedExperiment)
+source("/home/rstudio/script/functions_cancer_signature_reversion_JLF.R")
+library(signatureSearch)
+library(HDF5Array)
+library(viridis)
+library(tidyr)
+library(gprofiler2)
+library(ggplot2)
+library(ggpubr)
+```
+
+
+```{r}
+library(readr)
+primary_screen <- read_csv("~/data/DEPMAP_PRISM_220228/primary-screen-replicate-collapsed-logfold-change.csv")
+sample_info <- read_csv("~/data/DEPMAP_PRISM_220228/sample_info.csv")
+primary_screen_treatment_info <- read_csv("~/data/DEPMAP_PRISM_220228/primary-screen-replicate-collapsed-treatment-info.csv")
+```
+different order
+
+```{r}
+names_vector<- c()
+for ( i in 2:ncol(primary_screen)){
+  names_vector[i] <- primary_screen_treatment_info$name[ grep(colnames(primary_screen)[i], primary_screen_treatment_info$column_name)]
+}
+
+good_id <- c()
+for (i in 1:nrow(primary_screen)){
+  good_id[i]<- nchar(primary_screen[i,1]) == 10 
+}
+
+primary_screen_v2 <- primary_screen[good_id,]
+
+cell_vector<- c()
+for ( i in 1:nrow(primary_screen_v2)){
+  cell_vector[i] <-sample_info$stripped_cell_line_name[ grep(as.character(primary_screen_v2[i,1]), sample_info$DepMap_ID)]
+}
+
+primary_screen_v3<-  as.matrix(primary_screen_v2[,-1])
+rownames(primary_screen_v3)<- cell_vector
+
+colnames(primary_screen_v3) <- names_vector[-1]
+test2<- as.data.frame.table(primary_screen_v3, responseName = "log_fold_change")
+
+test2$Sensitive <- test2$log_fold_change < 0.3
+```
+overall
+
+liver
+```{r}
+#table(sample_info$Subtype)
+lihc_sample_info <- sample_info[sample_info$Subtype == "Hepatocellular Carcinoma",]
+
+primary_lihc_res <- test2[test2$Var1 %in% as.vector(lihc_sample_info$stripped_cell_line_name),]
+
+write.csv(primary_lihc_res , file= "~/output/liver_cancer/220808_prism_candidates.csv" )
+```
+
+lung
+```{r}
+#table(sample_info$Subtype)
+luad_sample_info <- sample_info[sample_info$Subtype == "Non-Small Cell Lung Cancer (NSCLC), Adenocarcinoma",]
+
+primary_luad_res <- test2[test2$Var1 %in% as.vector(luad_sample_info$stripped_cell_line_name),]
+write.csv(primary_luad_res , file= "~/output/lung_cancer/220808_lung_prism_candidates.csv" )
+```
+
+
+pancreas
+```{r}
+#filter by PANCREAS cancer cell lines
+#table(sample_info$Subtype)
+sample_info<- as.data.frame(sample_info)
+paad_sample_info <- sample_info[grep("Ductal Adenocarcinoma", sample_info$Subtype),]
+
+primary_paad_res <- test2[test2$Var1 %in% as.vector(paad_sample_info$stripped_cell_line_name),]
+
+write.csv(primary_paad_res  , file= "~/output/pancreas_cancer/220808_prism_paad_candidates.csv" )
+```
+
+
+gbm
+
+```{r}
+#table(sample_info$Subtype)
+sample_info<- as.data.frame(sample_info)
+gbm_sample_info <- sample_info[grep("Glioblastoma", sample_info$Subtype),]
+
+primary_gbm_res <- test2[test2$Var1 %in% as.vector(gbm_sample_info$stripped_cell_line_name),]
+
+write.csv(primary_gbm_res  , file= "~/output/220808_prism_gbm_candidates.csv" )
+```
+
+
+
+# END
+    Location of final scripts:
+    script
+    
+    Location of data produced:
+    in output folder
+    
+    Dates when operations were done:
+    220808
+    
+## Versions
+```{r}
+sessionInfo()
+```
+
+   
+    
+    
