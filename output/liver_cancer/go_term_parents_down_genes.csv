@@ -1,0 +1,52 @@
+"","go","cluster","parent","parentSimScore","score","size","term","parentTerm","tfl_drugs","deseq2_drugs","limma_drugs"
+"GO:0002542","GO:0002542",4,"GO:0051919",0.17,2,2,"Factor XII activation","positive regulation of fibrinolysis",TRUE,FALSE,FALSE
+"GO:0002353","GO:0002353",4,"GO:0051919",0.081,2,2,"plasma kallikrein-kinin cascade","positive regulation of fibrinolysis",TRUE,FALSE,FALSE
+"GO:0002254","GO:0002254",4,"GO:0051919",0.093,0,0,"kinin cascade","positive regulation of fibrinolysis",TRUE,FALSE,FALSE
+"GO:0002541","GO:0002541",4,"GO:0051919",0.066,1,1,"activation of plasma proteins involved in acute inflammatory response","positive regulation of fibrinolysis",TRUE,FALSE,FALSE
+"GO:0051919","GO:0051919",4,"GO:0051919",1,4,4,"positive regulation of fibrinolysis","positive regulation of fibrinolysis",TRUE,FALSE,FALSE
+"GO:0010273","GO:0010273",1,"GO:0009410",0.277,15,15,"detoxification of copper ion","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:1990169","GO:1990169",1,"GO:0009410",0.333,0,0,"stress response to copper ion","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0046688","GO:0046688",1,"GO:0009410",0.417,13,13,"response to copper ion","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0098754","GO:0098754",1,"GO:0009410",0.532,0,0,"detoxification","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0061687","GO:0061687",1,"GO:0009410",0.45,0,0,"detoxification of inorganic compound","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0097501","GO:0097501",1,"GO:0009410",0.411,1,1,"stress response to metal ion","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0009636","GO:0009636",1,"GO:0009410",0.605,81,81,"response to toxic substance","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0071294","GO:0071294",1,"GO:0009410",0.273,34,34,"cellular response to zinc ion","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0010043","GO:0010043",1,"GO:0009410",0.417,34,34,"response to zinc ion","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0071280","GO:0071280",1,"GO:0009410",0.273,29,29,"cellular response to copper ion","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0010035","GO:0010035",1,"GO:0009410",0.605,8,8,"response to inorganic substance","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0071276","GO:0071276",1,"GO:0009410",0.273,47,47,"cellular response to cadmium ion","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0006882","GO:0006882",2,"GO:0006882",1,38,38,"cellular zinc ion homeostasis","cellular zinc ion homeostasis",FALSE,FALSE,TRUE
+"GO:0055069","GO:0055069",2,"GO:0006882",0.662,5,5,"zinc ion homeostasis","cellular zinc ion homeostasis",FALSE,FALSE,TRUE
+"GO:0010038","GO:0010038",1,"GO:0009410",0.491,8,8,"response to metal ion","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0046686","GO:0046686",1,"GO:0009410",0.417,27,27,"response to cadmium ion","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0046916","GO:0046916",2,"GO:0006882",0.784,0,0,"cellular transition metal ion homeostasis","cellular zinc ion homeostasis",FALSE,FALSE,TRUE
+"GO:0071248","GO:0071248",1,"GO:0009410",0.315,4,4,"cellular response to metal ion","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0055076","GO:0055076",2,"GO:0006882",0.523,0,0,"transition metal ion homeostasis","cellular zinc ion homeostasis",FALSE,FALSE,TRUE
+"GO:0019752","GO:0019752",3,"GO:0006082",0.795,10,10,"carboxylic acid metabolic process","organic acid metabolic process",FALSE,FALSE,TRUE
+"GO:0009410","GO:0009410",1,"GO:0009410",1,286,286,"response to xenobiotic stimulus","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0071241","GO:0071241",1,"GO:0009410",0.381,3,3,"cellular response to inorganic substance","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0043436","GO:0043436",3,"GO:0006082",0.883,0,0,"oxoacid metabolic process","organic acid metabolic process",FALSE,FALSE,TRUE
+"GO:0042221","GO:0042221",1,"GO:0009410",0.788,0,0,"response to chemical","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0044283","GO:0044283",3,"GO:0006082",0.4,0,0,"small molecule biosynthetic process","organic acid metabolic process",FALSE,FALSE,TRUE
+"GO:0006082","GO:0006082",3,"GO:0006082",1,21,21,"organic acid metabolic process","organic acid metabolic process",FALSE,FALSE,TRUE
+"GO:0071466","GO:0071466",1,"GO:0009410",0.63,66,66,"cellular response to xenobiotic stimulus","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0016098","GO:0016098",3,"GO:0006082",0.436,6,6,"monoterpenoid metabolic process","organic acid metabolic process",FALSE,FALSE,TRUE
+"GO:0032787","GO:0032787",3,"GO:0006082",0.731,3,3,"monocarboxylic acid metabolic process","organic acid metabolic process",FALSE,FALSE,TRUE
+"GO:0044281","GO:0044281",3,"GO:0006082",0.563,0,0,"small molecule metabolic process","organic acid metabolic process",FALSE,FALSE,TRUE
+"GO:0006875","GO:0006875",2,"GO:0006882",0.695,6,6,"cellular metal ion homeostasis","cellular zinc ion homeostasis",FALSE,FALSE,TRUE
+"GO:0070887","GO:0070887",1,"GO:0009410",0.49,0,0,"cellular response to chemical stimulus","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0072503","GO:0072503",2,"GO:0006882",0.722,0,0,"cellular divalent inorganic cation homeostasis","cellular zinc ion homeostasis",FALSE,FALSE,TRUE
+"GO:0030003","GO:0030003",2,"GO:0006882",0.586,2,2,"cellular cation homeostasis","cellular zinc ion homeostasis",FALSE,FALSE,TRUE
+"GO:0006873","GO:0006873",2,"GO:0006882",0.51,5,5,"cellular ion homeostasis","cellular zinc ion homeostasis",FALSE,FALSE,TRUE
+"GO:0055065","GO:0055065",2,"GO:0006882",0.487,3,3,"metal ion homeostasis","cellular zinc ion homeostasis",FALSE,FALSE,TRUE
+"GO:0072507","GO:0072507",2,"GO:0006882",0.499,1,1,"divalent inorganic cation homeostasis","cellular zinc ion homeostasis",FALSE,FALSE,TRUE
+"GO:0055080","GO:0055080",2,"GO:0006882",0.386,1,1,"cation homeostasis","cellular zinc ion homeostasis",FALSE,FALSE,TRUE
+"GO:0098771","GO:0098771",2,"GO:0006882",0.386,0,0,"inorganic ion homeostasis","cellular zinc ion homeostasis",FALSE,FALSE,TRUE
+"GO:0006805","GO:0006805",1,"GO:0009410",0.484,114,114,"xenobiotic metabolic process","response to xenobiotic stimulus",FALSE,FALSE,TRUE
+"GO:0050801","GO:0050801",2,"GO:0006882",0.347,21,21,"ion homeostasis","cellular zinc ion homeostasis",FALSE,FALSE,TRUE
+"GO:0046394","GO:0046394",3,"GO:0006082",0.584,0,0,"carboxylic acid biosynthetic process","organic acid metabolic process",FALSE,FALSE,TRUE
+"GO:0016053","GO:0016053",3,"GO:0006082",0.677,0,0,"organic acid biosynthetic process","organic acid metabolic process",FALSE,FALSE,TRUE
+"GO:0072330","GO:0072330",3,"GO:0006082",0.543,0,0,"monocarboxylic acid biosynthetic process","organic acid metabolic process",FALSE,FALSE,TRUE
+"GO:0055082","GO:0055082",2,"GO:0006882",0.445,1,1,"cellular chemical homeostasis","cellular zinc ion homeostasis",FALSE,FALSE,TRUE
+"GO:0016051","GO:0016051",3,"GO:0006082",0.294,9,9,"carbohydrate biosynthetic process","organic acid metabolic process",FALSE,FALSE,TRUE

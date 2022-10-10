@@ -1,0 +1,173 @@
+"","go","cluster","parent","parentSimScore","score","size","term","parentTerm","tfl_drugs","deseq2_drugs","limma_drugs"
+"GO:1902036","GO:1902036",1,"GO:0030154",0.375,9,9,"regulation of hematopoietic stem cell differentiation","cell differentiation",TRUE,FALSE,FALSE
+"GO:0019219","GO:0019219",2,"GO:0006355",0.549,0,0,"regulation of nucleobase-containing compound metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0070498","GO:0070498",4,"GO:0006974",0.203,27,27,"interleukin-1-mediated signaling pathway","cellular response to DNA damage stimulus",TRUE,FALSE,FALSE
+"GO:0044249","GO:0044249",2,"GO:0006355",0.27,0,0,"cellular biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0034654","GO:0034654",2,"GO:0006355",0.543,0,0,"nucleobase-containing compound biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0018130","GO:0018130",2,"GO:0006355",0.306,0,0,"heterocycle biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0019438","GO:0019438",2,"GO:0006355",0.306,1,1,"aromatic compound biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0009058","GO:0009058",2,"GO:0006355",0.163,15,15,"biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0060218","GO:0060218",1,"GO:0030154",0.505,16,16,"hematopoietic stem cell differentiation","cell differentiation",TRUE,FALSE,FALSE
+"GO:0043161","GO:0043161",2,"GO:0006355",0.144,201,201,"proteasome-mediated ubiquitin-dependent protein catabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0043618","GO:0043618",2,"GO:0006355",0.842,3,3,"regulation of transcription from RNA polymerase II promoter in response to stress","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0006261","GO:0006261",2,"GO:0006355",0.324,24,24,"DNA-dependent DNA replication","regulation of transcription, DNA-templated",TRUE,FALSE,TRUE
+"GO:1901532","GO:1901532",1,"GO:0030154",0.444,2,2,"regulation of hematopoietic progenitor cell differentiation","cell differentiation",TRUE,FALSE,FALSE
+"GO:0043620","GO:0043620",2,"GO:0006355",0.897,6,6,"regulation of DNA-templated transcription in response to stress","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:1901362","GO:1901362",2,"GO:0006355",0.28,0,0,"organic cyclic compound biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0051252","GO:0051252",2,"GO:0006355",0.626,11,11,"regulation of RNA metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:1903311","GO:1903311",2,"GO:0006355",0.532,0,0,"regulation of mRNA metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0036388","GO:0036388",2,"GO:0006355",0.244,0,0,"pre-replicative complex assembly","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:1901576","GO:1901576",2,"GO:0006355",0.236,0,0,"organic substance biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0045935","GO:0045935",2,"GO:0006355",0.452,0,0,"positive regulation of nucleobase-containing compound metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0010498","GO:0010498",2,"GO:0006355",0.169,37,37,"proteasomal protein catabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0070555","GO:0070555",4,"GO:0006974",0.151,40,40,"response to interleukin-1","cellular response to DNA damage stimulus",TRUE,FALSE,FALSE
+"GO:0002479","GO:0002479",6,"GO:0002474",0.62,2,2,"antigen processing and presentation of exogenous peptide antigen via MHC class I, TAP-dependent","antigen processing and presentation of peptide antigen via MHC class I",TRUE,FALSE,FALSE
+"GO:0006259","GO:0006259",2,"GO:0006355",0.397,20,20,"DNA metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,TRUE
+"GO:0009059","GO:0009059",2,"GO:0006355",0.3,0,0,"macromolecule biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0044271","GO:0044271",2,"GO:0006355",0.329,0,0,"cellular nitrogen compound biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0031145","GO:0031145",2,"GO:0006355",0.134,23,23,"anaphase-promoting complex-dependent catabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0044237","GO:0044237",2,"GO:0006355",0.204,1,1,"cellular metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:2000736","GO:2000736",1,"GO:0030154",0.547,8,8,"regulation of stem cell differentiation","cell differentiation",TRUE,FALSE,FALSE
+"GO:0009889","GO:0009889",2,"GO:0006355",0.3,0,0,"regulation of biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0044281","GO:0044281",2,"GO:0006355",0.092,0,0,"small molecule metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0010564","GO:0010564",5,"GO:0051726",0.808,12,12,"regulation of cell cycle process","regulation of cell cycle",TRUE,FALSE,TRUE
+"GO:0042590","GO:0042590",6,"GO:0002474",0.683,5,5,"antigen processing and presentation of exogenous peptide antigen via MHC class I","antigen processing and presentation of peptide antigen via MHC class I",TRUE,FALSE,FALSE
+"GO:0031325","GO:0031325",5,"GO:0051726",0.38,0,0,"positive regulation of cellular metabolic process","regulation of cell cycle",TRUE,FALSE,FALSE
+"GO:0006521","GO:0006521",2,"GO:0006355",0.318,1,1,"regulation of cellular amino acid metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0006950","GO:0006950",4,"GO:0006974",0.563,0,0,"response to stress","cellular response to DNA damage stimulus",TRUE,FALSE,FALSE
+"GO:0031323","GO:0031323",5,"GO:0051726",0.508,0,0,"regulation of cellular metabolic process","regulation of cell cycle",TRUE,FALSE,FALSE
+"GO:0071347","GO:0071347",4,"GO:0006974",0.245,88,88,"cellular response to interleukin-1","cellular response to DNA damage stimulus",TRUE,FALSE,FALSE
+"GO:0061418","GO:0061418",2,"GO:0006355",0.732,4,4,"regulation of transcription from RNA polymerase II promoter in response to hypoxia","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0006351","GO:0006351",2,"GO:0006355",0.705,83,83,"transcription, DNA-templated","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0097659","GO:0097659",2,"GO:0006355",0.594,0,0,"nucleic acid-templated transcription","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0051171","GO:0051171",2,"GO:0006355",0.285,0,0,"regulation of nitrogen compound metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0010556","GO:0010556",2,"GO:0006355",0.479,0,0,"regulation of macromolecule biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0006260","GO:0006260",2,"GO:0006355",0.378,102,102,"DNA replication","regulation of transcription, DNA-templated",TRUE,FALSE,TRUE
+"GO:0032774","GO:0032774",2,"GO:0006355",0.61,2,2,"RNA biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0048522","GO:0048522",5,"GO:0051726",0.599,0,0,"positive regulation of cellular process","regulation of cell cycle",TRUE,FALSE,FALSE
+"GO:0051173","GO:0051173",2,"GO:0006355",0.229,2,2,"positive regulation of nitrogen compound metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0044260","GO:0044260",2,"GO:0006355",0.306,0,0,"cellular macromolecule metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:2001252","GO:2001252",3,"GO:0051301",0.174,2,2,"positive regulation of chromosome organization","cell division",TRUE,FALSE,FALSE
+"GO:1990858","GO:1990858",4,"GO:0006974",0.183,2,2,"cellular response to lectin","cellular response to DNA damage stimulus",TRUE,FALSE,FALSE
+"GO:0002223","GO:0002223",5,"GO:0051726",0.219,20,20,"stimulatory C-type lectin receptor signaling pathway","regulation of cell cycle",TRUE,FALSE,FALSE
+"GO:1990840","GO:1990840",4,"GO:0006974",0.231,0,0,"response to lectin","cellular response to DNA damage stimulus",TRUE,FALSE,FALSE
+"GO:0080090","GO:0080090",2,"GO:0006355",0.285,2,2,"regulation of primary metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0062012","GO:0062012",2,"GO:0006355",0.182,0,0,"regulation of small molecule metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0031326","GO:0031326",5,"GO:0051726",0.378,0,0,"regulation of cellular biosynthetic process","regulation of cell cycle",TRUE,FALSE,FALSE
+"GO:0010604","GO:0010604",2,"GO:0006355",0.284,0,0,"positive regulation of macromolecule metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0038095","GO:0038095",5,"GO:0051726",0.324,24,24,"Fc-epsilon receptor signaling pathway","regulation of cell cycle",TRUE,FALSE,FALSE
+"GO:0080134","GO:0080134",5,"GO:0051726",0.289,0,0,"regulation of response to stress","regulation of cell cycle",TRUE,FALSE,FALSE
+"GO:0071456","GO:0071456",4,"GO:0006974",0.484,134,134,"cellular response to hypoxia","cellular response to DNA damage stimulus",TRUE,FALSE,FALSE
+"GO:0090090","GO:0090090",5,"GO:0051726",0.226,193,193,"negative regulation of canonical Wnt signaling pathway","regulation of cell cycle",TRUE,FALSE,FALSE
+"GO:0015960","GO:0015960",2,"GO:0006355",0.304,0,0,"diadenosine polyphosphate biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0015965","GO:0015965",2,"GO:0006355",0.165,0,0,"diadenosine tetraphosphate metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0015966","GO:0015966",2,"GO:0006355",0.269,5,5,"diadenosine tetraphosphate biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0002220","GO:0002220",5,"GO:0051726",0.199,1,1,"innate immune response activating cell surface receptor signaling pathway","regulation of cell cycle",TRUE,FALSE,FALSE
+"GO:0006355","GO:0006355",2,"GO:0006355",1,540,540,"regulation of transcription, DNA-templated","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0002758","GO:0002758",5,"GO:0051726",0.202,1,1,"innate immune response-activating signal transduction","regulation of cell cycle",TRUE,FALSE,FALSE
+"GO:1903506","GO:1903506",2,"GO:0006355",0.84,2,2,"regulation of nucleic acid-templated transcription","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0019752","GO:0019752",2,"GO:0006355",0.125,10,10,"carboxylic acid metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:2001141","GO:2001141",2,"GO:0006355",0.816,3,3,"regulation of RNA biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0036294","GO:0036294",4,"GO:0006974",0.278,2,2,"cellular response to decreased oxygen levels","cellular response to DNA damage stimulus",TRUE,FALSE,FALSE
+"GO:0002474","GO:0002474",6,"GO:0002474",1,9,9,"antigen processing and presentation of peptide antigen via MHC class I","antigen processing and presentation of peptide antigen via MHC class I",TRUE,FALSE,FALSE
+"GO:0006511","GO:0006511",2,"GO:0006355",0.148,311,311,"ubiquitin-dependent protein catabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0043436","GO:0043436",2,"GO:0006355",0.153,0,0,"oxoacid metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:2001169","GO:2001169",2,"GO:0006355",0.362,2,2,"regulation of ATP biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0033044","GO:0033044",3,"GO:0051301",0.219,4,4,"regulation of chromosome organization","cell division",TRUE,FALSE,FALSE
+"GO:0019941","GO:0019941",2,"GO:0006355",0.162,8,8,"modification-dependent protein catabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0008152","GO:0008152",2,"GO:0006355",0.124,9,9,"metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0051254","GO:0051254",2,"GO:0006355",0.508,0,0,"positive regulation of RNA metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0006082","GO:0006082",2,"GO:0006355",0.192,21,21,"organic acid metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0071453","GO:0071453",4,"GO:0006974",0.337,3,3,"cellular response to oxygen levels","cellular response to DNA damage stimulus",TRUE,FALSE,FALSE
+"GO:0033238","GO:0033238",2,"GO:0006355",0.359,0,0,"regulation of cellular amine metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0043632","GO:0043632",2,"GO:0006355",0.184,0,0,"modification-dependent macromolecule catabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0045876","GO:0045876",3,"GO:0051301",0.126,4,4,"positive regulation of sister chromatid cohesion","cell division",TRUE,FALSE,FALSE
+"GO:0030178","GO:0030178",5,"GO:0051726",0.236,57,57,"negative regulation of Wnt signaling pathway","regulation of cell cycle",TRUE,FALSE,FALSE
+"GO:0002244","GO:0002244",1,"GO:0030154",0.57,60,60,"hematopoietic progenitor cell differentiation","cell differentiation",TRUE,FALSE,FALSE
+"GO:0006366","GO:0006366",2,"GO:0006355",0.635,160,160,"transcription by RNA polymerase II","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0002478","GO:0002478",6,"GO:0002474",0.568,0,0,"antigen processing and presentation of exogenous peptide antigen","antigen processing and presentation of peptide antigen via MHC class I",TRUE,FALSE,FALSE
+"GO:0006520","GO:0006520",2,"GO:0006355",0.194,20,20,"cellular amino acid metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0010332","GO:0010332",4,"GO:0006974",0.151,26,26,"response to gamma radiation","cellular response to DNA damage stimulus",TRUE,FALSE,FALSE
+"GO:0009628","GO:0009628",4,"GO:0006974",0.306,0,0,"response to abiotic stimulus","cellular response to DNA damage stimulus",TRUE,FALSE,FALSE
+"GO:0001666","GO:0001666",4,"GO:0006974",0.34,176,176,"response to hypoxia","cellular response to DNA damage stimulus",TRUE,FALSE,FALSE
+"GO:0031349","GO:0031349",5,"GO:0051726",0.199,0,0,"positive regulation of defense response","regulation of cell cycle",TRUE,FALSE,FALSE
+"GO:0009891","GO:0009891",2,"GO:0006355",0.243,0,0,"positive regulation of biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0048518","GO:0048518",2,"GO:0006355",0.136,0,0,"positive regulation of biological process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0043687","GO:0043687",2,"GO:0006355",0.185,19,19,"post-translational protein modification","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0019884","GO:0019884",6,"GO:0002474",0.491,2,2,"antigen processing and presentation of exogenous antigen","antigen processing and presentation of peptide antigen via MHC class I",TRUE,FALSE,FALSE
+"GO:0000723","GO:0000723",2,"GO:0006355",0.299,49,49,"telomere maintenance","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0036293","GO:0036293",4,"GO:0006974",0.183,2,2,"response to decreased oxygen levels","cellular response to DNA damage stimulus",TRUE,FALSE,FALSE
+"GO:0009893","GO:0009893",2,"GO:0006355",0.197,2,2,"positive regulation of metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0031146","GO:0031146",2,"GO:0006355",0.134,65,65,"SCF-dependent proteasomal ubiquitin-dependent protein catabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0002218","GO:0002218",5,"GO:0051726",0.111,36,36,"activation of innate immune response","regulation of cell cycle",TRUE,FALSE,FALSE
+"GO:0042026","GO:0042026",3,"GO:0051301",0.428,28,28,"protein refolding","cell division",TRUE,FALSE,FALSE
+"GO:0044238","GO:0044238",2,"GO:0006355",0.156,0,0,"primary metabolic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0060071","GO:0060071",5,"GO:0051726",0.216,35,35,"Wnt signaling pathway, planar cell polarity pathway","regulation of cell cycle",TRUE,FALSE,FALSE
+"GO:0009206","GO:0009206",2,"GO:0006355",0.256,0,0,"purine ribonucleoside triphosphate biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0033554","GO:0033554",4,"GO:0006974",0.864,9,9,"cellular response to stress","cellular response to DNA damage stimulus",TRUE,FALSE,FALSE
+"GO:0009145","GO:0009145",2,"GO:0006355",0.304,0,0,"purine nucleoside triphosphate biosynthetic process","regulation of transcription, DNA-templated",TRUE,FALSE,FALSE
+"GO:0003002","GO:0003002",1,"GO:0030154",0.214,0,0,"regionalization","cell differentiation",FALSE,TRUE,FALSE
+"GO:0009952","GO:0009952",1,"GO:0030154",0.19,86,86,"anterior/posterior pattern specification","cell differentiation",FALSE,TRUE,FALSE
+"GO:0007389","GO:0007389",1,"GO:0030154",0.247,28,28,"pattern specification process","cell differentiation",FALSE,TRUE,FALSE
+"GO:0032502","GO:0032502",1,"GO:0030154",0.536,24,24,"developmental process","cell differentiation",FALSE,TRUE,FALSE
+"GO:0048706","GO:0048706",1,"GO:0030154",0.154,25,25,"embryonic skeletal system development","cell differentiation",FALSE,TRUE,FALSE
+"GO:0001501","GO:0001501",1,"GO:0030154",0.214,135,135,"skeletal system development","cell differentiation",FALSE,TRUE,FALSE
+"GO:0007399","GO:0007399",1,"GO:0030154",0.214,335,335,"nervous system development","cell differentiation",FALSE,TRUE,FALSE
+"GO:0048704","GO:0048704",1,"GO:0030154",0.109,43,43,"embryonic skeletal system morphogenesis","cell differentiation",FALSE,TRUE,FALSE
+"GO:0048665","GO:0048665",1,"GO:0030154",0.517,18,18,"neuron fate specification","cell differentiation",FALSE,TRUE,FALSE
+"GO:0001708","GO:0001708",1,"GO:0030154",0.765,34,34,"cell fate specification","cell differentiation",FALSE,TRUE,FALSE
+"GO:0045666","GO:0045666",1,"GO:0030154",0.387,93,93,"positive regulation of neuron differentiation","cell differentiation",FALSE,TRUE,FALSE
+"GO:0032501","GO:0032501",1,"GO:0030154",0.221,0,0,"multicellular organismal process","cell differentiation",FALSE,TRUE,FALSE
+"GO:0048856","GO:0048856",1,"GO:0030154",0.388,50,50,"anatomical structure development","cell differentiation",FALSE,TRUE,FALSE
+"GO:0048705","GO:0048705",1,"GO:0030154",0.169,29,29,"skeletal system morphogenesis","cell differentiation",FALSE,TRUE,FALSE
+"GO:0048731","GO:0048731",1,"GO:0030154",0.247,2,2,"system development","cell differentiation",FALSE,TRUE,FALSE
+"GO:0045664","GO:0045664",1,"GO:0030154",0.464,27,27,"regulation of neuron differentiation","cell differentiation",FALSE,TRUE,FALSE
+"GO:0043009","GO:0043009",1,"GO:0030154",0.183,4,4,"chordate embryonic development","cell differentiation",FALSE,TRUE,FALSE
+"GO:0030182","GO:0030182",1,"GO:0030154",0.614,170,170,"neuron differentiation","cell differentiation",FALSE,TRUE,FALSE
+"GO:0009792","GO:0009792",1,"GO:0030154",0.206,22,22,"embryo development ending in birth or egg hatching","cell differentiation",FALSE,TRUE,FALSE
+"GO:0048699","GO:0048699",1,"GO:0030154",0.586,8,8,"generation of neurons","cell differentiation",FALSE,TRUE,FALSE
+"GO:0048562","GO:0048562",1,"GO:0030154",0.15,4,4,"embryonic organ morphogenesis","cell differentiation",FALSE,TRUE,FALSE
+"GO:0030154","GO:0030154",1,"GO:0030154",1,618,618,"cell differentiation","cell differentiation",FALSE,TRUE,FALSE
+"GO:0048663","GO:0048663",1,"GO:0030154",0.555,17,17,"neuron fate commitment","cell differentiation",FALSE,TRUE,FALSE
+"GO:0048869","GO:0048869",1,"GO:0030154",0.831,0,0,"cellular developmental process","cell differentiation",FALSE,TRUE,FALSE
+"GO:0022008","GO:0022008",1,"GO:0030154",0.623,45,45,"neurogenesis","cell differentiation",FALSE,TRUE,FALSE
+"GO:0050794","GO:0050794",5,"GO:0051726",0.772,2,2,"regulation of cellular process","regulation of cell cycle",FALSE,TRUE,FALSE
+"GO:0007275","GO:0007275",1,"GO:0030154",0.283,219,219,"multicellular organism development","cell differentiation",FALSE,TRUE,FALSE
+"GO:0007501","GO:0007501",1,"GO:0030154",0.426,5,5,"mesodermal cell fate specification","cell differentiation",FALSE,TRUE,FALSE
+"GO:0048568","GO:0048568",1,"GO:0030154",0.181,31,31,"embryonic organ development","cell differentiation",FALSE,TRUE,FALSE
+"GO:0035113","GO:0035113",1,"GO:0030154",0.169,0,0,"embryonic appendage morphogenesis","cell differentiation",FALSE,TRUE,FALSE
+"GO:0030326","GO:0030326",1,"GO:0030154",0.138,33,33,"embryonic limb morphogenesis","cell differentiation",FALSE,TRUE,FALSE
+"GO:0022402","GO:0022402",3,"GO:0051301",0.469,0,0,"cell cycle process","cell division",FALSE,FALSE,TRUE
+"GO:1903047","GO:1903047",3,"GO:0051301",0.342,0,0,"mitotic cell cycle process","cell division",FALSE,FALSE,TRUE
+"GO:0000278","GO:0000278",3,"GO:0051301",0.428,142,142,"mitotic cell cycle","cell division",FALSE,FALSE,TRUE
+"GO:0000819","GO:0000819",3,"GO:0051301",0.234,3,3,"sister chromatid segregation","cell division",FALSE,FALSE,TRUE
+"GO:0098813","GO:0098813",3,"GO:0051301",0.342,1,1,"nuclear chromosome segregation","cell division",FALSE,FALSE,TRUE
+"GO:0000070","GO:0000070",3,"GO:0051301",0.175,35,35,"mitotic sister chromatid segregation","cell division",FALSE,FALSE,TRUE
+"GO:0007059","GO:0007059",3,"GO:0051301",0.543,88,88,"chromosome segregation","cell division",FALSE,FALSE,TRUE
+"GO:0140014","GO:0140014",3,"GO:0051301",0.229,3,3,"mitotic nuclear division","cell division",FALSE,FALSE,TRUE
+"GO:0007049","GO:0007049",3,"GO:0051301",0.543,296,296,"cell cycle","cell division",FALSE,FALSE,TRUE
+"GO:0051726","GO:0051726",5,"GO:0051726",1,256,256,"regulation of cell cycle","regulation of cell cycle",FALSE,FALSE,TRUE
+"GO:0000280","GO:0000280",3,"GO:0051301",0.281,0,0,"nuclear division","cell division",FALSE,FALSE,TRUE
+"GO:0048285","GO:0048285",3,"GO:0051301",0.311,0,0,"organelle fission","cell division",FALSE,FALSE,TRUE
+"GO:0051301","GO:0051301",3,"GO:0051301",1,352,352,"cell division","cell division",FALSE,FALSE,TRUE
+"GO:0051276","GO:0051276",3,"GO:0051301",0.311,13,13,"chromosome organization","cell division",FALSE,FALSE,TRUE
+"GO:0006268","GO:0006268",2,"GO:0006355",0.256,15,15,"DNA unwinding involved in DNA replication","regulation of transcription, DNA-templated",FALSE,FALSE,TRUE
+"GO:0033260","GO:0033260",2,"GO:0006355",0.26,2,2,"nuclear DNA replication","regulation of transcription, DNA-templated",FALSE,FALSE,TRUE
+"GO:0044786","GO:0044786",2,"GO:0006355",0.289,0,0,"cell cycle DNA replication","regulation of transcription, DNA-templated",FALSE,FALSE,TRUE
+"GO:0007088","GO:0007088",3,"GO:0051301",0.147,28,28,"regulation of mitotic nuclear division","cell division",FALSE,FALSE,TRUE
+"GO:1902850","GO:1902850",3,"GO:0051301",0.216,2,2,"microtubule cytoskeleton organization involved in mitosis","cell division",FALSE,FALSE,TRUE
+"GO:0033043","GO:0033043",3,"GO:0051301",0.25,2,2,"regulation of organelle organization","cell division",FALSE,FALSE,TRUE
+"GO:0090307","GO:0090307",3,"GO:0051301",0.138,50,50,"mitotic spindle assembly","cell division",FALSE,FALSE,TRUE
+"GO:0051128","GO:0051128",3,"GO:0051301",0.3,2,2,"regulation of cellular component organization","cell division",FALSE,FALSE,TRUE
+"GO:0051783","GO:0051783",3,"GO:0051301",0.205,0,0,"regulation of nuclear division","cell division",FALSE,FALSE,TRUE
+"GO:0043137","GO:0043137",2,"GO:0006355",0.3,4,4,"DNA replication, removal of RNA primer","regulation of transcription, DNA-templated",FALSE,FALSE,TRUE
+"GO:0006281","GO:0006281",2,"GO:0006355",0.302,249,249,"DNA repair","regulation of transcription, DNA-templated",FALSE,FALSE,TRUE
+"GO:0051256","GO:0051256",3,"GO:0051301",0.113,11,11,"mitotic spindle midzone assembly","cell division",FALSE,FALSE,TRUE
+"GO:0000022","GO:0000022",3,"GO:0051301",0.134,2,2,"mitotic spindle elongation","cell division",FALSE,FALSE,TRUE
+"GO:0051225","GO:0051225",3,"GO:0051301",0.195,46,46,"spindle assembly","cell division",FALSE,FALSE,TRUE
+"GO:0051231","GO:0051231",3,"GO:0051301",0.221,0,0,"spindle elongation","cell division",FALSE,FALSE,TRUE
+"GO:0007346","GO:0007346",5,"GO:0051726",0.803,47,47,"regulation of mitotic cell cycle","regulation of cell cycle",FALSE,FALSE,TRUE
+"GO:0007052","GO:0007052",3,"GO:0051301",0.208,58,58,"mitotic spindle organization","cell division",FALSE,FALSE,TRUE
+"GO:0051302","GO:0051302",5,"GO:0051726",0.582,12,12,"regulation of cell division","regulation of cell cycle",FALSE,FALSE,TRUE
+"GO:0006974","GO:0006974",4,"GO:0006974",1,283,283,"cellular response to DNA damage stimulus","cellular response to DNA damage stimulus",FALSE,FALSE,TRUE
+"GO:0051988","GO:0051988",5,"GO:0051726",0.626,9,9,"regulation of attachment of spindle microtubules to kinetochore","regulation of cell cycle",FALSE,FALSE,TRUE

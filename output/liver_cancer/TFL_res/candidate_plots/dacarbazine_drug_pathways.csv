@@ -1,0 +1,7 @@
+"";"query";"significant";"p_value";"term_size";"query_size";"intersection_size";"precision";"recall";"term_id";"source";"term_name";"effective_domain_size";"source_order";"set"
+"1";"query_1";TRUE;0,037930975236967;2;2;1;0,5;0,5;"GO:1902937";"GO:CC";"inward rectifier potassium channel complex";21698;4052;"Up"
+"2";"query_1";TRUE;0,0385708052206455;68;19;3;0,157894736842105;0,0441176470588235;"KEGG:04924";"KEGG";"Renin secretion";7559;363;"Up"
+"3";"query_1";TRUE;0,00259423151859858;4752;12;11;0,916666666666667;0,00231481481481481;"TF:M09603";"TF";"Factor: Egr-1; motif: NNNNNGYGKGGGNGGGNN";19958;1616;"Up"
+"4";"query_1";TRUE;0,0138687144743031;3599;26;15;0,576923076923077;0,00416782439566546;"TF:M03895_1";"TF";"Factor: CTCF; motif: WGCGCCMYCTAGYGGYN; match class: 1";19958;1131;"Up"
+"5";"query_1";TRUE;0,0484748451920256;145;19;4;0,210526315789474;0,0275862068965517;"WP:WP536";"WP";"Calcium regulation in cardiac cells";7364;326;"Up"
+"6";"query_1";TRUE;0,0275213792696762;174;32;4;0,125;0,0229885057471264;"GO:0072686";"GO:CC";"mitotic spindle";21698;3154;"Down"
