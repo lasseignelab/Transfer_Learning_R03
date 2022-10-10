@@ -1,0 +1,8 @@
+"";"query";"significant";"p_value";"term_size";"query_size";"intersection_size";"precision";"recall";"term_id";"source";"term_name";"effective_domain_size";"source_order";"set"
+"1";"query_1";TRUE;0,00748754849277841;838;25;7;0,28;0,00835322195704057;"GO:1990234";"GO:CC";"transferase complex";21698;4218;"Up"
+"2";"query_1";TRUE;0,0153401513574758;369;8;4;0,5;0,010840108401084;"MIRNA:hsa-miR-331-3p";"MIRNA";"hsa-miR-331-3p";13650;671;"Up"
+"3";"query_1";TRUE;0,018570456861013;7581;31;24;0,774193548387097;0,00316580925999209;"TF:M09602";"TF";"Factor: ctcf; motif: NNNCCASYAGRKGGCRSYNN";19958;1140;"Up"
+"4";"query_1";TRUE;0,0444862707088385;178;19;4;0,210526315789474;0,0224719101123595;"TF:M12159_1";"TF";"Factor: KLF15; motif: GCCACGCCCMCN; match class: 1";19958;4541;"Up"
+"5";"query_1";TRUE;0,0120998619601247;106;8;3;0,375;0,0283018867924528;"GO:0031058";"GO:BP";"positive regulation of histone modification";21100;8129;"Down"
+"6";"query_1";TRUE;0,0345490657527616;9;16;2;0,125;0,222222222222222;"GO:0034392";"GO:BP";"negative regulation of smooth muscle cell apoptotic process";21100;9887;"Down"
+"7";"query_1";TRUE;0,00432527857146198;469;16;6;0,375;0,0127931769722814;"MIRNA:hsa-let-7c-5p";"MIRNA";"hsa-let-7c-5p";13650;9;"Down"

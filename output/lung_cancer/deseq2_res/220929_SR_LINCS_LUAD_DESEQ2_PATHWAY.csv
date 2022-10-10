@@ -1,0 +1,245 @@
+"","ID","Description","GeneRatio","BgRatio","pvalue","p.adjust","qvalue","itemID","Count","logqvalue"
+"1","hsa00591","Linoleic acid metabolism","10/46","444/20544",4.08511549844393e-08,9.9676818162032e-06,7.9552249180224e-06,"norgestrel/diflorasone/isotretinoin/phenytoin/aprepitant/irbesartan/ritonavir/voriconazole/dexamethasone/treprostinil",10,11.7416816227813
+"2","hsa05204","Chemical carcinogenesis - DNA adducts","11/46","732/20544",4.65634401423702e-07,5.68073969736916e-05,4.53380864544131e-05,"norgestrel/triamcinolone/isotretinoin/phenytoin/aprepitant/irbesartan/ritonavir/everolimus/voriconazole/dexamethasone/treprostinil",11,10.0013631181334
+"3","hsa00982","Drug metabolism - cytochrome P450","11/46","853/20544",2.08549745225004e-06,0.00016962045944967,0.000135374396023248,"norgestrel/triamcinolone/isotretinoin/phenytoin/aprepitant/irbesartan/ritonavir/everolimus/voriconazole/dexamethasone/treprostinil",11,8.90746631416186
+"4","hsa00830","Retinol metabolism","10/46","732/20544",3.9534561151119e-06,0.000241160823021826,0.000192470889814658,"triamcinolone/isotretinoin/phenytoin/aprepitant/irbesartan/ritonavir/everolimus/voriconazole/dexamethasone/treprostinil",10,8.55556563741363
+"5","hsa04726","Serotonergic synapse","13/46","1377/20544",6.5776974895622e-06,0.000314963854528532,0.000251373222984376,"spironolactone/midostaurin/isotretinoin/phenytoin/aprepitant/irbesartan/voriconazole/dopamine/amisulpride/zolpidem/doxepin/selumetinib/treprostinil",13,8.28857177907844
+"6","hsa00590","Arachidonic acid metabolism","10/46","790/20544",7.74501281627538e-06,0.000314963854528532,0.000251373222984376,"norgestrel/diflorasone/isotretinoin/phenytoin/aprepitant/irbesartan/ritonavir/voriconazole/deferiprone/treprostinil",10,8.28857177907844
+"7","hsa00980","Metabolism of xenobiotics by cytochrome P450","10/46","869/20544",1.77475352985754e-05,0.000618628373264628,0.000493728425599466,"norgestrel/triamcinolone/isotretinoin/phenytoin/aprepitant/irbesartan/ritonavir/everolimus/voriconazole/dexamethasone",10,7.61352493769202
+"8","hsa04924","Renin secretion","9/46","740/20544",3.23801415237808e-05,0.000987594316475315,0.000788200813407823,"spironolactone/midostaurin/pentoxifylline/dinoprostone/irbesartan/labetalol/lisinopril/treprostinil/pimozide",9,7.1457576612224
+"9","hsa04270","Vascular smooth muscle contraction","11/46","1253/20544",7.65942694357248e-05,0.00207655574914632,0.00165730290591919,"spironolactone/diflorasone/midostaurin/pentoxifylline/irbesartan/labetalol/doxepin/selumetinib/lisinopril/treprostinil/pimozide",11,6.40256375343066
+"10","hsa05221","Acute myeloid leukemia","8/46","827/20544",0.000447031904740187,0.0109075784756606,0.00870535814494048,"midostaurin/pentoxifylline/isotretinoin/everolimus/lenvatinib/dexamethasone/selumetinib/treprostinil",8,4.74381656416828
+"11","hsa00140","Steroid hormone biosynthesis","8/46","907/20544",0.000820898498293838,0.0182090212348815,0.0145326528406086,"norgestrel/spironolactone/triamcinolone/isotretinoin/phenytoin/ritonavir/everolimus/dexamethasone",8,4.23135724128539
+"12","hsa04725","Cholinergic synapse","8/46","1042/20544",0.00199436517179067,0.0388054741948268,0.0309707192667945,"spironolactone/midostaurin/pentoxifylline/methylene-blue/oxybutynin/donepezil/doxepin/selumetinib",8,3.4747130606366
+"13","hsa05224","Breast cancer","8/46","1048/20544",0.0020675047726752,0.0388054741948268,0.0309707192667945,"norgestrel/spironolactone/midostaurin/irbesartan/everolimus/lenvatinib/norgestimate/selumetinib",8,3.4747130606366
+"14","hsa05032","Morphine addiction","7/46","825/20544",0.00223964417516576,0.0390337984814604,0.031152945293659,"spironolactone/midostaurin/pentoxifylline/dopamine/roflumilast/diphenoxylate/zolpidem",7,3.46884648625506
+"15","hsa04261","Adrenergic signaling in cardiomyocytes","8/46","1089/20544",0.00262616076578727,0.0421553619749542,0.0336442707737986,"spironolactone/midostaurin/phenytoin/irbesartan/labetalol/doxepin/lisinopril/pimozide",8,3.39191249670964
+"16","hsa04927","Cortisol synthesis and secretion","5/46","434/20544",0.00276428603114454,0.0421553619749542,0.0336442707737986,"spironolactone/irbesartan/dexamethasone/lisinopril/pimozide",5,3.39191249670964
+"17","hsa04114","Oocyte meiosis","7/46","871/20544",0.00303501632285328,0.0435614107515411,0.034766440850022,"norgestrel/spironolactone/midostaurin/nilutamide/norgestimate/selumetinib/pimozide",7,3.35910270087012
+"18","hsa04640","Hematopoietic cell lineage","5/46","509/20544",0.00543591956923886,0.0721022467358891,0.0575449337624654,"methylprednisolone/midostaurin/pentoxifylline/ezetimibe/lenvatinib",5,2.85518917961864
+"19","hsa04022","cGMP-PKG signaling pathway","9/46","1509/20544",0.00561451921304054,0.0721022467358891,0.0575449337624654,"spironolactone/midostaurin/pentoxifylline/irbesartan/labetalol/diphenoxylate/doxepin/selumetinib/pimozide",9,2.85518917961864
+"20","hsa05323","Rheumatoid arthritis","5/46","528/20544",0.00633156565997035,0.0772451010516383,0.0616494551102376,"methylprednisolone/midostaurin/pentoxifylline/irbesartan/lenvatinib",5,2.78629088784981
+"21","hsa05215","Prostate cancer","8/46","1274/20544",0.00677636036606914,0.0787348537771843,0.062838429459789,"norgestrel/spironolactone/midostaurin/everolimus/lenvatinib/nilutamide/norgestimate/selumetinib",8,2.76718845859022
+"22","hsa00564","Glycerophospholipid metabolism","4/46","353/20544",0.0079249064325706,0.0878944167976012,0.0701486933026585,"diflorasone/pentoxifylline/methylene-blue/donepezil",4,2.65713809979663
+"23","hsa00983","Drug metabolism - other enzymes","6/46","820/20544",0.0095348597966231,0.0973334770775438,0.0776820244147783,"norgestrel/pentoxifylline/phenytoin/ritonavir/mycophenolate-mofetil/dexamethasone",6,2.5551313943863
+"24","hsa05321","Inflammatory bowel disease","4/46","373/20544",0.00957378463057808,0.0973334770775438,0.0776820244147783,"methylprednisolone/pentoxifylline/isotretinoin/irbesartan",4,2.5551313943863
+"25","hsa04915","Estrogen signaling pathway","8/46","1374/20544",0.0104978963723477,0.102459468594113,0.0817730875319713,"norgestrel/spironolactone/isotretinoin/irbesartan/diphenoxylate/norgestimate/selumetinib/pimozide",8,2.50380709278352
+"26","hsa04066","HIF-1 signaling pathway","8/46","1400/20544",0.0116781196412062,0.109594661248243,0.0874676977175367,"methylprednisolone/midostaurin/pentoxifylline/everolimus/lenvatinib/deferiprone/dexamethasone/selumetinib",8,2.43648572272064
+"27","hsa05140","Leishmaniasis","5/46","630/20544",0.0129773854336383,0.117277112807694,0.0935990762270208,"methylprednisolone/midostaurin/pentoxifylline/irbesartan/dexamethasone",5,2.36873476491673
+"28","hsa05410","Hypertrophic cardiomyopathy","4/46","419/20544",0.0141780641350464,0.123114389199824,0.0982578170921806,"methylprednisolone/spironolactone/pentoxifylline/lisinopril",4,2.32016046811856
+"29","hsa04072","Phospholipase D signaling pathway","7/46","1177/20544",0.0150257897508381,0.123114389199824,0.0982578170921806,"midostaurin/dinoprostone/irbesartan/everolimus/lenvatinib/selumetinib/lisinopril",7,2.32016046811856
+"30","hsa04923","Regulation of lipolysis in adipocytes","5/46","655/20544",0.0151370150655521,0.123114389199824,0.0982578170921806,"midostaurin/pentoxifylline/dinoprostone/labetalol/treprostinil",5,2.32016046811856
+"31","hsa05031","Amphetamine addiction","6/46","916/20544",0.0158116439430748,0.124452939422911,0.0993261164505549,"spironolactone/midostaurin/irbesartan/dopamine/doxepin/pimozide",6,2.30934673696655
+"32","hsa04934","Cushing syndrome","6/46","945/20544",0.0181711572715901,0.138555074195874,0.110581055764611,"spironolactone/midostaurin/irbesartan/selumetinib/lisinopril/pimozide",6,2.20200649059929
+"33","hsa04218","Cellular senescence","7/46","1248/20544",0.0201143347833441,0.147094774973867,0.117396606428669,"methylprednisolone/spironolactone/midostaurin/pentoxifylline/everolimus/selumetinib/pimozide",7,2.14219727806497
+"34","hsa05012","Parkinson disease","7/46","1257/20544",0.0208368425357301,0.147094774973867,0.117396606428669,"midostaurin/mebendazole/pentoxifylline/methylene-blue/dopamine/doxepin/pimozide",7,2.14219727806497
+"35","hsa04623","Cytosolic DNA-sensing pathway","3/46","264/20544",0.0212165055956339,0.147094774973867,0.117396606428669,"methylprednisolone/midostaurin/pentoxifylline",3,2.14219727806497
+"36","hsa04540","Gap junction","6/46","994/20544",0.0226950040706316,0.147094774973867,0.117396606428669,"midostaurin/mebendazole/labetalol/dopamine/doxepin/selumetinib",6,2.14219727806497
+"37","hsa01523","Antifolate resistance","4/46","484/20544",0.0227777512500057,0.147094774973867,0.117396606428669,"methylprednisolone/floxuridine/pentoxifylline/fluorouracil",4,2.14219727806497
+"38","hsa05202","Transcriptional misregulation in cancer","6/46","1001/20544",0.0233985890069455,0.147094774973867,0.117396606428669,"methylprednisolone/midostaurin/pentoxifylline/isotretinoin/lenvatinib/dexamethasone",6,2.14219727806497
+"39","hsa05163","Human cytomegalovirus infection","9/46","1904/20544",0.023511050098282,0.147094774973867,0.117396606428669,"methylprednisolone/midostaurin/pentoxifylline/dinoprostone/irbesartan/everolimus/selumetinib/treprostinil/pimozide",9,2.14219727806497
+"40","hsa05226","Gastric cancer","6/46","1023/20544",0.0257062889460598,0.155139723987951,0.123817294813507,"midostaurin/isotretinoin/phenytoin/everolimus/lenvatinib/selumetinib",6,2.08894822886428
+"41","hsa05133","Pertussis","5/46","757/20544",0.0264381086477796,0.155139723987951,0.123817294813507,"methylprednisolone/pentoxifylline/irbesartan/dexamethasone/pimozide",5,2.08894822886428
+"42","hsa04728","Dopaminergic synapse","7/46","1323/20544",0.0267043787192374,0.155139723987951,0.123817294813507,"spironolactone/midostaurin/phenytoin/dopamine/amisulpride/doxepin/pimozide",7,2.08894822886428
+"43","hsa05414","Dilated cardiomyopathy","4/46","520/20544",0.0286676819467923,0.160689792935868,0.128246814897047,"spironolactone/pentoxifylline/labetalol/lisinopril",4,2.0537986303504
+"44","hsa01521","EGFR tyrosine kinase inhibitor resistance","6/46","1052/20544",0.028976847906468,0.160689792935868,0.128246814897047,"methylprednisolone/midostaurin/pentoxifylline/everolimus/lenvatinib/selumetinib",6,2.0537986303504
+"45","hsa04925","Aldosterone synthesis and secretion","5/46","781/20544",0.0297193722004097,0.161145040375555,0.128610148703527,"spironolactone/midostaurin/irbesartan/lisinopril/pimozide",5,2.05096955346869
+"46","hsa04659","Th17 cell differentiation","6/46","1076/20544",0.0318853850888398,0.165790203978948,0.132317462191999,"methylprednisolone/midostaurin/pentoxifylline/isotretinoin/irbesartan/everolimus",6,2.02255122721354
+"47","hsa05320","Autoimmune thyroid disease","2/46","125/20544",0.0319349983074204,0.165790203978948,0.132317462191999,"methylprednisolone/pentoxifylline",2,2.02255122721354
+"48","hsa04928","Parathyroid hormone synthesis, secretion and action","5/46","806/20544",0.0334031290507528,0.169799239341327,0.135517080578712,"midostaurin/triamcinolone/pentoxifylline/roflumilast/selumetinib",5,1.99865759067531
+"49","hsa00100","Steroid biosynthesis","3/46","318/20544",0.0341916623569396,0.170260522757006,0.135885231708568,"ezetimibe/voriconazole/tioconazole",3,1.99594463401288
+"50","hsa05034","Alcoholism","6/46","1131/20544",0.0392634934919239,0.191605848240589,0.152920974652756,"midostaurin/pentoxifylline/dopamine/doxepin/selumetinib/pimozide",6,1.87783399656218
+"51","hsa01232","Nucleotide metabolism","4/46","583/20544",0.040995474682467,0.195819434263591,0.15628384529234,"floxuridine/pentoxifylline/fluorouracil/mycophenolate-mofetil",4,1.85608140395118
+"52","hsa04710","Circadian rhythm","2/46","148/20544",0.0434033023744943,0.195819434263591,0.15628384529234,"isotretinoin/dexamethasone",2,1.85608140395118
+"53","hsa04614","Renin-angiotensin system","3/46","353/20544",0.0443693929937817,0.195819434263591,0.15628384529234,"irbesartan/ezetimibe/lisinopril",3,1.85608140395118
+"54","hsa04371","Apelin signaling pathway","6/46","1167/20544",0.0446461582899717,0.195819434263591,0.15628384529234,"midostaurin/irbesartan/everolimus/dexamethasone/selumetinib/pimozide",6,1.85608140395118
+"55","hsa04744","Phototransduction","2/46","151/20544",0.0449977361118998,0.195819434263591,0.15628384529234,"midostaurin/pimozide",2,1.85608140395118
+"56","hsa04721","Synaptic vesicle cycle","3/46","357/20544",0.0456193021508837,0.195819434263591,0.15628384529234,"spironolactone/dopamine/doxepin",3,1.85608140395118
+"57","hsa05014","Amyotrophic lateral sclerosis","6/46","1174/20544",0.0457447039058389,0.195819434263591,0.15628384529234,"midostaurin/mebendazole/pentoxifylline/everolimus/dopamine/dexamethasone",6,1.85608140395118
+"58","hsa04810","Regulation of actin cytoskeleton","6/46","1187/20544",0.0478301523225187,0.199546710441224,0.159258591163186,"midostaurin/pentoxifylline/oxybutynin/lenvatinib/doxepin/selumetinib",6,1.83722603833547
+"59","hsa05332","Graft-versus-host disease","2/46","157/20544",0.0482510488361977,0.199546710441224,0.159258591163186,"methylprednisolone/pentoxifylline",2,1.83722603833547
+"60","hsa05330","Allograft rejection","2/46","164/20544",0.052152089380734,0.210873687491364,0.168298672070329,"methylprednisolone/pentoxifylline",2,1.78201506807004
+"61","hsa05310","Asthma","2/46","165/20544",0.052718421872841,0.210873687491364,0.168298672070329,"methylprednisolone/pentoxifylline",2,1.78201506807004
+"62","hsa05143","African trypanosomiasis","3/46","388/20544",0.0558949825269599,0.218798076516058,0.174623141309192,"methylprednisolone/midostaurin/pentoxifylline",3,1.74512510536034
+"63","hsa05167","Kaposi sarcoma-associated herpesvirus infection","7/46","1557/20544",0.0564929459857035,0.218798076516058,0.174623141309192,"methylprednisolone/midostaurin/pentoxifylline/irbesartan/everolimus/selumetinib/pimozide",7,1.74512510536034
+"64","hsa01522","Endocrine resistance","6/46","1259/20544",0.0604599841223769,0.230503689466562,0.183965412214469,"spironolactone/midostaurin/irbesartan/everolimus/norgestimate/selumetinib",6,1.69300751613834
+"65","hsa04672","Intestinal immune network for IgA production","2/46","183/20544",0.0632807868148789,0.237546338197391,0.189586162927167,"methylprednisolone/pentoxifylline",2,1.66291167216635
+"66","hsa04620","Toll-like receptor signaling pathway","5/46","981/20544",0.0671245780045728,0.248157530804784,0.19805497497362,"methylprednisolone/midostaurin/pentoxifylline/irbesartan/selumetinib",5,1.6192106354437
+"67","hsa04061","Viral protein interaction with cytokine and cytokine receptor","3/46","429/20544",0.071034448312055,0.255607346508531,0.204000686385152,"methylprednisolone/pentoxifylline/irbesartan",3,1.58963192051048
+"68","hsa04916","Melanogenesis","4/46","710/20544",0.0737768687847004,0.255607346508531,0.204000686385152,"midostaurin/lenvatinib/selumetinib/pimozide",4,1.58963192051048
+"69","hsa05144","Malaria","3/46","437/20544",0.0741858159962547,0.255607346508531,0.204000686385152,"methylprednisolone/pentoxifylline/irbesartan",3,1.58963192051048
+"70","hsa04625","C-type lectin receptor signaling pathway","5/46","1019/20544",0.076317817068234,0.255607346508531,0.204000686385152,"methylprednisolone/midostaurin/pentoxifylline/irbesartan/pimozide",5,1.58963192051048
+"71","hsa00240","Pyrimidine metabolism","3/46","446/20544",0.0778055064845753,0.255607346508531,0.204000686385152,"floxuridine/pentoxifylline/fluorouracil",3,1.58963192051048
+"72","hsa04975","Fat digestion and absorption","3/46","447/20544",0.0782125012844663,0.255607346508531,0.204000686385152,"diflorasone/ezetimibe/lomitapide",3,1.58963192051048
+"73","hsa05235","PD-L1 expression and PD-1 checkpoint pathway in cancer","5/46","1027/20544",0.0783379434390621,0.255607346508531,0.204000686385152,"midostaurin/pentoxifylline/irbesartan/everolimus/selumetinib",5,1.58963192051048
+"74","hsa05134","Legionellosis","3/46","448/20544",0.0786204505453271,0.255607346508531,0.204000686385152,"methylprednisolone/midostaurin/pentoxifylline",3,1.58963192051048
+"75","hsa04929","GnRH secretion","4/46","729/20544",0.0795764866050219,0.255607346508531,0.204000686385152,"spironolactone/midostaurin/selumetinib/pimozide",4,1.58963192051048
+"76","hsa04668","TNF signaling pathway","5/46","1032/20544",0.079615403010854,0.255607346508531,0.204000686385152,"methylprednisolone/midostaurin/pentoxifylline/irbesartan/selumetinib",5,1.58963192051048
+"77","hsa04960","Aldosterone-regulated sodium reabsorption","3/46","453/20544",0.080674446814869,0.255643701595169,0.20402970144567,"spironolactone/midostaurin/dexamethasone",3,1.58948970041398
+"78","hsa05020","Prion disease","6/46","1382/20544",0.0863305450482029,0.268968011750073,0.214663857522707,"methylprednisolone/spironolactone/mebendazole/pentoxifylline/irbesartan/dopamine",6,1.53868192770586
+"79","hsa04742","Taste transduction","4/46","756/20544",0.0882038973413215,0.268968011750073,0.214663857522707,"spironolactone/phenytoin/dopamine/zolpidem",4,1.53868192770586
+"80","hsa00670","One carbon pool by folate","2/46","223/20544",0.0889878845350203,0.268968011750073,0.214663857522707,"floxuridine/fluorouracil",2,1.53868192770586
+"81","hsa04713","Circadian entrainment","4/46","766/20544",0.0915121518407845,0.268968011750073,0.214663857522707,"spironolactone/midostaurin/dexamethasone/pimozide",4,1.53868192770586
+"82","hsa04392","Hippo signaling pathway - multiple species","1/46","43/20544",0.0919790979087111,0.268968011750073,0.214663857522707,"midostaurin",1,1.53868192770586
+"83","hsa04145","Phagosome","3/46","480/20544",0.0921671296605248,0.268968011750073,0.214663857522707,"mebendazole/pentoxifylline/irbesartan",3,1.53868192770586
+"84","hsa04914","Progesterone-mediated oocyte maturation","5/46","1085/20544",0.0938534741417652,0.268968011750073,0.214663857522707,"norgestrel/spironolactone/midostaurin/norgestimate/selumetinib",5,1.53868192770586
+"85","hsa05146","Amoebiasis","4/46","773/20544",0.0938636891352269,0.268968011750073,0.214663857522707,"methylprednisolone/midostaurin/pentoxifylline/dexamethasone",4,1.53868192770586
+"86","hsa04720","Long-term potentiation","4/46","777/20544",0.0952205425224282,0.268968011750073,0.214663857522707,"spironolactone/midostaurin/selumetinib/pimozide",4,1.53868192770586
+"87","hsa04930","Type II diabetes mellitus","4/46","779/20544",0.0959025287797391,0.268968011750073,0.214663857522707,"spironolactone/midostaurin/pentoxifylline/everolimus",4,1.53868192770586
+"88","hsa05205","Proteoglycans in cancer","7/46","1790/20544",0.101633595860221,0.274317234724486,0.21893308207088,"midostaurin/pentoxifylline/everolimus/halcinonide/lenvatinib/norgestimate/selumetinib",7,1.51898915717919
+"89","hsa04660","T cell receptor signaling pathway","5/46","1113/20544",0.10188178020151,0.274317234724486,0.21893308207088,"methylprednisolone/midostaurin/pentoxifylline/irbesartan/selumetinib",5,1.51898915717919
+"90","hsa04310","Wnt signaling pathway","4/46","797/20544",0.102146162160109,0.274317234724486,0.21893308207088,"midostaurin/isotretinoin/irbesartan/treprostinil",4,1.51898915717919
+"91","hsa04210","Apoptosis","6/46","1454/20544",0.103980648695019,0.274317234724486,0.21893308207088,"talazoparib/midostaurin/mebendazole/pentoxifylline/irbesartan/selumetinib",6,1.51898915717919
+"92","hsa05168","Herpes simplex virus 1 infection","5/46","1122/20544",0.104535206820082,0.274317234724486,0.21893308207088,"methylprednisolone/midostaurin/pentoxifylline/irbesartan/everolimus",5,1.51898915717919
+"93","hsa05142","Chagas disease","5/46","1129/20544",0.106623230005602,0.274317234724486,0.21893308207088,"methylprednisolone/pentoxifylline/irbesartan/dexamethasone/lisinopril",5,1.51898915717919
+"94","hsa04976","Bile secretion","4/46","810/20544",0.106772200095164,0.274317234724486,0.21893308207088,"phenytoin/irbesartan/ritonavir/dexamethasone",4,1.51898915717919
+"95","hsa04912","GnRH signaling pathway","5/46","1132/20544",0.1075245584564,0.274317234724486,0.21893308207088,"spironolactone/midostaurin/irbesartan/selumetinib/pimozide",5,1.51898915717919
+"96","hsa05214","Glioma","4/46","816/20544",0.108939780674351,0.274317234724486,0.21893308207088,"midostaurin/everolimus/selumetinib/pimozide",4,1.51898915717919
+"97","hsa04971","Gastric acid secretion","3/46","518/20544",0.109430049563894,0.274317234724486,0.21893308207088,"midostaurin/doxepin/pimozide",3,1.51898915717919
+"98","hsa05165","Human papillomavirus infection","6/46","1478/20544",0.110266803580943,0.274317234724486,0.21893308207088,"midostaurin/pentoxifylline/dinoprostone/everolimus/selumetinib/treprostinil",6,1.51898915717919
+"99","hsa04921","Oxytocin signaling pathway","5/46","1148/20544",0.112396637426904,0.274317234724486,0.21893308207088,"spironolactone/midostaurin/irbesartan/selumetinib/pimozide",5,1.51898915717919
+"100","hsa04014","Ras signaling pathway","7/46","1836/20544",0.11242509619856,0.274317234724486,0.21893308207088,"diflorasone/midostaurin/dopamine/amisulpride/lenvatinib/selumetinib/pimozide",7,1.51898915717919
+"101","hsa05130","Pathogenic Escherichia coli infection","5/46","1155/20544",0.114562328875501,0.276764438075467,0.220886199499402,"methylprednisolone/midostaurin/mebendazole/pentoxifylline/irbesartan",5,1.51010764448047
+"102","hsa04150","mTOR signaling pathway","4/46","841/20544",0.118187634381132,0.281917121901615,0.224998565797233,"midostaurin/pentoxifylline/everolimus/selumetinib",4,1.49166125103255
+"103","hsa05322","Systemic lupus erythematosus","2/46","266/20544",0.11942497836101,0.281917121901615,0.224998565797233,"methylprednisolone/pentoxifylline",2,1.49166125103255
+"104","hsa04740","Olfactory transduction","2/46","267/20544",0.12016139622036,0.281917121901615,0.224998565797233,"midostaurin/pimozide",2,1.49166125103255
+"105","hsa05016","Huntington disease","5/46","1185/20544",0.124075427195091,0.288327659386689,0.230114827379368,"spironolactone/midostaurin/mebendazole/everolimus/dopamine",5,1.46917684516699
+"106","hsa04750","Inflammatory mediator regulation of TRP channels","5/46","1195/20544",0.127328576358631,0.291026687736602,0.232268926795821,"midostaurin/dinoprostone/doxepin/treprostinil/pimozide",5,1.45985941140806
+"107","hsa04530","Tight junction","4/46","869/20544",0.128946976714083,0.291026687736602,0.232268926795821,"spironolactone/midostaurin/mebendazole/irbesartan",4,1.45985941140806
+"108","hsa05135","Yersinia infection","5/46","1203/20544",0.129960145583502,0.291026687736602,0.232268926795821,"methylprednisolone/midostaurin/pentoxifylline/irbesartan/selumetinib",5,1.45985941140806
+"109","hsa05132","Salmonella infection","6/46","1549/20544",0.130007823620039,0.291026687736602,0.232268926795821,"methylprednisolone/midostaurin/mebendazole/pentoxifylline/irbesartan/selumetinib",6,1.45985941140806
+"110","hsa04933","AGE-RAGE signaling pathway in diabetic complications","5/46","1208/20544",0.131617873765417,0.291952374534198,0.233007719106241,"methylprednisolone/midostaurin/pentoxifylline/irbesartan/lisinopril",5,1.45668369675386
+"111","hsa04630","JAK-STAT signaling pathway","4/46","880/20544",0.133285948470972,0.29298893177403,0.233834997317496,"methylprednisolone/midostaurin/pentoxifylline/everolimus",4,1.45313955202117
+"112","hsa04970","Salivary secretion","4/46","884/20544",0.134879037807036,0.293843618079614,0.234517124006594,"midostaurin/labetalol/doxepin/pimozide",4,1.45022667027961
+"113","hsa04931","Insulin resistance","5/46","1226/20544",0.137667458710922,0.297264247128008,0.237247134247979,"methylprednisolone/midostaurin/pentoxifylline/everolimus/lisinopril",5,1.43865292060413
+"114","hsa04213","Longevity regulating pathway - multiple species","3/46","578/20544",0.139014932630217,0.297540732998009,0.237467798121793,"midostaurin/everolimus/dopamine",3,1.43772325155578
+"115","hsa04613","Neutrophil extracellular trap formation","5/46","1237/20544",0.141426541830692,0.300070227884251,0.239486592573712,"midostaurin/pentoxifylline/irbesartan/everolimus/selumetinib",5,1.42925784460124
+"116","hsa05150","Staphylococcus aureus infection","2/46","300/20544",0.145066418979318,0.305005762838848,0.243425651963705,"methylprednisolone/pentoxifylline",2,1.41294371382695
+"117","hsa05231","Choline metabolism in cancer","4/46","912/20544",0.146252763328464,0.305005762838848,0.243425651963705,"midostaurin/irbesartan/everolimus/selumetinib",4,1.41294371382695
+"118","hsa04932","Non-alcoholic fatty liver disease","5/46","1260/20544",0.149435265671057,0.306963911565886,0.244988454010737,"norgestrel/methylprednisolone/midostaurin/pentoxifylline/irbesartan",5,1.40654419603468
+"119","hsa04070","Phosphatidylinositol signaling system","2/46","306/20544",0.149707809329264,0.306963911565886,0.244988454010737,"midostaurin/pimozide",2,1.40654419603468
+"120","hsa04727","GABAergic synapse","3/46","612/20544",0.156888341489864,0.316559552228199,0.252646752209736,"spironolactone/midostaurin/zolpidem",3,1.37576300222597
+"121","hsa04136","Autophagy - other","1/46","77/20544",0.15879859455182,0.316559552228199,0.252646752209736,"everolimus",1,1.37576300222597
+"122","hsa04730","Long-term depression","3/46","616/20544",0.159038208490728,0.316559552228199,0.252646752209736,"spironolactone/midostaurin/selumetinib",3,1.37576300222597
+"123","hsa05030","Cocaine addiction","3/46","617/20544",0.159577151328149,0.316559552228199,0.252646752209736,"irbesartan/dopamine/doxepin",3,1.37576300222597
+"124","hsa05210","Colorectal cancer","4/46","949/20544",0.161851338858163,0.317599835792287,0.253477004407131,"midostaurin/irbesartan/everolimus/selumetinib",4,1.37248217246342
+"125","hsa05152","Tuberculosis","5/46","1298/20544",0.163093336310386,0.317599835792287,0.253477004407131,"methylprednisolone/midostaurin/pentoxifylline/dexamethasone/pimozide",5,1.37248217246342
+"126","hsa04657","IL-17 signaling pathway","4/46","954/20544",0.164006472581263,0.317599835792287,0.253477004407131,"methylprednisolone/midostaurin/pentoxifylline/irbesartan",4,1.37248217246342
+"127","hsa05170","Human immunodeficiency virus 1 infection","6/46","1673/20544",0.168358656954505,0.321731308199645,0.256774340021287,"midostaurin/pentoxifylline/irbesartan/everolimus/selumetinib/pimozide",6,1.35955763419436
+"128","hsa04622","RIG-I-like receptor signaling pathway","3/46","636/20544",0.169925809212685,0.321731308199645,0.256774340021287,"midostaurin/pentoxifylline/dexamethasone",3,1.35955763419436
+"129","hsa05164","Influenza A","5/46","1317/20544",0.170113452954263,0.321731308199645,0.256774340021287,"methylprednisolone/midostaurin/pentoxifylline/irbesartan/selumetinib",5,1.35955763419436
+"130","hsa05230","Central carbon metabolism in cancer","4/46","971/20544",0.171414221581778,0.321731308199645,0.256774340021287,"midostaurin/everolimus/lenvatinib/selumetinib",4,1.35955763419436
+"131","hsa04012","ErbB signaling pathway","4/46","987/20544",0.178496060005593,0.331734112103266,0.264757595940915,"midostaurin/irbesartan/everolimus/selumetinib",4,1.32894060391724
+"132","hsa05219","Bladder cancer","3/46","656/20544",0.181030619679299,0.331734112103266,0.264757595940915,"midostaurin/lenvatinib/selumetinib",3,1.32894060391724
+"133","hsa00400","Phenylalanine, tyrosine and tryptophan biosynthesis","1/46","89/20544",0.181213595399541,0.331734112103266,0.264757595940915,"methylprednisolone",1,1.32894060391724
+"134","hsa00232","Caffeine metabolism","1/46","90/20544",0.183054914129026,0.331734112103266,0.264757595940915,"ritonavir",1,1.32894060391724
+"135","hsa04658","Th1 and Th2 cell differentiation","3/46","662/20544",0.184401733855424,0.331734112103266,0.264757595940915,"midostaurin/pentoxifylline/irbesartan",3,1.32894060391724
+"136","hsa05171","Coronavirus disease - COVID-19","5/46","1356/20544",0.184900980516574,0.331734112103266,0.264757595940915,"methylprednisolone/midostaurin/pentoxifylline/irbesartan/lisinopril",5,1.32894060391724
+"137","hsa04152","AMPK signaling pathway","4/46","1016/20544",0.191589000933159,0.341224206041539,0.272331657108217,"midostaurin/labetalol/everolimus/doxepin",4,1.30073462785857
+"138","hsa05211","Renal cell carcinoma","3/46","695/20544",0.2032420314665,0.359355475926276,0.286802256455397,"midostaurin/irbesartan/selumetinib",3,1.24896230259098
+"139","hsa04961","Endocrine and other factor-regulated calcium reabsorption","2/46","378/20544",0.207363642306759,0.363765060586565,0.29032155396253,"midostaurin/norgestimate",2,1.23676616350646
+"140","hsa04650","Natural killer cell mediated cytotoxicity","3/46","707/20544",0.210208498125843,0.363765060586565,0.29032155396253,"midostaurin/pentoxifylline/selumetinib",3,1.23676616350646
+"141","hsa04670","Leukocyte transendothelial migration","3/46","707/20544",0.210208498125843,0.363765060586565,0.29032155396253,"midostaurin/pentoxifylline/irbesartan",3,1.23676616350646
+"142","hsa04920","Adipocytokine signaling pathway","3/46","718/20544",0.216643395928308,0.370871352985346,0.295993098801937,"midostaurin/pentoxifylline/everolimus",3,1.21741913978819
+"143","hsa04060","Cytokine-cytokine receptor interaction","3/46","720/20544",0.217818177956544,0.370871352985346,0.295993098801937,"methylprednisolone/pentoxifylline/irbesartan",3,1.21741913978819
+"144","hsa05033","Nicotine addiction","2/46","392/20544",0.218874896843811,0.370871352985346,0.295993098801937,"spironolactone/zolpidem",2,1.21741913978819
+"145","hsa04064","NF-kappa B signaling pathway","3/46","747/20544",0.23381127944047,0.393053062263226,0.313696361167804,"talazoparib/midostaurin/pentoxifylline",3,1.15932976357288
+"146","hsa03050","Proteasome","1/46","120/20544",0.236449359691006,0.393053062263226,0.313696361167804,"pentoxifylline",1,1.15932976357288
+"147","hsa04662","B cell receptor signaling pathway","3/46","752/20544",0.236798361281534,0.393053062263226,0.313696361167804,"midostaurin/irbesartan/selumetinib",3,1.15932976357288
+"148","hsa05162","Measles","4/46","1120/20544",0.24089452553643,0.397150433992493,0.316966480968987,"methylprednisolone/midostaurin/pentoxifylline/irbesartan",4,1.14895924896372
+"149","hsa05206","MicroRNAs in cancer","5/46","1500/20544",0.243340507701007,0.398490495832522,0.318035986751581,"midostaurin/phenytoin/everolimus/lenvatinib/selumetinib",5,1.14559073671926
+"150","hsa00130","Ubiquinone and other terpenoid-quinone biosynthesis","1/46","127/20544",0.248408032115751,0.404077065574954,0.322494638185361,"methylprednisolone",1,1.13166876866635
+"151","hsa04350","TGF-beta signaling pathway","2/46","433/20544",0.252877200183102,0.406366907649985,0.324322165294423,"midostaurin/pentoxifylline",2,1.12601791988724
+"152","hsa05166","Human T-cell leukemia virus 1 infection","5/46","1523/20544",0.253146598208188,0.406366907649985,0.324322165294423,"methylprednisolone/midostaurin/pentoxifylline/irbesartan/selumetinib",5,1.12601791988724
+"153","hsa05415","Diabetic cardiomyopathy","5/46","1542/20544",0.261328395218749,0.414434463787762,0.330760896465643,"talazoparib/midostaurin/irbesartan/everolimus/lisinopril",5,1.10635953181124
+"154","hsa04722","Neurotrophin signaling pathway","4/46","1164/20544",0.262650715114621,0.414434463787762,0.330760896465643,"midostaurin/irbesartan/selumetinib/pimozide",4,1.10635953181124
+"155","hsa05208","Chemical carcinogenesis - reactive oxygen species","6/46","1937/20544",0.26360350915048,0.414434463787762,0.330760896465643,"norgestrel/midostaurin/irbesartan/ritonavir/dopamine/selumetinib",6,1.10635953181124
+"156","hsa04919","Thyroid hormone signaling pathway","4/46","1175/20544",0.268155471038481,0.414434463787762,0.330760896465643,"midostaurin/everolimus/norgestimate/selumetinib",4,1.10635953181124
+"157","hsa05145","Toxoplasmosis","4/46","1175/20544",0.268155471038481,0.414434463787762,0.330760896465643,"methylprednisolone/midostaurin/pentoxifylline/dexamethasone",4,1.10635953181124
+"158","hsa05418","Fluid shear stress and atherosclerosis","5/46","1559/20544",0.268706975020666,0.414434463787762,0.330760896465643,"midostaurin/pentoxifylline/irbesartan/lenvatinib/pimozide",5,1.10635953181124
+"159","hsa04015","Rap1 signaling pathway","5/46","1566/20544",0.271760304123123,0.414434463787762,0.330760896465643,"midostaurin/pentoxifylline/lenvatinib/selumetinib/pimozide",5,1.10635953181124
+"160","hsa05161","Hepatitis B","5/46","1566/20544",0.271760304123123,0.414434463787762,0.330760896465643,"methylprednisolone/midostaurin/pentoxifylline/irbesartan/selumetinib",5,1.10635953181124
+"161","hsa05216","Thyroid cancer","2/46","475/20544",0.287887834438686,0.435851237403193,0.347853662293316,"midostaurin/selumetinib",2,1.05597339829845
+"162","hsa04935","Growth hormone synthesis, secretion and action","4/46","1217/20544",0.28937664122671,0.435851237403193,0.347853662293316,"spironolactone/midostaurin/everolimus/selumetinib",4,1.05597339829845
+"163","hsa04621","NOD-like receptor signaling pathway","4/46","1226/20544",0.293960861043366,0.440039571132401,0.351196379031468,"methylprednisolone/midostaurin/pentoxifylline/irbesartan",4,1.04640972754919
+"164","hsa04380","Osteoclast differentiation","4/46","1250/20544",0.306238631223679,0.455138805492628,0.36324710533277,"midostaurin/pentoxifylline/irbesartan/selumetinib",4,1.01267194536523
+"165","hsa04926","Relaxin signaling pathway","4/46","1253/20544",0.307778290599523,0.455138805492628,0.36324710533277,"midostaurin/irbesartan/dexamethasone/selumetinib",4,1.01267194536523
+"166","hsa04973","Carbohydrate digestion and absorption","2/46","506/20544",0.313664613923707,0.459436300522508,0.366676943902778,"spironolactone/midostaurin",2,1.00327408043083
+"167","hsa04664","Fc epsilon RI signaling pathway","3/46","879/20544",0.314450254865815,0.459436300522508,0.366676943902778,"midostaurin/pentoxifylline/selumetinib",3,1.00327408043083
+"168","hsa04370","VEGF signaling pathway","3/46","885/20544",0.318169332332853,0.462103077912001,0.368805303769285,"midostaurin/lenvatinib/selumetinib",3,0.997486406249948
+"169","hsa04137","Mitophagy - animal","2/46","523/20544",0.327732485257254,0.473175895874378,0.377642539847972,"midostaurin/irbesartan",2,0.973807192560594
+"170","hsa05017","Spinocerebellar ataxia","3/46","906/20544",0.331196575636679,0.475364496796175,0.379389266209199,"spironolactone/midostaurin/everolimus",3,0.969192513370104
+"171","hsa04723","Retrograde endocannabinoid signaling","3/46","914/20544",0.336161431529578,0.479668943235188,0.382824652711431,"spironolactone/midostaurin/zolpidem",3,0.960178220454447
+"172","hsa04140","Autophagy - animal","3/46","926/20544",0.343608294921838,0.487278528663759,0.388897876629833,"midostaurin/everolimus/selumetinib",3,0.944438497774057
+"173","hsa04068","FoxO signaling pathway","4/46","1326/20544",0.345488464995206,0.487278528663759,0.388897876629833,"methylprednisolone/midostaurin/pentoxifylline/selumetinib",4,0.944438497774057
+"174","hsa04940","Type I diabetes mellitus","1/46","192/20544",0.35105287835914,0.492281047813967,0.392890396227713,"pentoxifylline",1,0.934224596015744
+"175","hsa02010","ABC transporters","1/46","199/20544",0.361252357443509,0.503689001235522,0.401995104523605,"phenytoin",1,0.911315368239245
+"176","hsa00230","Purine metabolism","3/46","963/20544",0.366540185629833,0.508157984623178,0.405561808262674,"pentoxifylline/roflumilast/mycophenolate-mofetil",3,0.902481992226679
+"177","hsa05110","Vibrio cholerae infection","1/46","206/20544",0.371294962892208,0.510924563667949,0.407769820011089,"midostaurin",1,0.897052430419341
+"178","hsa05223","Non-small cell lung cancer","3/46","973/20544",0.372723657102028,0.510924563667949,0.407769820011089,"midostaurin/isotretinoin/selumetinib",3,0.897052430419341
+"179","hsa04071","Sphingolipid signaling pathway","4/46","1401/20544",0.384453348958861,0.517536888860115,0.413047128727874,"midostaurin/pentoxifylline/diphenoxylate/selumetinib",4,0.884193579388961
+"180","hsa04514","Cell adhesion molecules","1/46","216/20544",0.385374085688374,0.517536888860115,0.413047128727874,"pentoxifylline",1,0.884193579388961
+"181","hsa04911","Insulin secretion","2/46","595/20544",0.38639325203733,0.517536888860115,0.413047128727874,"spironolactone/midostaurin",2,0.884193579388961
+"182","hsa05169","Epstein-Barr virus infection","4/46","1405/20544",0.386530422998247,0.517536888860115,0.413047128727874,"methylprednisolone/midostaurin/pentoxifylline/irbesartan",4,0.884193579388961
+"183","hsa00510","N-Glycan biosynthesis","1/46","218/20544",0.388152666645086,0.517536888860115,0.413047128727874,"spironolactone",1,0.884193579388961
+"184","hsa04910","Insulin signaling pathway","4/46","1427/20544",0.397944070606599,0.527708441456577,0.421165063285017,"midostaurin/everolimus/selumetinib/pimozide",4,0.864730447829601
+"185","hsa05412","Arrhythmogenic right ventricular cardiomyopathy","1/46","228/20544",0.40186228929363,0.530023776149436,0.423012936098558,"spironolactone",1,0.860352518610192
+"186","hsa03410","Base excision repair","1/46","240/20544",0.417917536243298,0.542757145553897,0.433175461291937,"talazoparib",1,0.836612410676837
+"187","hsa05217","Basal cell carcinoma","1/46","242/20544",0.420552102842448,0.542757145553897,0.433175461291937,"halcinonide",1,0.836612410676837
+"188","hsa04146","Peroxisome","2/46","642/20544",0.423567238333311,0.542757145553897,0.433175461291937,"dopamine/dexamethasone",2,0.836612410676837
+"189","hsa04666","Fc gamma R-mediated phagocytosis","2/46","643/20544",0.424346578526373,0.542757145553897,0.433175461291937,"midostaurin/selumetinib",2,0.836612410676837
+"190","hsa04977","Vitamin digestion and absorption","1/46","246/20544",0.425786287807838,0.542757145553897,0.433175461291937,"ezetimibe",1,0.836612410676837
+"191","hsa04936","Alcoholic liver disease","4/46","1482/20544",0.426355469994186,0.542757145553897,0.433175461291937,"norgestrel/methylprednisolone/midostaurin/pentoxifylline",4,0.836612410676837
+"192","hsa00220","Arginine biosynthesis","1/46","247/20544",0.42708758994405,0.542757145553897,0.433175461291937,"dexamethasone",1,0.836612410676837
+"193","hsa05212","Pancreatic cancer","3/46","1067/20544",0.430243324950917,0.54393456625919,0.434115162890208,"midostaurin/everolimus/selumetinib",3,0.834445427799837
+"194","hsa04550","Signaling pathways regulating pluripotency of stem cells","2/46","657/20544",0.435202868298366,0.54736855600413,0.436855836327714,"lenvatinib/selumetinib",2,0.828152032300463
+"195","hsa00120","Primary bile acid biosynthesis","1/46","268/20544",0.453758015771851,0.565476304818543,0.45130766346605,"voriconazole",1,0.795605991424641
+"196","hsa04217","Necroptosis","3/46","1107/20544",0.454235064526371,0.565476304818543,0.45130766346605,"talazoparib/midostaurin/pentoxifylline",3,0.795605991424641
+"197","hsa04611","Platelet activation","3/46","1121/20544",0.462543940709498,0.568663758630375,0.453851576128642,"midostaurin/dinoprostone/treprostinil",3,0.789985059219139
+"198","hsa04211","Longevity regulating pathway","2/46","694/20544",0.463380633913767,0.568663758630375,0.453851576128642,"midostaurin/everolimus",2,0.789985059219139
+"199","hsa00350","Tyrosine metabolism","2/46","696/20544",0.464881570579742,0.568663758630375,0.453851576128642,"methylprednisolone/dopamine",2,0.789985059219139
+"200","hsa05218","Melanoma","2/46","700/20544",0.46787640224048,0.568663758630375,0.453851576128642,"midostaurin/selumetinib",2,0.789985059219139
+"201","hsa05225","Hepatocellular carcinoma","3/46","1131/20544",0.468448424117645,0.568663758630375,0.453851576128642,"midostaurin/everolimus/selumetinib",3,0.789985059219139
+"202","hsa04510","Focal adhesion","4/46","1575/20544",0.473701345943403,0.568987953223504,0.45411031642083,"midostaurin/irbesartan/lenvatinib/selumetinib",4,0.789415122746443
+"203","hsa00592","alpha-Linolenic acid metabolism","1/46","285/20544",0.474455308799022,0.568987953223504,0.45411031642083,"diflorasone",1,0.789415122746443
+"204","hsa05131","Shigellosis","4/46","1579/20544",0.475711239580307,0.568987953223504,0.45411031642083,"midostaurin/pentoxifylline/irbesartan/everolimus",4,0.789415122746443
+"205","hsa04979","Cholesterol metabolism","1/46","290/20544",0.480395356820413,0.570431775105068,0.455262633280576,"ezetimibe",1,0.786880810554999
+"206","hsa05222","Small cell lung cancer","2/46","720/20544",0.482707385893708,0.570431775105068,0.455262633280576,"isotretinoin/dexamethasone",2,0.786880810554999
+"207","hsa00520","Amino sugar and nucleotide sugar metabolism","1/46","294/20544",0.485100060680758,0.570431775105068,0.455262633280576,"pentoxifylline",1,0.786880810554999
+"208","hsa00360","Phenylalanine metabolism","1/46","295/20544",0.486269709925632,0.570431775105068,0.455262633280576,"methylprednisolone",1,0.786880810554999
+"209","hsa04978","Mineral absorption","1/46","304/20544",0.496680257738842,0.579856377455872,0.462784425493254,"deferiprone",1,0.770493937009232
+"210","hsa00565","Ether lipid metabolism","1/46","308/20544",0.501240653463356,0.582393902119328,0.464809628524917,"diflorasone",1,0.766127358243943
+"211","hsa03320","PPAR signaling pathway","2/46","749/20544",0.503775619826333,0.5825651717423,0.464946319121335,"isotretinoin/treprostinil",2,0.765833322808624
+"212","hsa01524","Platinum drug resistance","2/46","758/20544",0.510205921968397,0.584102703762879,0.466173426212824,"enoxacin/moxifloxacin",2,0.763197554835582
+"213","hsa04144","Endocytosis","2/46","758/20544",0.510205921968397,0.584102703762879,0.466173426212824,"midostaurin/lenvatinib",2,0.763197554835582
+"214","hsa05416","Viral myocarditis","1/46","318/20544",0.512465528455351,0.584102703762879,0.466173426212824,"pentoxifylline",1,0.763197554835582
+"215","hsa04216","Ferroptosis","1/46","320/20544",0.514680661102537,0.584102703762879,0.466173426212824,"deferiprone",1,0.763197554835582
+"216","hsa00760","Nicotinate and nicotinamide metabolism","1/46","332/20544",0.527766167524065,0.596180300351259,0.47581257793349,"pentoxifylline",1,0.742731246125382
+"217","hsa04340","Hedgehog signaling pathway","1/46","335/20544",0.530983230474696,0.597050268367861,0.476506900983841,"halcinonide",1,0.74127307334041
+"218","hsa05160","Hepatitis C","3/46","1262/20544",0.543071597711554,0.60784160477807,0.485119486125724,"midostaurin/pentoxifylline/selumetinib",3,0.723360055241247
+"219","hsa05220","Chronic myeloid leukemia","2/46","822/20544",0.554398980884316,0.616361486150334,0.491919218886159,"midostaurin/selumetinib",2,0.709440765226134
+"220","hsa04724","Glutamatergic synapse","2/46","824/20544",0.555735766201121,0.616361486150334,0.491919218886159,"spironolactone/midostaurin",2,0.709440765226134
+"221","hsa03250","Viral life cycle - HIV-1","1/46","368/20544",0.564986012051254,0.623785461269257,0.497844306880123,"dexamethasone",1,0.697467887625454
+"222","hsa04972","Pancreatic secretion","2/46","857/20544",0.577397688985372,0.634617279785724,0.506489200864361,"diflorasone/midostaurin",2,0.680252276617713
+"223","hsa04260","Cardiac muscle contraction","1/46","401/20544",0.59657341932774,0.652752978995375,0.52096333526378,"spironolactone",1,0.652075613479054
+"224","hsa04612","Antigen processing and presentation","1/46","415/20544",0.609285855826089,0.661217050232433,0.527718525854185,"pentoxifylline",1,0.639192232394655
+"225","hsa04922","Glucagon signaling pathway","2/46","910/20544",0.610613553164527,0.661217050232433,0.527718525854185,"midostaurin/pimozide",2,0.639192232394655
+"226","hsa00270","Cysteine and methionine metabolism","1/46","421/20544",0.614613300386649,0.661217050232433,0.527718525854185,"methylprednisolone",1,0.639192232394655
+"227","hsa04062","Chemokine signaling pathway","3/46","1400/20544",0.615148649191649,0.661217050232433,0.527718525854185,"midostaurin/irbesartan/selumetinib",3,0.639192232394655
+"228","hsa04360","Axon guidance","2/46","939/20544",0.627961673233428,0.67202915907437,0.536347689511469,"midostaurin/halcinonide",2,0.62297265374798
+"229","hsa00480","Glutathione metabolism","1/46","472/20544",0.657118343636472,0.697950481682901,0.557035544052358,"ezetimibe",1,0.585126227711382
+"230","hsa04390","Hippo signaling pathway","1/46","473/20544",0.657904142569947,0.697950481682901,0.557035544052358,"midostaurin",1,0.585126227711382
+"231","hsa04714","Thermogenesis","2/46","1003/20544",0.664184745277078,0.701563107565399,0.559918787314921,"midostaurin/everolimus",2,0.57996352842167
+"232","hsa04917","Prolactin signaling pathway","2/46","1009/20544",0.667436224907887,0.701958788265192,0.560234580798363,"norgestimate/selumetinib",2,0.579399688681867
+"233","hsa04918","Thyroid hormone synthesis","1/46","510/20544",0.685772143624322,0.716581617035625,0.571905086935249,"midostaurin",1,0.558782233301949
+"234","hsa04115","p53 signaling pathway","1/46","512/20544",0.687213517976788,0.716581617035625,0.571905086935249,"midostaurin",1,0.558782233301949
+"235","hsa04974","Protein digestion and absorption","1/46","531/20544",0.700587934783751,0.727418962073341,0.580554391646109,"lisinopril",1,0.543771784307453
+"236","hsa00330","Arginine and proline metabolism","1/46","584/20544",0.735007684418067,0.759923199144103,0.606496082146933,"dexamethasone",1,0.500057010393121
+"237","hsa04141","Protein processing in endoplasmic reticulum","1/46","600/20544",0.744615403498286,0.766608263517223,0.611831444135834,"midostaurin",1,0.491298452483038
+"238","hsa00380","Tryptophan metabolism","1/46","619/20544",0.755582585733136,0.774630886213803,0.61823431384622,"ritonavir",1,0.480887744764643
+"239","hsa05213","Endometrial cancer","1/46","647/20544",0.770909666425235,0.787037483714465,0.628136041791096,"selumetinib",1,0.464998508918305
+"240","hsa04610","Complement and coagulation cascades","1/46","721/20544",0.807032473784418,0.820483015014158,0.654828980921567,"pentoxifylline",1,0.423381175268526
+"241","hsa04110","Cell cycle","1/46","730/20544",0.811026160296911,0.821121921628407,0.655338893448039,"midostaurin",1,0.422602782572151
+"242","hsa04520","Adherens junction","1/46","749/20544",0.819193574119439,0.825963768946873,0.659203180565882,"midostaurin",1,0.416723475510951
+"243","hsa05120","Epithelial cell signaling in Helicobacter pylori infection","1/46","788/20544",0.834891097584229,0.838326863417909,0.669070188663992,"irbesartan",1,0.401866308566465
+"244","hsa05203","Viral carcinogenesis","1/46","1175/20544",0.933611701072829,0.933611701072829,0.74511719024363,"irbesartan",1,0.294213770632851

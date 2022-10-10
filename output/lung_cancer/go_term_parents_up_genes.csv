@@ -1,0 +1,70 @@
+"","go","cluster","parent","parentSimScore","score","size","term","parentTerm","tfl_drugs","deseq2_drugs","limma_drugs"
+"GO:0000819","GO:0000819",3,"GO:0000226",0.368,3,3,"sister chromatid segregation","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:0051276","GO:0051276",8,"GO:0032200",0.833,13,13,"chromosome organization","telomere organization",TRUE,FALSE,FALSE
+"GO:0098813","GO:0098813",3,"GO:0000226",0.207,1,1,"nuclear chromosome segregation","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:0000070","GO:0000070",3,"GO:0000226",0.265,35,35,"mitotic sister chromatid segregation","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:0007059","GO:0007059",2,"GO:0051301",0.543,88,88,"chromosome segregation","cell division",TRUE,FALSE,FALSE
+"GO:0033044","GO:0033044",8,"GO:0032200",0.518,4,4,"regulation of chromosome organization","telomere organization",TRUE,FALSE,FALSE
+"GO:0000280","GO:0000280",8,"GO:0032200",0.444,0,0,"nuclear division","telomere organization",TRUE,FALSE,FALSE
+"GO:0048285","GO:0048285",8,"GO:0032200",0.55,0,0,"organelle fission","telomere organization",TRUE,FALSE,FALSE
+"GO:0140014","GO:0140014",3,"GO:0000226",0.329,3,3,"mitotic nuclear division","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:0022402","GO:0022402",2,"GO:0051301",0.469,0,0,"cell cycle process","cell division",TRUE,FALSE,FALSE
+"GO:0007051","GO:0007051",3,"GO:0000226",0.776,19,19,"spindle organization","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:0000723","GO:0000723",4,"GO:0006302",0.517,49,49,"telomere maintenance","double-strand break repair",TRUE,FALSE,FALSE
+"GO:0000278","GO:0000278",2,"GO:0051301",0.428,142,142,"mitotic cell cycle","cell division",TRUE,FALSE,FALSE
+"GO:0007049","GO:0007049",2,"GO:0051301",0.543,296,296,"cell cycle","cell division",TRUE,FALSE,FALSE
+"GO:0051301","GO:0051301",2,"GO:0051301",1,352,352,"cell division","cell division",TRUE,FALSE,FALSE
+"GO:0032200","GO:0032200",8,"GO:0032200",1,27,27,"telomere organization","telomere organization",TRUE,FALSE,FALSE
+"GO:0051256","GO:0051256",3,"GO:0000226",0.371,11,11,"mitotic spindle midzone assembly","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:0051726","GO:0051726",2,"GO:0051301",0.323,256,256,"regulation of cell cycle","cell division",TRUE,FALSE,FALSE
+"GO:0051225","GO:0051225",3,"GO:0000226",0.637,46,46,"spindle assembly","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:1903047","GO:1903047",2,"GO:0051301",0.342,0,0,"mitotic cell cycle process","cell division",TRUE,FALSE,FALSE
+"GO:0000022","GO:0000022",3,"GO:0000226",0.423,2,2,"mitotic spindle elongation","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:0007052","GO:0007052",3,"GO:0000226",0.618,58,58,"mitotic spindle organization","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:1902850","GO:1902850",3,"GO:0000226",0.708,2,2,"microtubule cytoskeleton organization involved in mitosis","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:0051231","GO:0051231",3,"GO:0000226",0.638,0,0,"spindle elongation","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:0051255","GO:0051255",3,"GO:0000226",0.6,2,2,"spindle midzone assembly","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:0140694","GO:0140694",12,"GO:0140694",1,0,0,"non-membrane-bounded organelle assembly","non-membrane-bounded organelle assembly",TRUE,FALSE,FALSE
+"GO:0000226","GO:0000226",3,"GO:0000226",1,142,142,"microtubule cytoskeleton organization","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:0090307","GO:0090307",3,"GO:0000226",0.459,50,50,"mitotic spindle assembly","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:0010833","GO:0010833",4,"GO:0006302",0.482,10,10,"telomere maintenance via telomere lengthening","double-strand break repair",TRUE,FALSE,FALSE
+"GO:0010564","GO:0010564",2,"GO:0051301",0.29,12,12,"regulation of cell cycle process","cell division",TRUE,FALSE,FALSE
+"GO:1900182","GO:1900182",7,"GO:1900182",1,33,33,"positive regulation of protein localization to nucleus","positive regulation of protein localization to nucleus",TRUE,FALSE,FALSE
+"GO:0043648","GO:0043648",5,"GO:0006099",0.218,2,2,"dicarboxylic acid metabolic process","tricarboxylic acid cycle",TRUE,FALSE,FALSE
+"GO:0019752","GO:0019752",5,"GO:0006099",0.249,10,10,"carboxylic acid metabolic process","tricarboxylic acid cycle",TRUE,FALSE,FALSE
+"GO:0043436","GO:0043436",5,"GO:0006099",0.292,0,0,"oxoacid metabolic process","tricarboxylic acid cycle",TRUE,FALSE,FALSE
+"GO:0006082","GO:0006082",5,"GO:0006099",0.349,21,21,"organic acid metabolic process","tricarboxylic acid cycle",TRUE,FALSE,FALSE
+"GO:1904356","GO:1904356",4,"GO:0006302",0.352,2,2,"regulation of telomere maintenance via telomere lengthening","double-strand break repair",TRUE,FALSE,FALSE
+"GO:0006996","GO:0006996",8,"GO:0032200",0.709,10,10,"organelle organization","telomere organization",TRUE,FALSE,FALSE
+"GO:0007017","GO:0007017",2,"GO:0051301",0.543,17,17,"microtubule-based process","cell division",TRUE,FALSE,FALSE
+"GO:0090068","GO:0090068",2,"GO:0051301",0.233,2,2,"positive regulation of cell cycle process","cell division",TRUE,FALSE,FALSE
+"GO:0006259","GO:0006259",4,"GO:0006302",0.769,20,20,"DNA metabolic process","double-strand break repair",TRUE,FALSE,FALSE
+"GO:1900180","GO:1900180",7,"GO:1900182",0.845,8,8,"regulation of protein localization to nucleus","positive regulation of protein localization to nucleus",TRUE,FALSE,FALSE
+"GO:0051054","GO:0051054",4,"GO:0006302",0.459,2,2,"positive regulation of DNA metabolic process","double-strand break repair",TRUE,FALSE,FALSE
+"GO:0007004","GO:0007004",6,"GO:0032212",0.613,35,35,"telomere maintenance via telomerase","positive regulation of telomere maintenance via telomerase",TRUE,FALSE,FALSE
+"GO:0006278","GO:0006278",6,"GO:0032212",0.499,8,8,"RNA-dependent DNA biosynthetic process","positive regulation of telomere maintenance via telomerase",TRUE,FALSE,FALSE
+"GO:2000573","GO:2000573",6,"GO:0032212",0.807,16,16,"positive regulation of DNA biosynthetic process","positive regulation of telomere maintenance via telomerase",TRUE,FALSE,FALSE
+"GO:0019471","GO:0019471",11,"GO:0019470",0.676,0,0,"4-hydroxyproline metabolic process","4-hydroxyproline catabolic process",TRUE,FALSE,FALSE
+"GO:0019470","GO:0019470",11,"GO:0019470",1,4,4,"4-hydroxyproline catabolic process","4-hydroxyproline catabolic process",TRUE,FALSE,FALSE
+"GO:0032204","GO:0032204",4,"GO:0006302",0.369,12,12,"regulation of telomere maintenance","double-strand break repair",TRUE,FALSE,FALSE
+"GO:0051302","GO:0051302",2,"GO:0051301",0.595,12,12,"regulation of cell division","cell division",TRUE,FALSE,FALSE
+"GO:0051642","GO:0051642",7,"GO:1900182",0.212,19,19,"centrosome localization","positive regulation of protein localization to nucleus",TRUE,FALSE,FALSE
+"GO:0051052","GO:0051052",4,"GO:0006302",0.534,0,0,"regulation of DNA metabolic process","double-strand break repair",TRUE,FALSE,FALSE
+"GO:0061842","GO:0061842",7,"GO:1900182",0.222,1,1,"microtubule organizing center localization","positive regulation of protein localization to nucleus",TRUE,FALSE,FALSE
+"GO:2001169","GO:2001169",6,"GO:0032212",0.292,2,2,"regulation of ATP biosynthetic process","positive regulation of telomere maintenance via telomerase",TRUE,FALSE,FALSE
+"GO:0044281","GO:0044281",5,"GO:0006099",0.298,0,0,"small molecule metabolic process","tricarboxylic acid cycle",TRUE,FALSE,FALSE
+"GO:0007088","GO:0007088",3,"GO:0000226",0.229,28,28,"regulation of mitotic nuclear division","microtubule cytoskeleton organization",TRUE,FALSE,FALSE
+"GO:2001252","GO:2001252",8,"GO:0032200",0.421,2,2,"positive regulation of chromosome organization","telomere organization",TRUE,FALSE,FALSE
+"GO:0032212","GO:0032212",6,"GO:0032212",1,39,39,"positive regulation of telomere maintenance via telomerase","positive regulation of telomere maintenance via telomerase",TRUE,FALSE,FALSE
+"GO:0006403","GO:0006403",9,"GO:0015908",0.303,2,2,"RNA localization","fatty acid transport",TRUE,FALSE,FALSE
+"GO:0045787","GO:0045787",2,"GO:0051301",0.263,34,34,"positive regulation of cell cycle","cell division",TRUE,FALSE,FALSE
+"GO:1904358","GO:1904358",4,"GO:0006302",0.299,5,5,"positive regulation of telomere maintenance via telomere lengthening","double-strand break repair",TRUE,FALSE,FALSE
+"GO:0006099","GO:0006099",5,"GO:0006099",1,43,43,"tricarboxylic acid cycle","tricarboxylic acid cycle",TRUE,FALSE,FALSE
+"GO:0006302","GO:0006302",4,"GO:0006302",1,91,91,"double-strand break repair","double-strand break repair",TRUE,FALSE,FALSE
+"GO:0036414","GO:0036414",10,"GO:0036414",1,6,6,"histone citrullination","histone citrullination",FALSE,TRUE,FALSE
+"GO:0018101","GO:0018101",10,"GO:0036414",0.734,5,5,"protein citrullination","histone citrullination",FALSE,TRUE,FALSE
+"GO:0018195","GO:0018195",10,"GO:0036414",0.69,0,0,"peptidyl-arginine modification","histone citrullination",FALSE,TRUE,FALSE
+"GO:0032502","GO:0032502",1,"GO:0030154",0.536,24,24,"developmental process","cell differentiation",FALSE,TRUE,FALSE
+"GO:0030154","GO:0030154",1,"GO:0030154",1,618,618,"cell differentiation","cell differentiation",FALSE,TRUE,FALSE
+"GO:0048869","GO:0048869",1,"GO:0030154",0.831,0,0,"cellular developmental process","cell differentiation",FALSE,TRUE,FALSE
+"GO:0015908","GO:0015908",9,"GO:0015908",1,10,10,"fatty acid transport","fatty acid transport",FALSE,FALSE,TRUE
