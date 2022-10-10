@@ -15,7 +15,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # START 
     Goal/Purpose of operations: 
-    quick summary 
+    To compare the centrality metrics for the disease genes from limma, DESeq2, and the transfer learning approach, we compared the distribution of the log2-transformed metrics (degree, betweenness, and Eigenvalue of centrality) of the unique genes identified by the methods. Then we conducted a Kruskal-Wallis test to determine if there were differences between the three methods. If this was significant ( ɑ = 0.05), then a pairwise Wilcox test with Benjamini Hochberg p-value adjustment was applied. We did not consider overlapping genes due to the assumption of independence for both the Kruskal-Wallis and pairwise Wilcox tests. 
+
     
     Finished psedocode on: 
     220323
@@ -27,7 +28,7 @@ knitr::opts_chunk$set(echo = TRUE)
     Transfer_leanring_R03
     
     Docker:
-    jenfisher7/rstudio_tf_dr_v3
+    rstudio_cancer_dr
     
     Directory of operations: 
     /home/rstudio/ "Docker"
@@ -42,237 +43,108 @@ knitr::opts_chunk$set(echo = TRUE)
     Papers and tools: 
     igrpah was used for PPI network analysis. 
     gPROFILER2 was used for pathway analysis.
+    
 # STEPS
 ### Set working directory 
+```{r}
+library(recount3)
+library(SummarizedExperiment)
+source("/home/rstudio/script/functions_cancer_signature_reversion_JLF.R")
+library(signatureSearch)
+library(HDF5Array)
+library(viridis)
+library(tidyr)
+library(gprofiler2)
+library(ggplot2)
+library(ggpubr)
+library(VennDiagram)
+library(ComplexHeatmap)
+library(dplyr)
+library(gplots)
+library(circlize)
+source("~/script/plier_util.R")
+source("~/script/test_LV_differences.R")
+library(dplyr)
+library(gridExtra)
+```
 ### load in data
 ```{r}
-#recount3_plier <- readRDS("~/data/recount3/recount3_plier_wo.rds")
+string_ppi_details<- readRDS("~/string_ppi_metrics.rds")
 ```
+
+gbm
+```{r}
+gbm_tfl_input <- readRDS("~/output/TF_L_GBM/22004_SR_gene_list_gbm_tfl.rds")
+gbm_deseq2_input<- readRDS("~/output/deseq2_gbm/SR_gene_list_gbm_deseq2.rds")
+gbm_limma_input<- readRDS("~/output/limma_gbm/SR_gene_list_gbm_limma.rds")
+```
+
+liver 
+```{r}
+liver_tfl_input <- readRDS("~/output/liver_cancer/TFL_res/SR_gene_list_liver_tfl.rds")
+liver_deseq2_input <- readRDS("~/output/liver_cancer/deseq2_res/SR_gene_list_liver_deseq2.rds")
+liver_limma_input <- readRDS("~/output/liver_cancer/limma_res/SR_gene_list_liver_limma.rds")
+```
+
+lung 
+```{r}
+lung_deseq2_input <- readRDS("~/output/lung_cancer/deseq2_res/SR_gene_list_luad_deseq2.rds")
+lung_tfl_input<- readRDS("~/output/lung_cancer/deseq2_res/SR_gene_list_lung_tfl.rds")
+lung_limma_input<- readRDS("~/output/lung_cancer/deseq2_res/SR_gene_list_lung_limma.rds")
+```
+
+pancreas
+```{r}
+paad_tfl_input <- readRDS("~/output/pancreas_cancer/TFL_res/SR_gene_list_paad_tfl.rds")
+paad_limma_input <- readRDS("~/output/pancreas_cancer/limma_res/SR_gene_list_paad_limma.rds")
+paad_deseq2_input <- readRDS("~/output/pancreas_cancer/deseq2_res/SR_gene_list_paad_deseq2.rds")
+```
+
+
+```{r}
+string_ppi_details$degree_log <- log(string_ppi_details$degree)
+string_ppi_details$log_betweness <- log(string_ppi_details$betweenness)
+string_ppi_details$eign_cent_log <- log(string_ppi_details$eign_cent)
+string_ppi_details$genes<- rownames(string_ppi_details)
+```
+
 ### Analysis
 
+
+```{r}
+network_cent_method_plotting(gbm_limma_input, gbm_deseq2_input, gbm_tfl_input, string_ppi_details= string_ppi_details, "~/output/gbm_plots/220822_network_gbm_")
+```
+
+
+
+```{r}
+network_cent_method_plotting(liver_limma_input, liver_deseq2_input, liver_tfl_input, string_ppi_details= string_ppi_details,"~/output/liver_cancer/220822_network_liver_" )
+```
+
+```{r}
+network_cent_method_plotting(lung_limma_input, lung_deseq2_input, lung_tfl_input, string_ppi_details= string_ppi_details, "~/output/lung_cancer/220822_network_lung_" )
+```
+
+```{r}
+network_cent_method_plotting(paad_limma_input, paad_deseq2_input, paad_tfl_input, string_ppi_details= string_ppi_details, "~/output/pancreas_cancer/220822_network_paad_" )
+```
+### Save Data
+NA
+
+### Save Figures
+done
     
-
-add the limma gene set list 
-
-```{r}
-GBM_GTEX_gene_limma_res <- readRDS("~/output/limma_gbm/220421_GBM_GTEX_gene_limma_res.rds")
-```
-
-
-```{r}
-GBM_gene_limma_sig<- GBM_GTEX_gene_limma_res$limma[abs(GBM_GTEX_gene_limma_res$limma$logFC) > 2 & GBM_GTEX_gene_limma_res$limma$adj.P.Val < 0.05,]
-```
-filter to genes only in latent varaibles 
-
-GBM_gene_limma_sig
-```{r}
-limma_genes_v2 <- GBM_gene_limma_sig$LV[GBM_gene_limma_sig$LV %in% rownames(Z_mtx)]
-```
-
-
-compare gene list across different methods
-
-```{r}
-library(VennDiagram)
-```
-```{r}
-# Prepare a palette of 3 colors with R colorbrewer:
-myCol <- c("#440154FF" , "#31688EFF" ,"#35B779FF")
-```
-
-```{r}
-venn.diagram(
-        x = list(limma_genes_v2, deseq2_genes_v2, topgenes),
-        category.names = c("limma" , "DESeq2" , "Transfer Learning"),
-        filename = '~/output/gene_gbm_venn_diagramm.png',
-        output=TRUE,
-        
-        # Output features
-        imagetype="png" ,
-        height = 480 , 
-        width = 480 , 
-        resolution = 300,
-        compression = "lzw",
-        
-        # Circles
-        lwd = 2,
-        lty = 'blank',
-        fill = myCol,
-        
-        # Numbers
-        cex = .4,
-        fontface = "bold",
-        fontfamily = "sans",
-        
-        # Set names
-        cat.cex = 0.3,
-        cat.fontface = "bold",
-        cat.default.pos = "outer",
-        cat.pos = c(-27, 27, 135),
-        cat.dist = c(0.055, 0.055, 0.085),
-        cat.fontfamily = "sans",
-        rotation = 1
-)
-```
-
-
-pathway analysis for each unique gene set
-```{r}
-un_tf_genes <- setdiff(topgenes, c(limma_genes_v2, deseq2_genes_v2))
-```
-
-```{r}
-deseq_results<- deseq_results[complete.cases(deseq_results),]
-up_genes<- deseq_results$Symbol[deseq_results$log2FoldChange >0]
-down_genes<- deseq_results$Symbol[deseq_results$log2FoldChange <0]
-```
-
-
-```{r}
-pathway_geneset_analysis<- function(geneset , method ){
-  #get up down gene set 
-  up <- geneset[geneset %in% up_genes]
-  #print(up)
-  down <- geneset[geneset %in% down_genes]
- downset_pathway_results <- gost(query = down, 
-                organism = "hsapiens", ordered_query = TRUE, 
-                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
-                measure_underrepresentation = FALSE, evcodes = FALSE, 
-                user_threshold = 0.05, correction_method = "g_SCS", 
-                domain_scope = "annotated", custom_bg = rownames(Z_mtx), 
-                numeric_ns = "", sources = NULL, as_short_link = FALSE)
-  downset_pathway_results<- downset_pathway_results$result
-  
-  upset_pathway_results <- gost(query = up, 
-                organism = "hsapiens", ordered_query = TRUE, 
-                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
-                measure_underrepresentation = FALSE, evcodes = FALSE, 
-                user_threshold = 0.05, correction_method = "g_SCS", 
-                domain_scope = "annotated", custom_bg = rownames(Z_mtx), 
-                numeric_ns = "", sources = NULL, as_short_link = FALSE)
-  upset_pathway_results<- upset_pathway_results$result
-  
-  pathway_results<- rbind(upset_pathway_results, downset_pathway_results)
-  pathway_results$set<- c(rep("Up", nrow(upset_pathway_results)), rep("Down", nrow(downset_pathway_results)))
-  file_name<- paste0("~/output/gbm_",  method, "_gene_pathways.csv")
-  write.csv2(as.data.frame(pathway_results[,-14]), file_name )
-  
-  file_name<- paste0("~/output/gbm_", method, "_gene_pathways.png")
-  if(nrow(pathway_results)<50){
-    ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value))+geom_tile()+scale_fill_viridis(direction=-1)+theme_classic()+ labs(title=name,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
+# END
+    Location of final scripts:
+    script 
     
-  }else{
-    pathway_results<- pathway_results[pathway_results$source %in% c("KEGG","REAC","GO:MF" ),]
-    ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value)) + geom_tile()+ scale_fill_viridis(direction=-1)+ theme_classic() + labs(title=method,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
-  }
-  ggsave(file_name, width = 12, height = 14)
-}
-```
-
-note due to the overlapping of genes between the different methods. A direct statistical test can not be done due to the independence assumption. 
-
-pathways analysi of genes from limma and DESEQ2
+    Location of data produced:
+    ~/output
+    
+    Dates when operations were done:
+    220822
+    
+## Versions
 ```{r}
-library(gprofiler2)
-#no signifcant pathways
-#pathway_geneset_analysis(un_tf_genes, "transfer_learning")
-```
-
-```{r}
-pathway_geneset_analysis(limma_genes_v2, "limma")
-```
-
-```{r}
-pathway_geneset_analysis(deseq2_genes_v2, "DESeq2")
-```
-
-
-```{r}
-lima_ppi <- string_ppi_details[rownames(string_ppi_details) %in% limma_genes_v2,]
-deseq2_ppi <- string_ppi_details[rownames(string_ppi_details) %in% deseq2_genes_v2,]
-transfer_ppi <- string_ppi_details[rownames(string_ppi_details) %in% topgenes,]
-ppi_details_sig_3_methods <- rbind(lima_ppi ,deseq2_ppi , transfer_ppi)
-ppi_details_sig_3_methods$method <- c(rep("limma", nrow(lima_ppi)), rep("DESeq2", nrow(deseq2_ppi)), rep("Transfer Learning", nrow(transfer_ppi)))
-```
-
-```{r}
-ggplot(ppi_details_sig_3_methods, aes(x=method , y=degree_log, fill=method )) + 
-  geom_violin()+ geom_point() +labs(title="PPI Degree",x="Signficant Genes in Method", y = "PPI log(Degree)", color= "Method") + scale_colour_manual(values = c("#440154FF" , "#31688EFF" ,"#35B779FF"), aesthetics = c("colour", "fill"))+ theme_minimal()
-```
-
-```{r}
-#string_ppi_details$log_betweness <- log(string_ppi_details$betweenness)
-ggplot(ppi_details_sig_3_methods, aes(x=method, y=log_betweness , fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="PPI Betweeness",x="Signficant Genes in Method", y = "PPI log(Betweeness)", color= "Method") + scale_colour_manual(values =  c("#440154FF" , "#31688EFF" ,"#35B779FF"), aesthetics = c("colour", "fill"))+ theme_minimal()
-```
-
-```{r}
-string_ppi_details$eign_cent_log <- log(string_ppi_details$eign_cent)
-ggplot(ppi_details_sig_3_methods, aes(x=method, y=eign_cent_log, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="PPI Eigenvector Centrality Scores",x="Signficant Genes in Method", y = "PPI log(Eigenvector Centrality Scores)", color= "Method") + scale_colour_manual(values =  c("#440154FF" , "#31688EFF" ,"#35B779FF"), aesthetics = c("colour", "fill"))+ theme_minimal()
-```
-
-
-To compare the different centrality metrics for the GBM output genes from limma, deseq2, and the transfer learning approach. For each method, I randomly selected the same number of genes and calculated the median of each of the three log2 transformed centrality metrics. This was done 100,000 times. A one-way t-test was conducted to determine if the genes determined if one of the methods had a higher median of the centrality metrics than by chance. We used this approach over a comparison of one method vs another via Wilcox test and ANOVA due to the assumption of independence because of the overlap of genes between methods. 
-
-
-```{r}
-network_metric_anaylsis<- function(geneset, method){
-  #calculate the median for each metric for method
-  degree_med <- median(string_ppi_details$degree_log[ rownames(string_ppi_details) %in% geneset ])
-  print(degree_med)
-  betweenness_med <- median(string_ppi_details$log_betweness[ rownames(string_ppi_details) %in% geneset ])
-  print(betweenness_med)
-  eign_cent_med <- median(string_ppi_details$eign_cent_log[ rownames(string_ppi_details) %in% geneset ])
-  print(eign_cent_med)
-  
-  random_degree_med <- c()
-  random_betweenness_med<- c()
-  random_eign_cent_med<- c() 
-  
-  for( i in 1:100000){
-    sub_genes <- rownames(Z_mtx)[sample(1:nrow(Z_mtx), length(geneset))]
-    sub_ppi <- string_ppi_details[rownames(string_ppi_details) %in% sub_genes,]
-    random_degree_med[i] <- median(sub_ppi$degree_log)
-    random_betweenness_med[i] <- median(sub_ppi$log_betweness)
-    random_eign_cent_med[i] <- median(sub_ppi$eign_cent_log)
-  }
-  #print(hist(random_degree_med))
-  #print("wilcox degree")
-  #print(random_degree_med[1:5])
-  print(t.test(random_degree_med,mu= degree_med, alternative = "less" ))
-   
-  #print(hist(random_betweenness_med))
- # print("wilcox betweenness")
-  print(t.test(random_betweenness_med,mu=betweenness_med, alternative = "less" ))
-  
-  #print(hist(random_eign_cent_med))
-  #print("wilcox betweenness")
-  print(t.test(random_eign_cent_med, mu=eign_cent_med, alternative ="less"))
-  
-  #degree
-  
-    #Print plot   
-  
-  #betweeness 
-  
-    #Print plot
-  
-  #eignvector 
-    #print plot 
-  
-  
-}
-```
-
-```{r}
-network_metric_anaylsis(topgenes)
-```
-
-```{r}
-network_metric_anaylsis(limma_genes_v2)
-```
-
-```{r}
-network_metric_anaylsis(deseq2_genes_v2)
+sessionInfo()
 ```

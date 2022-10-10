@@ -86,15 +86,16 @@ deseq2_function <- function(dds, file_name, condition= "status", B= "Primary Tum
   #B and A are the different groups to compare to
   #B-TUMOR 
   #A-CONTROL
-
+  dds$status <- factor(dds$status, levels = c("Solid Tissue Normal","Primary Tumor"))
   #run deseq2 model
   dds <- DESeq(dds)
-  
+  print(resultsNames(dds))
   #get results and save them and return it 
-  dds_res <- results(dds, c(condition,B,A))
-  res_df <- as.data.frame(dds_res)
-  write.table(res_df, file=file_name, sep=",", row.names =TRUE)
-  return(res_df)
+  #dds_res <- results(dds, c(condition,B,A))
+  #res_df <- as.data.frame(dds_res)
+  res.ape <- as.data.frame(lfcShrink(dds=dds, coef=3, type="apeglm"))
+  write.table(res.ape, file=file_name, sep=",", row.names =TRUE)
+  return(res.ape)
 }
 
 
@@ -415,6 +416,46 @@ LVTestWrapperJLF_v2 <- function(b.matrix,
   return(return.list)
 }
 
+gene_reordering_testing <- function(seed_num, tpm_table, test_vector, groups){
+  #input 
+  #seed_num- the seed number 
+  #tpm_table- the gene expression tpm normalized table
+  #test_vector- the vector that matches the colnames in in the tpm table that say what group the samples belong in 
+  #groups- the groups in the comparision 
+  
+  #output
+  #noise_number- the number of latent variabels are different
+  
+  limma_list <- vector(mode = "list", length = 10)
+  #print(test)
+  set.seed(seed_num)
+  
+  for(i in 1:10){
+    #print(groups[[i]])
+    tpm_table_sub <- tpm_table[sample(1:nrow(tpm_table), size= groups[[i]]) ,]
+    tpm_table_left<- tpm_table[! rownames(tpm_table) %in% rownames(tpm_table_sub ) ,]
+    test_index <- sample(1:groups[[i]], size= groups[[i]])
+    reorder_genes <-  rownames(tpm_table_sub)[test_index ]
+    rownames(tpm_table_sub) <- reorder_genes
+    tpm_table_v3 <- rbind(tpm_table_sub, tpm_table_left)
+    test <- GetOrderedRowNorm(as.matrix(tpm_table_v3),recount3_plier)
+    zeros<- rownames(test)[!complete.cases(test)]
+    tpm_table_v4 <- tpm_table_v3[!rownames(tpm_table_v3) %in% zeros,]
+    b.matrix <- GetNewDataB(as.matrix(tpm_table_v4), recount3_plier)
+    test_res <- TestLVDifferences(b.matrix, test_vector ,use.bonferroni = TRUE)
+    limma_list[[i]] <- test_res$LV[test_res$adj.P.Val < 0.05 & abs(test_res$logFC)> 0.05]
+    #print("Done")
+    
+  }
+  noise_number<- c()
+  for(j in 1:10){
+    noise_number[j] <- length(limma_list[[j]])
+  }
+  return(noise_number)    
+}
+
+
+
 #LINCS match the ids to gene ids
 match_to_LINCS_genes <- function(gene_list){
   #gene_list- gene symbols to matching 
@@ -487,14 +528,16 @@ FDA_APPROVAL_CHECK<- function(drug_list){
   fda_approve <- fda_info[fda_info$market_status_v2 %in% c("Over-the-Counter", "Prescription" ),]
   return_list <- c()
   for (i in 1:length(drug_list)){
-    test <- grep( drug_list[i], fda_approve$ActiveIngredient, ignore.case= TRUE)
+    drug <- str_replace_all(drug_list[i], "[^[:alnum:]]", " ")
+    drug <- str_squish(drug)
+    test <- grep( drug, fda_approve$ActiveIngredient, ignore.case= TRUE)
     if (length(test)>0 ){
       return_list[i] <- TRUE
     }else{
       return_list[i] <- FALSE
     }
-    #more than 4 character are needed for matching
-    if (nchar(drug_list[i])< 4){
+    #more than 5 character are needed for matching
+    if (nchar(drug_list[i])< 6){
       return_list[i] <- FALSE
     }
   }
@@ -512,7 +555,9 @@ clinical_trial_check<- function(drug_list, clinical_trial_info){
   #return_list- a vector of true or false of drug list having a clinical trial presence 
   return_list <- c()
   for (i in 1:length(drug_list)){
-    test <- grep( drug_list[i], clinical_trial_info$Interventions, ignore.case= TRUE)
+    drug <- str_replace_all(drug_list[i], "[^[:alnum:]]", " ")
+    drug <- str_squish(drug)
+    test <- grep( drug, clinical_trial_info$Interventions, ignore.case= TRUE)
     if (length(test)>0 ){
       return_list[i] <- TRUE
     }else{
@@ -548,6 +593,20 @@ sig_filter_JLF<- function (meta, pert_type = "trt_cp", dose, time = "24 h") {
 #LINCS pathway & Drug targets
 
 drug_analysis <- function(drug_name, target_list,  tpm_df, sample_vector, deseq_results, se, cell_lincs= "__GI1__trt_cp", result_path){
+  #input
+  #drug_name- character of the name of drug
+  #target_list- the list of genes that are drug targets
+  #tpm_df- a data frame with the transcript per million for the gene expresssion for tummor and control 
+  #sample_vector- same order as the column names of the tpm_df, but the sample group (tumor or control)
+  #deseq2_result- deseq2 result data frame with the symbol inculded for each gene
+  #se- summarized experiment for LINCS level 5 data
+  #cell_lincs- the cell line for the cancer in the following format "__GI1__trt_cp"
+  #result_path- the path to the directory to store csv and plot images 
+  
+  #output
+  #target different expression plots
+  #pathway analysis for perturbation based on LINCS profiles
+  
   #drug target expression
   tpm_sub <- tpm_df[rownames(tpm_df) %in% target_list,]
   tpm_sub$genes<- rownames(tpm_sub)
@@ -650,7 +709,23 @@ drug_analysis <- function(drug_name, target_list,  tpm_df, sample_vector, deseq_
 }
 
 #clinical trials -testing
+#To evaluate, if one of the methods was able to determine more candidates that were already in clinical trials for specific cancer, 
+#a permutation test was conducted. For each cancer the drugs that were in the LINCS 2020 database, it was evaluated if it was FDA approved. 
+#Then randomly the same number of drugs that were significant in the method being tested (i.e., DESeq2, limma, Transfer Learning) and 
+#determine what fraction of the randomly selected drugs were in clinical trials for specific cancer. This was done 10,000 and a 
+#one-tailed Wilcox test determined if the fraction of FDA-approved drugs that were higher than by randomly selected drugs.
+
 clinical_trial_testing<- function(seed, cell_line,number_sig_drugs, fraction_clinical_drugs, CT_DATA){
+  #input 
+  #seed- the seed for the analysis for reproducible results
+  #cell_line- name of cell line 
+  #number_sig_drugs- the number of significant drugs from method
+  #fraction_clinical_drugs- the fraction of drugs that are in clinical trial compared to all drug. Note this is decimal number
+  #CT_DATA- the dataframe with the clinical trial data for the Cancer of interest.
+  
+  #Output
+  #results for the one-tailed wilcox test 
+  
   FDA_CT_table<- CT_DATA
   library(HDF5Array)
   lincs_samples<- HDF5Array("~/data/lincs_2020.h5", name="colnames")
@@ -691,7 +766,20 @@ clinical_trial_testing<- function(seed, cell_line,number_sig_drugs, fraction_cli
 }
 
 #Prism testing
+# The PRISM study considered a cell line as sensitive to a treatment if the median-collapsed fold-change is less than 0.3. 
+#To evaluate if one of the methods was able to identify a larger fraction of candidates that cancer cell lines (for specific cancer in question)
+#were more sensitive than by random chance, a permutation test was conducted. For this, the same number of drugs were randomly selected. 
+#The median of the fraction of cell lines sensitive (log2  fold change < 0.3) across the randomly selected drugs. A one-tail Wilcox 
+#test was used to determine if the median fraction was higher than by random chance. 
+
 PRISM_testing<- function(seed, cell_line, drugs, drug_senstive_precentage_all_drugs){
+  #input 
+  #seed- the seed for the analysis for reproducible results
+  #cell_line- name of cell line 
+  #drug_senstive_precentage_all_drugs- Prism results for the drug candidates signifcant in method
+  
+  #output
+  #the results of the one-tail wilcox test 
   
   #check all drugs for fda approval
   library(HDF5Array)
@@ -732,8 +820,14 @@ PRISM_testing<- function(seed, cell_line, drugs, drug_senstive_precentage_all_dr
   #return(fraction_adj)
 }
 
-
+#create venn diagram for comparing genes, pathways, candidates, etc. 
 venn_dia_methods <- function(limma_list, deseq2_list, tfl_list, file_name='~/output/liver_cancer/SR_liver_all_gene_venn_diagram.png' ){
+  #input
+  #limma_list, deseq2_list, tfl_list- list of the items for that method. order is important. 
+  #file_name- path and name for the file with image of the venn_diagram
+  
+  #output- the venn diam image 
+  
   myCol <- c("#440154FF" , "#31688EFF" ,"#35B779FF")
   venn.diagram(
     x = list(limma_list, deseq2_list, tfl_list),
@@ -769,8 +863,19 @@ venn_dia_methods <- function(limma_list, deseq2_list, tfl_list, file_name='~/out
   )
 }
 
-
+#pathway analysis for the up and down gene signatures
 method_up_down_gene_set_analysis<- function(up, down,result_path, method, name){
+  #input
+  #up- up gene vector
+  #down- down gene vector 
+  #result_path- the path to save the files 
+  #mehtod- name of the method that found this signature
+  #name- title for the plots
+  
+  #output
+  #pathway results for both up and down genes 
+  #saved as csv and a plot for quick veiw of results 
+  
   library(gprofiler2)
   downset_pathway_results <- gost(query = down, 
                                   organism = "hsapiens", ordered_query = TRUE, 
@@ -797,8 +902,7 @@ method_up_down_gene_set_analysis<- function(up, down,result_path, method, name){
   
   file_name<- paste0(result_path, "/", method, "_pathways.png")
   
-  #making adjustments here
-  #pathway_results$set <- factor(pathway_results$set, levels = c("up", "down"))
+  #making adjustments here for case of more than 50 pathways enirched
   if(nrow(pathway_results)<50){
     ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value))+geom_tile()+scale_fill_viridis(direction=-1)+theme_classic()+ labs(title=name,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
     
@@ -811,6 +915,7 @@ method_up_down_gene_set_analysis<- function(up, down,result_path, method, name){
 }
 
 #functions from rrvgo
+#rrvgo github (getGoTerm, loadOrgdb, getGoSize, reduceSimMatrix)
 getGoTerm <- function(x) {
   sapply(x, function(x) tryCatch(GO.db::GOTERM[[x]]@Term, error=function(e) NA))
 }
@@ -869,47 +974,86 @@ reduceSimMatrix <- function (simMatrix, scores = NULL, threshold = 0.7, orgdb="o
              parentTerm = getGoTerm(clusterRep[cluster]))
 }
 
-go_term_heatmap<- function(limma_pathways, deseq2_pathways, TFL_pathways, list_type, threshold = 0.95){
+#compare disease signatures between the different methods with go term semantic similarity based on go biological go terms and plot as a heatmap
+go_term_heatmap<- function(limma_pathways, deseq2_pathways, TFL_pathways, list_type, threshold = 0.95, file_name){
+  #input
+  #limma_pathways, deseqq2_pathways, TFL_pathways- the gprofiler result data frame for each method with the last column (named set)
+  #indicating if the pathway was from the up or down group
+  #list_type- up or down regulated 
+  #threshold- is the threshold of how far up or down the go ontology tree to go. default to 0.95
+  #file name for the parent go term results
+  
+  #output 
+  #heatmap
   
   #get terms
   limma_bp<- limma_pathways$term_id[ limma_pathways$source == "GO:BP" & limma_pathways$set == list_type]
   deseq2_bp <- deseq2_pathways$term_id[ deseq2_pathways$source == "GO:BP" & deseq2_pathways$set == list_type]
   TFL_bp <- TFL_pathways$term_id[ TFL_pathways$source == "GO:BP" & TFL_pathways$set == list_type]
   
+  #run the go term semantic similarity 
   go1 <-  unique(c(TFL_bp, deseq2_bp, limma_bp ))
   go_gbm_up_sim <- mgoSim(go1, go1, semData=hsGO, measure="Wang", combine=NULL)
   
-  
+  #get the parent terms from rrvgo for the pathways
   res <- reduceSimMatrix(go_gbm_up_sim, threshold = threshold)
   res_v2<- res[match(colnames(go_gbm_up_sim), res$go),]
   
+  
+  
+  #determine which pathway is enriched in the different methods for the heatmap annotation
   tfl_drugs <- grepl(paste(TFL_bp,collapse="|"), colnames(go_gbm_up_sim)) 
   deseq2_drugs<- grepl(paste(deseq2_bp,collapse="|"), colnames(go_gbm_up_sim))
   limma_drugs <- grepl(paste(limma_bp,collapse="|"), colnames(go_gbm_up_sim)) 
   
+  #handing the case where there are no pathways enriched
   if(length(deseq2_bp) ==0){ deseq2_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
   if(length(TFL_bp) ==0){ tfl_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
   if(length(limma_bp) ==0){ limma_drugs <- rep(FALSE,ncol(go_gbm_up_sim) )} 
   
-  #bp_color<- rainbow(n= length(unique(res_v2$parentTerm)), alpha=0.8)
+  #pick the number of colors note limit is about 9 
   bp_color<- brewer.pal(n = length(unique(res_v2$parentTerm)), name = "Paired")
   names(bp_color)<- unique(res_v2$parentTerm)
   
+  #create heatmap
   row_ha = HeatmapAnnotation(Transfer_Learning=tfl_drugs,DESeq2= deseq2_drugs, limma= limma_drugs,GO_BP_Group= res_v2$parentTerm , col = list(Transfer_Learning = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),DESeq2 = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),limma = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"), GO_BP_Group= bp_color ))
   col_fun = colorRamp2(c(0,  1), c( "black", "yellow"))
-  #ha = rowAnnotation(foo = anno_mark(at = c(1:4, 20, 60, 97:100), labels = TFL_bp_up[1:10]))
   
-  Heatmap(go_gbm_up_sim, nam= "GO Term Similarity (Wang)", col = col_fun, show_column_names = FALSE,  show_row_names = FALSE, top_annotation = row_ha,  
+  #SAVE THE PARENT MATCHES
+  res_v3<- cbind(res_v2,tfl_drugs, deseq2_drugs, limma_drugs )
+  write.csv(res_v3, file_name)
+  print(Heatmap(go_gbm_up_sim, nam= "GO Term Similarity (Wang)", col = col_fun, show_column_names = FALSE,  show_row_names = FALSE, top_annotation = row_ha,  
           clustering_distance_rows= "euclidean",
           clustering_distance_columns=  "euclidean",
           clustering_method_rows = "ward.D2" ,
-          clustering_method_columns="ward.D2")
-  #file_name<- paste0(file_starter, "_", "Go_sem_heatmap.png")
-  #ggsave(file_name, width = 20, height=20, units= "in")
+          clustering_method_columns="ward.D2"))
+  
+  column_dend = hclust(dist(t(go_gbm_up_sim)), method = "ward.D2")
+  
+  heatmap_v2 <- Heatmap(matrix(nrow = 0, ncol = ncol(go_gbm_up_sim)),
+          cluster_columns = column_dend, 
+          show_column_names = FALSE,  
+          show_row_names = FALSE, 
+          top_annotation = row_ha
+  )
+  draw(heatmap_v2, annotation_legend_side = "bottom")
+  
 }
 
-
+#compare disease signatures between the different methods with go term semantic similarity based on go biological go terms and plot a tree plot
 go_term_tree_plot<- function(limma_pathways, deseq2_pathways, TFL_pathways, list_type, num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift = 4){
+  #input
+  #limma_pathways, deseqq2_pathways, TFL_pathways- the gprofiler result data frame for each method with the last column (named set)
+  #indicating if the pathway was from the up or down group
+  #list_type- up or down regulated 
+  #num= the number of pathways to look at 
+  #k_num- number of groups
+  #colors- colors for the groups based of clustering
+  
+  #output 
+  #treeplot
+  
+  
   limma_bp<- limma_pathways$term_id[ limma_pathways$source == "GO:BP" & limma_pathways$set == list_type]
   deseq2_bp <- deseq2_pathways$term_id[ deseq2_pathways$source == "GO:BP" & deseq2_pathways$set == list_type]
   TFL_bp <- TFL_pathways$term_id[ TFL_pathways$source == "GO:BP" & TFL_pathways$set == list_type]
@@ -976,8 +1120,16 @@ go_term_tree_plot<- function(limma_pathways, deseq2_pathways, TFL_pathways, list
   
 }
 
+#plotting drug target and mechanism of action for all candidate results
 drug_moa_target_plotting<- function(fda_approved_res, lincs_commpound_info=lincs_commpound_info, method, cancer, file_path_header ){
+  #fda_approved_res- the signaturesearch results with only fda approved
+  #lincs_commpound_info- the lincs compound info from the LINCS database
+  #method- what method found these candidates
+  #cancer- which cancer was this result for 
+  #file_path_header- path and header for output files
   
+  #output
+  #several plots including alluvial and bar plots for the candidates
   file_starter<- paste0(file_path_header, "_", cancer, "_", method, "_", sep= "")
   
   test_fda <- fda_approved_res
@@ -1210,6 +1362,13 @@ cosine <- function (x, y = NULL) {
 }
 
 candidate_cosine_data_heatmap<- function(lincs=se_assay, cell_line, deseq_drugs, limma_drugs, tfl_drugs ){
+  #input
+  #lincs- the summarized experiment for the lincs profiles (level 5)
+  #cell_line- the name of the cell line
+  #deseq_drug, limma_drugs, tfl_drugs - the list of drugs for the different methods
+  
+  #output
+  # the cosine similarity matrix for the drug candidates, row and column should match
   
   se_assay_cell <- lincs[, grep( cell_line , colnames(lincs)) ]
   
@@ -1236,8 +1395,18 @@ candidate_cosine_data_heatmap<- function(lincs=se_assay, cell_line, deseq_drugs,
 
 
 candidate_network_analysis<- function( cos_matrix, deseq_cand, limma_cand, tfl_cand, quantile= 9, header){
-  #make the self match equal to zero
+  #input
+  #cos_matrix-  the cosine similarity matrix for the drug candidates, row and column should match
+  #deseq_cand, limma_cand, tfl_cand - the list of drugs for the different methods
+  #quantile- a number that indicates what quantile to cuttoff. oNly edges above this quantile will used in the plotting of the netwoork.
+  # default is 9 so only the top 10% of edges are plotted. 
+  #header- the file path and header for saving plots. 
   
+  #output
+  #html files with networks (one with lables and another without)
+  #heatmap with the leiden communities and which candidates are in each. 
+  
+  #make the self match equal to zero
   cos_matrix[cos_matrix== 1]<- 0
   
   #add 1 to quantile because of 0 at index 1
@@ -1248,14 +1417,15 @@ candidate_network_analysis<- function( cos_matrix, deseq_cand, limma_cand, tfl_c
   cos_matrix[cos_matrix < cutoff ]<- 0 
   colnames(cos_matrix)<- rownames(cos_matrix)
   
-  #remove candidate with zero edge weights
+  #remove candidate with only zero edge weights
   cos_matrix_v2<- cos_matrix[ !colSums(cos_matrix) == 0, !colSums(cos_matrix) == 0]
   
   #create network
   cos_cand_igraph <- graph_from_adjacency_matrix(cos_matrix_v2 ,mode= "undirected", weighted=TRUE)
   
   #cluster analysis 
-  leiden_clusters <- groups(cluster_leiden(cos_cand_igraph,n_iterations = 10,  objective_function ="modularity"))
+  #leiden_clusters <- groups(cluster_leiden(cos_cand_igraph,n_iterations = 10,  objective_function ="modularity"))
+  leiden_clusters <- cluster_leiden(cos_cand_igraph,n_iterations = 10,  objective_function ="modularity")
   
   #determine which candidate is in which cluster
   com <-rep(NA, nrow(cos_matrix_v2))
@@ -1263,6 +1433,7 @@ candidate_network_analysis<- function( cos_matrix, deseq_cand, limma_cand, tfl_c
     com<- ifelse(colnames(cos_matrix_v2) %in% unlist(leiden_clusters[i]), i , com )
   }
   com
+  print(com)
   
   tfl_drugs <- grepl(paste(tfl_cand,collapse="|"), colnames(cos_matrix_v2)) 
   deseq2_drugs<- grepl(paste(deseq_cand,collapse="|"), colnames(cos_matrix_v2))
@@ -1300,7 +1471,7 @@ candidate_network_analysis<- function( cos_matrix, deseq_cand, limma_cand, tfl_c
   color<- ifelse(all_drugs, "#FDE725FF", color)
   #set colors for nodes and edges
   V(cos_cand_igraph)$color<- color
-  E(cos_cand_igraph)$color <- "black"
+  E(cos_cand_igraph)$color <- "gray"
   
   #set groups for each node
   #this will match node color
@@ -1312,9 +1483,9 @@ candidate_network_analysis<- function( cos_matrix, deseq_cand, limma_cand, tfl_c
   group<- ifelse(deseq, "DESeq2", group)
   group<- ifelse(deseq_tfl, "DESeq2 and Transfer Learning", group)
   group<- ifelse(all_drugs, "All Methods", group)
+  
   #ploting with labels
   filename<- paste(header, "_network_with_labels.html")
-  
   test.visn <- toVisNetworkData(cos_cand_igraph)
   test.visn$edges$value <- test.visn$edges$weight
   test.visn$nodes$group<- group
@@ -1329,9 +1500,7 @@ candidate_network_analysis<- function( cos_matrix, deseq_cand, limma_cand, tfl_c
   
   #ploting network with no labels 
   filename<- paste(header, "_network_without_labels.html")
-  
   test.visn$nodes$label <- NULL
-  
   network <- visNetwork(test.visn$nodes, test.visn$edges) %>% 
     visIgraphLayout(layout = "layout.fruchterman.reingold")%>%
     visNodes(font = list(size = 25))
@@ -1372,8 +1541,438 @@ candidate_network_analysis<- function( cos_matrix, deseq_cand, limma_cand, tfl_c
   print(heatmap)
 }
 
+#clinical trial summary bar plots
+clinical_trail_summary_bar_plot <- function(summary_table, cancer, file ){
+  #input
+  #summary_table- table with infromation about how many candidates are in clinical trial vs not 
+  #cancer - name of cancer
+  #file- the file name to save the output bar plot 
+  
+  clinical_trial_gbm <- summary_table[summary_table$cancer == cancer,]
+  t <- ggplot(clinical_trial_gbm ,aes(x=method,y=value,fill=type, label= value))+
+    geom_bar(stat = "identity",color="white")+
+    #facet_wrap(~cancer,ncol=1) +                                                              # Add values on top of bars
+    geom_text(size = 5, position = position_stack(vjust = 0.5)) + scale_fill_manual(values= c("#FDE725FF","#21908CFF"), name="Legend") + ylab("Number of Drug   Candidates")
+  #dodger = position_dodge(width = 0.9)
+  t + geom_text(aes(label=labels_v2),  position= position_stack(vjust = 1),  size= 10)
+  ggsave(file)
+}
+
+#Prism summary plot 
+PRISM_methods_plotting<- function(deseq2_prism_path, tfl_prism_path, limma_prism_path, filename){
+  #input
+  #file paths to the prism data for each method. order is important
+  #filename- the name of the file to save
+  
+  prism_deseq2_candidates <- read.csv( deseq2_prism_path)
+  prism_tfl_candidates <- read.csv( tfl_prism_path)
+  prism_limma_candidates <- read.csv(  limma_prism_path)
+  
+  #combine and remove duplicates and NAs
+  prism_candidates<- rbind(prism_deseq2_candidates,prism_tfl_candidates ,  prism_limma_candidates)
+  prism_candidates<- prism_candidates[!duplicated(prism_candidates),]
+  prism_candidates <- prism_candidates[!is.na(prism_candidates$log_fold_change),]
+  
+  #create dataframe with drug medians for each drug and note methood 
+  drug_list <- c(unique(prism_deseq2_candidates$Var2), unique(prism_tfl_candidates$Var2), unique(prism_limma_candidates$Var2))
+  
+  drug_median<- c()
+  for (i in 1:length(drug_list)){
+    cells <- prism_candidates$log_fold_change[prism_candidates$Var2 %in% drug_list[i]]
+    drug_median[i] <- median(cells)
+  }
+  drug_prism_median_all_drugs <- data.frame( drug_list, drug_median)
+  methods<- c(rep("DESeq2", length(unique(prism_deseq2_candidates$Var2))),  rep("Transfer Learning", length(unique(prism_tfl_candidates$Var2))),  rep("limma", length(unique(prism_limma_candidates$Var2))))
+  drug_prism_median_all_drugs$methods<- methods
+  
+  #plot the results 
+  t <- ggplot(drug_prism_median_all_drugs ,aes(x=methods, y=drug_median ,fill=methods))+
+    #geom_point()+
+    geom_violin() +
+    geom_boxplot(width = 0.1, fill = "grey", color = "black") + scale_fill_manual(values= c("#440154FF" ,"#21908CFF" ,"#FDE725FF"), name="Methods")  +
+    ylab("Median log2fold change (PRISM)") + geom_hline(yintercept=0.3, linetype="dashed", color = "red")
+  #t + geom_text(aes(label=labels_v2),vjust=- 15,  size= 10) +ylim(0, 90)
+  ggsave(filename)
+}
+
+#plotting and determine differences in centrality metrics in ppi networks 
+network_cent_method_plotting<- function(limma_lists, deseq2_lists, tfl_lists, string_ppi_details= string_ppi_details, filepath){
+  #limma_lists, deseq2_lists, tfl_lists- list of genes in disease signature
+  #string_ppi_details- dataframe with network centality measurements for ppi string network
+  #filepath- where to save the file
+  
+  #output
+  #plots of the centrality metics and significance testing
+  
+  #unlist the genes
+  limma_genes_v2<- unlist(limma_lists)
+  deseq2_genes_v2<- unlist(deseq2_lists)
+  topgenes<- unlist(tfl_lists)
+  
+  names(limma_genes_v2)<- NULL 
+  names(deseq2_genes_v2) <- NULL 
+  names(topgenes)<- NULL
+  
+  #convert entrez ids to symbols
+  limma_genes_v2<- gconvert(as.character(limma_genes_v2), organism = "hsapiens", target = "HGNC", numeric_ns= "ENTREZGENE_ACC")
+  deseq2_genes_v2<- gconvert( deseq2_genes_v2, organism = "hsapiens", target = "HGNC", numeric_ns= "ENTREZGENE_ACC")
+  topgenes<- gconvert( topgenes, organism = "hsapiens", target = "HGNC", numeric_ns= "ENTREZGENE_ACC")
+  
+  #get centraility merics for all the genes and make dataframe 
+  lima_ppi <- string_ppi_details[rownames(string_ppi_details) %in% limma_genes_v2$target,]
+  deseq2_ppi <- string_ppi_details[rownames(string_ppi_details) %in% deseq2_genes_v2$target,]
+  transfer_ppi <- string_ppi_details[rownames(string_ppi_details) %in% topgenes$target,]
+  ppi_details_sig_3_methods <- rbind(lima_ppi ,deseq2_ppi , transfer_ppi)
+  ppi_details_sig_3_methods$method <- c(rep("limma", nrow(lima_ppi)), rep("DESeq2", nrow(deseq2_ppi)), rep("Transfer Learning", nrow(transfer_ppi)))
+  
+  
+  
+  #run wilcox test on only unique genes from method and the different metrics 
+  remove_genes<- unique(ppi_details_sig_3_methods$genes[duplicated(ppi_details_sig_3_methods$genes)])
+  
+  ppi_details_sig_3_methods_filtered <- ppi_details_sig_3_methods[! ppi_details_sig_3_methods$genes %in% remove_genes,]
+  #print(ppi_details_sig_3_methods_filtered )
+  
+  
+  my_comparisons <- list( c("Transfer Learning", "limma"), c("limma", "DESeq2"), c("DESeq2", "Transfer Learning") )
+  #plot each metric 
+  #ppi_details_sig_3_methods$degree_log <- log(ppi_details_sig_3_methods$degree)
+  p1 <- ggplot(ppi_details_sig_3_methods_filtered, aes(x=method , y=degree_log, fill=method )) + 
+    geom_violin()+ geom_boxplot(width = 0.1, fill = "grey", color = "black")+labs(title="PPI Degree",x="Genes from Disease Signature for Signature Reversion", y = "PPI log(Degree)", color= "Method") + scale_colour_manual(values = c("#440154FF" ,"#21908CFF" ,"#FDE725FF"), aesthetics = c("colour", "fill"))+ theme_minimal()+ stat_compare_means(comparisons = my_comparisons, p.adjust.method = "bonf")+ # Add pairwise comparisons p-value
+    stat_compare_means(label.y = 10)
+  file<- paste(filepath, "ppi_degree_methods.png", sep="")
+  p1
+  ggsave(file, bg = "white")
+  
+  #ppi_details_sig_3_methods$log_betweness <- log(ppi_details_sig_3_methods$betweenness)
+  p2<- ggplot(ppi_details_sig_3_methods_filtered, aes(x=method, y=log_betweness , fill=method)) + 
+    geom_violin()+ geom_boxplot(width = 0.1, fill = "grey", color = "black")+labs(title="PPI Betweeness",x="Genes from Disease Signature for Signature Reversion", y = "PPI log(Betweeness)", color= "Method") + scale_colour_manual(values =  c("#440154FF" ,"#21908CFF" ,"#FDE725FF"), aesthetics = c("colour", "fill"))+ theme_minimal()+ 
+    stat_compare_means(comparisons = my_comparisons, p.adjust.method = "bonf")+ # Add pairwise comparisons p-value
+    stat_compare_means(label.y = 20)
+  file<- paste(filepath, "ppi_betweeness_methods.png", sep="")
+  p2
+  ggsave(file, bg = "white")
+  
+  #ppi_details_sig_3_methods$eign_cent_log <- log(ppi_details_sig_3_methods$eign_cent)
+  p3<- ggplot(ppi_details_sig_3_methods_filtered, aes(x=method, y=eign_cent_log, fill=method)) + 
+    geom_violin()+ geom_boxplot(width = 0.1, fill = "grey", color = "black")  +labs(title="PPI Eigenvector Centrality Scores",x="Genes from Disease Signature for Signature Reversion", y = "PPI log(Eigenvector Centrality Scores)", color= "Method") + scale_colour_manual(values =  c("#440154FF" ,"#21908CFF" ,"#FDE725FF"), aesthetics = c("colour", "fill"))+ theme_minimal()+ 
+    stat_compare_means(comparisons = my_comparisons, method= "wilcox.test", p.adjust.method = "bonf")+ # Add pairwise comparisons p-value
+    stat_compare_means(label.y = 10)
+  
+  file<- paste(filepath, "ppi_Eigenvector_Centrality_Scores_methods.png", sep="")
+  p3
+  ggsave(file, bg = "white")
+  
+  print(p1)
+  print(p2)
+  print(p3)
+}
+
+#from the customCMPdb github. not in bioconductor package
+loadSDFwithName <- function(source="LINCS"){
+  ah <- AnnotationHub()
+  annot_path <- ah[["AH79563"]]
+  conn <- DBI::dbConnect(SQLite(), annot_path)
+  if(source == "LINCS"){
+    lincs_annot <- dbReadTable(conn, "lincsAnnot")
+    lincs_sdf_path <- ah[["AH79567"]]
+    lincs_sdf <-ChemmineR::read.SDFset(lincs_sdf_path)
+    cid(lincs_sdf) <- sdfid(lincs_sdf)
+    ## make lincs cids as pert names
+    brd_ids <- lincs_annot$lincs_id
+    names(brd_ids) <- lincs_annot$pert_iname
+    brd_uniq <- brd_ids[!duplicated(names(brd_ids))] # 19811
+    brd_common <- brd_uniq[brd_uniq %in% cid(lincs_sdf)] # 19758
+    res_sdf <- lincs_sdf[brd_common]
+    cid(res_sdf) <- names(brd_common)
+  }
+  if(source == "CMAP2"){
+    cmap_annot <- dbReadTable(conn, "cmapAnnot")
+    cmap_sdf_path <- ah[["AH79566"]]
+    cmap_sdf <-ChemmineR::read.SDFset(cmap_sdf_path)
+    cid(cmap_sdf) <- sdfid(cmap_sdf)
+    cmap_ids <- cmap_annot$cmap_id
+    names(cmap_ids) <- cmap_annot$cmap_name
+    res_sdf <- cmap_sdf[cmap_ids]
+    cid(res_sdf) <- names(cmap_ids)
+  }
+  if(source == "DrugBank"){
+    db_annot <- dbReadTable(conn, "drugBankAnnot")
+    db_sdf_path <- ah[["AH79565"]]
+    db_sdf <-ChemmineR::read.SDFset(db_sdf_path)
+    cid(db_sdf) <- sdfid(db_sdf)
+    db_ids <- db_annot$drugbank_id
+    names(db_ids) <- db_annot$name
+    db_common <- db_ids[db_ids %in% cid(db_sdf)] # 10569
+    res_sdf <- db_sdf[db_common]
+    cid(res_sdf) <- names(db_common)
+  }
+  if(source == "DrugAge"){
+    da_annot <- dbReadTable(conn, "drugAgeAnnot")
+    da_sdf_path <- ah[["AH79564"]]
+    da_sdf <-ChemmineR::read.SDFset(da_sdf_path)
+    cid(da_sdf) <- sdfid(da_sdf)
+    da_ids <- da_annot$drugage_id
+    names(da_ids) <- da_annot$compound_name
+    da_uniq <- da_ids[!duplicated(names(da_ids))] # 420
+    da_common <- da_uniq[da_uniq %in% cid(da_sdf)] # 223
+    res_sdf <- da_sdf[da_common]
+    cid(res_sdf) <- names(da_common)
+  }
+  dbDisconnect(conn)
+  return(res_sdf)
+}
+
+drug_struc_heatmap<- function(limma_drugs, deseq2_drugs, TFL_drugs, file){
+  
+  drug_list <- unique(c(limma_drugs,deseq2_drugs,  TFL_drugs))
+  IDs <- lincs_sdfset@ID[grepl(paste(drug_list,collapse="|"), lincs_sdfset@ID)]
+  IDs<- intersect(IDs, drug_list)
+  
+  
+  
+  drug_sdfset <- lincs_sdfset[IDs]
+  
+  drug_res <- sapply(cid(drug_sdfset ), function(x) fmcsBatch(drug_sdfset[x], drug_sdfset , au=0, bu=0, timeout=1000000, matching.mode = "aromatic")[,"Tanimoto_Coefficient"])
+  #return(drug_res)
+  
+  tfl_drugs3 <-  drug_sdfset@ID %in% TFL_drugs
+  limma_drugs3 <- drug_sdfset@ID %in% limma_drugs
+  deseq2_drugs3<- drug_sdfset@ID %in% deseq2_drugs
+  
+  row_ha = HeatmapAnnotation(Transfer_Learning=tfl_drugs3,DESeq2= deseq2_drugs3, limma= limma_drugs3 , col = list(Transfer_Learning = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),DESeq2 = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),limma = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF") ))
+  col_fun = colorRamp2(c(0,  1), c( "black", "yellow"))
+  #ha = rowAnnotation(foo = anno_mark(at = c(1:4, 20, 60, 97:100), labels = TFL_bp_up[1:10]))
+  
+  png(file, width = 10, height =7,  units = "in", res = 120) 
+  draw(Heatmap(drug_res, nam= "Tanimoto_Coefficient drug structure", col = col_fun, show_column_names = FALSE,  show_row_names = FALSE, top_annotation = row_ha,
+               clustering_distance_rows= "euclidean",
+               clustering_distance_columns=  "euclidean",
+               clustering_method_rows = "ward.D2" ,
+               clustering_method_columns="ward.D2"))
+  dev.off()
+  return(drug_res)
+}
+
+
+volcano_plots<- function(results, method, method_genes, transfer_learning_genes){
+  #
+  # results- results data frame from either deseq2 or limma 
+  # method- "deseq2" or "limma" to indicate which method was used 
+  # method_genes- disease signature genes used for signature reversion for method
+  # transfer_learning_genes- disease signature genes used for signature reversion for transfer learning 
+  
+  #return 
+  # a volcano plot with the disease signature genes for limma and transfer learning
+  
+  #adjust limma result names 
+  if(method == "limma" ){
+    #results<- results$limma
+    
+    colnames(results)[2]<- "log2FoldChange"
+    colnames(results)[6]<- "padj"
+    #limma symbol location
+    colnames(results)[1]<- "Symbol"
+  }
+  
+  #handle duplicated genes due to ids conversions
+  aa <- results[order( -abs(results$log2FoldChange) ), ]
+  results<- aa[ !duplicated(aa$Symbol), ]  
+  
+  # subset by LINCS genes 
+  res_lincs_only <- results[!is.na(match_to_LINCS_genes(results$Symbol)), ]
+  res_lincs_only$ids <- match_to_LINCS_genes( res_lincs_only$Symbol)
+  
+  #determine both genes
+  both_genes<- intersect(unlist(transfer_learning_genes), unlist(method_genes))
+  
+  #limma or deseq2 only 
+  method_genes_only <- unlist(method_genes)[!unlist(method_genes) %in% both_genes]
+  
+  #transfer learning only 
+  tfl_genes_only <- unlist(transfer_learning_genes)[!unlist(transfer_learning_genes) %in% both_genes]
+  
+  res_lincs_only$neg_log_adj_p_value <- -1* log(res_lincs_only$padj)
+  
+  #if deseq2 the following colors based on the network colors and levels
+  if(method == "DESeq2"){
+    res_lincs_only$groups <- ifelse(res_lincs_only$ids %in% method_genes_only, "DESeq2", ifelse(res_lincs_only$ids %in% tfl_genes_only, "Transfer Learning", ifelse(res_lincs_only$ids %in% both_genes, "Both",  "NA")))
+    if (length(both_genes) > 0){
+      color_groups<- c("gray", "green4", "#FDE725FF", "#440154FF"  )
+      group_levels<- c("NA", "Both", "Transfer Learning", "DESeq2")
+    }else{
+      color_groups<- c("gray", "#FDE725FF", "#440154FF"  )
+      group_levels<- c("NA", "Transfer Learning", "DESeq2")
+    }
+  }else{
+    #if limma the following colors
+    res_lincs_only$groups <- ifelse(res_lincs_only$ids %in% method_genes_only, "limma", ifelse(res_lincs_only$ids %in% tfl_genes_only, "Transfer Learning", ifelse(res_lincs_only$ids %in% both_genes, "Both",  "NA")))
+    if (length(both_genes) > 0){
+      color_groups<- c("gray", "maroon", "#FDE725FF", "#21908CFF"  )
+      group_levels<- c("NA", "Both", "Transfer Learning", "limma")
+    }else{
+      color_groups<- c("gray", "#FDE725FF", "#21908CFF"  )
+      group_levels<- c("NA", "Transfer Learning", "limma")
+    }
+    
+  }
+  
+  #rbind to change the order of the results
+  res_lincs_only <- rbind(res_lincs_only[res_lincs_only$groups == "NA",], res_lincs_only[!res_lincs_only$groups == "NA",])
+  res_lincs_only<- res_lincs_only[ complete.cases(res_lincs_only),]
+  # Main plot
+  res_lincs_only$groups <- factor(res_lincs_only$groups , levels= group_levels)
+  
+  p_value_cut<- -log(0.05)
+  
+  pmain <- ggplot(res_lincs_only, aes(x = log2FoldChange, y = neg_log_adj_p_value, color = groups))+
+    geom_point() + scale_color_manual(values=color_groups)   +theme_bw() + xlab("log(Fold Change)") + ylab("-log(adj. p-value)") + guides(color=guide_legend(title="Method")) + geom_hline(yintercept=p_value_cut, linetype="dashed", color = "black")+ theme(legend.position="bottom")
+  
+  # Marginal densities along x axis
+  xdens <- axis_canvas(pmain, axis = "x")+
+    geom_density(data =res_lincs_only, aes(x = log2FoldChange, fill = groups),
+                 alpha = 0.7, size = 0.3)+ scale_fill_manual(values=color_groups)           
+  # Marginal densities along y axis
+  # Need to set coord_flip = TRUE, if you plan to use coord_flip()
+  ydens <- axis_canvas(pmain, axis = "y", coord_flip = TRUE)+
+    geom_density(data = res_lincs_only, aes(x = neg_log_adj_p_value, fill = groups),
+                 alpha = 0.7, size = 0.3)+
+    coord_flip()+ scale_fill_manual(values=color_groups)     
+  
+  p1 <- insert_xaxis_grob(pmain, xdens, grid::unit(.2, "null"), position = "top")
+  p2<- insert_yaxis_grob(p1, ydens, grid::unit(.2, "null"), position = "right")
+  
+  #change to histogram 
+  #p3 <- ggplot(res_lincs_only, aes(x = log2FoldChange, fill = groups ))+ geom_density() +  scale_fill_manual(values=color_groups) + xlab("log Fold Change") + guides(color=guide_legend(title="Method"))
+  #change color to fill, add points, and signficance line
+ # p4 <- ggplot(res_lincs_only, aes(x = groups, y = neg_log_adj_p_value, fill = groups ))+ geom_histogram()+ geom_point(fill= "black")+ scale_fill_manual(values=color_groups) + geom_hline(yintercept=p_value_cut, linetype="dashed", color = "black")   + xlab("Methods") + theme(legend.position="none")
+  
+  #print(p3)
+ # print(p4)
+  ggdraw(p2)
+  #return(res_lincs_only )
+  
+  
+}
+
+
+compare_deseq2_limma <- function(deseq_results, limma_results, x_p1=3, y_p1=30, x_p2=400, y_p2=200){
+  #comparing the log fold change and adjusted p-values between methods
+  #deseq_results-  result output for DESeq2 
+  #limma_results - result output for limma 
+  #x_p1 - x location for plot 1 (fold change)
+  #y_p1- y location for plot 1 (fold change)
+  #x_p2 - x location for plot 2 (adjusted pvalue)
+  #y_p2 - y location for plot 2 (adjusted pvalue)
+  
+  #return
+  #plots with the spearman correlation between methods for both log fold change and adjsut pvalue 
+  
+  diff_metrics <- cbind(deseq_results$log2FoldChange, limma_results$logFC, -log(deseq_results$padj), -log(limma_results$adj.P.Val))
+  diff_metrics<- diff_metrics[complete.cases(diff_metrics), ]
+  
+  #diff_metrics<- diff_metrics[diff_metrics$DESeq2_padj < 0.05 |diff_metrics$limma_padj < 0.05,]
+  
+  colnames(diff_metrics)<- c("DESeq2_logFC","limma_logFC" , "DESeq2_padj", "limma_padj")
+  diff_metrics<- as.data.frame(diff_metrics)
+  
+  P1<-ggplot(diff_metrics, aes(x=limma_logFC, y=DESeq2_logFC) ) +
+    geom_bin2d(bins = 60) +
+    scale_fill_continuous(type = "viridis") +
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p1, label.y = y_p1) + xlab("limma log(Fold Change)") + ylab("DESeq2 log(Fold Change)") 
+  
+  P2 <- ggplot(diff_metrics, aes(x=limma_padj, y=DESeq2_padj) ) +
+    geom_bin2d(bins = 60) +
+    scale_fill_continuous(type = "viridis") +
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p2, label.y = y_p2) + xlab("limma -log(adj. p-value)") + ylab("DESeq2 -log(adj. p-value)") 
+  # Add correlation coefficient
+  print(P1)
+  print(P2)
+}
 
 
 
+lincs_method_comparsion<- function(deseq_results_all,limma_results_all , tfl_results_all, cell_line= "GI1", x_p1=0, y_p1=2, x_p2=5, y_p2=10){
+  #comparing the normalized connnectivity scores and false discovery rates between methods
+  #deseq_results_all- the lincs signature search result output for DESeq2 (filter to the cell line of interest)
+  #limma_results_all - the lincs signature search result output for limma (filter to the cell line of interest)
+  #tfl_results_all- the lincs signature search result output for Transfer Learning (filter to the cell line of interest)
+  #cell_line= "GI1" - cell line of interest
+  #x_p1=0 - x location for plot 1 (NCS)
+  #y_p1=2- y location for plot 1 (NCS)
+  #x_p2=5 - x location for plot 2 (FDR)
+  #y_p2=10 - y location for plot 2 (FDR)
+  
+  #return
+  #plots with the spearman correlation between methods for both NCS and FDR
+  
+  #FOCUS ON ONLY THE CELL OF INTEREST
+  deseq_results_all <- deseq_results_all[deseq_results_all$cell == "GI1",]
+  limma_results_all <- limma_results_all[limma_results_all$cell == "GI1",]
+  tfl_results_all  <- tfl_results_all[tfl_results_all$cell == "GI1",]
+  
+  #order the results for comparision
+  deseq_results_all <- deseq_results_all[order(deseq_results_all$pert),]
+  limma_results_all<- limma_results_all[order(limma_results_all$pert),]
+  tfl_results_all<- tfl_results_all[order(tfl_results_all$pert),]
+  
+  #check and good
+  #deseq_results_all$pert == limma_results_all$pert
+  #deseq_results_all$pert == tfl_results_all$pert
+  
+  diff_metrics <- cbind(deseq_results_all$NCS, limma_results_all$NCS, tfl_results_all$NCS, -log(deseq_results_all$WTCS_FDR), -log(limma_results_all$WTCS_FDR), -log(tfl_results_all$WTCS_FDR))
+  diff_metrics<- diff_metrics[complete.cases(diff_metrics), ]
+  
+  #diff_metrics<- diff_metrics[diff_metrics$DESeq2_padj < 0.05 |diff_metrics$limma_padj < 0.05,]
+  
+  colnames(diff_metrics)<- c("DESeq2_NCS","limma_NCS" , "TFL_NCS",  "DESeq2_FDR", "limma_FDR", "TFL_FDR")
+  diff_metrics<- as.data.frame(diff_metrics)
+  
+  #deseq2 vs limma 
+  P1<-ggplot(diff_metrics, aes(x=DESeq2_NCS, y=limma_NCS) ) +
+    geom_bin2d(bins = 60) +
+    scale_fill_continuous(type = "viridis") +
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p1, label.y = y_p1) + xlab("DESeq2 NCS") + ylab("limma NCS") 
+  
+  P2 <- ggplot(diff_metrics, aes(x=DESeq2_FDR, y=limma_FDR) ) +
+    geom_bin2d(bins = 60) +
+    scale_fill_continuous(type = "viridis") +
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p2, label.y = y_p2) + xlab("DESeq2 -log(FDR)") + ylab("limma -log(FDR)") 
+  
+  # Add correlation coefficient
+  print(P1)
+  print(P2)
+  
+  #deseq2 vs tfl 
+  P1<-ggplot(diff_metrics, aes(x=DESeq2_NCS, y=TFL_NCS) ) +
+    geom_bin2d(bins = 60) +
+    scale_fill_continuous(type = "viridis") +
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p1, label.y = y_p1) + xlab("DESeq2 NCS") + ylab("Transfer Learning NCS") 
+  
+  P2 <- ggplot(diff_metrics, aes(x=DESeq2_FDR, y=TFL_FDR) ) +
+    geom_bin2d(bins = 60) +
+    scale_fill_continuous(type = "viridis") +
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p2, label.y = y_p2) + xlab("DESeq2 -log(FDR)") + ylab("Transfer Learning -log(FDR)") 
+  
+  # Add correlation coefficient
+  print(P1)
+  print(P2)
+  
+  #limma vs tfl 
+  P1<-ggplot(diff_metrics, aes(x=limma_NCS, y=TFL_NCS) ) +
+    geom_bin2d(bins = 60) +
+    scale_fill_continuous(type = "viridis") +
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p1, label.y = y_p1) + xlab("limma NCS") + ylab("Transfer Learning NCS") 
+  
+  P2 <- ggplot(diff_metrics, aes(x=limma_FDR, y=TFL_FDR) ) +
+    geom_bin2d(bins = 60) +
+    scale_fill_continuous(type = "viridis") +
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p2, label.y = y_p2) + xlab("limma -log(FDR)") + ylab("Transfer Learning -log(FDR)") 
+  
+  # Add correlation coefficient
+  print(P1)
+  print(P2)
+  
+} 
 
 

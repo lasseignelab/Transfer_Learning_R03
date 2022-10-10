@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # START 
     Goal/Purpose of operations: 
-    Donwloading Recount 3 RNA-seq Counts and normlizing counts by gene length via tpm 
+    Donwloading Recount 3 RNA-seq Counts and normalizing counts by gene length via tpm 
     
     Finished psedocode on: Date
     211213
@@ -47,6 +47,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Set working directory 
 /data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03
 
+location on UAB Cheaha cluster 
+
 ### load in data
 in analysis
 
@@ -54,23 +56,23 @@ in analysis
 ```{r}
 library(recount3)
 ```
-
+collect human project project ids. 
 ```{r eval= FALSE}
 human_projects<- available_projects()
 ```
 
 #GBM
-
+download the GBM and normal brain data from recount3 
 ```{r eval= FALSE}
  human_recount_projects_gbm <- human_projects[! (human_projects$project == "GBM" | human_projects$project == "BRAIN"),]
 ```
-
+downloading the rse with the gene expression data
 ```{r eval= FALSE}
 test<- create_rse(human_recount_projects_gbm[1,])
 recount3__gbm_tf <- as.data.frame(assay(test))
 ```
 
-
+Using apply to find all the gene expression url locations for downloading
 ```{r eval= FALSE}
 human_projects$gene_url <- apply(human_projects, 1, function(x)
     locate_url(
@@ -81,16 +83,15 @@ human_projects$gene_url <- apply(human_projects, 1, function(x)
         annotation = annotation_options(x["organism"])[1] # Use default annotation
     ))
 ```
-
+create the wget commands to download the data 
 ```{r eval= FALSE}
 human_projects$command <- paste0("wget ", human_projects$gene_url, sep="")
 ```
-
-
+save the objects
 ```{r eval= FALSE}
 saveRDS(human_projects, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/human_samples.rds")
 ```
-
+creating the sh files for UAB cheaha to download via the slurm queue system
 ```{r eval= FALSE}
 write.table(human_projects$command[1:1000], file = "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_1.sh", row.names= FALSE, quote= FALSE)
 write.table(human_projects$command[1001:2000], file = "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_2.sh", row.names= FALSE, quote= FALSE)
@@ -103,7 +104,7 @@ write.table(human_projects$command[7001:8742], file = "/data/project/lasseigne_l
 
 ```
 
-
+after the data is download via the sh scripts. This function was used to convert files in one directory to count table in R. 
 ```{r eval= FALSE}
 count_table<- function(file_dir){
   setwd(file_dir)
@@ -125,18 +126,16 @@ count_table<- function(file_dir){
 }
 ```
 
-
+Applying the count_table to all the directories with the recount3 files. 
 ```{r eval= FALSE}
 group1<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_1/")
 ```
 
-```{r}
+```{r eval= FALSE}
 saveRDS(group1, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1.rds")
 rm(group1)
 gc()
 ```
-
-
 
 ```{r eval= FALSE}
 group2<- count_table("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_2/")
@@ -168,9 +167,7 @@ saveRDS(group8, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/d
 rm(group8)
 gc()
 ```
-
-
-
+read the rds object created from count_table function into R 
 ```{r eval= FALSE}
 recount3_group1 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1.rds")
 recount3_group2 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2.rds")
@@ -181,7 +178,7 @@ recount3_group6 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Lea
 recount3_group7 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group7.rds")
 recount3_group8 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group8.rds")
 ```
-
+tried to combine the tables. 
 ```{r eval= FALSE}
 #recount3_Counts<- cbind(recount3_group1, recount3_group2, recount3_group3, recount3_group4, recount3_group5, recount3_group6, recount3_group7, recount3_group8)
 #rm(recount3_group1, recount3_group2, recount3_group3, recount3_group4, recount3_group5, recount3_group6, recount3_group7, recount3_group8)
@@ -190,8 +187,7 @@ recount3_group8 <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Lea
 #gc()
 ```
 
-#change it to tpm 
-
+change count tables to tpm 
 ```{r eval= FALSE}
 Counts_to_tpm <- function(counts, featureLength) {
   # Ensure valid arguments.
@@ -211,8 +207,7 @@ Counts_to_tpm <- function(counts, featureLength) {
 }
 ```
 
-
-
+downloaded a random project to gene lengths for tpm calculations
 ```{r eval= FALSE}
 #SRP118922
 test<- create_rse(human_projects[(human_projects$project == "SRP118922"),])
@@ -222,6 +217,7 @@ gene_info <- test@rowRanges
 rm(test)
 ```
 
+Apply tpm function to all the recount3 data
 ```{r eval= FALSE}
 recount3_group1_tpm<- Counts_to_tpm(recount3_group1[,-1], gene_info$bp_length)
 rownames(recount3_group1_tpm)<- recount3_group1[,1]
@@ -282,8 +278,8 @@ rm(recount3_group8)
 rm(recount3_group8_tpm)
 ```
 
-there was no reason for the removal of the first col form the matrix add ing it back as group 9 done 220728 
-```{r}
+there was no reason for the removal of the first col from the matrix adding it back as group 9 done 220728 
+```{r eval= FALSE}
 #"DRR002593" "DRR001796" "DRR000897" "DRR031682" "DRR006400" "DRR001622" "DRR001173"
 recount3_group9 <- cbind(recount3_group1[,1], recount3_group2[,1], recount3_group3[,1], recount3_group4[,1], recount3_group5[,1], recount3_group6[,1], recount3_group7[,1], recount3_group8[,1])
 recount3_group9_tpm <- Counts_to_tpm(recount3_group9 , gene_info$bp_length)

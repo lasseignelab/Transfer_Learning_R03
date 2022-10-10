@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # START 
     Goal/Purpose of operations: 
-    Conducting Demension reduction for Transfer learning with PLIER without GTEx and TCGA data
+    Conducting Dimension reduction for Transfer learning with PLIER without GTEx and TCGA data
     
     Finished psedocode on: Date
     220727
@@ -50,7 +50,8 @@ knitr::opts_chunk$set(echo = TRUE)
 /data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03
 
 ### load in data
-```{r}
+create a dataframe with all the tpm values. then remove the indidivudal groups of recount3 samples
+```{r eval=FALSE}
 recount3_group1_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1_tpm.rds")
 recount3_group2_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2_tpm.rds")
 recount3_group3_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group3_tpm.rds")
@@ -62,25 +63,24 @@ recount3_group8_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer
 recount3_group9_tpm <- readRDS("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group9_tpm.rds")
 ```
 
-```{r}
+```{r eval=FALSE}
 recount3_tpm <- cbind(recount3_group1_tpm, recount3_group2_tpm, recount3_group3_tpm, recount3_group4_tpm, recount3_group5_tpm, recount3_group6_tpm, recount3_group7_tpm, recount3_group8_tpm, recount3_group9_tpm)
 ```
 
-```{r}
+```{r eval=FALSE}
 rm(recount3_group1_tpm, recount3_group2_tpm, recount3_group3_tpm, recount3_group4_tpm, recount3_group5_tpm, recount3_group6_tpm, recount3_group7_tpm, recount3_group8_tpm, recount3_group9_tpm)
 gc()
 ```
 
-remove Nas
+remove Na from data
 
-```{r}
+```{r eval=FALSE}
 dim(recount3_tpm[1:4,is.na(recount3_tpm[1,])])
 ```
-
-```{r}
+[1]   4 262
+```{r eval=FALSE}
 recount3_tpm<- recount3_tpm[,! is.na(recount3_tpm[1,])]
 ```
-
 
 
 ```{r}
@@ -93,68 +93,888 @@ recount3_tpm<- recount3_tpm[,! is.na(recount3_tpm[1,])]
 library(PLIER)
 library(recount3)
 ```
-
+load in the functions for dimension reduction step of transfer learning  
 ```{r}
 source("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/script/plier_util.R")
 source("/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/script/functions_cancer_signature_reversion_JLF.R")
 ```
 
 
-```{r}
+```{r eval=FALSE}
 human_samples<- available_samples()
 ```
-```{r}
+```{r eval=FALSE}
 human_projects<- available_projects()
 ```
-```{r}
+```{r eval=FALSE}
 #SRP118922
 test<- create_rse(human_projects[(human_projects$project == "DRP000987"),])
 ```
-```{r}
+```{r eval=FALSE}
 gene_info <- test@rowRanges
 rm(test)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 table(human_samples$project_home)
 ```
+data_sources/gtex  data_sources/sra data_sources/tcga 
+            19214            316443             11348 
+
 262 was removed for NAs; 316181 should be the total
 
 
-```{r}
+```{r eval=FALSE}
 human_samples_not_gtex_tcga <- human_samples$external_id[ human_samples$project_home == "data_sources/sra" ]
 
 ```
 
 
-```{r}
+```{r eval=FALSE}
 recount3_wo_tpm <- recount3_tpm[, colnames(recount3_tpm) %in% human_samples_not_gtex_tcga]
 ```
 
-```{r}
+```{r eval=FALSE}
 dim(recount3_wo_tpm )
 ```
+[1]  63856 316181
 
-
-```{r}
+```{r eval=FALSE}
 rm(human_samples, human_samples_not_gtex_tcga, recount3_tpm)
 gc()
 ```
 
-
-```{r}
+add gene names from recount3 and make the data frame into a matrix 
+```{r eval=FALSE}
 recount3_wo_tpm<- as.matrix(recount3_wo_tpm)
 rownames(recount3_wo_tpm) <- gene_info$gene_name
 ```
 
-
-```{r}
+Apply the PLIERNewData from multiplier but with the adjustments from Jen
+```{r eval=FALSE}
 recount3_plier_wo <- PLIERNewData_JLF(recount3_wo_tpm)
 
 saveRDS(recount3_plier_wo, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_plier_wo.rds")
 ```
+## Output from PLIER
+[1] "combine the pathway data from PLIER"
 
+[1] " row normalize"
+
+[1] "num.pc"
+
+[1] "matrix" "array" 
+
+[1]   6379 316181
+
+Warning in if ((class(data) != "list") & (class(data) != "rsvd")) { :
+  the condition has length > 1 and only the first element will be used
+
+Computing svd
+
+[1] "PLIER main function"
+
+Selecting common genes: 6379
+
+Removing 5 pathways with too few genes
+
+Computing SVD
+
+Using rsvd
+
+Done
+
+[1] 854.637
+
+[1] "L2 is set to 854.636965350575"
+
+[1] "L1 is set to 427.318482675288"
+
+errorY (SVD based:best possible) = 0.8243
+
+iter1 errorY= 0.9986, Bdiff= 418600, Bkappa=47.66
+
+iter2 errorY= 0.9217, Bdiff= 0.8404, Bkappa=192.8
+
+iter3 errorY= 0.8505, Bdiff= 0.2483, Bkappa=144
+
+iter4 errorY= 0.8187, Bdiff= 0.08981, Bkappa=84.92
+
+iter5 errorY= 0.7975, Bdiff= 0.04308, Bkappa=59.25
+
+iter6 errorY= 0.7841, Bdiff= 0.02169, Bkappa=49.93
+
+iter7 errorY= 0.7765, Bdiff= 0.01177, Bkappa=41.33
+
+iter8 errorY= 0.7722, Bdiff= 0.007461, Bkappa=37.8
+
+iter9 errorY= 0.7695, Bdiff= 0.005535, Bkappa=33.96
+
+iter10 errorY= 0.7675, Bdiff= 0.004499, Bkappa=32.64
+
+iter11 errorY= 0.7659, Bdiff= 0.003853, Bkappa=29.26
+
+iter12 errorY= 0.7645, Bdiff= 0.003407, Bkappa=29.84
+
+iter13 errorY= 0.7632, Bdiff= 0.003095, Bkappa=28.48
+
+iter14 errorY= 0.762, Bdiff= 0.002878, Bkappa=26.68
+
+iter15 errorY= 0.7609, Bdiff= 0.002725, Bkappa=26.4
+
+iter16 errorY= 0.7598, Bdiff= 0.002607, Bkappa=27.73
+
+iter17 errorY= 0.7588, Bdiff= 0.002508, Bkappa=27.36
+
+iter18 errorY= 0.7578, Bdiff= 0.002414, Bkappa=27.72
+
+iter19 errorY= 0.7568, Bdiff= 0.002311, Bkappa=26.78
+
+New L3 is 0.00193045413622771
+
+ter20 errorY= 0.7549, prior information ratio= 0.05, Bdiff= 0.002872, Bkappa=25.27;pos. col. U=285
+
+iter21 errorY= 0.7538, prior information ratio= 0.06, Bdiff= 0.002511, Bkappa=25.74;pos. col. U=277
+
+iter22 errorY= 0.7529, prior information ratio= 0.07, Bdiff= 0.002228, Bkappa=26.06;pos. col. U=265
+
+iter23 errorY= 0.7521, prior information ratio= 0.08, Bdiff= 0.00199, Bkappa=26.19;pos. col. U=263
+
+iter24 errorY= 0.7514, prior information ratio= 0.08, Bdiff= 0.001785, Bkappa=26.71;pos. col. U=261
+
+iter25 errorY= 0.7508, prior information ratio= 0.09, Bdiff= 0.001611, Bkappa=26.36;pos. col. U=261
+
+iter26 errorY= 0.7502, prior information ratio= 0.09, Bdiff= 0.001469, Bkappa=25.2;pos. col. U=258
+
+iter27 errorY= 0.7497, prior information ratio= 0.1, Bdiff= 0.001358, Bkappa=24.74;pos. col. U=256
+
+iter28 errorY= 0.7491, prior information ratio= 0.1, Bdiff= 0.001269, Bkappa=23.7;pos. col. U=257
+
+iter29 errorY= 0.7486, prior information ratio= 0.1, Bdiff= 0.001198, Bkappa=22.92;pos. col. U=260
+
+iter30 errorY= 0.7482, prior information ratio= 0.11, Bdiff= 0.001146, Bkappa=22.61;pos. col. U=261
+
+iter31 errorY= 0.7477, prior information ratio= 0.11, Bdiff= 0.001107, Bkappa=23.72;pos. col. U=259
+
+iter32 errorY= 0.7472, prior information ratio= 0.11, Bdiff= 0.001075, Bkappa=23.47;pos. col. U=260
+
+iter33 errorY= 0.7467, prior information ratio= 0.11, Bdiff= 0.001046, Bkappa=23.34;pos. col. U=262
+
+iter34 errorY= 0.7463, prior information ratio= 0.12, Bdiff= 0.001015, Bkappa=23.09;pos. col. U=261
+
+iter35 errorY= 0.7458, prior information ratio= 0.12, Bdiff= 0.0009785, Bkappa=23.03;pos. col. U=266
+
+iter36 errorY= 0.7454, prior information ratio= 0.12, Bdiff= 0.000936, Bkappa=22.54;pos. col. U=270
+
+iter37 errorY= 0.745, prior information ratio= 0.12, Bdiff= 0.0008886, Bkappa=22.15;pos. col. U=272
+
+iter38 errorY= 0.7446, prior information ratio= 0.12, Bdiff= 0.0008408, Bkappa=22.12;pos. col. U=275
+
+iter39 errorY= 0.7442, prior information ratio= 0.12, Bdiff= 0.0007957, Bkappa=21.87;pos. col. U=275
+
+New L3 is 0.00193045413622771
+
+iter40 errorY= 0.7438, prior information ratio= 0.13, Bdiff= 0.0007514, Bkappa=21.8;pos. col. U=278
+
+iter41 errorY= 0.7435, prior information ratio= 0.13, Bdiff= 0.0007077, Bkappa=21.32;pos. col. U=281
+
+iter42 errorY= 0.7431, prior information ratio= 0.13, Bdiff= 0.0006657, Bkappa=20.74;pos. col. U=281
+
+iter43 errorY= 0.7428, prior information ratio= 0.13, Bdiff= 0.0006259, Bkappa=20.69;pos. col. U=282
+
+iter44 errorY= 0.7425, prior information ratio= 0.13, Bdiff= 0.0005866, Bkappa=20.41;pos. col. U=282
+
+iter45 errorY= 0.7423, prior information ratio= 0.13, Bdiff= 0.0005467, Bkappa=20.12;pos. col. U=284
+
+iter46 errorY= 0.742, prior information ratio= 0.13, Bdiff= 0.000505, Bkappa=20.17;pos. col. U=286
+
+iter47 errorY= 0.7418, prior information ratio= 0.13, Bdiff= 0.000462, Bkappa=20.37;pos. col. U=291
+
+iter48 errorY= 0.7416, prior information ratio= 0.13, Bdiff= 0.0004181, Bkappa=20.44;pos. col. U=290
+
+iter49 errorY= 0.7414, prior information ratio= 0.13, Bdiff= 0.0003755, Bkappa=19.62;pos. col. U=291
+
+iter50 errorY= 0.7413, prior information ratio= 0.13, Bdiff= 0.0003386, Bkappa=19.86;pos. col. U=292
+
+iter51 errorY= 0.7411, prior information ratio= 0.13, Bdiff= 0.0003085, Bkappa=20.07;pos. col. U=290
+
+iter52 errorY= 0.741, prior information ratio= 0.13, Bdiff= 0.0002841, Bkappa=20.33;pos. col. U=290
+
+iter53 errorY= 0.7409, prior information ratio= 0.13, Bdiff= 0.0002657, Bkappa=20.07;pos. col. U=288
+
+iter54 errorY= 0.7408, prior information ratio= 0.13, Bdiff= 0.0002507, Bkappa=20.29;pos. col. U=290
+
+iter55 errorY= 0.7407, prior information ratio= 0.13, Bdiff= 0.0002388, Bkappa=20.26;pos. col. U=292
+
+iter56 errorY= 0.7406, prior information ratio= 0.13, Bdiff= 0.000228, Bkappa=20.29;pos. col. U=291
+
+iter57 errorY= 0.7405, prior information ratio= 0.13, Bdiff= 0.0002184, Bkappa=20.56;pos. col. U=290
+
+iter58 errorY= 0.7404, prior information ratio= 0.13, Bdiff= 0.0002079, Bkappa=20.69;pos. col. U=291
+
+iter59 errorY= 0.7403, prior information ratio= 0.13, Bdiff= 0.0001973, Bkappa=20.87;pos. col. U=292
+
+New L3 is 0.00218749111818289
+
+iter60 errorY= 0.7403, prior information ratio= 0.12, Bdiff= 0.0001904, Bkappa=21.07;pos. col. U=261
+
+iter61 errorY= 0.7403, prior information ratio= 0.13, Bdiff= 0.0001758, Bkappa=21.21;pos. col. U=244
+
+iter62 errorY= 0.7402, prior information ratio= 0.12, Bdiff= 0.0001632, Bkappa=21.37;pos. col. U=240
+
+iter63 errorY= 0.7402, prior information ratio= 0.12, Bdiff= 0.0001499, Bkappa=21.47;pos. col. U=236
+
+iter64 errorY= 0.7401, prior information ratio= 0.12, Bdiff= 0.0001371, Bkappa=21.56;pos. col. U=236
+
+iter65 errorY= 0.7401, prior information ratio= 0.12, Bdiff= 0.0001248, Bkappa=21.65;pos. col. U=235
+
+iter66 errorY= 0.74, prior information ratio= 0.12, Bdiff= 0.0001131, Bkappa=21.93;pos. col. U=235
+
+iter67 errorY= 0.74, prior information ratio= 0.12, Bdiff= 0.000103, Bkappa=21.98;pos. col. U=235
+
+iter68 errorY= 0.74, prior information ratio= 0.12, Bdiff= 9.39e-05, Bkappa=21.97;pos. col. U=233
+
+iter69 errorY= 0.7399, prior information ratio= 0.12, Bdiff= 8.599e-05, Bkappa=22.14;pos. col. U=232
+
+iter70 errorY= 0.7399, prior information ratio= 0.12, Bdiff= 7.89e-05, Bkappa=21.96;pos. col. U=232
+
+iter71 errorY= 0.7399, prior information ratio= 0.12, Bdiff= 7.289e-05, Bkappa=21.98;pos. col. U=232
+
+iter72 errorY= 0.7399, prior information ratio= 0.12, Bdiff= 6.771e-05, Bkappa=21.91;pos. col. U=232
+
+iter73 errorY= 0.7399, prior information ratio= 0.12, Bdiff= 6.312e-05, Bkappa=21.97;pos. col. U=232
+
+iter74 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 5.905e-05, Bkappa=21.99;pos. col. U=232
+
+iter75 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 5.523e-05, Bkappa=22.13;pos. col. U=232
+
+iter76 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 5.227e-05, Bkappa=22.2;pos. col. U=233
+
+iter77 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 4.874e-05, Bkappa=22.25;pos. col. U=234
+
+iter78 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 4.576e-05, Bkappa=22.33;pos. col. U=235
+
+iter79 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 4.309e-05, Bkappa=22.25;pos. col. U=235
+
+New L3 is 0.00193045413622771
+
+iter80 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 4.523e-05, Bkappa=22.49;pos. col. U=297
+
+iter81 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 4.152e-05, Bkappa=22.64;pos. col. U=298
+
+iter82 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 3.855e-05, Bkappa=22.67;pos. col. U=298
+
+iter83 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 3.61e-05, Bkappa=22.72;pos. col. U=298
+
+iter84 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 3.401e-05, Bkappa=22.71;pos. col. U=297
+
+iter85 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 3.225e-05, Bkappa=22.78;pos. col. U=297
+
+iter86 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 3.062e-05, Bkappa=22.83;pos. col. U=296
+
+iter87 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.924e-05, Bkappa=22.91;pos. col. U=296
+
+iter88 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.806e-05, Bkappa=23.24;pos. col. U=297
+
+iter89 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.701e-05, Bkappa=23.37;pos. col. U=297
+
+iter90 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.61e-05, Bkappa=23.39;pos. col. U=297
+
+iter91 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.536e-05, Bkappa=23.37;pos. col. U=297
+
+iter92 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.474e-05, Bkappa=23.4;pos. col. U=297
+
+iter93 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.424e-05, Bkappa=23.48;pos. col. U=296
+
+iter94 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.382e-05, Bkappa=23.56;pos. col. U=297
+
+iter95 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.351e-05, Bkappa=23.57;pos. col. U=297
+
+iter96 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.328e-05, Bkappa=23.64;pos. col. U=296
+
+iter97 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.314e-05, Bkappa=23.91;pos. col. U=296
+
+iter98 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.302e-05, Bkappa=24;pos. col. U=296
+
+iter99 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.291e-05, Bkappa=24.13;pos. col. U=296
+
+New L3 is 0.00218749111818289
+
+iter100 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.694e-05, Bkappa=24.14;pos. col. U=264
+
+iter101 errorY= 0.7398, prior information ratio= 0.13, Bdiff= 2.44e-05, Bkappa=24.16;pos. col. U=251
+
+iter102 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 2.326e-05, Bkappa=24.35;pos. col. U=246
+
+iter103 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 2.268e-05, Bkappa=24.35;pos. col. U=240
+
+iter104 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 2.243e-05, Bkappa=24.43;pos. col. U=240
+
+iter105 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.236e-05, Bkappa=24.4;pos. col. U=238
+
+iter106 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.244e-05, Bkappa=24.52;pos. col. U=237
+
+iter107 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.266e-05, Bkappa=24.63;pos. col. U=234
+
+iter108 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.298e-05, Bkappa=24.77;pos. col. U=233
+
+iter109 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.335e-05, Bkappa=24.65;pos. col. U=233
+
+iter110 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.386e-05, Bkappa=24.68;pos. col. U=232
+
+iter111 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.434e-05, Bkappa=24.8;pos. col. U=232
+
+iter112 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.488e-05, Bkappa=24.89;pos. col. U=232
+
+iter113 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.54e-05, Bkappa=24.64;pos. col. U=232
+
+iter114 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.596e-05, Bkappa=24.77;pos. col. U=233
+
+iter115 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.644e-05, Bkappa=24.77;pos. col. U=233
+
+iter116 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.693e-05, Bkappa=24.68;pos. col. U=233
+
+iter117 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.736e-05, Bkappa=24.81;pos. col. U=234
+
+iter118 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.769e-05, Bkappa=24.81;pos. col. U=234
+
+iter119 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 2.79e-05, Bkappa=24.57;pos. col. U=234
+
+New L3 is 0.00193045413622771
+
+iter120 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 3.262e-05, Bkappa=24.84;pos. col. U=298
+
+iter121 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 3.126e-05, Bkappa=24.83;pos. col. U=298
+
+iter122 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 3.035e-05, Bkappa=24.74;pos. col. U=299
+
+iter123 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 2.955e-05, Bkappa=24.77;pos. col. U=299
+
+iter124 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 2.876e-05, Bkappa=24.67;pos. col. U=299
+
+iter125 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 2.788e-05, Bkappa=24.67;pos. col. U=298
+
+iter126 errorY= 0.7396, prior information ratio= 0.13, Bdiff= 2.695e-05, Bkappa=24.55;pos. col. U=298
+
+iter127 errorY= 0.7396, prior information ratio= 0.13, Bdiff= 2.601e-05, Bkappa=24.55;pos. col. U=298
+
+iter128 errorY= 0.7396, prior information ratio= 0.13, Bdiff= 2.513e-05, Bkappa=24.54;pos. col. U=298
+
+iter129 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.436e-05, Bkappa=24.44;pos. col. U=298
+
+iter130 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.37e-05, Bkappa=24.64;pos. col. U=298
+
+iter131 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.316e-05, Bkappa=24.58;pos. col. U=299
+
+iter132 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.272e-05, Bkappa=24.54;pos. col. U=299
+
+iter133 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.238e-05, Bkappa=24.53;pos. col. U=299
+
+iter134 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.206e-05, Bkappa=24.71;pos. col. U=298
+
+iter135 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.182e-05, Bkappa=24.52;pos. col. U=298
+
+iter136 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.165e-05, Bkappa=24.51;pos. col. U=298
+
+iter137 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.15e-05, Bkappa=24.54;pos. col. U=298
+
+iter138 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.138e-05, Bkappa=24.54;pos. col. U=297
+
+iter139 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.125e-05, Bkappa=24.48;pos. col. U=297
+
+New L3 is 0.00218749111818289
+
+iter140 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 2.532e-05, Bkappa=24.52;pos. col. U=262
+
+iter141 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 2.257e-05, Bkappa=24.49;pos. col. U=248
+
+iter142 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 2.118e-05, Bkappa=24.81;pos. col. U=243
+
+iter143 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 2.005e-05, Bkappa=24.71;pos. col. U=236
+
+iter144 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.916e-05, Bkappa=24.68;pos. col. U=235
+
+iter145 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.84e-05, Bkappa=24.49;pos. col. U=234
+
+iter146 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.799e-05, Bkappa=24.46;pos. col. U=235
+
+iter147 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.703e-05, Bkappa=24.46;pos. col. U=234
+
+iter148 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.66e-05, Bkappa=24.25;pos. col. U=233
+
+iter149 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.606e-05, Bkappa=24.2;pos. col. U=233
+
+iter150 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.565e-05, Bkappa=24.17;pos. col. U=233
+
+iter151 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.533e-05, Bkappa=24.16;pos. col. U=233
+
+iter152 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.505e-05, Bkappa=24.16;pos. col. U=233
+
+iter153 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.474e-05, Bkappa=24.16;pos. col. U=233
+
+iter154 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.446e-05, Bkappa=24.16;pos. col. U=233
+
+iter155 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.417e-05, Bkappa=24.2;pos. col. U=232
+
+iter156 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.387e-05, Bkappa=24.2;pos. col. U=232
+
+iter157 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.354e-05, Bkappa=24.21;pos. col. U=232
+
+iter158 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.319e-05, Bkappa=24.22;pos. col. U=230
+
+iter159 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.283e-05, Bkappa=24.24;pos. col. U=230
+
+New L3 is 0.00193045413622771
+
+iter160 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 1.672e-05, Bkappa=24.24;pos. col. U=300
+
+iter161 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 1.486e-05, Bkappa=24.25;pos. col. U=299
+
+iter162 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 1.373e-05, Bkappa=24.17;pos. col. U=296
+
+iter163 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 1.289e-05, Bkappa=24.26;pos. col. U=296
+
+iter164 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.22e-05, Bkappa=24.3;pos. col. U=296
+
+iter165 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.167e-05, Bkappa=24.28;pos. col. U=295
+
+iter166 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.124e-05, Bkappa=24.42;pos. col. U=295
+
+iter167 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.087e-05, Bkappa=24.37;pos. col. U=296
+
+iter168 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.058e-05, Bkappa=24.39;pos. col. U=297
+
+iter169 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.034e-05, Bkappa=24.22;pos. col. U=297
+
+iter170 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.016e-05, Bkappa=24.34;pos. col. U=297
+
+iter171 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.002e-05, Bkappa=24.2;pos. col. U=297
+
+iter172 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 9.929e-06, Bkappa=24.35;pos. col. U=298
+
+iter173 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 9.889e-06, Bkappa=24.37;pos. col. U=298
+
+iter174 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 9.905e-06, Bkappa=24.24;pos. col. U=298
+
+iter175 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 9.977e-06, Bkappa=24.37;pos. col. U=298
+
+iter176 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.011e-05, Bkappa=24.39;pos. col. U=298
+
+iter177 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.029e-05, Bkappa=24.41;pos. col. U=298
+
+iter178 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.051e-05, Bkappa=24.43;pos. col. U=298
+
+iter179 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.078e-05, Bkappa=24.44;pos. col. U=298
+
+New L3 is 0.00218749111818289
+
+iter138 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.138e-05, Bkappa=24.54;pos. col. U=297
+
+iter139 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 2.125e-05, Bkappa=24.48;pos. col. U=297
+
+New L3 is 0.00218749111818289
+
+iter140 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 2.532e-05, Bkappa=24.52;pos. col. U=262
+
+iter141 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 2.257e-05, Bkappa=24.49;pos. col. U=248
+
+iter142 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 2.118e-05, Bkappa=24.81;pos. col. U=243
+
+iter143 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 2.005e-05, Bkappa=24.71;pos. col. U=236
+
+iter144 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.916e-05, Bkappa=24.68;pos. col. U=235
+
+iter145 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.84e-05, Bkappa=24.49;pos. col. U=234
+
+iter146 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.799e-05, Bkappa=24.46;pos. col. U=235
+
+iter147 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.703e-05, Bkappa=24.46;pos. col. U=234
+
+iter148 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.66e-05, Bkappa=24.25;pos. col. U=233
+
+iter149 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.606e-05, Bkappa=24.2;pos. col. U=233
+
+iter150 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.565e-05, Bkappa=24.17;pos. col. U=233
+
+iter151 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.533e-05, Bkappa=24.16;pos. col. U=233
+
+iter152 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.505e-05, Bkappa=24.16;pos. col. U=233
+
+iter153 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.474e-05, Bkappa=24.16;pos. col. U=233
+
+iter154 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.446e-05, Bkappa=24.16;pos. col. U=233
+
+iter155 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.417e-05, Bkappa=24.2;pos. col. U=232
+
+iter156 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.387e-05, Bkappa=24.2;pos. col. U=232
+
+iter157 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.354e-05, Bkappa=24.21;pos. col. U=232
+
+iter158 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.319e-05, Bkappa=24.22;pos. col. U=230
+
+iter159 errorY= 0.7398, prior information ratio= 0.12, Bdiff= 1.283e-05, Bkappa=24.24;pos. col. U=230
+
+New L3 is 0.00193045413622771
+
+iter160 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 1.672e-05, Bkappa=24.24;pos. col. U=300
+
+iter161 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 1.486e-05, Bkappa=24.25;pos. col. U=299
+
+iter162 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 1.373e-05, Bkappa=24.17;pos. col. U=296
+
+iter163 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 1.289e-05, Bkappa=24.26;pos. col. U=296
+
+iter164 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.22e-05, Bkappa=24.3;pos. col. U=296
+
+iter165 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.167e-05, Bkappa=24.28;pos. col. U=295
+
+iter166 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.124e-05, Bkappa=24.42;pos. col. U=295
+
+iter167 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.087e-05, Bkappa=24.37;pos. col. U=296
+
+iter168 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.058e-05, Bkappa=24.39;pos. col. U=297
+
+iter169 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.034e-05, Bkappa=24.22;pos. col. U=297
+
+iter170 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.016e-05, Bkappa=24.34;pos. col. U=297
+
+iter171 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.002e-05, Bkappa=24.2;pos. col. U=297
+
+iter172 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 9.929e-06, Bkappa=24.35;pos. col. U=298
+
+iter173 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 9.889e-06, Bkappa=24.37;pos. col. U=298
+
+iter174 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 9.905e-06, Bkappa=24.24;pos. col. U=298
+
+iter175 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 9.977e-06, Bkappa=24.37;pos. col. U=298
+
+iter176 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.011e-05, Bkappa=24.39;pos. col. U=298
+
+iter177 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.029e-05, Bkappa=24.41;pos. col. U=298
+
+iter178 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.051e-05, Bkappa=24.43;pos. col. U=298
+
+iter179 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.078e-05, Bkappa=24.44;pos. col. U=298
+
+New L3 is 0.00218749111818289
+
+iter180 errorY= 0.7398, prior information ratio= 0.13, Bdiff= 1.564e-05, Bkappa=24.51;pos. col. U=262
+
+iter181 errorY= 0.7398, prior information ratio= 0.13, Bdiff= 1.373e-05, Bkappa=24.56;pos. col. U=249
+
+iter182 errorY= 0.7398, prior information ratio= 0.13, Bdiff= 1.301e-05, Bkappa=24.45;pos. col. U=240
+
+iter183 errorY= 0.7398, prior information ratio= 0.13, Bdiff= 1.283e-05, Bkappa=24.41;pos. col. U=237
+
+iter184 errorY= 0.7398, prior information ratio= 0.13, Bdiff= 1.292e-05, Bkappa=24.41;pos. col. U=234
+
+iter185 errorY= 0.7398, prior information ratio= 0.13, Bdiff= 1.313e-05, Bkappa=24.4;pos. col. U=233
+
+iter186 errorY= 0.7398, prior information ratio= 0.13, Bdiff= 1.342e-05, Bkappa=24.33;pos. col. U=232
+
+iter187 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 1.372e-05, Bkappa=24.37;pos. col. U=232
+
+iter188 errorY= 0.7397, prior information ratio= 0.13, Bdiff= 1.471e-05, Bkappa=24.33;pos. col. U=232
+
+iter189 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 1.457e-05, Bkappa=24.43;pos. col. U=233
+
+iter190 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 1.475e-05, Bkappa=24.37;pos. col. U=233
+
+iter191 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 1.495e-05, Bkappa=24.45;pos. col. U=232
+
+iter192 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 1.605e-05, Bkappa=24.45;pos. col. U=235
+
+iter193 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 1.549e-05, Bkappa=24.38;pos. col. U=235
+
+iter194 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 1.532e-05, Bkappa=24.43;pos. col. U=235
+
+iter195 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 1.518e-05, Bkappa=24.43;pos. col. U=236
+
+iter196 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 1.604e-05, Bkappa=24.4;pos. col. U=235
+
+iter197 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 1.495e-05, Bkappa=24.29;pos. col. U=235
+
+iter198 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 1.456e-05, Bkappa=24.83;pos. col. U=235
+
+iter199 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 1.417e-05, Bkappa=24.84;pos. col. U=235
+New L3 is 0.00193045413622771
+
+iter200 errorY= 0.7396, prior information ratio= 0.1, Bdiff= 1.826e-05, Bkappa=24.84;pos. col. U=303
+
+Bdiff is not decreasing
+
+iter201 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 1.648e-05, Bkappa=24.85;pos. col. U=303
+
+Bdiff is not decreasing
+
+iter202 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 1.531e-05, Bkappa=24.91;pos. col. U=303
+
+Bdiff is not decreasing
+
+iter203 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 1.442e-05, Bkappa=24.92;pos. col. U=303
+
+iter204 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 1.365e-05, Bkappa=25.1;pos. col. U=303
+
+iter205 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 1.294e-05, Bkappa=25.12;pos. col. U=303
+
+iter206 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 1.231e-05, Bkappa=25.13;pos. col. U=303
+
+iter207 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 1.173e-05, Bkappa=25.15;pos. col. U=303
+
+iter208 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 1.118e-05, Bkappa=25.14;pos. col. U=302
+
+iter209 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 1.068e-05, Bkappa=25.15;pos. col. U=302
+
+iter210 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 1.026e-05, Bkappa=25.16;pos. col. U=302
+
+iter211 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 9.875e-06, Bkappa=25.19;pos. col. U=302
+
+iter212 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 9.535e-06, Bkappa=24.95;pos. col. U=303
+
+iter213 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 9.221e-06, Bkappa=24.96;pos. col. U=303
+
+iter214 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 8.887e-06, Bkappa=24.97;pos. col. U=303
+
+iter215 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 8.516e-06, Bkappa=24.98;pos. col. U=304
+
+iter216 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 8.261e-06, Bkappa=24.99;pos. col. U=304
+
+iter217 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 8.016e-06, Bkappa=25;pos. col. U=304
+
+iter218 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 7.777e-06, Bkappa=25.2;pos. col. U=304
+
+iter219 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 7.522e-06, Bkappa=25.16;pos. col. U=304
+
+New L3 is 0.00218749111818289
+
+ter220 errorY= 0.7396, prior information ratio= 0.12, Bdiff= 1.178e-05, Bkappa=25.1;pos. col. U=269
+
+Bdiff is not decreasing
+
+iter221 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 9.278e-06, Bkappa=25.12;pos. col. U=252
+
+iter222 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 7.891e-06, Bkappa=25.15;pos. col. U=246
+
+iter223 errorY= 0.7397, prior information ratio= 0.12, Bdiff= 6.933e-06, Bkappa=25.09;pos. col. U=242
+
+iter224 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 6.187e-06, Bkappa=25.09;pos. col. U=241
+
+iter225 errorY= 0.7397, prior information ratio= 0.11, Bdiff= 5.632e-06, Bkappa=24.57;pos. col. U=238
+
+iter226 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 5.206e-06, Bkappa=24.58;pos. col. U=237
+
+iter227 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 4.853e-06, Bkappa=24.59;pos. col. U=236
+
+iter228 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 4.556e-06, Bkappa=24.59;pos. col. U=235
+
+iter229 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 4.309e-06, Bkappa=24.6;pos. col. U=235
+
+iter230 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 4.113e-06, Bkappa=24.62;pos. col. U=236
+
+iter231 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 3.972e-06, Bkappa=24.8;pos. col. U=236
+
+iter232 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 3.898e-06, Bkappa=24.77;pos. col. U=236
+
+iter233 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 3.883e-06, Bkappa=24.8;pos. col. U=235
+
+iter234 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 3.934e-06, Bkappa=24.81;pos. col. U=235
+
+iter235 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 4.061e-06, Bkappa=24.81;pos. col. U=235
+
+iter236 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 4.281e-06, Bkappa=24.81;pos. col. U=235
+
+iter237 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 4.635e-06, Bkappa=24.82;pos. col. U=235
+
+iter238 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 5.141e-06, Bkappa=24.83;pos. col. U=235
+
+iter239 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 5.828e-06, Bkappa=24.85;pos. col. U=235
+
+New L3 is 0.00218749111818289
+
+iter240 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 6.75e-06, Bkappa=24.69;pos. col. U=235
+
+iter241 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 7.93e-06, Bkappa=24.56;pos. col. U=235
+
+iter242 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 9.379e-06, Bkappa=24.74;pos. col. U=235
+
+iter243 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 1.105e-05, Bkappa=24.77;pos. col. U=235
+
+iter244 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 1.28e-05, Bkappa=25.06;pos. col. U=235
+
+iter245 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 1.445e-05, Bkappa=25.07;pos. col. U=235
+
+iter246 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 1.571e-05, Bkappa=25.01;pos. col. U=235
+
+iter247 errorY= 0.7396, prior information ratio= 0.11, Bdiff= 1.622e-05, Bkappa=25.03;pos. col. U=235
+
+Bdiff is not decreasing
+
+iter248 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 1.574e-05, Bkappa=25.15;pos. col. U=235
+
+Bdiff is not decreasing
+
+iter249 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 1.456e-05, Bkappa=25.23;pos. col. U=235
+
+Bdiff is not decreasing
+
+iter250 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 1.284e-05, Bkappa=25.34;pos. col. U=236
+
+iter251 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 1.098e-05, Bkappa=25.35;pos. col. U=236
+
+iter252 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 9.222e-06, Bkappa=25.08;pos. col. U=236
+
+iter253 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 7.775e-06, Bkappa=25.08;pos. col. U=236
+
+iter254 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 6.551e-06, Bkappa=25.09;pos. col. U=236
+
+iter255 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 5.662e-06, Bkappa=25.1;pos. col. U=236
+
+iter256 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 5.007e-06, Bkappa=25.11;pos. col. U=236
+
+iter257 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 4.514e-06, Bkappa=25.11;pos. col. U=236
+
+iter258 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 4.144e-06, Bkappa=25.12;pos. col. U=236
+
+iter259 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.873e-06, Bkappa=25.13;pos. col. U=236
+
+New L3 is 0.00218749111818289
+
+iter260 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.667e-06, Bkappa=25.14;pos. col. U=235
+
+iter261 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.534e-06, Bkappa=25.15;pos. col. U=235
+
+iter262 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.434e-06, Bkappa=25.16;pos. col. U=235
+
+iter263 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.35e-06, Bkappa=25.18;pos. col. U=235
+
+iter264 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.276e-06, Bkappa=25.19;pos. col. U=235
+
+iter265 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.226e-06, Bkappa=25.19;pos. col. U=235
+
+iter266 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.189e-06, Bkappa=25.37;pos. col. U=235
+
+iter267 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.158e-06, Bkappa=25.41;pos. col. U=235
+
+iter268 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.131e-06, Bkappa=25.36;pos. col. U=235
+
+iter269 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.11e-06, Bkappa=25.37;pos. col. U=235
+
+iter270 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.088e-06, Bkappa=25.37;pos. col. U=235
+
+iter271 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.067e-06, Bkappa=25.38;pos. col. U=235
+
+iter272 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.053e-06, Bkappa=25.37;pos. col. U=235
+
+iter273 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.049e-06, Bkappa=25.37;pos. col. U=235
+
+iter274 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.052e-06, Bkappa=25.38;pos. col. U=235
+
+iter275 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.058e-06, Bkappa=25.38;pos. col. U=235
+
+iter276 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.053e-06, Bkappa=25.41;pos. col. U=235
+
+iter277 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.053e-06, Bkappa=25.41;pos. col. U=235
+
+iter278 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.06e-06, Bkappa=25.4;pos. col. U=235
+
+iter279 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.071e-06, Bkappa=25.41;pos. col. U=236
+
+New L3 is 0.00218749111818289
+
+iter280 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.084e-06, Bkappa=25.41;pos. col. U=236
+
+iter281 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.096e-06, Bkappa=25.43;pos. col. U=236
+
+iter282 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.105e-06, Bkappa=25.44;pos. col. U=237
+
+iter283 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.108e-06, Bkappa=25.44;pos. col. U=237
+
+iter284 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.111e-06, Bkappa=25.45;pos. col. U=237
+
+iter285 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.114e-06, Bkappa=25.45;pos. col. U=237
+
+iter286 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.112e-06, Bkappa=25.7;pos. col. U=236
+
+iter287 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.105e-06, Bkappa=25.71;pos. col. U=237
+
+iter288 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.099e-06, Bkappa=25.71;pos. col. U=237
+
+iter289 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.085e-06, Bkappa=25.62;pos. col. U=237
+
+iter290 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.069e-06, Bkappa=25.72;pos. col. U=237
+
+iter291 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.047e-06, Bkappa=25.72;pos. col. U=237
+
+iter292 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.023e-06, Bkappa=25.32;pos. col. U=237
+
+iter293 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 2.998e-06, Bkappa=25.64;pos. col. U=237
+
+iter294 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 2.972e-06, Bkappa=25.64;pos. col. U=237
+
+iter295 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 2.947e-06, Bkappa=25.65;pos. col. U=237
+iter296 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 2.919e-06, Bkappa=25.66;pos. col. U=237
+
+iter297 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 2.895e-06, Bkappa=25.67;pos. col. U=237
+
+iter298 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 2.873e-06, Bkappa=25.68;pos. col. U=238
+
+iter299 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 2.859e-06, Bkappa=25.68;pos. col. U=238
+
+New L3 is 0.00218749111818289
+
+iter300 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 2.855e-06, Bkappa=25.69;pos. col. U=238
+
+iter301 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 2.86e-06, Bkappa=25.73;pos. col. U=238
+
+iter302 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 2.872e-06, Bkappa=25.74;pos. col. U=239
+
+iter303 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 2.887e-06, Bkappa=25.74;pos. col. U=239
+
+iter304 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 2.912e-06, Bkappa=25.72;pos. col. U=239
+
+iter305 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 2.942e-06, Bkappa=25.54;pos. col. U=239
+
+iter306 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 2.977e-06, Bkappa=25.54;pos. col. U=239
+
+iter307 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.021e-06, Bkappa=25.55;pos. col. U=239
+
+iter308 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.068e-06, Bkappa=25.56;pos. col. U=239
+
+iter309 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.124e-06, Bkappa=25.56;pos. col. U=239
+
+iter310 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.195e-06, Bkappa=25.57;pos. col. U=239
+
+iter311 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.282e-06, Bkappa=25.57;pos. col. U=240
+
+iter312 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.379e-06, Bkappa=25.57;pos. col. U=240
+
+iter313 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.494e-06, Bkappa=25.58;pos. col. U=240
+
+Bdiff is not decreasing
+
+iter314 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.627e-06, Bkappa=25.58;pos. col. U=240
+
+Bdiff is not decreasing
+
+iter315 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.781e-06, Bkappa=25.58;pos. col. U=241
+
+Bdiff is not decreasing
+
+iter316 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 3.968e-06, Bkappa=25.58;pos. col. U=241
+
+Bdiff is not decreasing
+
+iter317 errorY= 0.7395, prior information ratio= 0.11, Bdiff= 4.18e-06, Bkappa=25.79;pos. col. U=241
+
+Bdiff is not decreasing
+
+converged at  iteration 317 Bdiff is not decreasing
+
+There are 114  LVs with AUC>0.70
+
+2022-08-04T20:12:25.030070Z [rsession-jfisher7] WARNING Abort requested; LOGGED FROM: bool 
+rstudio::session::connection::checkForAbort(rstudio_boost::shared_ptr<rstudio::session::HttpConnection>, 
 
 ### Save Data
 Done in analysis 

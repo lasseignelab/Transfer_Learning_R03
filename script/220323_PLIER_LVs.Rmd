@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # START 
     Goal/Purpose of operations: 
-    quick summary 
+    We investigated the centraility of the highest weighted genes from all the latent variables and found that the top 10 highest weighted genes (aka. an important gene for the latent variable) for all the latent variables compared to genes that were not a top gene in any of latent gene were higher across all three centrality metrics 
     
     Finished psedocode on: 
     220323
@@ -45,6 +45,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # STEPS
 ### Set working directory 
+```{r}
+library(MatrixGenerics)
+library(Biobase)
+```
+
 ### load in data
 ```{r}
 recount3_plier <- readRDS("~/data/recount3/recount3_plier_wo.rds")
@@ -106,7 +111,7 @@ plot(gene_avg_weight, gene_max_weight)
 ```{r}
 plot(gene_avg_weight, gene_med_weights)
 ```
-there are genes that mostlyhave zero weights with an outlier 
+there are genes that mostl yhave zero weights with an outlier 
 interesting that are some genes where is seems like they are similar 
 
 ```{r}
@@ -161,7 +166,7 @@ hist(gene_sp_Avg)
 ```
 no correlation between weights and other genes
 
-
+looking at the string database for these top latent variable genes
 ```{r}
 ppi <- read.delim("~/data/9606.protein.links.v11.5.txt" , sep= " ", header = TRUE)
 ```
@@ -236,7 +241,7 @@ plot(string_ppi_details$degree, string_ppi_details$eign_cent)
 ```{r}
 plot(string_ppi_details$betweenness, string_ppi_details$eign_cent)
 ```
-```{r eval=False}
+```{r eval=FALSE}
 saveRDS(string_ppi_details, "~/string_ppi_metrics.rds")
 ```
 
@@ -287,6 +292,7 @@ ggplot(lv_topgene_data, aes(x= Number, y= Unique_fraction))+geom_point()+theme_c
 ```{r}
 length(gene_list)
 ```
+This line plot with the overlap between top genes (Number on the x-axis) and the unique function which describe the number of all the top genes from each LVs (removing repeats) over the total number of genes (without removing shared top genes). The vertical line is at 10 top genes and the horizontal line is at 0.80 were the cut offs for the top genes for this network analysis. 
 
 
 ```{r}
@@ -346,7 +352,7 @@ ggplot(string_ppi_details, aes(x=top_10_weights, y=eign_cent_log, fill=top_10_we
 plot(string_ppi_details$eign_cent, string_ppi_details$eign_cent_log)
 ```
 
-
+Conduct wilcox test to determine if there is a difference in network centrailtity betweeen genes that are higly weighted in teh latent variables vs not highly weighted.
 ```{r}
 #
 string_ppi_details_true <- string_ppi_details[string_ppi_details$top_10_weights == TRUE,]

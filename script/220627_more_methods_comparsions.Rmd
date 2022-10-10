@@ -21,7 +21,7 @@ output:
     Transfer_Learning_R03
     
     Docker/Singularity: 
-    rstudio_tf_dr_v3
+    rstudio_cancer_dr
     
     Directory of operations: 
     "/home/rstudio"
@@ -72,7 +72,7 @@ library(RColorBrewer)
 gbm
 ```{r}
 lincs_limma_gbm_res_GI1_fda_approved<- read_csv( "~/output/limma_gbm/220808_SR_LINCS_GBM_top_RES_all.csv")
-lincs_deseq2_gbm_res_GI1_fda_approved <- read_csv( "~/output/deseq2_gbm/220427_SR_LINCS_GBM_DESEQ2_RES_all.csv")
+lincs_deseq2_gbm_res_GI1_fda_approved <- read_csv( "~/output/deseq2_gbm/220928_SR_LINCS_GBM_DESEQ2_RES_all.csv")
 lincs_tfl_gbm_res_GI1_fda_approved <- read_csv( "~/output/TF_L_GBM/220808_SR_LINCS_GBM_top_RES_all.csv")
 ```
 
@@ -89,7 +89,7 @@ limma_pathways <- read_delim("~/output/gbm_plots/limma_pathways.csv",
 
 liver
 ```{r}
-lincs_deseq_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/deseq2_res/220808_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/deseq2_res/220929_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
 lincs_deseq_gbm_res_HEPG2_fda_approved <- lincs_deseq_gbm_res_HEPG2_fda_approved [lincs_deseq_gbm_res_HEPG2_fda_approved$fda_approved== TRUE,]
 
 lincs_limma_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_RES_tau.csv")
@@ -117,7 +117,7 @@ lung
 #comment.   
 lincs_limma_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/limma_res/220808_SR_LINCS_LUAD_limma_RES_tau.csv")
 lincs_limma_gbm_res_A549_fda_approved<- lincs_limma_gbm_res_A549_fda_approved[lincs_limma_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
-lincs_deseq_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/deseq2_res/220808_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/deseq2_res/220929_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
 lincs_deseq_gbm_res_A549_fda_approved<- lincs_deseq_gbm_res_A549_fda_approved[lincs_deseq_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
 lincs_tfl_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/TFL_res/220808_SR_LINCS_LUAD_TFL_RES_tau.csv")
 lincs_tfl_gbm_res_A549_fda_approved<- lincs_tfl_gbm_res_A549_fda_approved[lincs_tfl_gbm_res_A549_fda_approved$fda_approved==TRUE,]
@@ -136,7 +136,7 @@ limma_pathways_lung <- read_delim("~/output/lung_cancer/limma_pathways.csv",
 
 pancreatic
 ```{r}
-lincs_deseq_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/deseq2_res/220602_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/deseq2_res/220929_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
 lincs_deseq_gbm_res_YAPC_fda_approved<- lincs_deseq_gbm_res_YAPC_fda_approved[lincs_deseq_gbm_res_YAPC_fda_approved$fda_approved == TRUE,]
 
 lincs_limma_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/limma_res/220602_SR_LINCS_PAAD_limma_RES_tau.csv")
@@ -170,7 +170,7 @@ for gbm
 limma_gbm_targets <- unique(unlist(str_split(lincs_limma_gbm_res_GI1_fda_approved$t_gn_sym, "; ")))
 
 deseq_gbm_targets <- unique(unlist(str_split(lincs_deseq2_gbm_res_GI1_fda_approved$t_gn_sym, "; ")))
-
+deseq_gbm_targets <- deseq_gbm_targets [complete.cases(deseq_gbm_targets )]
 tfl_gbm_targets <- unique(unlist(str_split(lincs_tfl_gbm_res_GI1_fda_approved$t_gn_sym, "; ")))
 ```
 
@@ -233,12 +233,12 @@ hsGO <- godata('org.Hs.eg.db', ont="BP")
 ```
 
 ```{r}
-go_term_heatmap(limma_pathways, deseq2_pathways, TFL_pathways, "Up")
+go_term_heatmap(limma_pathways, deseq2_pathways, TFL_pathways, "Up", file_name = "~/output/gbm_plots/go_term_parents_up_genes.csv")
 ```
 
 
 ```{r}
-go_term_heatmap(limma_pathways, deseq2_pathways, TFL_pathways, "Down")
+go_term_heatmap(limma_pathways, deseq2_pathways, TFL_pathways, "Down", file_name = "~/output/gbm_plots/go_term_parents_down_genes.csv")
 ```
 ```{r}
 #go_term_tree_plot(limma_pathways, deseq2_pathways, TFL_pathways, list_type= "Down", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
@@ -249,7 +249,7 @@ go_term_heatmap(limma_pathways, deseq2_pathways, TFL_pathways, "Down")
 up 
 
 ```{r}
-go_term_heatmap(limma_pathways_liver, deseq2_pathways_liver, TFL_pathways_liver, "Up", threshold =0.95)
+go_term_heatmap(limma_pathways_liver, deseq2_pathways_liver, TFL_pathways_liver, "Up", threshold =0.95, file_name = "~/output/liver_cancer/go_term_parents_up_genes.csv")
 ```
 
 ```{r}
@@ -258,7 +258,7 @@ go_term_heatmap(limma_pathways_liver, deseq2_pathways_liver, TFL_pathways_liver,
 
 down
 ```{r}
-go_term_heatmap(limma_pathways_liver, deseq2_pathways_liver, TFL_pathways_liver, "Down", threshold =0.95)
+go_term_heatmap(limma_pathways_liver, deseq2_pathways_liver, TFL_pathways_liver, "Down", threshold =0.95, file_name = "~/output/liver_cancer/go_term_parents_down_genes.csv")
 ```
 
 ```{r}
@@ -270,7 +270,7 @@ go_term_heatmap(limma_pathways_liver, deseq2_pathways_liver, TFL_pathways_liver,
 up 
 
 ```{r}
-go_term_heatmap(limma_pathways_lung, deseq2_pathways_lung, TFL_pathways_lung, "Up", threshold =0.80)
+go_term_heatmap(limma_pathways_lung, deseq2_pathways_lung, TFL_pathways_lung, "Up", threshold =0.80, file_name = "~/output/lung_cancer/go_term_parents_up_genes.csv")
 ```
 
 ```{r}
@@ -279,7 +279,7 @@ go_term_heatmap(limma_pathways_lung, deseq2_pathways_lung, TFL_pathways_lung, "U
 
 down
 ```{r}
-go_term_heatmap(limma_pathways_lung, deseq2_pathways_lung, TFL_pathways_lung, "Down", threshold =0.90)
+go_term_heatmap(limma_pathways_lung, deseq2_pathways_lung, TFL_pathways_lung, "Down", threshold =0.90, file_name = "~/output/lung_cancer/go_term_parents_down_genes.csv")
 ```
 
 ```{r}
@@ -289,7 +289,7 @@ go_term_heatmap(limma_pathways_lung, deseq2_pathways_lung, TFL_pathways_lung, "D
 
 up 
 ```{r}
-go_term_heatmap(limma_pathways_PAAD, deseq2_pathways_PAAD, TFL_pathways_PAAD, "Up", threshold =0.70)
+go_term_heatmap(limma_pathways_PAAD, deseq2_pathways_PAAD, TFL_pathways_PAAD, "Up", threshold =0.70, file_name = "~/output/pancreas_cancer/go_term_parents_up_genes.csv")
 ```
 
 ```{r}
@@ -298,7 +298,7 @@ go_term_heatmap(limma_pathways_PAAD, deseq2_pathways_PAAD, TFL_pathways_PAAD, "U
 
 down
 ```{r}
-go_term_heatmap(limma_pathways_PAAD, deseq2_pathways_PAAD, TFL_pathways_PAAD, "Down", threshold =0.95)
+go_term_heatmap(limma_pathways_PAAD, deseq2_pathways_PAAD, TFL_pathways_PAAD, "Down", threshold =0.95, file_name = "~/output/pancreas_cancer/go_term_parents_down_genes.csv")
 ```
 
 ```{r}

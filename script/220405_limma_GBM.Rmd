@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE)
     Transfer_Learning_R03
     
     Docker/Singularity: 
-    rstudio_tf_dr_v3
+    rstudio_cancer_dr
     
     Directory of operations:
     "/home/rstudio"
@@ -69,8 +69,8 @@ source("/home/rstudio/script/test_LV_differences.R")
 ```
 
 ```{r}
-count_table<- readRDS( "/home/rstudio/data/recount3_GBM_GTEx_BRAIN_raw_counts.rds")
-all_metadata<- readRDS("/home/rstudio/data/recount3_GBM_GTEx_BRAIN_metadata.rds")
+count_table<- readRDS( "~/data/recount3_GBM_GTEx_BRAIN_raw_counts.rds")
+all_metadata<- readRDS("~/data/recount3_GBM_GTEx_BRAIN_metadata.rds")
 ```
 
 normalize count data by tpm
@@ -134,7 +134,7 @@ saveRDS(limma_gene_TCGA_BH , file= "~/output/limma_gbm/220421_GBM_GTEX_gene_limm
 
 ## signaturesearch 
 get the limma results
-```{r}
+```{r eval= FALSE}
 GBM_GTEX_gene_limma_res <- readRDS("~/output/limma_gbm/220421_GBM_GTEX_gene_limma_res.rds")
 ```
 
@@ -145,168 +145,176 @@ library(HDF5Array)
 se <- SummarizedExperiment(HDF5Array("~/data/lincs_2020.h5", name="assay"))
 ```
 
-```{r}
+```{r eval= FALSE}
 rownames(se) <- HDF5Array("~/data/lincs_2020.h5", name="rownames")
 colnames(se) <- HDF5Array("~/data/lincs_2020.h5", name="colnames")
 db_path <- "~/data/lincs_2020.h5"
 ```
 
-```{r}
+```{r eval= FALSE}
 limma_results<- GBM_GTEX_gene_limma_res$limma
 ```
 
 get the top up and down regulated genes; use the top ~100 from the up and down regulated genes
-```{r}
+```{r eval= FALSE}
 limma_results<- limma_results[complete.cases(limma_results),]
 limma_results_sig <- limma_results[limma_results$adj.P.Val < 0.05 & abs(limma_results$logFC) > 2,]
 ```
 
-```{r}
+```{r eval= FALSE}
 upset<-limma_results_sig$LV[order(-limma_results_sig$logFC)]
 downset<- limma_results_sig$LV[order(limma_results_sig$logFC)]
 upset<- upset[1:200]
 downset<- downset[1:200]
 ```
 convert gene symbols to LINCS genes
-```{r}
+```{r eval= FALSE}
 upset_v2 <- match_to_LINCS_genes(upset)
 downset_v2 <- match_to_LINCS_genes(downset)
 ```
 
-```{r}
+```{r eval= FALSE}
 downset_v2<- downset_v2[complete.cases(downset_v2)]
 upset_v2<- upset_v2[complete.cases(upset_v2)]
 ```
 
-```{r}
+```{r eval= FALSE}
 names(upset_v2)<- NULL
 names(downset_v2)<- NULL
 ```
 
-```{r}
+```{r eval= FALSE}
 limma_gbm_list<- list(up= upset_v2, down= downset_v2)
 ```
 save the input gene signature. 
-```{r}
+```{r eval= FALSE}
 saveRDS(limma_gbm_list,"~/output/limma_gbm/SR_gene_list_gbm_limma.rds")
 ```
 
 run signature reversion for limma GBM vs Control
-```{r}
+```{r eval= FALSE}
 set.seed(101)
 qsig_lincs_limma_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
                    gess_method="LINCS", refdb=db_path)
 ```
 
-```{r}
+```{r eval= FALSE}
 set.seed(101)
 lincs_limma_gbm <- gess_lincs(qsig_lincs_limma_res, sortby="NCS", workers=1)
 #result(lincs)
 ```
 
-```{r}
+```{r eval= FALSE}
 lincs_limma_gbm_res <- result(lincs_limma_gbm)
 ```
-```{r}
+```{r eval= FALSE}
 write.csv(lincs_limma_gbm_res , file= "~/output/limma_gbm/220421_SR_LINCS_GBM_LIMMA_RES.csv" )
 ```
 
 
 tau calc 
 
-```{r}
+```{r eval= FALSE}
 lincs_limma_gbm_res_GI1 <- lincs_limma_gbm_res[lincs_limma_gbm_res$cell == "GI1",]
 ```
 
-```{r}
+```{r eval= FALSE}
 GI1_taudf <- readRDS("~/data/GI1_taudf.rds")
 ```
 
-```{r}
+```{r eval= FALSE}
 tau_test<- tau_scores(lincs_limma_gbm_res_GI1, GI1_taudf)
 ```
 
-```{r}
+```{r eval= FALSE}
 lincs_limma_gbm_res_GI1$jlf_tau<-tau_test
 ```
 
-```{r}
+```{r eval= FALSE}
 limma_sig_drugs <- lincs_limma_gbm_res_GI1[lincs_limma_gbm_res_GI1$WTCS_Pval <0.05 & lincs_limma_gbm_res_GI1$NCS <0 & as.numeric(lincs_limma_gbm_res_GI1$jlf_tau) < -80, ] 
 ```
 
 drug analysis
 
-```{r}
+```{r eval= FALSE}
 #FDA_APPROVAL_CHECK
 limma_sig_drugs$fda_database<- FDA_APPROVAL_CHECK(limma_sig_drugs$pert)
 ```
 
-```{r}
+```{r eval= FALSE}
 limma_sig_drugs_fda <-limma_sig_drugs[ limma_sig_drugs$fda_database == TRUE,]
 ```
 
 
-```{r}
+```{r eval= FALSE}
 FDA_CT_table<- read.csv("~/data/SearchResults.csv")
 limma_sig_drugs_fda$GBM_CT<- clinical_trial_check(as.character(limma_sig_drugs_fda$pert), FDA_CT_table)
 ```
 
 
-```{r}
+```{r eval= FALSE}
 hyperG_k_res_limma <- dsea_hyperG(drugs =limma_sig_drugs_fda$pert , type = "KEGG", 
                             pvalueCutoff = 1, qvalueCutoff = 1, 
                             minGSSize = 10, maxGSSize = 2000)
 hyperG_k_res_limma_v2<- result(hyperG_k_res_limma)
 ```
 
-```{r}
+```{r eval= FALSE}
 #false discovery rate
 hyperG_k_res_limma_v2$logqvalue<- -log(hyperG_k_res_limma_v2$qvalue)
 ```
 
-```{r}
+```{r eval= FALSE}
 hyperG_k_res_limma_v2$Description<- factor(hyperG_k_res_limma_v2$Description, levels= hyperG_k_res_limma_v2$Description)
 ```
 
-```{r}
+```{r eval= FALSE}
 gbm.2.2<-ggplot(data=hyperG_k_res_limma_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
   geom_bar(stat="identity") 
 gbm.2.2 + coord_flip(ylim = c(0,8)) + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
 ggsave("~/output/limma_gbm/220421_ggplot_limma_tau_gbm_approved_candidates_pathways.png")
 ```
+```{r}
+knitr::include_graphics("~/output/limma_gbm/220421_ggplot_limma_tau_gbm_approved_candidates_pathways.png")
+```
 
 check that all the drug can result in pathways== yes
-```{r}
+```{r eval= FALSE}
 limma_sig_drugs_fda_order <- limma_sig_drugs_fda[order(-limma_sig_drugs_fda$NCS),]
 limma_sig_drugs_fda$pert <- factor(limma_sig_drugs_fda$pert, levels = limma_sig_drugs_fda_order$pert)
 ```
 
 
-```{r}
+```{r eval= FALSE}
 p<-ggplot(data=limma_sig_drugs_fda , aes(x=pert, y=NCS, fill=jlf_tau, shape= GBM_CT)) +
   geom_bar(stat="identity", color= "black")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
 p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]", shape= "Clinical Trials")
 ggsave("~/output/limma_gbm/2200421_ggplot_limma_tau_gbm_approved_candidates.png")
 ```
 ```{r}
+knitr::include_graphics("~/output/limma_gbm/2200421_ggplot_limma_tau_gbm_approved_candidates.png")
+```
+
+
+```{r eval= FALSE}
 write.csv(limma_sig_drugs_fda , file = "~/output/limma_GBM/220808_SR_LINCS_GBM_top_RES_all.csv")
 ```
 
 
 look at the brain tumor cell types 
-```{r}
+```{r eval= FALSE}
 lincs_limma_gbm_res_brain_tumor <- lincs_limma_gbm_res[lincs_limma_gbm_res$cell %in% c("GI1","SHSY5Y", "LN229","SKNSH", "U251MG","YH13")   ,]
 ```
 
-```{r}
+```{r eval= FALSE}
 lincs_limma_gbm_res_brain_tumor_top  <- lincs_limma_gbm_res_brain_tumor[lincs_limma_gbm_res_brain_tumor$pert %in% limma_sig_drugs_fda$pert,]
 ```
 
-```{r}
+```{r eval= FALSE}
 lincs_limma_gbm_res_brain_tumor_top$pert <- factor(lincs_limma_gbm_res_brain_tumor_top$pert, levels = unique(lincs_limma_gbm_res_brain_tumor_top$pert))
 ```
 
-```{r}
+```{r eval= FALSE}
 g.2<-ggplot(data= lincs_limma_gbm_res_brain_tumor_top , aes(x=pert, y=NCS, color=cell)) +
   geom_point(stat="identity", size = 3)
 g.2 + coord_flip() + scale_color_viridis_d()
@@ -316,23 +324,28 @@ hard to get an idea if this drug response is common across brain tumor cell line
 
 PRISM plotting
 
-```{r}
+```{r eval= FALSE}
 prism_gbm_cell_lines <- read.csv("~/output/220808_prism_gbm_candidates.csv")
 ```
 
-```{r}
+```{r eval= FALSE}
 primary_gbm_res_sub <-prism_gbm_cell_lines[ prism_gbm_cell_lines$Var2 %in% limma_sig_drugs_fda$pert,]
 write.csv(primary_gbm_res_sub , file= "~/output/limma_gbm/220808_prism_limma_candidates_gbm.csv" )
 ```
 
-```{r}
+```{r eval= FALSE}
 #primary_paad_res_sub$Var2 <- factor(primary_paad_res_sub$Var2, levels=unique(primary_paad_res_sub$Var2))
 primary_gbm_res_sub$Var2 <- factor(primary_gbm_res_sub$Var2, levels=unique(primary_gbm_res_sub$Var2[order(primary_gbm_res_sub$log_fold_change)]))
 ggplot(primary_gbm_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() + geom_point()+ geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
 ggsave("~/output/limma_gbm/220808_ggplot_limma_candidates_prism_screen1.png")
 ```
-look at the number of sensitive cell lines
+
 ```{r}
+knitr::include_graphics("~/output/limma_gbm/220808_ggplot_limma_candidates_prism_screen1.png")
+```
+
+look at the number of sensitive cell lines
+```{r eval= FALSE}
 drug_list <- as.vector(unique(primary_gbm_res_sub$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -350,29 +363,48 @@ drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_a
 ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity",  color= "black") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
 ggsave("~/output/limma_gbm/220808_ggplot_limma_candidates_prism_screen1_sensitive_cell_lines.png")
 ```
-Determine if the median log fold change is lower than random drug selection. 
+
 ```{r}
+knitr::include_graphics("~/output/limma_gbm/220808_ggplot_limma_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+
+Determine if the median log fold change is lower than random drug selection. 
+```{r eval= FALSE}
 limma_PRISM_test<- PRISM_testing(101,"GI1", limma_sig_drugs_fda$pert, drug_senstive_precentage_all_drugs)
 ```
-```{r}
+```{r eval= FALSE}
 limma_PRISM_test
 ```
 
+	Wilcoxon signed rank test with continuity correction
+
+data:  fraction
+
+V = 10392308, p-value < 2.2e-16
+
+alternative hypothesis: true location is less than 0.875
+
 determine if there are more drug from clinical trials than compared to random 
-```{r}
+```{r eval= FALSE}
 len<- length(limma_sig_drugs_fda$pert)
 num_clin <- nrow(limma_sig_drugs_fda[limma_sig_drugs_fda$GBM_CT == TRUE,])
 fract<- num_clin/len
 limma_CT_test_res <- clinical_trial_testing(101, "GI1", len, fract, FDA_CT_table)
 ```
 
-```{r}
+```{r eval= FALSE}
 limma_CT_test_res 
 ```
+	Wilcoxon signed rank test with continuity correction
 
+data:  fraction_adj
+
+V = 1900, p-value < 2.2e-16
+
+alternative hypothesis: true location is less than 0.4666667
 
 LINCS pathways & Drug targets for all the candidates
-```{r}
+```{r eval= FALSE}
 #note this requires the deseq2 output for GBM
 Deseq2_gbm_normal_gtx_res <- read_csv("~/output/deseq2_gbm/Deseq2_gbm_normal_gtx_res.csv", 
     col_names = FALSE, skip = 1)
@@ -391,8 +423,6 @@ for (i in 1:nrow(limma_sig_drugs_fda) ){
   drug_analysis( limma_sig_drugs_fda$pert[i], targets, as.data.frame(tpm_df) , all_metadata$status, Deseq2_gbm_normal_gtx_res, se= se_asssay, cell_lincs= "__GI1__trt_cp", "~/output/limma_gbm/220808_candidate_plots/")
 }
 ```
-
-
     
 # END
     Location of final scripts:

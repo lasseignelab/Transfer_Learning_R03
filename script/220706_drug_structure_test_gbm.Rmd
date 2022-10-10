@@ -1,5 +1,5 @@
 ---
-title: "220706_drug_structure_test_gbm"
+title: "220706_drug_structures"
 author: "Jennifer Fisher"
 date: "`r Sys.Date()`"
 output: html_document
@@ -8,613 +8,173 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+# START 
+    Goal/Purpose of operations: 
+    Investigating the similarity of drug candidates' structures. Wanting to address if the candidates are different between methods. Drug structures have been used in drug repurposing to identify candidates with drugs with similar structures. 
+    
+    Finished psedocode on: 
+    220709
+    
+    System which operations were done on: 
+    my laptop
+    
+    GitHub Repo:
+    rstudio_cancer_dr
+    
+    Docker:
+    jenfisher7/rstudio_sex_bias_analysis
+    
+    Directory of operations: 
+    /home/rstudio/ "Docker"
+    
+    Scripts being edited for operations: 
+    script/functions_cancer_signature_reversion_JLF.R
+    
+    Data being used:
+   The drug structure data files for the different candidates were accessed via customCMPdb’s loadSDFwithName function for the LINCS dataset (Accessed date: July. 2022). 
+   The FDA-approved candidates from all the cancers
+    
+    Papers and tools: 
+    ChemmineR was used to calculate the smilialrity between the methods. 
+    igrpah was used for PPI network analysis. 
+    
 
-```{r}
-BiocManager::install("customCMPdb")
-```
-
-```{r}
-BiocManager::install("ChemmineR")
-```
-
-```{r}
-library(readr)
-transfer_gbm_res_GI1_tau_fda_approved <- read_csv("~/Documents/Transfer_Learning_R03/output/TF_L_GBM/220207_lincs_transfer_gbm_res_GI1_tau_fda_approved.csv")
-```
-
-
-```{r}
-lincs_commpound_info <- read.delim("~/Documents/Transfer_Learning_R03/data/LINCS_210914_LEVEL3/compoundinfo_beta.txt")
-```
-
-```{r}
-#some deprecated or multiple ids 
-tfl_gbm_ids <- unique(lincs_commpound_info$pert_id[grepl(paste(transfer_gbm_res_GI1_tau_fda_approved$pert,collapse="|"), lincs_commpound_info$cmap_name) ])
-```
-
+# STEPS
+### Set working directory 
 ```{r}
 library(customCMPdb)
 library(ChemmineR)
-```
-
-```{r}
-qres <- queryAnnotDB(tfl_gbm_ids, annot=c("lincsAnnot"))
-qres
-```
-
-```{r}
-#if there are multiples keep the toouchstone case
-qres[qres$is_touchstone == 1,]
-```
-
-```{r}
+library(readr)
 library(AnnotationHub)
 library(RSQLite)
+library(ComplexHeatmap)
+library(circlize)
+library(fmcsR)
+library(igraph)
+library(visNetwork)
+library(viridis)
+library(signatureSearch)
+library(HDF5Array)
+library(tidyr)
+library(gprofiler2)
+library(ggplot2)
+library(ggpubr)
+library(VennDiagram)
+library(dplyr)
+library(gplots)
+source("/home/rstudio/script/functions_cancer_signature_reversion_JLF.R")
 ```
+### load in data
 
-
+LINCS compound information
 ```{r}
-loadSDFwithName <- function(source="LINCS"){
-    ah <- AnnotationHub()
-    annot_path <- ah[["AH79563"]]
-    conn <- DBI::dbConnect(SQLite(), annot_path)
-    if(source == "LINCS"){
-        lincs_annot <- dbReadTable(conn, "lincsAnnot")
-        lincs_sdf_path <- ah[["AH79567"]]
-        lincs_sdf <-ChemmineR::read.SDFset(lincs_sdf_path)
-        cid(lincs_sdf) <- sdfid(lincs_sdf)
-        ## make lincs cids as pert names
-        brd_ids <- lincs_annot$lincs_id
-        names(brd_ids) <- lincs_annot$pert_iname
-        brd_uniq <- brd_ids[!duplicated(names(brd_ids))] # 19811
-        brd_common <- brd_uniq[brd_uniq %in% cid(lincs_sdf)] # 19758
-        res_sdf <- lincs_sdf[brd_common]
-        cid(res_sdf) <- names(brd_common)
-    }
-    if(source == "CMAP2"){
-        cmap_annot <- dbReadTable(conn, "cmapAnnot")
-        cmap_sdf_path <- ah[["AH79566"]]
-        cmap_sdf <-ChemmineR::read.SDFset(cmap_sdf_path)
-        cid(cmap_sdf) <- sdfid(cmap_sdf)
-        cmap_ids <- cmap_annot$cmap_id
-        names(cmap_ids) <- cmap_annot$cmap_name
-        res_sdf <- cmap_sdf[cmap_ids]
-        cid(res_sdf) <- names(cmap_ids)
-    }
-    if(source == "DrugBank"){
-        db_annot <- dbReadTable(conn, "drugBankAnnot")
-        db_sdf_path <- ah[["AH79565"]]
-        db_sdf <-ChemmineR::read.SDFset(db_sdf_path)
-        cid(db_sdf) <- sdfid(db_sdf)
-        db_ids <- db_annot$drugbank_id
-        names(db_ids) <- db_annot$name
-        db_common <- db_ids[db_ids %in% cid(db_sdf)] # 10569
-        res_sdf <- db_sdf[db_common]
-        cid(res_sdf) <- names(db_common)
-    }
-    if(source == "DrugAge"){
-        da_annot <- dbReadTable(conn, "drugAgeAnnot")
-        da_sdf_path <- ah[["AH79564"]]
-        da_sdf <-ChemmineR::read.SDFset(da_sdf_path)
-        cid(da_sdf) <- sdfid(da_sdf)
-        da_ids <- da_annot$drugage_id
-        names(da_ids) <- da_annot$compound_name
-        da_uniq <- da_ids[!duplicated(names(da_ids))] # 420
-        da_common <- da_uniq[da_uniq %in% cid(da_sdf)] # 223
-        res_sdf <- da_sdf[da_common]
-        cid(res_sdf) <- names(da_common)
-    }
-    dbDisconnect(conn)
-    return(res_sdf)
-}
-
+lincs_commpound_info <- read.delim("~/data/LINCS_210914_LEVEL3/compoundinfo_beta.txt")
 ```
 
-
-
+LINCS drug structure information 
 ```{r}
 lincs_sdfset <- loadSDFwithName(source="LINCS")
 ```
 
+gbm candidates
 ```{r}
-IDs <- lincs_sdfset@ID[grepl(paste(transfer_gbm_res_GI1_tau_fda_approved$pert,collapse="|"), lincs_sdfset@ID)]
-```
-two of the candidates sxagliptin and pamidronte were not in the dataset 
-
-
-```{r}
-tfl_gbm_sdfset <- lincs_sdfset[IDs]
+lincs_limma_gbm_res_GI1_fda_approved<- read_csv( "~/output/limma_gbm/220808_SR_LINCS_GBM_top_RES_all.csv")
+lincs_deseq2_gbm_res_GI1_fda_approved <- read_csv( "~/output/deseq2_gbm/220427_SR_LINCS_GBM_DESEQ2_RES_all.csv")
+lincs_tfl_gbm_res_GI1_fda_approved <- read_csv( "~/output/TF_L_GBM/220808_SR_LINCS_GBM_top_RES_all.csv")
 ```
 
+liver candidates
 ```{r}
-library(fmcsR)
-```
-
-
-```{r}
-d <- sapply(cid(tfl_gbm_sdfset), function(x) fmcsBatch(tfl_gbm_sdfset[x], tfl_gbm_sdfset, au=0, bu=0, matching.mode = "aromatic")[,"Overlap_Coefficient"])
-```
-
-```{r}
-hc <- hclust(as.dist(1-d), method="complete")
-plot(as.dendrogram(hc), edgePar=list(col=4, lwd=2), horiz=TRUE) 
-```
-
-```{r}
-lincs_tfl_gbm_res_GI1_fda_approved <- read_csv( "~/Documents/Transfer_Learning_R03/output/TF_L_GBM/220207_lincs_transfer_gbm_res_GI1_tau_fda_approved.csv")
-lincs_limma_gbm_res_GI1_fda_approved <- read_csv("~/Documents/Transfer_Learning_R03/output/limma_gbm/220421_SR_LINCS_GBM_LIMMA_RES_tau_fda_approved.csv")
-lincs_deseq2_gbm_res_GI1_fda_approved <- read_csv("~/Documents/Transfer_Learning_R03/output/deseq2_gbm/220427_lincs_deseq_gbm_res_GI1_tau_fda_approved.csv")
-```
-```{r}
-drug_list <- unique(c(lincs_tfl_gbm_res_GI1_fda_approved$pert,lincs_limma_gbm_res_GI1_fda_approved$pert,  lincs_deseq2_gbm_res_GI1_fda_approved$pert))
-```
-
-
-```{r}
-IDs <- lincs_sdfset@ID[grepl(paste(drug_list,collapse="|"), lincs_sdfset@ID)]
-```
-
-```{r}
-drug_gbm_sdfset <- lincs_sdfset[IDs]
-```
-
-```{r}
-drug_gbm_res <- sapply(cid(drug_gbm_sdfset ), function(x) fmcsBatch(drug_gbm_sdfset[x], drug_gbm_sdfset , au=0, bu=0, matching.mode = "aromatic")[,"Tanimoto_Coefficient"])
-```
-```{r}
-hc <- hclust(as.dist(1-drug_gbm_res ), method="complete")
-plot(as.dendrogram(hc), edgePar=list(col=4, lwd=2), horiz=TRUE) 
-```
-
-```{r}
-library(dendextend)
-dendro <- as.dendrogram(hc)
-tfl_drugs2 <-  IDs %in% lincs_tfl_gbm_res_GI1_fda_approved$pert
-limma_drugs2 <- IDs %in% lincs_limma_gbm_res_GI1_fda_approved$pert
-deseq2_drugs2<- IDs %in% lincs_deseq2_gbm_res_GI1_fda_approved$pert
-
-test<- ifelse(tfl_drugs2== TRUE, "#440154FF", "#228C8DFF")
-test2<- ifelse(limma_drugs2== TRUE, "#440154FF", "#228C8DFF")
-test3<- ifelse(deseq2_drugs2== TRUE, "#440154FF", "#228C8DFF")
-#test<- ifelse(tfl_drugs== TRUE, "#440154FF", "#228C8DFF")
-#test2<- ifelse(limma_drugs== TRUE, "#440154FF", "#228C8DFF")
-#test3<- ifelse(deseq2_drugs== TRUE, "#440154FF", "#228C8DFF")
-
-par(oma=c(0.5,0.5,0.5,20), mar = c(4, 0.01, 0.01, 12))
-#dend2 <-prune( dend, med_bottom, reindex_dend=FALSE)
-dendro %>%
-  set("labels_col",value =c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), k=5) %>%
-  set("branches_k_color",value =c("#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"),  k = 5) %>%
-  set("leaves_pch", 19)  %>% 
-  set("nodes_cex", 0.6) %>% 
- set("branches_lwd", 3) %>% 
-   set("labels_cex", 0.5) %>%
-  plot( horiz=TRUE, axes=FALSE)
-#addjust eh y shift
-colored_bars(cbind(test, test2, test3), dendro ,rowLabels = c("Transfer", "limma", "DESeq2"), y_shift = 4, horiz = TRUE)
-#note have to save manually via export function as a pdf
-```
-
-
-```{r}
-library(ComplexHeatmap)
-library(circlize)
-```
-
-
-```{r}
-  row_ha = HeatmapAnnotation(Transfer_Learning=tfl_drugs2,DESeq2= deseq2_drugs2, limma= limma_drugs2 , col = list(Transfer_Learning = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),DESeq2 = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),limma = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF") ))
-  col_fun = colorRamp2(c(0,  1), c( "black", "yellow"))
-#ha = rowAnnotation(foo = anno_mark(at = c(1:4, 20, 60, 97:100), labels = TFL_bp_up[1:10]))
-
-  Heatmap(drug_gbm_res, nam= "Overlap_Coefficient drug structure", col = col_fun, show_column_names = FALSE,  top_annotation = row_ha,  
-        clustering_distance_rows= "euclidean",
-             clustering_distance_columns=  "euclidean",
-             clustering_method_rows = "ward.D2" ,
-             clustering_method_columns="ward.D2")
-```
-
-
-```{r}
-drug_struc_heatmap<- function(limma_drugs, deseq2_drugs, TFL_drugs, file){
-
-  drug_list <- unique(c(limma_drugs,deseq2_drugs,  TFL_drugs))
-  IDs <- lincs_sdfset@ID[grepl(paste(drug_list,collapse="|"), lincs_sdfset@ID)]
-  IDs<- intersect(IDs, drug_list)
-
-
-
-  drug_sdfset <- lincs_sdfset[IDs]
-
-  drug_res <- sapply(cid(drug_sdfset ), function(x) fmcsBatch(drug_sdfset[x], drug_sdfset , au=0, bu=0, timeout=100000, matching.mode = "aromatic")[,"Tanimoto_Coefficient"])
-  #return(drug_res)
-
-  tfl_drugs3 <-  drug_sdfset@ID %in% TFL_drugs
-  limma_drugs3 <- drug_sdfset@ID %in% limma_drugs
-  deseq2_drugs3<- drug_sdfset@ID %in% deseq2_drugs
-
-  row_ha = HeatmapAnnotation(Transfer_Learning=tfl_drugs3,DESeq2= deseq2_drugs3, limma= limma_drugs3 , col = list(Transfer_Learning = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),DESeq2 = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),limma = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF") ))
-  col_fun = colorRamp2(c(0,  1), c( "black", "yellow"))
-#ha = rowAnnotation(foo = anno_mark(at = c(1:4, 20, 60, 97:100), labels = TFL_bp_up[1:10]))
-
-  png(file, width = 10, height =7,  units = "in", res = 120) 
-  draw(Heatmap(drug_res, nam= "Tanimoto_Coefficient drug structure", col = col_fun, show_column_names = FALSE,  show_row_names = FALSE, top_annotation = row_ha,
-       clustering_distance_rows= "euclidean",
-           clustering_distance_columns=  "euclidean",
-            clustering_method_rows = "ward.D2" ,
-            clustering_method_columns="ward.D2"))
- dev.off()
- return(drug_res)
-}
-
-```
-
-
-```{r}
-drug_gbm_res<- drug_struc_heatmap(lincs_limma_gbm_res_GI1_fda_approved$pert,  lincs_deseq2_gbm_res_GI1_fda_approved$pert, lincs_tfl_gbm_res_GI1_fda_approved$pert, "~/Documents/Transfer_Learning_R03/output/gbm_plots/220709_drug_struct_gbm_Tanimoto_Coefficient.png")
-```
-
-pancreatic 
-```{r}
-
-lincs_deseq_gbm_res_YAPC_fda_approved <- read_csv("~/Documents/Transfer_Learning_R03/output/pancreas_cancer/deseq2_res/220602_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
-lincs_deseq_gbm_res_YAPC_fda_approved<- lincs_deseq_gbm_res_YAPC_fda_approved[lincs_deseq_gbm_res_YAPC_fda_approved$fda_approved == TRUE,]
-
-lincs_limma_gbm_res_YAPC_fda_approved <- read_csv("~/Documents/Transfer_Learning_R03/output/pancreas_cancer/limma_res/220602_SR_LINCS_PAAD_limma_RES_tau.csv")
-lincs_limma_gbm_res_YAPC_fda_approved<- lincs_limma_gbm_res_YAPC_fda_approved[lincs_limma_gbm_res_YAPC_fda_approved$fda_approved ==TRUE, ]
-
-lincs_tfl_gbm_res_YAPC_fda_approved <- read_csv("~/Documents/Transfer_Learning_R03/output/pancreas_cancer/TFL_res/220602_SR_LINCS_PAAD_TFL_RES_tau.csv")
-lincs_tfl_gbm_res_YAPC_fda_approved<- lincs_tfl_gbm_res_YAPC_fda_approved[ lincs_tfl_gbm_res_YAPC_fda_approved$fda_approved ==TRUE,]
-```
-```{r}
-drug_pan_res<-drug_struc_heatmap(lincs_limma_gbm_res_YAPC_fda_approved$pert,  lincs_deseq_gbm_res_YAPC_fda_approved$pert, lincs_tfl_gbm_res_YAPC_fda_approved$pert, "~/Documents/Transfer_Learning_R03/output/pancreas_cancer/220709_drug_struct_yapc_Tanimoto_Coefficient.png")
-```
-
-liver cancer
-```{r}
-lincs_deseq_gbm_res_HEPG2_fda_approved <- read_csv("~/Documents/Transfer_Learning_R03/output/liver_cancer/deseq2_res/220602_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/deseq2_res/220808_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
 lincs_deseq_gbm_res_HEPG2_fda_approved <- lincs_deseq_gbm_res_HEPG2_fda_approved [lincs_deseq_gbm_res_HEPG2_fda_approved$fda_approved== TRUE,]
 
-lincs_limma_gbm_res_HEPG2_fda_approved <- read_csv("~/Documents/Transfer_Learning_R03/output/liver_cancer/limma_res/220602_SR_LINCS_LIHC_limma_RES_tau.csv")
+lincs_limma_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_RES_tau.csv")
 
 lincs_limma_gbm_res_HEPG2_fda_approved<- lincs_limma_gbm_res_HEPG2_fda_approved[ lincs_limma_gbm_res_HEPG2_fda_approved$fda_approved== TRUE,]
-
-lincs_tfl_gbm_res_HEPG2_fda_approved <- read_csv("~/Documents/Transfer_Learning_R03/output/liver_cancer/TFL_res/220602_SR_LINCS_LIHC_TFL_RES_tau.csv")
+#wrong date on file
+lincs_tfl_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/TFL_res/220602_SR_LINCS_LIHC_TFL_RES_tau.csv")
 lincs_tfl_gbm_res_HEPG2_fda_approved<- lincs_tfl_gbm_res_HEPG2_fda_approved[ lincs_tfl_gbm_res_HEPG2_fda_approved$fda_approved == TRUE, ]
 ```
 
-```{r}
-drug_liver_res<- drug_struc_heatmap(lincs_limma_gbm_res_HEPG2_fda_approved$pert,  lincs_deseq_gbm_res_HEPG2_fda_approved$pert, lincs_tfl_gbm_res_HEPG2_fda_approved$pert, "~/Documents/Transfer_Learning_R03/output/liver_cancer/220709_drug_struct_liver_Tanimoto_Coefficient.png")
-```
-
+lung candidates
 ```{r}
 #comment.   
-lincs_limma_gbm_res_A549_fda_approved<- read_csv("~/Documents/Transfer_Learning_R03/output/lung_cancer/limma_res/220602_SR_LINCS_LUAD_limma_RES_tau.csv")
+lincs_limma_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/limma_res/220808_SR_LINCS_LUAD_limma_RES_tau.csv")
 lincs_limma_gbm_res_A549_fda_approved<- lincs_limma_gbm_res_A549_fda_approved[lincs_limma_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
-lincs_deseq_gbm_res_A549_fda_approved<- read_csv("~/Documents/Transfer_Learning_R03/output/lung_cancer/deseq2_res/220602_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/deseq2_res/220808_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
 lincs_deseq_gbm_res_A549_fda_approved<- lincs_deseq_gbm_res_A549_fda_approved[lincs_deseq_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
-lincs_tfl_gbm_res_A549_fda_approved<- read_csv("~/Documents/Transfer_Learning_R03/output/lung_cancer/TFL_res/220602_SR_LINCS_LUAD_TFL_RES_tau.csv")
+lincs_tfl_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/TFL_res/220808_SR_LINCS_LUAD_TFL_RES_tau.csv")
 lincs_tfl_gbm_res_A549_fda_approved<- lincs_tfl_gbm_res_A549_fda_approved[lincs_tfl_gbm_res_A549_fda_approved$fda_approved==TRUE,]
 ```
 
+pancreatic candidates
 ```{r}
-drug_lung_res<-drug_struc_heatmap(lincs_limma_gbm_res_A549_fda_approved$pert,  lincs_deseq_gbm_res_A549_fda_approved$pert, lincs_tfl_gbm_res_A549_fda_approved$pert, "~/Documents/Transfer_Learning_R03/output/lung_cancer/220709_drug_struct_lung_Tanimoto_Coefficient.png")
+lincs_deseq_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/deseq2_res/220602_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_YAPC_fda_approved<- lincs_deseq_gbm_res_YAPC_fda_approved[lincs_deseq_gbm_res_YAPC_fda_approved$fda_approved == TRUE,]
+
+lincs_limma_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/limma_res/220602_SR_LINCS_PAAD_limma_RES_tau.csv")
+lincs_limma_gbm_res_YAPC_fda_approved<- lincs_limma_gbm_res_YAPC_fda_approved[lincs_limma_gbm_res_YAPC_fda_approved$fda_approved ==TRUE, ]
+
+lincs_tfl_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/TFL_res/220602_SR_LINCS_PAAD_TFL_RES_tau.csv")
+lincs_tfl_gbm_res_YAPC_fda_approved<- lincs_tfl_gbm_res_YAPC_fda_approved[ lincs_tfl_gbm_res_YAPC_fda_approved$fda_approved ==TRUE,]
 ```
 
+# Analysis
 
-compare the similarity
+## Determine the smilarity vis Tanimoto coffieient for the candidate drug strutures (if they exiist; some don't)
 
 ```{r}
-plot_tam_sim_boxplot<- function(tam_sim_matrix, drug_list,  title , method){
-  cos_GI1_cand_tfl <- tam_sim_matrix[grep(paste(drug_list,collapse="|"), colnames(tam_sim_matrix)), grep(paste(drug_list,collapse="|"), colnames(tam_sim_matrix))]
-
-  cos_GI1_cand_tfl[cos_GI1_cand_tfl == 1] <- NA
-  cos_median <- rowMedians(cos_GI1_cand_tfl, na.rm=TRUE)
-  meth<- rep(method, nrow(cos_GI1_cand_tfl))
-  
-  cos_median<- data.frame(drug = rownames(cos_GI1_cand_tfl), cos_sim_med= cos_median, method= meth)
-  
-  cos_GI1_cand_tfl<- as.data.frame(cos_GI1_cand_tfl)
-  cos_GI1_cand_tfl$names <-  rownames(cos_GI1_cand_tfl)
-  cos_GI1_cand_tfl_long <- cos_GI1_cand_tfl %>% pivot_longer(!names, names_to = "other")
-  p <- ggplot(cos_GI1_cand_tfl_long, aes(x=names, y=value)) + 
-  geom_boxplot()+ geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5) +
-  labs(title=title,x="Drug Candidates", y = "Tanimoto Coefficient")
-  print(p)
-  
-  return(cos_median)
-}
+drug_gbm_res<- drug_struc_heatmap(lincs_limma_gbm_res_GI1_fda_approved$pert,  lincs_deseq2_gbm_res_GI1_fda_approved$pert, lincs_tfl_gbm_res_GI1_fda_approved$pert, "~/output/gbm_plots/220830_drug_struct_gbm_Tanimoto_Coefficient.png")
 ```
 
 ```{r}
-library(matrixStats)
-library(stringr)
-library(tidyverse)
-tfl_gbm_tam_sim <- plot_tam_sim_boxplot(drug_gbm_res, lincs_tfl_gbm_res_GI1_fda_approved$pert, "test", "transfer_learning")
+candidate_network_analysis( as.matrix(drug_gbm_res), lincs_deseq2_gbm_res_GI1_fda_approved$pert, lincs_limma_gbm_res_GI1_fda_approved$pert, lincs_tfl_gbm_res_GI1_fda_approved$pert, quantile= 9, header= "~/output/gbm_plots/220830_drug_struct_gbm_Tanimoto_Coefficient")
 ```
 
 
 ```{r}
-limma_gbm_tam_sim <- plot_tam_sim_boxplot(drug_gbm_res, lincs_limma_gbm_res_GI1_fda_approved$pert, "test", "limma")
-```
-
-
-```{r}
-deseq2_gbm_tam_sim <- plot_tam_sim_boxplot(drug_gbm_res, lincs_deseq2_gbm_res_GI1_fda_approved$pert, "test", "deseq2")
+drug_pan_res<-drug_struc_heatmap(lincs_limma_gbm_res_YAPC_fda_approved$pert,  lincs_deseq_gbm_res_YAPC_fda_approved$pert, lincs_tfl_gbm_res_YAPC_fda_approved$pert, "~/output/pancreas_cancer/220830_drug_struct_yapc_Tanimoto_Coefficient.png")
 ```
 
 ```{r}
-tam_sim_gbm <- rbind(deseq2_gbm_tam_sim, limma_gbm_tam_sim, tfl_gbm_tam_sim)
+candidate_network_analysis( drug_pan_res, lincs_deseq_gbm_res_YAPC_fda_approved$pert, lincs_limma_gbm_res_YAPC_fda_approved$pert, lincs_tfl_gbm_res_YAPC_fda_approved$pert, quantile= 9, header= "~/output/pancreas_cancer/220830_drug_struct_yapc_Tanimoto_Coefficient")
 ```
 
 ```{r}
-ggplot(tam_sim_gbm, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Tanimoto Coefficient of GBM candidates",x="Method", y = "Median Tanimoto Coefficient", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
+drug_liver_res<- drug_struc_heatmap(lincs_limma_gbm_res_HEPG2_fda_approved$pert,  lincs_deseq_gbm_res_HEPG2_fda_approved$pert, lincs_tfl_gbm_res_HEPG2_fda_approved$pert, "~/output/liver_cancer/220830_drug_struct_liver_Tanimoto_Coefficient.png")
 ```
 
 ```{r}
-kruskal.test(cos_sim_med ~ method, data = tam_sim_gbm)
+candidate_network_analysis( drug_liver_res, lincs_deseq_gbm_res_HEPG2_fda_approved$pert, lincs_limma_gbm_res_HEPG2_fda_approved$pert, lincs_tfl_gbm_res_HEPG2_fda_approved$per, quantile= 9, header= "~/output/liver_cancer/220830_drug_struct_liver_Tanimoto_Coefficient")
 ```
 
 ```{r}
-tfl_pan_tam_sim <- plot_tam_sim_boxplot(drug_pan_res, lincs_tfl_gbm_res_YAPC_fda_approved$pert, "test", "transfer_learning")
-```
-
-
-```{r}
-limma_pan_tam_sim <- plot_tam_sim_boxplot(drug_pan_res, lincs_limma_gbm_res_YAPC_fda_approved$pert, "test", "limma")
-```
-
-
-```{r}
-deseq2_pan_tam_sim <- plot_tam_sim_boxplot(drug_pan_res, lincs_deseq_gbm_res_YAPC_fda_approved$pert, "test", "deseq2")
+drug_lung_res<-drug_struc_heatmap(lincs_limma_gbm_res_A549_fda_approved$pert,  lincs_deseq_gbm_res_A549_fda_approved$pert, lincs_tfl_gbm_res_A549_fda_approved$pert, "~/output/lung_cancer/220830_drug_struct_lung_Tanimoto_Coefficient.png")
 ```
 
 ```{r}
-tam_sim_pan<- rbind(deseq2_pan_tam_sim, limma_pan_tam_sim, tfl_pan_tam_sim)
+candidate_network_analysis( drug_lung_res, lincs_deseq_gbm_res_A549_fda_approved$pert, lincs_limma_gbm_res_A549_fda_approved$pert, lincs_tfl_gbm_res_A549_fda_approved$pert, "~/output/lung_cancer/220830_drug_struct_lung_Tanimoto_Coefficien", quantile= 9)
 ```
 
+
+### Save Data
+NA
+
+### Save Figures
+done
+    
+# END
+    Location of final scripts:
+    script 
+    
+    Location of data produced:
+    ~/output
+    
+    Dates when operations were done:
+    221003
+    
+## Versions
 ```{r}
-ggplot(tam_sim_pan, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Tanimoto Coefficient of Pancreas candidates",x="Method", y = "Median Tanimoto Coefficient", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
+sessionInfo()
 ```
 
-```{r}
-kruskal.test(cos_sim_med ~ method, data = tam_sim_pan)
-```
-
-```{r}
-tfl_lung_tam_sim <- plot_tam_sim_boxplot(drug_lung_res, lincs_tfl_gbm_res_A549_fda_approved$pert, "test", "transfer_learning")
-```
-
-
-```{r}
-limma_lung_tam_sim <- plot_tam_sim_boxplot(drug_lung_res, lincs_limma_gbm_res_A549_fda_approved$pert, "test", "limma")
-```
-
-
-```{r}
-deseq2_lung_tam_sim <- plot_tam_sim_boxplot(drug_lung_res, lincs_deseq_gbm_res_A549_fda_approved$pert, "test", "deseq2")
-```
-
-```{r}
-tam_sim_lung<- rbind(deseq2_lung_tam_sim, limma_lung_tam_sim, tfl_lung_tam_sim)
-```
-
-```{r}
-ggplot(tam_sim_lung, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Tanimoto Coefficient of LUNG candidates",x="Method", y = "Median Tanimoto Coefficient", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
-```
-
-```{r}
-kruskal.test(cos_sim_med ~ method, data = tam_sim_lung)
-```
-
-
-```{r}
-pairwise.wilcox.test(tam_sim_lung$cos_sim_med, tam_sim_lung$method,
-                 p.adjust.method = "BH")
-```
-
-```{r}
-tfl_liver_tam_sim <- plot_tam_sim_boxplot(drug_liver_res, lincs_tfl_gbm_res_HEPG2_fda_approved$pert, "test", "transfer_learning")
-```
-
-
-```{r}
-limma_liver_tam_sim <- plot_tam_sim_boxplot(drug_liver_res, lincs_limma_gbm_res_HEPG2_fda_approved$pert, "test", "limma")
-```
-
-
-```{r}
-deseq2_liver_tam_sim <- plot_tam_sim_boxplot(drug_liver_res, lincs_deseq_gbm_res_HEPG2_fda_approved$pert, "test", "deseq2")
-```
-
-```{r}
-tam_sim_liver<- rbind(deseq2_liver_tam_sim, limma_liver_tam_sim, tfl_liver_tam_sim)
-```
-
-```{r}
-ggplot(tam_sim_liver, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Tanimoto Coefficient of liver candidates",x="Method", y = "Median Tanimoto Coefficient", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
-```
-
-```{r}
-kruskal.test(cos_sim_med ~ method, data = tam_sim_liver)
-```
-
-```{r}
-plot_tam_sim_boxplot_others <- function(tam_sim_matrix, drug_list_testing_method, drug_list_method1, drug_list_method2,  title , method){
-  drug_list_others<- c(drug_list_method1, drug_list_method2)
-  cos_GI1_cand_tfl <- tam_sim_matrix[grep(paste(drug_list_testing_method,collapse="|"), colnames(tam_sim_matrix)), grep(paste(drug_list_others,collapse="|"), colnames(tam_sim_matrix))]
-
-  cos_GI1_cand_tfl[cos_GI1_cand_tfl == 1] <- NA
-  cos_median <- rowMedians(cos_GI1_cand_tfl, na.rm=TRUE)
-  meth<- rep(method, nrow(cos_GI1_cand_tfl))
-  
-  cos_median<- data.frame(drug = rownames(cos_GI1_cand_tfl), cos_sim_med= cos_median, method= meth)
-  
-  cos_GI1_cand_tfl<- as.data.frame(cos_GI1_cand_tfl)
-  cos_GI1_cand_tfl$names <-  rownames(cos_GI1_cand_tfl)
-  cos_GI1_cand_tfl_long <- cos_GI1_cand_tfl %>% pivot_longer(!names, names_to = "other")
-  p <- ggplot(cos_GI1_cand_tfl_long, aes(x=names, y=value)) + 
-  geom_boxplot()+ geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5) +
-  labs(title=title,x="Drug Candidates", y = "Tanimoto Coefficient of drugs of other methods")
-  print(p)
-  
-  return(cos_median)
-}
-```
-
-```{r}
-tfl_gbm_tam_sim_others <- plot_tam_sim_boxplot_others(drug_gbm_res, lincs_tfl_gbm_res_GI1_fda_approved$pert, lincs_limma_gbm_res_GI1_fda_approved$pert, lincs_deseq2_gbm_res_GI1_fda_approved$pert,"test", "transfer learning")
-```
-
-```{r}
-limma_gbm_tam_sim_others <- plot_tam_sim_boxplot_others(drug_gbm_res, lincs_limma_gbm_res_GI1_fda_approved$pert, lincs_tfl_gbm_res_GI1_fda_approved$pert, lincs_deseq2_gbm_res_GI1_fda_approved$pert, "test", "limma")
-```
-
-
-```{r}
-deseq2_gbm_tam_sim_others <- plot_tam_sim_boxplot_others(drug_gbm_res, lincs_deseq2_gbm_res_GI1_fda_approved$pert, lincs_limma_gbm_res_GI1_fda_approved$pert, lincs_tfl_gbm_res_GI1_fda_approved$pert,"test", "deseq2")
-```
-
-```{r}
-tam_sim_gbm_others <- rbind(deseq2_gbm_tam_sim_others, limma_gbm_tam_sim_others, tfl_gbm_tam_sim_others)
-```
-
-```{r}
-ggplot(tam_sim_gbm_others, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Tanimoto Coefficient of GBM candidates of other methods",x="Method", y = "Median Tanimoto Coefficient", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
-```
-
-```{r}
-kruskal.test(cos_sim_med ~ method, data = tam_sim_gbm_others)
-```
-
-```{r}
-tam_sim_gbm_others$method<- paste0(tam_sim_gbm_others$method, "_others")
-```
-
-```{r}
-tam_sim_all_gbm<- rbind(tam_sim_gbm_others, tam_sim_gbm)
-```
-
-```{r}
-ggplot(tam_sim_all_gbm, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Tanimoto Coefficient of gbm candidates of other methods",x="Method", y = "Median Tanimoto Coefficient", color= "Method") 
-```
-
-
-
-```{r}
-tfl_lung_tam_sim_others <- plot_tam_sim_boxplot_others(drug_lung_res, lincs_tfl_gbm_res_A549_fda_approved$pert, lincs_limma_gbm_res_A549_fda_approved$pert, lincs_deseq_gbm_res_A549_fda_approved$pert,"test", "transfer learning")
-```
-
-```{r}
-limma_lung_tam_sim_others <- plot_tam_sim_boxplot_others(drug_lung_res, lincs_limma_gbm_res_A549_fda_approved$pert, lincs_tfl_gbm_res_A549_fda_approved$pert, lincs_deseq_gbm_res_A549_fda_approved$pert, "test", "limma")
-```
-
-
-```{r}
-deseq2_lung_tam_sim_others <- plot_tam_sim_boxplot_others(drug_lung_res, lincs_deseq_gbm_res_A549_fda_approved$pert, lincs_limma_gbm_res_A549_fda_approved$pert, lincs_tfl_gbm_res_A549_fda_approved$pert,"test", "deseq2")
-```
-
-```{r}
-tam_sim_lung_others <- rbind(deseq2_lung_tam_sim_others, limma_lung_tam_sim_others, tfl_lung_tam_sim_others)
-```
-
-```{r}
-ggplot(tam_sim_lung_others, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Tanimoto Coefficient of Lung candidates of other methods",x="Method", y = "Median Tanimoto Coefficient", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
-```
-
-```{r}
-kruskal.test(cos_sim_med ~ method, data = tam_sim_lung_others)
-```
-
-```{r}
-tam_sim_lung_others$method<- paste0(tam_sim_lung_others$method, "_others")
-```
-
-```{r}
-tam_sim_all<- rbind(tam_sim_lung_others, tam_sim_lung)
-```
-
-```{r}
-ggplot(tam_sim_all, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Tanimoto Coefficient of Lung candidates of other methods",x="Method", y = "Median Tanimoto Coefficient", color= "Method") 
-```
-
-
-
-
-```{r}
-tfl_liver_tam_sim_others <- plot_tam_sim_boxplot_others(drug_liver_res, lincs_tfl_gbm_res_HEPG2_fda_approved$pert, lincs_limma_gbm_res_HEPG2_fda_approved$pert, lincs_deseq_gbm_res_HEPG2_fda_approved$pert,"test", "transfer learning")
-```
-
-```{r}
-limma_liver_tam_sim_others <- plot_tam_sim_boxplot_others(drug_liver_res, lincs_limma_gbm_res_HEPG2_fda_approved$pert, lincs_tfl_gbm_res_HEPG2_fda_approved$pert, lincs_deseq_gbm_res_HEPG2_fda_approved$pert, "test", "limma")
-```
-
-
-```{r}
-deseq2_liver_tam_sim_others <- plot_tam_sim_boxplot_others(drug_liver_res, lincs_deseq_gbm_res_HEPG2_fda_approved$pert, lincs_limma_gbm_res_HEPG2_fda_approved$pert, lincs_tfl_gbm_res_HEPG2_fda_approved$pert,"test", "deseq2")
-```
-
-```{r}
-tam_sim_liver_others <- rbind(deseq2_liver_tam_sim_others, limma_liver_tam_sim_others, tfl_liver_tam_sim_others)
-```
-
-```{r}
-ggplot(tam_sim_liver_others, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Tanimoto Coefficient of Liver candidates of other methods",x="Method", y = "Median Tanimoto Coefficient", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
-```
-
-```{r}
-tam_sim_liver_others$method<- paste0(tam_sim_liver_others$method, "_others")
-```
-
-```{r}
-tam_sim_all_liver<- rbind(tam_sim_liver_others, tam_sim_liver)
-```
-
-```{r}
-ggplot(tam_sim_all_liver, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Tanimoto Coefficient of Liver candidates of other methods",x="Method", y = "Median Tanimoto Coefficient", color= "Method") 
-```
-
-```{r}
-tfl_pan_tam_sim_others <- plot_tam_sim_boxplot_others(drug_pan_res, lincs_tfl_gbm_res_YAPC_fda_approved$pert, lincs_limma_gbm_res_YAPC_fda_approved$pert, lincs_deseq_gbm_res_YAPC_fda_approved$pert,"test", "transfer learning")
-```
-
-```{r}
-limma_pan_tam_sim_others <- plot_tam_sim_boxplot_others(drug_pan_res, lincs_limma_gbm_res_YAPC_fda_approved$pert, lincs_tfl_gbm_res_YAPC_fda_approved$pert, lincs_deseq_gbm_res_YAPC_fda_approved$pert, "test", "limma")
-```
-
-
-```{r}
-deseq2_pan_tam_sim_others <- plot_tam_sim_boxplot_others(drug_pan_res, lincs_deseq_gbm_res_YAPC_fda_approved$pert, lincs_limma_gbm_res_YAPC_fda_approved$pert, lincs_tfl_gbm_res_YAPC_fda_approved$pert,"test", "deseq2")
-```
-
-```{r}
-tam_sim_pan_others <- rbind(deseq2_pan_tam_sim_others, limma_pan_tam_sim_others, tfl_pan_tam_sim_others)
-```
-
-```{r}
-ggplot(tam_sim_pan_others, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Tanimoto Coefficient of Liver candidates of other methods",x="Method", y = "Median Tanimoto Coefficient", color= "Method") + scale_colour_manual(values =  c("#440154FF", "#31688EFF", "#FDE725FF"), aesthetics = c("colour", "fill"))
-```
-
-```{r}
-tam_sim_pan_others$method<- paste0(tam_sim_pan_others$method, "_others")
-```
-
-```{r}
-tam_sim_all_pan <- rbind(tam_sim_pan_others, tam_sim_pan)
-```
-
-```{r}
-ggplot(tam_sim_all_pan, aes(x=method, y=cos_sim_med, fill=method)) + 
-  geom_violin()+ geom_point() +labs(title="Tanimoto Coefficient of Pancreas candidates of other methods",x="Method", y = "Median Tanimoto Coefficient", color= "Method") 
-```

@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE)
     Transfer_Learning_R03
     
     Docker/Singularity: 
-    rstudio_tf_dr_v3
+    rstudio_cancer_dr
     
     Directory of operations: 
     "/home/rstudio"
@@ -181,12 +181,12 @@ library(HDF5Array)
 se <- SummarizedExperiment(HDF5Array("~/data/lincs_2020.h5", name="assay"))
 ```
 
-```{r}
+```{r eval=FALSE}
 rownames(se) <- HDF5Array("~/data/lincs_2020.h5", name="rownames")
 colnames(se) <- HDF5Array("~/data/lincs_2020.h5", name="colnames")
 ```
 
-```{r}
+```{r eval=FALSE}
 se_asssay<- assay(se)
 ```
 
@@ -205,14 +205,14 @@ library(DESeq2)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 dds_paad_normal <- DESeqDataSetFromMatrix(countData = count_table_v3,
                               colData = all_metadata_v3,
                               design= ~ database + status)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 deseq2_paad_normal <- deseq2_function(dds_paad_normal, "~/output/pancreas_cancer/deseq2_res/Deseq2_paad_normal_gtx_res.csv", "status", "Primary Tumor", "Solid Tissue Normal")
 ```
 signaturesearch 
@@ -226,69 +226,67 @@ gene_info <- test@rowRanges
 rm(test)
 ```
 
-```{r}
+```{r eval=FALSE}
 dim(as.data.frame(gene_info))
 ```
 
-```{r}
+```{r eval=FALSE}
 identical(gene_info$gene_id, rownames(deseq2_paad_normal))
 ```
 
-```{r}
+```{r eval=FALSE}
 deseq2_paad_normal$Symbol<- gene_info$gene_name
 ```
 
-```{r}
-deseq2_paad_normal<- deseq2_paad_normal[complete.cases(deseq2_paad_normal),]
-deseq_results_sig <- deseq2_paad_normal[deseq2_paad_normal$padj < 0.05 & abs(deseq2_paad_normal$log2FoldChange) > 2,]
+```{r eval=FALSE}
+deseq2_paad_normal<- deseq2_paad_normal[!is.na(deseq2_paad_normal$padj),]
+deseq_results_sig_top <- deseq2_paad_normal[deseq2_paad_normal$padj < 0.05 & deseq2_paad_normal$log2FoldChange > 0,]
+deseq_results_sig_bottom <- deseq2_paad_normal[deseq2_paad_normal$padj < 0.05 & deseq2_paad_normal$log2FoldChange < 0,]
 ```
 
-```{r}
-downset<- deseq_results_sig$Symbol[order(deseq_results_sig$log2FoldChange)] [1:500]
-upset<- deseq_results_sig$Symbol[order(-deseq_results_sig$log2FoldChange)] [1:500]
+```{r eval=FALSE}
+downset<- deseq_results_sig_bottom$Symbol[deseq_results_sig_bottom$log2FoldChange < -1.5]
+upset<- deseq_results_sig_top$Symbol[deseq_results_sig_top$log2FoldChange >1.5] 
 ```
 
-```{r}
-gene_info_LINCS<- read.table("~/data/LINCS_210914_LEVEL3/geneinfo_beta.txt", sep="\t", header=TRUE)
-```
 convert gene symbols to LINCS genes
-```{r}
+```{r eval=FALSE}
 upset_v2 <- match_to_LINCS_genes(upset)
 downset_v2 <- match_to_LINCS_genes(downset)
 ```
 
-```{r}
-downset_v2<- downset_v2[complete.cases(downset_v2)]
-upset_v2<- upset_v2[complete.cases(upset_v2)]
+```{r eval=FALSE}
+downset_v2<- downset_v2[!is.na(downset_v2)]
+upset_v2<- upset_v2[!is.na(upset_v2)]
 ```
 
-```{r}
+```{r eval=FALSE}
 #double check that they didn't overlap 
  intersect(downset_v2, upset_v2)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 names(upset_v2)<- NULL
 names(downset_v2)<- NULL
 ```
-```{r}
+```{r eval=FALSE}
 deseq_paad_list<- list(up= upset_v2, down= downset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 saveRDS(deseq_paad_list,"~/output/pancreas_cancer/deseq2_res/SR_gene_list_paad_deseq2.rds")
 ```
 
 
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 qsig_lincs_deseq2_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
                    gess_method="LINCS", refdb=db_path)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 lincs_deseq <- gess_lincs(qsig_lincs_deseq2_res, sortby="NCS")
 #result(lincs)
@@ -296,141 +294,149 @@ lincs_deseq <- gess_lincs(qsig_lincs_deseq2_res, sortby="NCS")
 
 
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_paad_res <- result(lincs_deseq)
 ```
 
-```{r}
-write.csv(lincs_deseq_paad_res, file= "~/output/pancreas_cancer/deseq2_res/220808_SR_LINCS_PAAD_DESEQ2_RES.csv" )
+```{r eval=FALSE}
+write.csv(lincs_deseq_paad_res, file= "~/output/pancreas_cancer/deseq2_res/220929_SR_LINCS_PAAD_DESEQ2_RES.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_paad_res_YAPC <- lincs_deseq_paad_res[lincs_deseq_paad_res$cell == "YAPC",]
 ```
 tau 
-```{r}
+```{r eval=FALSE}
 YAPC_taudf <- readRDS("~/data/YAPC_taudf.rds")
 ```
 
 
-```{r}
+```{r eval=FALSE}
 tau_test<- tau_scores(lincs_deseq_paad_res_YAPC , YAPC_taudf)
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_paad_res_YAPC$jlf_tau<- tau_test
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_paad_res_YAPC_top <- lincs_deseq_paad_res_YAPC[lincs_deseq_paad_res_YAPC$NCS < 0 & lincs_deseq_paad_res_YAPC$WTCS_FDR < 0.05 & lincs_deseq_paad_res_YAPC$jlf_tau< -80,]
 ```
 
 FDA approved and clinical trials
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_paad_res_YAPC_top$fda_approved<- FDA_APPROVAL_CHECK(lincs_deseq_paad_res_YAPC_top$pert)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 clinical_trial_PAAD <- read.csv("~/data/SearchResults_PAAD.csv")
 ```
 
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_paad_res_YAPC_top$clinical_trial_PAAD <- clinical_trial_check(lincs_deseq_paad_res_YAPC_top$pert, clinical_trial_PAAD)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_paad_res_YAPC_top_fda<- lincs_deseq_paad_res_YAPC_top[lincs_deseq_paad_res_YAPC_top$fda_approved,]
 #lincs_deseq_paad_res_YAPC_top_fda$clinical_trial_PAAD<- ifelse(lincs_deseq_paad_res_YAPC_top_fda$clinical_trial_PAAD, "star", "")
 
 lincs_deseq_paad_res_YAPC_top_fda_order <- lincs_deseq_paad_res_YAPC_top_fda[order(-lincs_deseq_paad_res_YAPC_top_fda$NCS),]
 lincs_deseq_paad_res_YAPC_top_fda$pert <- factor(lincs_deseq_paad_res_YAPC_top_fda$pert, levels = lincs_deseq_paad_res_YAPC_top_fda_order$pert)
 p<-ggplot(data=lincs_deseq_paad_res_YAPC_top_fda, aes(x=pert, y=NCS, fill=jlf_tau, shape= clinical_trial_PAAD)) +
-  geom_bar(stat="identity")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
+  geom_bar(stat="identity", color = "black")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
 p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]", shape= "Clinical Trials")
 
-ggsave("~/output/pancreas_cancer/deseq2_res/220808_ggplot_deseq2_tau_paad_approved_candidates.png")
+ggsave("~/output/pancreas_cancer/deseq2_res/220929_ggplot_deseq2_tau_paad_approved_candidates.png")
+```
+```{r}
+knitr::include_graphics("~/output/pancreas_cancer/deseq2_res/220929_ggplot_deseq2_tau_paad_approved_candidates.png")
 ```
 
-```{r}
+
+```{r eval=FALSE}
 #lincs_deseq_paad_res_YAPC_top 
-write.csv(lincs_deseq_paad_res_YAPC_top , file= "~/output/pancreas_cancer/deseq2_res/220808_SR_LINCS_PAAD_DESEQ2_RES_tau.csv" )
+write.csv(lincs_deseq_paad_res_YAPC_top , file= "~/output/pancreas_cancer/deseq2_res/220929_SR_LINCS_PAAD_DESEQ2_RES_tau.csv" )
 ```
 
 pathways
 
-```{r}
+```{r eval=FALSE}
 
 hyperG_k_res <- dsea_hyperG(drugs = lincs_deseq_paad_res_YAPC_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
 hyperG_k_res_v2<- result(hyperG_k_res)
 ```
 
-```{r}
+```{r eval=FALSE}
 #false discovery rate
 hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
 ```
 
-```{r}
+```{r eval=FALSE}
 hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
 ```
 
-```{r}
+```{r eval=FALSE}
 gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
   geom_bar(stat="identity") + scale_fill_viridis()
 gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
 ```
 
-```{r}
-write.csv(hyperG_k_res_v2 , file= "~/output/pancreas_cancer/deseq2_res/220808_SR_LINCS_PAAD_DESEQ2_PATHWAY.csv" )
+```{r eval=FALSE}
+write.csv(hyperG_k_res_v2 , file= "~/output/pancreas_cancer/deseq2_res/220929_SR_LINCS_PAAD_DESEQ2_PATHWAY.csv" )
 ```
 
 
 plotting the drug targets
-```{r}
+```{r eval=FALSE}
 gene_info <- as.data.frame(recount3_rse_PANCREAS@rowRanges)
 ```
 
-```{r}
+```{r eval=FALSE}
 tpm_table<- Counts_to_tpm(count_table_v3, gene_info$bp_length)
 ```
 
-```{r}
+```{r eval=FALSE}
 rownames(tpm_table)<- gene_info$gene_name
 ```
 
-```{r}
+```{r eval=FALSE}
 tpm_df <- as.data.frame(tpm_table)
 ```
 
 
 
 look at all the drug target for this method/cancer
-```{r}
+```{r eval=FALSE}
+deseq2_paad_normal<- cbind(rownames(deseq2_paad_normal), deseq2_paad_normal)
 for (i in 1:nrow(lincs_deseq_paad_res_YAPC_top_fda) ){
   targets<- as.vector(unlist(strsplit(lincs_deseq_paad_res_YAPC_top_fda$t_gn_sym[i], "; ")))
   #print(targets)
-  try(drug_analysis( lincs_deseq_paad_res_YAPC_top_fda$pert[i], targets, tpm_df , all_metadata_v3$status, deseq2_paad_normal, se= se_asssay, cell_lincs= "__YAPC__trt_cp", "~/output/pancreas_cancer/deseq2_res/candidate_plots"))
+  try(drug_analysis( lincs_deseq_paad_res_YAPC_top_fda$pert[i], targets, tpm_df , all_metadata_v3$status, deseq2_paad_normal, se= se_asssay, cell_lincs= "__YAPC__trt_cp", "~/output/pancreas_cancer/deseq2_res/220929_candidate_plots"))
 }
 ```
 
 
 PRISM
 
-```{r}
+```{r eval=FALSE}
 primary_paad_res <-read.csv( file= "~/output/pancreas_cancer/220808_prism_paad_candidates.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 primary_paad_res_sub <-primary_paad_res[ primary_paad_res$Var2 %in% lincs_deseq_paad_res_YAPC_top_fda$pert,]
 primary_paad_res_sub$Var2 <- factor(primary_paad_res_sub$Var2, levels=unique(primary_paad_res_sub$Var2[order(-primary_paad_res_sub$log_fold_change)]))
 ggplot(primary_paad_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() +geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
-ggsave("~/output/pancreas_cancer/deseq2_res/220808_ggplot_deseq2_candidates_prism_screen1.png")
+ggsave("~/output/pancreas_cancer/deseq2_res/220929_ggplot_deseq2_candidates_prism_screen1.png")
+```
+```{r}
+knitr::include_graphics("~/output/pancreas_cancer/deseq2_res/220929_ggplot_deseq2_candidates_prism_screen1.png")
 ```
 
-```{r}
+```{r eval=FALSE}
 drug_list <- as.vector(unique(primary_paad_res_sub$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -445,13 +451,15 @@ for (i in 1:length(drug_list)){
 test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
 drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
 drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_all_drugs$drug_list, levels= unique(drug_senstive_precentage_all_drugs$drug_list[order(drug_senstive_precentage_all_drugs$drug_fraction)]))
-ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
-ggsave("~/output/pancreas_cancer/deseq2_res/220808_ggplot_deseq2_candidates_prism_screen1_sensitive_cell_lines.png")
+ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity", color = "black") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
+ggsave("~/output/pancreas_cancer/deseq2_res/220929_ggplot_deseq2_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+```{r}
+knitr::include_graphics("~/output/pancreas_cancer/deseq2_res/220929_ggplot_deseq2_candidates_prism_screen1_sensitive_cell_lines.png")
 ```
 
 
-
-```{r}
+```{r eval=FALSE}
 len<- length(lincs_deseq_paad_res_YAPC_top_fda$pert)
 num_clin <- nrow(lincs_deseq_paad_res_YAPC_top_fda[lincs_deseq_paad_res_YAPC_top_fda$clinical_trial_PAAD == TRUE,])
 fract<- num_clin/len
@@ -459,7 +467,7 @@ deseq2_CT_test_res <- clinical_trial_testing(101, "YAPC", len, fract , clinical_
 ```
 
 
-```{r}
+```{r eval=FALSE}
 drug_list <- as.vector(unique(primary_paad_res$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -476,10 +484,10 @@ drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 deseq2_PRISM_test<- PRISM_testing(101,"YAPC", lincs_deseq_paad_res_YAPC_top_fda$pert, drug_senstive_precentage_all_drugs)
 ```
-```{r}
+```{r eval=FALSE}
 deseq2_PRISM_test
 ```
 
@@ -488,7 +496,7 @@ deseq2_PRISM_test
 limma with tpm counts
 normalize count data by tpm
 
-```{r}
+```{r eval=FALSE}
 TPM <- log2(as.matrix(tpm_df) + 1)
 
 ```
@@ -506,7 +514,7 @@ LVTestWrapperJLF <- function(b.matrix,
                           
 
                           
-```{r}
+```{r eval=FALSE}
 sampleinfo<- cbind(colnames(TPM), as.character(all_metadata_v3$status), as.character(all_metadata_v3$database))
 colnames(sampleinfo) <- c("Sample", "Tumor","database")
 sampleinfo<- as.data.frame(sampleinfo)
@@ -517,69 +525,69 @@ limma_gene_TCGA_BH <- LVTestWrapperJLF_v2(b.matrix=TPM , sample.info.df= samplei
 ```
 
 
-```{r}
+```{r eval=FALSE}
 saveRDS(limma_gene_TCGA_BH , file= "~/output/pancreas_cancer/limma_res/220808_PAAD_GTEX_gene_limma_res.rds")
 ```
 
 signaturesearch 
 
-```{r}
+```{r eval=FALSE}
 limma_res <- limma_gene_TCGA_BH$limma
 ```
 
-```{r}
+```{r eval=FALSE}
 limma_results<- limma_res[complete.cases(limma_res),]
 limma_results_sig <- limma_results[limma_results$adj.P.Val < 0.05 & abs(limma_results$logFC) > 1.6,]
 ```
 
-```{r}
+```{r eval=FALSE}
 downset<- limma_results_sig$LV[ limma_results_sig$logFC < -1.6]
 upset<- limma_results_sig$LV[limma_results_sig$logFC > 1.6]
 ```
 
 
-```{r}
+```{r eval=FALSE}
 upset_v2 <- match_to_LINCS_genes(upset)
 downset_v2 <- match_to_LINCS_genes(downset)
 ```
 
-```{r}
+```{r eval=FALSE}
 downset_v2<- downset_v2[complete.cases(downset_v2)]
 upset_v2<- upset_v2[complete.cases(upset_v2)]
 ```
 
-```{r}
+```{r eval=FALSE}
 #double check that they didn't overlap 
  intersect(downset_v2, upset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 length(downset_v2)
 length(upset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 names(upset_v2)<- NULL
 names(downset_v2)<- NULL
 ```
 
-```{r}
+```{r eval=FALSE}
 limma_paad_list<- list(up= upset_v2, down= downset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 saveRDS(limma_paad_list,"~/output/pancreas_cancer/limma_res/SR_gene_list_paad_limma.rds")
 ```
 
 
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 qsig_lincs_limma_pancreas_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
                    gess_method="LINCS", refdb=db_path)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 library(parallel)
 lincs_limma_pancreas <- gess_lincs(qsig_lincs_limma_pancreas_res, sortby="NCS", tau=FALSE)
@@ -588,87 +596,91 @@ lincs_limma_pancreas <- gess_lincs(qsig_lincs_limma_pancreas_res, sortby="NCS", 
 
 
 
-```{r}
+```{r eval=FALSE}
 lincs_limma_pancreas_res <- result(lincs_limma_pancreas)
 ```
 
-```{r}
+```{r eval=FALSE}
 write.csv(lincs_limma_pancreas_res, file= "~/output/pancreas_cancer/limma_res/220808_SR_LINCS_PANCREAS_LIMMA_RES.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_limma_pancreas_res_YAPC <- lincs_limma_pancreas_res[lincs_limma_pancreas_res$cell == "YAPC",]
 ```
 tau 
 
-```{r}
+```{r eval=FALSE}
 tau_test<- tau_scores(lincs_limma_pancreas_res_YAPC, YAPC_taudf)
 lincs_limma_pancreas_res_YAPC$jlf_tau<- tau_test
 ```
 
-```{r}
+```{r eval=FALSE}
 write.csv(lincs_limma_pancreas_res_YAPC, file= "~/output/pancreas_cancer/limma_res/220808_lincs_limma_pancreas_res_YAPC_tau.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_limma_pancreas_res_YAPC_top <- lincs_limma_pancreas_res_YAPC[lincs_limma_pancreas_res_YAPC$NCS < 0 & lincs_limma_pancreas_res_YAPC$WTCS_FDR < 0.05 & lincs_limma_pancreas_res_YAPC$jlf_tau< -80,]
 ```
 
 FDA approval and clinical trials
 
-```{r}
+```{r eval=FALSE}
 lincs_limma_pancreas_res_YAPC_top$fda_approved<- FDA_APPROVAL_CHECK(lincs_limma_pancreas_res_YAPC_top$pert)
 ```
-```{r}
+```{r eval=FALSE}
 lincs_limma_pancreas_res_YAPC_top$clinical_trial_PAAD <- clinical_trial_check(lincs_limma_pancreas_res_YAPC_top$pert, clinical_trial_PAAD)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 lincs_limma_pancreas_res_YAPC_top_fda<- lincs_limma_pancreas_res_YAPC_top[lincs_limma_pancreas_res_YAPC_top$fda_approved,]
 #lincs_deseq_paad_res_YAPC_top_fda$clinical_trial_PAAD<- ifelse(lincs_deseq_paad_res_YAPC_top_fda$clinical_trial_PAAD, "star", "")
 
 lincs_limma_pancreas_res_YAPC_top_fda_order <- lincs_limma_pancreas_res_YAPC_top_fda[order(-lincs_limma_pancreas_res_YAPC_top_fda$NCS),]
 lincs_limma_pancreas_res_YAPC_top_fda$pert <- factor(lincs_limma_pancreas_res_YAPC_top_fda$pert, levels = lincs_limma_pancreas_res_YAPC_top_fda_order$pert)
 p<-ggplot(data=lincs_limma_pancreas_res_YAPC_top_fda, aes(x=pert, y=NCS, fill=jlf_tau, shape= clinical_trial_PAAD)) +
-  geom_bar(stat="identity")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
+  geom_bar(stat="identity", color = "black")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
 p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("Top 30 LINCS Small Molecules") +labs(fill = "Tau [-100,100]", shape= "Clinical Trials")
 
 ggsave("~/output/pancreas_cancer/limma_res/220808_ggplot_limma_tau_paad_approved_candidates_top_30.png")
 ```
 
 ```{r}
+knitr::include_graphics("~/output/pancreas_cancer/limma_res/220808_ggplot_limma_tau_paad_approved_candidates_top_30.png")
+```
+
+```{r eval=FALSE}
 #lincs_deseq_paad_res_YAPC_top 
 write.csv(lincs_limma_pancreas_res_YAPC_top , file= "~/output/pancreas_cancer/limma_res/220808_SR_LINCS_PAAD_limma_RES_tau.csv" )
 ```
 
 pathways
 
-```{r}
+```{r eval=FALSE}
 hyperG_k_res <- dsea_hyperG(drugs = lincs_limma_pancreas_res_YAPC_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
 hyperG_k_res_v2<- result(hyperG_k_res)
 ```
 
-```{r}
+```{r eval=FALSE}
 #false discovery rate
 hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
 hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
 ```
 
-```{r}
+```{r eval=FALSE}
 gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
   geom_bar(stat="identity") + scale_fill_viridis()
 gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
 ```
 
-```{r}
+```{r eval=FALSE}
 write.csv(hyperG_k_res_v2 , file= "~/output/pancreas_cancer/limma_res/220808_SR_LINCS_PAAD_limma_PATHWAY.csv" )
 ```
 
 
 LINCS pathway & Drug targets
 
-```{r}
+```{r eval=FALSE}
 for (i in 1:nrow(lincs_limma_pancreas_res_YAPC_top_fda) ){
   targets<- as.vector(unlist(strsplit(lincs_limma_pancreas_res_YAPC_top_fda$t_gn_sym[i], "; ")))
   #print(targets)
@@ -678,17 +690,17 @@ for (i in 1:nrow(lincs_limma_pancreas_res_YAPC_top_fda) ){
 
 PRISM
 
-```{r}
+```{r eval=FALSE}
 primary_paad_res_sub <-primary_paad_res[ primary_paad_res$Var2 %in% lincs_limma_pancreas_res_YAPC_top_fda$pert,]
 ```
 
 
-```{r}
+```{r eval=FALSE}
 write.csv(primary_paad_res_sub , file= "~/output/pancreas_cancer/limma_res/220808_prism_limma_candidates.csv" )
 ```
 
 
-```{r}
+```{r eval=FALSE}
 primary_paad_res_sub$Var2 <- factor(primary_paad_res_sub$Var2, levels=unique(primary_paad_res_sub$Var2[order(-primary_paad_res_sub$log_fold_change)]))
 #primary_paad_res_sub$Var2 <- factor(primary_paad_res_sub$Var2, levels=unique(primary_paad_res_sub$Var2))
 ggplot(primary_paad_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() +geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
@@ -696,6 +708,10 @@ ggsave("~/output/pancreas_cancer/limma_res/220808_ggplot_limma_candidates_prism_
 ```
 
 ```{r}
+knitr::include_graphics("~/output/pancreas_cancer/limma_res/220808_ggplot_limma_candidates_prism_screen1.png")
+```
+
+```{r eval=FALSE}
 drug_list <- as.vector(unique(primary_paad_res_sub$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -710,13 +726,15 @@ for (i in 1:length(drug_list)){
 test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
 drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
 drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_all_drugs$drug_list, levels= unique(drug_senstive_precentage_all_drugs$drug_list[order(drug_senstive_precentage_all_drugs$drug_fraction)]))
-ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
+ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity", color = "black") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
 ggsave("~/output/pancreas_cancer/limma_res/220808_ggplot_limma_candidates_prism_screen1_sensitive_cell_lines_top_30.png")
 ```
 
-
-
 ```{r}
+knitr::include_graphics("~/output/pancreas_cancer/limma_res/220808_ggplot_limma_candidates_prism_screen1_sensitive_cell_lines_top_30.png")
+```
+
+```{r eval=FALSE}
 drug_list <- as.vector(unique(primary_paad_res$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -732,38 +750,38 @@ test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
 drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
 ```
 
-```{r}
+```{r eval=FALSE}
 limma_PRISM_test<- PRISM_testing(101,"YAPC", lincs_limma_pancreas_res_YAPC_top_fda$pert, drug_senstive_precentage_all_drugs)
 ```
-```{r}
+```{r eval=FALSE}
 limma_PRISM_test
 ```
 
-```{r}
+```{r eval=FALSE}
 table(lincs_limma_pancreas_res_YAPC_top_fda$clinical_trial_PAAD)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 len<- length(lincs_limma_pancreas_res_YAPC_top_fda$pert)
 num_clin <- nrow(lincs_limma_pancreas_res_YAPC_top_fda[lincs_limma_pancreas_res_YAPC_top_fda$clinical_trial_PAAD == TRUE,])
 fract<- num_clin/len
 limma_CT_test_res <- clinical_trial_testing(101, "YAPC", len, fract, clinical_trial_PAAD)
 ```
 
-```{r}
+```{r eval=FALSE}
 limma_CT_test_res
 ```
 
 
 #### Transfer Learning
 
-```{r}
+```{r eval=FALSE}
 recount3_plier_wo<- readRDS("~/data/recount3_plier_wo.rds")
 ```
 
 
-```{r}
+```{r eval=FALSE}
 #There is a issue with handling genes with zero expression. Best thing to do is to remove the genes
 test <- GetOrderedRowNorm(as.matrix(tpm_table),recount3_plier_wo )
 zeros<- rownames(test)[!complete.cases(test)]
@@ -771,16 +789,16 @@ tpm_table_v2<- tpm_table[!rownames(tpm_table) %in% zeros,]
 ```
 
 create the b.matrix 
-```{r}
+```{r eval=FALSE}
 PAAD.GTEx.b.matrix <- GetNewDataB(as.matrix(tpm_table_v2), recount3_plier_wo)
 ```
 
-```{r}
+```{r eval=FALSE}
 saveRDS(PAAD.GTEx.b.matrix, file= "~/output/pancreas_cancer/TFL_res/200808_PAAD_GTEX_B_MATRIX.rds")
 ```
 
 
-```{r}
+```{r eval=FALSE}
 sampleinfo<- cbind(colnames(PAAD.GTEx.b.matrix), as.character(all_metadata_v3$status), as.character(all_metadata$database))
 colnames(sampleinfo) <- c("Sample", "Tumor","database")
 sampleinfo<- as.data.frame(sampleinfo)
@@ -790,23 +808,23 @@ names(database)<- colnames(PAAD.GTEx.b.matrix)
 LV_test_TCGA_BH <- LVTestWrapperJLF(b.matrix=PAAD.GTEx.b.matrix , sample.info.df= sampleinfo, phenotype.col= "Tumor", blocking= database, file.lead= "220808_LV_TCGA_GTEX_T_vs_NT_PAAD", plot.dir= "~/output/pancreas_cancer/TFL_res/", results.dir= "~/output/pancreas_cancer/TFL_res/", use.bonferroni= FALSE, sig.threshold = 0.05)
 ```
 
-```{r}
+```{r eval=FALSE}
 saveRDS(LV_test_TCGA_BH , file= "~/output/pancreas_cancer/TFL_res/220808_PAAD_GTEX_limma_TFL_res.rds")
 ```
 
 
 are genes and heatmaps and pathway analysis
 
-```{r}
+```{r eval=FALSE}
 sig_LVs <- LV_test_TCGA_BH$limma[LV_test_TCGA_BH$limma$adj.P.Val < 0.05,]
 ```
-```{r}
+```{r eval=FALSE}
 hist(LV_test_TCGA_BH$limma$logFC)
 ```
 going with .10 for this analysis 
 
 Wanting to look at the lvs that are show extreme differences 
-```{r}
+```{r eval=FALSE}
 sd <- sd(LV_test_TCGA_BH$limma$logFC)
 mean(LV_test_TCGA_BH$limma$logFC) - (3*sd)
 mean(LV_test_TCGA_BH$limma$logFC) + (3*sd)
@@ -814,15 +832,15 @@ mean(LV_test_TCGA_BH$limma$logFC) + (3*sd)
 +/- 0.1 seems to be a good threshold
 
 
-```{r}
+```{r eval=FALSE}
 sig_LVs <- LV_test_TCGA_BH$limma[LV_test_TCGA_BH$limma$adj.P.Val < 0.05 & abs(LV_test_TCGA_BH$limma$logFC) > .1 ,]
 ```
 
-```{r}
+```{r eval=FALSE}
 SIG_LVs <- sig_LVs$LV
 ```
 
-```{r}
+```{r eval=FALSE}
 SIG_LVs
 ```
 
@@ -830,7 +848,7 @@ plot latent variable heatmap
 Latent Variable heatmap 
 
 
-```{r}
+```{r eval=FALSE}
 PAAD_GTEX_B_MATRIX_SIG<- PAAD.GTEx.b.matrix[rownames(PAAD.GTEx.b.matrix ) %in% SIG_LVs, ]
 column_ha = HeatmapAnnotation(Sample=all_metadata_v3$status, col = list(Sample = c("Primary Tumor" = "#440154FF", "Solid Tissue Normal" = "#228C8DFF")))
 col_fun = colorRamp2(c(-1, 0, 1), c("blue", "black", "yellow"))
@@ -842,14 +860,14 @@ Heatmap(PAAD_GTEX_B_MATRIX_SIG, nam= "LV Score",  col = col_fun, show_column_nam
 
 
 
-```{r}
+```{r eval=FALSE}
 sig_Z_mt <- recount3_plier_wo$Z[,LV_test_TCGA_BH$limma$adj.P.Val < 0.05 & abs(LV_test_TCGA_BH$limma$logFC)> .1 ]
 colnames(sig_Z_mt) <- SIG_LVs
 ```
 
 
 top 100 
-```{r}
+```{r eval=FALSE}
 topgene_1 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,1])][1:30]
 topgene_2 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,2])][1:30]
 topgene_3 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,3])][1:30]
@@ -862,63 +880,63 @@ topgene_9 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,9])][1:30]
 topgene_10 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,10])][1:30]
 ```
 
-```{r}
+```{r eval=FALSE}
 topgenes<- unique(c(topgene_1, topgene_2,topgene_3, topgene_4, topgene_5, topgene_6, topgene_7, topgene_8, topgene_9, topgene_10))
 ```
 
 
-```{r}
+```{r eval=FALSE}
 deseq2_paad_tfl <- deseq2_paad_normal[deseq2_paad_normal$Symbol %in% topgenes,]
 ```
 
 
-```{r}
+```{r eval=FALSE}
 downset<- deseq2_paad_tfl$Symbol[deseq2_paad_tfl[,2] < 0]
 upset<- deseq2_paad_tfl$Symbol[deseq2_paad_tfl[,2] > 0]
 ```
 
-```{r}
+```{r eval=FALSE}
 upset_v2 <- match_to_LINCS_genes(upset)
 downset_v2 <- match_to_LINCS_genes(downset)
 ```
 
-```{r}
+```{r eval=FALSE}
 downset_v2<- downset_v2[complete.cases(downset_v2)]
 upset_v2<- upset_v2[complete.cases(upset_v2)]
 ```
 
-```{r}
+```{r eval=FALSE}
 #double check that they didn't overlap 
  intersect(downset_v2, upset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 length(downset_v2)
 length(upset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 names(upset_v2)<- NULL
 names(downset_v2)<- NULL
 ```
 
-```{r}
+```{r eval=FALSE}
 tfl_paad_list<- list(up= upset_v2, down= downset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 saveRDS(tfl_paad_list,"~/output/pancreas_cancer/TFL_res/SR_gene_list_paad_tfl.rds")
 ```
 
 
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 qsig_lincs_tfl_pancreas_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
                    gess_method="LINCS", refdb=db_path)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 library(parallel)
 lincs_tfl_pancreas <- gess_lincs(qsig_lincs_tfl_pancreas_res, sortby="NCS", tau=FALSE)
@@ -926,109 +944,118 @@ lincs_tfl_pancreas <- gess_lincs(qsig_lincs_tfl_pancreas_res, sortby="NCS", tau=
 ```
 
 
-```{r}
+```{r eval=FALSE}
 lincs_tfl_pancreas_res <- result(lincs_tfl_pancreas)
 ```
 
-```{r}
+```{r eval=FALSE}
 write.csv(lincs_tfl_pancreas_res, file= "~/output/pancreas_cancer/220808_SR_LINCS_PANCREAS_TFL_RES.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_tfl_pancreas_res_YAPC <- lincs_tfl_pancreas_res[lincs_tfl_pancreas_res$cell == "YAPC",]
 ```
 tau 
-```{r}
+```{r eval=FALSE}
 tau_test<- tau_scores(lincs_tfl_pancreas_res_YAPC, YAPC_taudf)
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_tfl_pancreas_res_YAPC$jlf_tau<- tau_test
 ```
 
-```{r}
+```{r eval=FALSE}
 write.csv(lincs_tfl_pancreas_res_YAPC, file= "~/output/pancreas_cancer/TFL_res/220808_lincs_tfl_pancreas_res_YAPC_tau.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_tfl_pancreas_res_YAPC_top <- lincs_tfl_pancreas_res_YAPC[lincs_tfl_pancreas_res_YAPC$NCS < 0 & lincs_tfl_pancreas_res_YAPC$WTCS_FDR < 0.05 & lincs_tfl_pancreas_res_YAPC$jlf_tau< -80,]
 ```
 
 annotate fda approval clinical trials
 
-```{r}
+```{r eval=FALSE}
 lincs_tfl_pancreas_res_YAPC_top<- lincs_tfl_pancreas_res_YAPC_top[complete.cases(lincs_tfl_pancreas_res_YAPC_top),]
 lincs_tfl_pancreas_res_YAPC_top$fda_approved<- FDA_APPROVAL_CHECK(lincs_tfl_pancreas_res_YAPC_top$pert)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 lincs_tfl_pancreas_res_YAPC_top$clinical_trial_PAAD <- clinical_trial_check(lincs_tfl_pancreas_res_YAPC_top$pert, clinical_trial_PAAD)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 lincs_tfl_pancreas_res_YAPC_top_fda<- lincs_tfl_pancreas_res_YAPC_top[lincs_tfl_pancreas_res_YAPC_top$fda_approved== TRUE,]
 #lincs_deseq_paad_res_YAPC_top_fda$clinical_trial_PAAD<- ifelse(lincs_deseq_paad_res_YAPC_top_fda$clinical_trial_PAAD, "star", "")
 
 lincs_tfl_pancreas_res_YAPC_top_fda_order <- lincs_tfl_pancreas_res_YAPC_top_fda[order(-lincs_tfl_pancreas_res_YAPC_top_fda$NCS),]
 lincs_tfl_pancreas_res_YAPC_top_fda$pert <- factor(lincs_tfl_pancreas_res_YAPC_top_fda$pert, levels = lincs_tfl_pancreas_res_YAPC_top_fda_order$pert)
 p<-ggplot(data=lincs_tfl_pancreas_res_YAPC_top_fda, aes(x=pert, y=NCS, fill=jlf_tau, shape= clinical_trial_PAAD)) +
-  geom_bar(stat="identity")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
+  geom_bar(stat="identity", color = "black")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
 p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]", shape= "Clinical Trials")
 
 ggsave("~/output/pancreas_cancer/TFL_res/220808_ggplot_tfl_tau_paad_approved_candidates.png")
 ```
 
 ```{r}
+knitr::include_graphics("~/output/pancreas_cancer/TFL_res/220808_ggplot_tfl_tau_paad_approved_candidates.png")
+```
+
+```{r eval=FALSE}
 #lincs_deseq_paad_res_YAPC_top 
 write.csv(lincs_tfl_pancreas_res_YAPC_top , file= "~/output/pancreas_cancer/TFL_res/220808_SR_LINCS_PAAD_TFL_RES_tau.csv" )
 ```
 
 drug target pathways
 
-```{r}
+```{r eval=FALSE}
 
 hyperG_k_res <- dsea_hyperG(drugs = lincs_tfl_pancreas_res_YAPC_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
 hyperG_k_res_v2<- result(hyperG_k_res)
 ```
 
-```{r}
+```{r eval=FALSE}
 #false discovery rate
 hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
 ```
 
-```{r}
+```{r eval=FALSE}
 hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
 ```
 
-```{r}
+```{r eval=FALSE}
 gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
   geom_bar(stat="identity") + scale_fill_viridis()
 gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
 ```
 
 
-```{r}
+```{r eval=FALSE}
 write.csv(hyperG_k_res_v2 , file= "~/output/pancreas_cancer/TFL_res/220808_SR_LINCS_PAAD_TFL_PATHWAY.csv" )
 ```
 
 
 PRISM plotting
 
-```{r}
+```{r eval=FALSE}
 primary_paad_res_sub <-primary_paad_res[ primary_paad_res$Var2 %in% lincs_tfl_pancreas_res_YAPC_top_fda$pert,]
 write.csv(primary_paad_res_sub , file= "~/output/pancreas_cancer/TFL_res/220808_prism_tfl_candidates.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 #primary_paad_res_sub$Var2 <- factor(primary_paad_res_sub$Var2, levels=unique(primary_paad_res_sub$Var2))
 primary_paad_res_sub$Var2 <- factor(primary_paad_res_sub$Var2, levels=unique(primary_paad_res_sub$Var2[order(primary_paad_res_sub$log_fold_change)]))
 ggplot(primary_paad_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() +geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
 ggsave("~/output/pancreas_cancer/TFL_res/220808_ggplot_TFL_candidates_prism_screen1.png")
 ```
-look at the number of sensitive cell lines
+
 ```{r}
+knitr::include_graphics("~/output/pancreas_cancer/TFL_res/220808_ggplot_TFL_candidates_prism_screen1.png")
+```
+
+look at the number of sensitive cell lines
+```{r eval=FALSE}
 drug_list <- as.vector(unique(primary_paad_res_sub$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -1043,12 +1070,16 @@ for (i in 1:length(drug_list)){
 test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
 drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
 drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_all_drugs$drug_list, levels= unique(drug_senstive_precentage_all_drugs$drug_list[order(drug_senstive_precentage_all_drugs$drug_fraction)]))
-ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
+ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity", color = "black") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
 ggsave("~/output/pancreas_cancer/TFL_res/220808_ggplot_TFL_candidates_prism_screen1_sensitive_cell_lines.png")
 ```
 
-LINCS pathways & Drug targets
 ```{r}
+knitr::include_graphics("~/output/pancreas_cancer/TFL_res/220808_ggplot_TFL_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+
+LINCS pathways & Drug targets
+```{r eval=FALSE}
 for (i in 1:nrow(lincs_tfl_pancreas_res_YAPC_top_fda) ){
   targets<- as.vector(unlist(strsplit(lincs_tfl_pancreas_res_YAPC_top_fda$t_gn_sym[i], "; ")))
   #print(targets)
@@ -1057,7 +1088,7 @@ for (i in 1:nrow(lincs_tfl_pancreas_res_YAPC_top_fda) ){
 ```
 
 test the PRISM and number of clinical trail drugs to random drug selection
-```{r}
+```{r eval=FALSE}
 drug_list <- as.vector(unique(primary_paad_res$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -1073,73 +1104,73 @@ test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
 drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
 ```
 PRISM test
-```{r}
+```{r eval=FALSE}
 tfl_PRISM_test<- PRISM_testing(101,"YAPC", lincs_tfl_pancreas_res_YAPC_top_fda$pert, drug_senstive_precentage_all_drugs)
 ```
 
-```{r}
+```{r eval=FALSE}
 tfl_PRISM_test
 ```
 
-```{r}
+```{r eval=FALSE}
 table(lincs_tfl_pancreas_res_YAPC_top_fda$clinical_trial_PAAD)
 ```
 clinical trials test
-```{r}
+```{r eval=FALSE}
 len<- length(lincs_tfl_pancreas_res_YAPC_top_fda$pert)
 num_clin <- nrow(lincs_tfl_pancreas_res_YAPC_top_fda[lincs_tfl_pancreas_res_YAPC_top_fda$clinical_trial_PAAD == TRUE,])
 fract<- num_clin/len
 tfl_CT_test_res <- clinical_trial_testing(101, "YAPC", len, fract, clinical_trial_PAAD)
 ```
 
-```{r}
+```{r eval=FALSE}
 tfl_CT_test_res
 ```
 
 
 compare gene list across the different methods
 
-```{r}
+```{r eval=FALSE}
 venn_dia_methods(limma_paad_list$up, deseq_paad_list$up, tfl_paad_list$up, file_name='~/output/pancreas_cancer/SR_up_genes_venn_diagram.png' )
 ```
 
-```{r}
+```{r eval=FALSE}
 venn_dia_methods(limma_paad_list$down, deseq_paad_list$down, tfl_paad_list$down, file_name='~/output/pancreas_cancer/SR_down_genes_venn_diagram.png' )
 ```
 
-```{r}
+```{r eval=FALSE}
 venn_dia_methods(unlist(limma_paad_list), unlist(deseq_paad_list), unlist(tfl_paad_list), file_name='~/output/pancreas_cancer/SR_all_genes_venn_diagram.png' )
 ```
 
 compare the input pathways
-```{r}
+```{r eval=FALSE}
 limma_paad_pathway_res <- method_up_down_gene_set_analysis(limma_paad_list$up, limma_paad_list$down, "~/output/pancreas_cancer/", "limma", "PAAD_cancer_limma_input_genes_SR")
 ```
 
-```{r}
+```{r eval=FALSE}
 deseq2_paad_pathway_res<- method_up_down_gene_set_analysis(deseq_paad_list$up, deseq_paad_list$down, "~/output/pancreas_cancer/", "DESEq2", "PAAD_cancer_deseq2_input_genes_SR")
 ```
 
-```{r}
+```{r eval=FALSE}
 tfl_paad_pathway_res<- method_up_down_gene_set_analysis(tfl_paad_list$up, tfl_paad_list$down, "~/output/pancreas_cancer/", "TFL", "PAAD_cancer_tfl_input_genes_SR")
 ```
 
 
-```{r}
+```{r eval=FALSE}
 limma<- limma_paad_pathway_res$term_id[ limma_paad_pathway_res$set == "Up"]
 deseq2<- deseq2_paad_pathway_res$term_id[ deseq2_paad_pathway_res$set == "Up"]
 tfl<-tfl_paad_pathway_res$term_id[ tfl_paad_pathway_res$set == "Up"]
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/pancreas_cancer/SR_PAAD_Up_pathway_venn_diagram.png' )
 ```
 
-```{r}
+```{r eval=FALSE}
 limma<- limma_paad_pathway_res$term_id[ limma_paad_pathway_res$set == "Down"]
 deseq2<- deseq2_paad_pathway_res$term_id[ deseq2_paad_pathway_res$set == "Down"]
 tfl<-tfl_paad_pathway_res$term_id[ tfl_paad_pathway_res$set == "Down"]
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/pancreas_cancer/SR_PAAD_Down_pathway_venn_diagram.png' )
 ```
 
-```{r}
+```{r eval=FALSE}
 limma<- limma_paad_pathway_res$term_id
 deseq2<- deseq2_paad_pathway_res$term_id
 tfl<-tfl_paad_pathway_res$term_id
@@ -1148,7 +1179,7 @@ venn_dia_methods(limma, deseq2, tfl, file_name='~/output/pancreas_cancer/SR_PAAD
 
 compare candidates
 
-```{r}
+```{r eval=FALSE}
 venn_dia_methods(lincs_limma_pancreas_res_YAPC_top_fda$pert, lincs_deseq_paad_res_YAPC_top_fda$pert, lincs_tfl_pancreas_res_YAPC_top_fda$pert, file_name='~/output/pancreas_cancer/SR_drug_candidates_venn_diagram.png' )
 ```
 

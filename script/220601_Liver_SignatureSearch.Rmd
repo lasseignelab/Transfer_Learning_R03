@@ -15,21 +15,33 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # START 
     Goal/Purpose of operations: 
-    quick summary 
+    Determine disease signatures for all the methods and conduct Signature Reversion on liver samples for all three approaches 
     
-    Finished psedocode on: Date
+    Finished psedocode on:
+    220606
     
-    System which operations were done on: my laptop(on cheaha), lab mac etc... 
+    System which operations were done on: 
+    my laptop
     
     GitHub Repo:
+    Transfer_Learning_R03
     
-    Directory of operations: /path
+    Docker/Singularity: 
+    rstudio_cancer_dr
+    
+    Directory of operations: 
+    /home/rstudio
     
     Scripts being edited for operations: filename(s)
+    ./script/functions_cancer_signature_reversion_JLF.R- contains all the functions for this project. 
     
     Data being used: description and location
     
-    Papers and tools: deseq with paper 
+    Papers and tools:
+    DESeq2
+    limma
+    SignatureSearch
+    MultiPLIER
 
 # STEPS
 ### Set working directory 
@@ -170,20 +182,20 @@ DESEq2 (make into a function )
 library(DESeq2)
 ```
 
-```{r}
+```{r eval=FALSE}
 dds_lihc_normal <- DESeqDataSetFromMatrix(countData = count_table_v3,
                               colData = all_metadata_v3,
                               design= ~ database + status)
 ```
 
 
-```{r}
-deseq2_lihc_normal <- deseq2_function(dds_lihc_normal, "Deseq2_lihc_normal_gtx_res.csv", "status", "Primary Tumor", "Solid Tissue Normal")
+```{r eval=FALSE}
+deseq2_lihc_normal <- deseq2_function(dds_lihc_normal, "~/output/liver_cancer/deseq2_res/220929_deseq2_lihc_normal_gtx_res.csv", "status", "Primary Tumor", "Solid Tissue Normal")
 ```
 
 signaturesearch 
 Genes
-```{r}
+```{r eval=FALSE}
 #SRP118922
 library(recount3)
 human_projects<- available_projects()
@@ -192,70 +204,71 @@ gene_info <- test@rowRanges
 rm(test)
 ```
 
-```{r}
+```{r eval=FALSE}
 dim(as.data.frame(gene_info))
 ```
 
-```{r}
+```{r eval=FALSE}
 identical(gene_info$gene_id, rownames(deseq2_lihc_normal))
 ```
 
-```{r}
+```{r eval=FALSE}
 deseq2_lihc_normal$Symbol<- gene_info$gene_name
 ```
 
-```{r}
+```{r eval=FALSE}
 deseq2_lihc_normal<- deseq2_lihc_normal[complete.cases(deseq2_lihc_normal),]
-deseq_results_sig <- deseq2_lihc_normal[deseq2_lihc_normal$padj < 0.05 & abs(deseq2_lihc_normal$log2FoldChange) > 2,]
+deseq_results_sig_top <- deseq2_lihc_normal[deseq2_lihc_normal$padj < 0.05 & deseq2_lihc_normal$log2FoldChange > 2,]
+deseq_results_sig_bottom <- deseq2_lihc_normal[deseq2_lihc_normal$padj < 0.05 & deseq2_lihc_normal$log2FoldChange < -2,]
 ```
 
-```{r}
-downset<- deseq_results_sig$Symbol[order(deseq_results_sig$log2FoldChange)] [1:450]
-upset<- deseq_results_sig$Symbol[order(-deseq_results_sig$log2FoldChange)] [1:450]
+```{r eval=FALSE}
+downset<- deseq_results_sig_bottom$Symbol[deseq_results_sig_bottom$log2FoldChange< -4]
+upset<- deseq_results_sig_top$Symbol[deseq_results_sig_top$log2FoldChange > 4] 
 ```
 
 
 convert gene symbols to LINCS genes
-```{r}
+```{r eval=FALSE}
 upset_v2 <- match_to_LINCS_genes(upset)
 downset_v2 <- match_to_LINCS_genes(downset)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 downset_v2<- downset_v2[complete.cases(downset_v2)]
 upset_v2<- upset_v2[complete.cases(upset_v2)]
 ```
 
-```{r}
+```{r eval=FALSE}
 #double check that they didn't overlap 
  intersect(downset_v2, upset_v2)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 names(upset_v2)<- NULL
 names(downset_v2)<- NULL
 ```
 
-```{r}
+```{r eval=FALSE}
 deseq2_liver_list<- list(up= upset_v2, down= downset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 saveRDS(deseq2_liver_list,"~/output/liver_cancer/deseq2_res/SR_gene_list_liver_deseq2.rds")
 ```
 
 
 
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 qsig_lincs_deseq2_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
                    gess_method="LINCS", refdb=db_path)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 lincs_deseq_gbm <- gess_lincs(qsig_lincs_deseq2_res, sortby="NCS", workers=1)
 #result(lincs)
@@ -263,53 +276,53 @@ lincs_deseq_gbm <- gess_lincs(qsig_lincs_deseq2_res, sortby="NCS", workers=1)
 
 
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_lihc_res <- result(lincs_deseq_gbm)
 ```
 
-```{r}
-write.csv(lincs_deseq_lihc_res, file= "~/output/liver_cancer/deseq2_res/220808_SR_LINCS_LIHC_DESEQ2_RES.csv" )
+```{r eval=FALSE}
+write.csv(lincs_deseq_lihc_res, file= "~/output/liver_cancer/deseq2_res/220929_SR_LINCS_LIHC_DESEQ2_RES.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_lihc_res_HEPG2 <- lincs_deseq_lihc_res[lincs_deseq_lihc_res$cell == "HEPG2",]
 ```
 tau 
-```{r}
+```{r eval=FALSE}
 HEPG2_taudf <- readRDS("~/data/HEPG2_taudf.rds")
 ```
 
-```{r}
+```{r eval=FALSE}
 tau_test<- tau_scores(lincs_deseq_lihc_res_HEPG2 , HEPG2_taudf)
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_lihc_res_HEPG2$jlf_tau<- tau_test
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_lihc_res_HEPG2_top <- lincs_deseq_lihc_res_HEPG2[lincs_deseq_lihc_res_HEPG2$NCS < 0 & lincs_deseq_lihc_res_HEPG2$WTCS_FDR < 0.05 & lincs_deseq_lihc_res_HEPG2$jlf_tau< -80,]
 ```
 
 clinical trials
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_lihc_res_HEPG2_top$fda_approved<- FDA_APPROVAL_CHECK(lincs_deseq_lihc_res_HEPG2_top$pert)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 library(readr)
 clinical_trial_LIHC <- read_tsv("~/data/SearchResults_LIHC.tsv")
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_lihc_res_HEPG2_top$clinical_trial_LIHC <- clinical_trial_check(lincs_deseq_lihc_res_HEPG2_top$pert, clinical_trial_LIHC)
 ```
 
 
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_lihc_res_HEPG2_top_fda<- lincs_deseq_lihc_res_HEPG2_top[lincs_deseq_lihc_res_HEPG2_top$fda_approved,]
 #lincs_deseq_lihc_res_HEPG2_top_fda$clinical_trial_LIHC<- ifelse(lincs_deseq_lihc_res_HEPG2_top_fda$clinical_trial_LIHC, "star", "")
 
@@ -319,70 +332,70 @@ p<-ggplot(data=lincs_deseq_lihc_res_HEPG2_top_fda, aes(x=pert, y=NCS, fill=jlf_t
   geom_bar(stat="identity")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
 p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]", shape= "Clinical Trials")
 
-ggsave("~/output/liver_cancer/deseq2_res/220808_ggplot_deseq2_tau_lihc_approved_candidates.png")
+ggsave("~/output/liver_cancer/deseq2_res/220929_ggplot_deseq2_tau_lihc_approved_candidates.png")
+```
+```{r}
+knitr::include_graphics("~/output/liver_cancer/deseq2_res/220929_ggplot_deseq2_tau_lihc_approved_candidates.png")
 ```
 
-```{r}
+```{r eval=FALSE}
 #lincs_deseq_lihc_res_HEPG2_top 
-write.csv(lincs_deseq_lihc_res_HEPG2_top , file= "~/output/liver_cancer/deseq2_res/220808_SR_LINCS_LIHC_DESEQ2_RES_tau.csv" )
+write.csv(lincs_deseq_lihc_res_HEPG2_top , file= "~/output/liver_cancer/deseq2_res/220929_SR_LINCS_LIHC_DESEQ2_RES_tau.csv" )
 ```
 
 pathways
 
-```{r}
+```{r eval=FALSE}
 
 hyperG_k_res <- dsea_hyperG(drugs = lincs_deseq_lihc_res_HEPG2_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
 hyperG_k_res_v2<- result(hyperG_k_res)
 ```
 
-```{r}
+```{r eval=FALSE}
 #false discovery rate
 hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
 ```
 
-```{r}
+```{r eval=FALSE}
 hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
 ```
 
-```{r}
-library(viridis)
-```
 
-```{r}
+```{r eval=FALSE}
 gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
   geom_bar(stat="identity") + scale_fill_viridis()
 gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
 ```
 no kegg pathways are signficant
 
-```{r}
-write.csv(hyperG_k_res_v2 , file= "~/output/liver_cancer/deseq2_res/220808_SR_LINCS_LIHC_DESEQ2_PATHWYA.csv" )
+```{r eval=FALSE}
+write.csv(hyperG_k_res_v2 , file= "~/output/liver_cancer/deseq2_res/220929_SR_LINCS_LIHC_DESEQ2_PATHWYA.csv" )
 ```
 
 
 LINCS pathway & Drug targets
 
-```{r}
+```{r eval=FALSE}
 gene_info <- as.data.frame(recount3_rse_LIVER@rowRanges)
 ```
 
-```{r}
+```{r eval=FALSE}
 tpm_table<- Counts_to_tpm(count_table_v3, gene_info$bp_length)
 ```
 
-```{r}
+```{r eval=FALSE}
 rownames(tpm_table)<- gene_info$gene_name
 ```
 
-```{r}
+```{r eval=FALSE}
 tpm_df <- as.data.frame(tpm_table)
 ```
 
-```{r}
+```{r eval=FALSE}
 se_asssay<- assay(se)
 ```
 
-```{r}
+```{r eval=FALSE}
 for (i in 1:nrow(lincs_deseq_lihc_res_HEPG2_top_fda) ){
   targets<- as.vector(unlist(strsplit(lincs_deseq_lihc_res_HEPG2_top_fda$t_gn_sym[i], "; ")))
   #print(targets)
@@ -393,27 +406,29 @@ for (i in 1:nrow(lincs_deseq_lihc_res_HEPG2_top_fda) ){
 
 PRISM
 
-```{r}
+```{r eval=FALSE}
 primary_lihc_res <-read.csv( file= "~/output/liver_cancer/220808_prism_candidates.csv" )
 ```
 
-
-
-```{r}
+```{r eval=FALSE}
 primary_lihc_res_sub <-primary_lihc_res[ primary_lihc_res$Var2 %in% lincs_deseq_lihc_res_HEPG2_top_fda$pert,]
 ```
 
 
-```{r}
-write.csv(primary_lihc_res_sub , file= "~/output/liver_cancer/deseq2_res/220808_prism_deseq2_candidates.csv" )
+```{r eval=FALSE}
+write.csv(primary_lihc_res_sub , file= "~/output/liver_cancer/deseq2_res/220929_prism_deseq2_candidates.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 primary_lihc_res_sub$Var2 <- factor(primary_lihc_res_sub$Var2, levels=unique(primary_lihc_res_sub$Var2[order(-primary_lihc_res_sub$log_fold_change)]))
 ggplot(primary_lihc_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() +geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
-ggsave("~/output/liver_cancer/deseq2_res/220808_ggplot_deseq2_candidates_prism_screen1.png")
+ggsave("~/output/liver_cancer/deseq2_res/220929_ggplot_deseq2_candidates_prism_screen1.png")
 ```
 ```{r}
+knitr::include_graphics("~/output/liver_cancer/deseq2_res/220929_ggplot_deseq2_candidates_prism_screen1.png")
+```
+
+```{r eval=FALSE}
 drug_list <- as.vector(unique(primary_lihc_res_sub$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -429,11 +444,14 @@ test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
 drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
 drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_all_drugs$drug_list, levels= unique(drug_senstive_precentage_all_drugs$drug_list[order(drug_senstive_precentage_all_drugs$drug_fraction)]))
 ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity", color = "black") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
-ggsave("~/output/liver_cancer/deseq2_res/220808_ggplot_deseq2_candidates_prism_screen1_sensitive_cell_lines.png")
+ggsave("~/output/liver_cancer/deseq2_res/220929_ggplot_deseq2_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+```{r}
+knitr::include_graphics("~/output/liver_cancer/deseq2_res/220929_ggplot_deseq2_candidates_prism_screen1_sensitive_cell_lines.png")
 ```
 
 
-```{r}
+```{r eval=FALSE}
 len<- length(lincs_deseq_lihc_res_HEPG2_top_fda$pert)
 num_clin <- nrow(lincs_deseq_lihc_res_HEPG2_top_fda[lincs_deseq_lihc_res_HEPG2_top_fda$clinical_trial_LIHC == TRUE,])
 fract<- num_clin/len
@@ -441,7 +459,7 @@ deseq2_CT_test_res <- clinical_trial_testing(101, "HEPG2", len, fract, clinical_
 ```
 
 
-```{r}
+```{r eval=FALSE}
 drug_list <- as.vector(unique(primary_lihc_res$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -457,10 +475,10 @@ test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
 drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
 ```
 
-```{r}
+```{r eval=FALSE}
 deseq2_PRISM_test<- PRISM_testing(101,"HEPG2", lincs_deseq_lihc_res_HEPG2_top_fda$pert, drug_senstive_precentage_all_drugs)
 ```
-```{r}
+```{r eval=FALSE}
 deseq2_PRISM_test
 ```
 
@@ -469,7 +487,7 @@ deseq2_PRISM_test
 limma with tpm counts
 normalize count data by tpm
 
-```{r}
+```{r eval=FALSE}
 TPM <- log2(as.matrix(tpm_df) + 1)
 ```
 
@@ -484,7 +502,7 @@ LVTestWrapperJLF <- function(b.matrix,
                           use.bonferroni = FALSE,
                           significant.only = FALSE,
                           sig.threshold = 0.05)
-```{r}
+```{r eval=FALSE}
 sampleinfo<- cbind(colnames(TPM), as.character(all_metadata_v3$status), as.character(all_metadata_v3$database))
 colnames(sampleinfo) <- c("Sample", "Tumor","database")
 sampleinfo<- as.data.frame(sampleinfo)
@@ -501,110 +519,110 @@ saveRDS(limma_gene_TCGA_BH , file= "~/output/liver_cancer/limma_res/220808_LIHC_
 
 signaturesearch 
 
-```{r}
+```{r eval=FALSE}
 limma_res <- limma_gene_TCGA_BH$limma
 ```
 
-```{r}
+```{r eval=FALSE}
 limma_results<- limma_res[complete.cases(limma_res),]
 limma_results_sig <- limma_results[limma_results$adj.P.Val < 0.05 & abs(limma_results$logFC) > 1.8,]
 ```
 
-```{r}
+```{r eval=FALSE}
 downset<- limma_results_sig$LV[ limma_results_sig$logFC < -1.8]
 upset<- limma_results_sig$LV[limma_results_sig$logFC > 1.8]
 ```
 
 
 convert gene symbols to LINCS genes
-```{r}
+```{r eval=FALSE}
 upset_v2 <- match_to_LINCS_genes(upset)
 downset_v2 <- match_to_LINCS_genes(downset)
 ```
 
-```{r}
+```{r eval=FALSE}
 downset_v2<- downset_v2[complete.cases(downset_v2)]
 upset_v2<- upset_v2[complete.cases(upset_v2)]
 ```
 
-```{r}
+```{r eval=FALSE}
 #double check that they didn't overlap 
  intersect(downset_v2, upset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 length(downset_v2)
 length(upset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 names(upset_v2)<- NULL
 names(downset_v2)<- NULL
 ```
 
-```{r}
+```{r eval=FALSE}
 limma_liver_list<- list(up= upset_v2, down= downset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 saveRDS(limma_liver_list,"~/output/liver_cancer/limma_res/SR_gene_list_liver_limma.rds")
 ```
 
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 qsig_lincs_limma_liver_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
                    gess_method="LINCS", refdb=db_path)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 library(parallel)
 lincs_limma_liver <- gess_lincs(qsig_lincs_limma_liver_res, sortby="NCS", tau=FALSE,workers=2)
 #result(lincs)
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_limma_liver_res <- result(lincs_limma_liver)
 ```
 
-```{r}
+```{r eval=FALSE}
 write.csv(lincs_limma_liver_res, file= "~/output/liver_cancer/220808_SR_LINCS_LIVER_LIMMA_RES.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_limma_liver_res_HEPG2 <- lincs_limma_liver_res[lincs_limma_liver_res$cell == "HEPG2",]
 ```
 tau 
-```{r}
+```{r eval=FALSE}
 tau_test<- tau_scores(lincs_limma_liver_res_HEPG2, HEPG2_taudf)
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_limma_liver_res_HEPG2$jlf_tau<- tau_test
 ```
 
-```{r}
+```{r eval=FALSE}
 write.csv(lincs_limma_liver_res_HEPG2, file= "~/output/liver_cancer/limma_res/220808_lincs_limma_liver_res_HEPG2_tau.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_limma_liver_res_HEPG2_top <- lincs_limma_liver_res_HEPG2[lincs_limma_liver_res_HEPG2$NCS < 0 & lincs_limma_liver_res_HEPG2$WTCS_FDR < 0.05 & lincs_limma_liver_res_HEPG2$jlf_tau< -80,]
 ```
 
 clinical trials
 
-```{r}
+```{r eval=FALSE}
 lincs_limma_liver_res_HEPG2_top$fda_approved<- FDA_APPROVAL_CHECK(lincs_limma_liver_res_HEPG2_top$pert)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 lincs_limma_liver_res_HEPG2_top$clinical_trial_LIHC <- clinical_trial_check(lincs_limma_liver_res_HEPG2_top$pert, clinical_trial_LIHC)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 lincs_limma_liver_res_HEPG2_top_fda<- lincs_limma_liver_res_HEPG2_top[lincs_limma_liver_res_HEPG2_top$fda_approved,]
 #lincs_deseq_lihc_res_HEPG2_top_fda$clinical_trial_LIHC<- ifelse(lincs_deseq_lihc_res_HEPG2_top_fda$clinical_trial_LIHC, "star", "")
 
@@ -618,34 +636,39 @@ ggsave("~/output/liver_cancer/limma_res/220808_ggplot_limma_tau_lihc_approved_ca
 ```
 
 ```{r}
+knitr::include_graphics("~/output/liver_cancer/limma_res/220808_ggplot_limma_tau_lihc_approved_candidates.png")
+```
+
+
+```{r eval=FALSE}
 #lincs_deseq_lihc_res_HEPG2_top 
 write.csv(lincs_limma_liver_res_HEPG2_top , file= "~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_RES_tau.csv" )
 ```
 
 pathways
 
-```{r}
+```{r eval=FALSE}
 hyperG_k_res <- dsea_hyperG(drugs = lincs_limma_liver_res_HEPG2_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
 hyperG_k_res_v2<- result(hyperG_k_res)
 ```
 
-```{r}
+```{r eval=FALSE}
 #false discovery rate
 hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
 ```
 
-```{r}
+```{r eval=FALSE}
 hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
 ```
 
-```{r}
+```{r eval=FALSE}
 gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
   geom_bar(stat="identity") + scale_fill_viridis()
 gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
 ```
 no kegg pathways are signficant
 
-```{r}
+```{r eval=FALSE}
 write.csv(hyperG_k_res_v2 , file= "~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_PATHWAY.csv" )
 ```
 
@@ -653,7 +676,7 @@ write.csv(hyperG_k_res_v2 , file= "~/output/liver_cancer/limma_res/220808_SR_LIN
 LINCS pathway & Drug targets
 
 
-```{r}
+```{r eval=FALSE}
 for (i in 1:nrow(lincs_limma_liver_res_HEPG2_top_fda) ){
   targets<- as.vector(unlist(strsplit(lincs_limma_liver_res_HEPG2_top_fda$t_gn_sym[i], "; ")))
   #print(targets)
@@ -664,23 +687,26 @@ for (i in 1:nrow(lincs_limma_liver_res_HEPG2_top_fda) ){
 
 PRISM
 
-```{r}
+```{r eval=FALSE}
 primary_lihc_res_sub <-primary_lihc_res[ primary_lihc_res$Var2 %in% lincs_limma_liver_res_HEPG2_top_fda$pert,]
 ```
 
 
-```{r}
+```{r eval=FALSE}
 write.csv(primary_lihc_res_sub , file= "~/output/liver_cancer/limma_res/220808_prism_limma_candidates.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 primary_lihc_res_sub$Var2 <- factor(primary_lihc_res_sub$Var2, levels=unique(primary_lihc_res_sub$Var2[order(-primary_lihc_res_sub$log_fold_change)]))
 #primary_lihc_res_sub$Var2 <- factor(primary_lihc_res_sub$Var2, levels=unique(primary_lihc_res_sub$Var2))
 ggplot(primary_lihc_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() +geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
 ggsave("~/output/liver_cancer/limma_res/220808_ggplot_limma_candidates_prism_screen1.png")
 ```
-
 ```{r}
+knitr::include_graphics("~/output/liver_cancer/limma_res/220808_ggplot_limma_candidates_prism_screen1.png")
+```
+
+```{r eval=FALSE}
 drug_list <- as.vector(unique(primary_lihc_res_sub$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -699,9 +725,11 @@ ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= 
 ggsave("~/output/liver_cancer/limma_res/220808_ggplot_limma_candidates_prism_screen1_sensitive_cell_lines.png")
 ```
 
-
-
 ```{r}
+knitr::include_graphics("~/output/liver_cancer/limma_res/220808_ggplot_limma_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+
+```{r eval=FALSE}
 drug_list <- as.vector(unique(primary_lihc_res$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -718,22 +746,22 @@ drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 limma_PRISM_test<- PRISM_testing(101,"HEPG2", lincs_limma_liver_res_HEPG2_top_fda$pert, drug_senstive_precentage_all_drugs)
 ```
-```{r}
+```{r eval=FALSE}
 limma_PRISM_test
 ```
 
 
-```{r}
+```{r eval=FALSE}
 len<- length(lincs_limma_liver_res_HEPG2_top_fda$pert)
 num_clin <- nrow(lincs_limma_liver_res_HEPG2_top_fda[lincs_limma_liver_res_HEPG2_top_fda$clinical_trial_LIHC == TRUE,])
 fract<- num_clin/len
 limma_CT_test_res <- clinical_trial_testing(101, "HEPG2", len, fract, clinical_trial_LIHC)
 ```
 
-```{r}
+```{r eval=FALSE}
 limma_CT_test_res
 ```
 
@@ -789,11 +817,11 @@ are genes and heatmaps and pathway analysis
 ```{r eval= FALSE}
 sig_LVs <- LV_test_TCGA_BH$limma[LV_test_TCGA_BH$limma$adj.P.Val < 0.05,]
 ```
-```{r}
+```{r eval= FALSE}
 hist(LV_test_TCGA_BH$limma$logFC)
 ```
 Wanting to look at the lvs that are show extreme differences 
-```{r}
+```{r eval=FALSE}
 sd <- sd(LV_test_TCGA_BH$limma$logFC)
 mean(LV_test_TCGA_BH$limma$logFC) - (3*sd)
 mean(LV_test_TCGA_BH$limma$logFC) + (3*sd)
@@ -805,24 +833,24 @@ mean(LV_test_TCGA_BH$limma$logFC) + (3*sd)
 sig_LVs <- LV_test_TCGA_BH$limma[LV_test_TCGA_BH$limma$adj.P.Val < 0.05 & abs(LV_test_TCGA_BH$limma$logFC)> .07 ,]
 ```
 
-```{r}
+```{r eval=FALSE}
 SIG_LVs <- sig_LVs$LV
 ```
 
-```{r}
+```{r eval=FALSE}
 SIG_LVs
 ```
 
 plot latent variable heatmap 
 Latent Variable heatmap 
 
-```{r}
+```{r eval=FALSE}
 colSideColors<- ifelse(all_metadata_v3$status =="Primary Tumor","#440154FF","#228C8DFF" )
 LIHC_GTEX_B_MATRIX_SIG<- LIHC.GTEx.b.matrix [rownames(LIHC.GTEx.b.matrix) %in% SIG_LVs, ]
 heatmap.2(x=LIHC_GTEX_B_MATRIX_SIG, hclustfun=function(d) hclust(d, method="ward.D2"), labCol = FALSE, trace="none",ColSideColors=colSideColors, col=colorRampPalette(colors=c("blue", "black", "yellow")),cexRow= .5, dendrogram="both", cexCol = 0.5,main = "Significant Latent Varibles")
 
 ```
-```{r}
+```{r eval=FALSE}
 column_ha = HeatmapAnnotation(Sample=all_metadata_v3$status, col = list(Sample = c("Primary Tumor" = "#440154FF", "Solid Tissue Normal" = "#228C8DFF")))
 col_fun = colorRamp2(c(-1, 0, 1), c("blue", "black", "yellow"))
 Heatmap(LIHC_GTEX_B_MATRIX_SIG, nam= "LV Score",  col = col_fun, show_column_names = FALSE, clustering_distance_rows= "euclidean",
@@ -833,14 +861,14 @@ Heatmap(LIHC_GTEX_B_MATRIX_SIG, nam= "LV Score",  col = col_fun, show_column_nam
 
 
 
-```{r}
+```{r eval=FALSE}
 sig_Z_mt <- recount3_plier$Z[,LV_test_TCGA_BH$limma$adj.P.Val < 0.05 & abs(LV_test_TCGA_BH$limma$logFC)> .07 ]
 colnames(sig_Z_mt) <- SIG_LVs
 ```
 
 
 top 100 
-```{r}
+```{r eval=FALSE}
 topgene_1 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,1])][1:20]
 topgene_2 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,2])][1:20]
 topgene_3 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,3])][1:20]
@@ -852,64 +880,64 @@ topgene_8 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,8])][1:20]
 topgene_9 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,9])][1:20]
 ```
 
-```{r}
+```{r eval=FALSE}
 topgenes<- unique(c(topgene_1, topgene_2,topgene_3, topgene_4, topgene_5, topgene_6, topgene_7, topgene_8, topgene_9))
 ```
 
 
-```{r}
+```{r eval=FALSE}
 deseq2_lihc_tfl <- deseq2_lihc_normal[deseq2_lihc_normal$Symbol %in% topgenes,]
 ```
 
 
-```{r}
+```{r eval=FALSE}
 downset<- deseq2_lihc_tfl$Symbol[deseq2_lihc_tfl$log2FoldChange < 0]
 upset<- deseq2_lihc_tfl$Symbol[deseq2_lihc_tfl$log2FoldChange > 0]
 ```
 
 convert gene symbols to LINCS genes
-```{r}
+```{r eval=FALSE}
 upset_v2 <- match_to_LINCS_genes(upset)
 downset_v2 <- match_to_LINCS_genes(downset)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 downset_v2<- downset_v2[complete.cases(downset_v2)]
 upset_v2<- upset_v2[complete.cases(upset_v2)]
 ```
 
-```{r}
+```{r eval=FALSE}
 #double check that they didn't overlap 
  intersect(downset_v2, upset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 length(downset_v2)
 length(upset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 names(upset_v2)<- NULL
 names(downset_v2)<- NULL
 ```
 
-```{r}
+```{r eval=FALSE}
 tfl_liver_list<- list(up= upset_v2, down= downset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 saveRDS(tfl_liver_list,"~/output/liver_cancer/TFL_res/SR_gene_list_liver_tfl.rds")
 ```
 
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 qsig_lincs_tfl_liver_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
                    gess_method="LINCS", refdb=db_path)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 library(parallel)
 lincs_tfl_liver <- gess_lincs(qsig_lincs_tfl_liver_res, sortby="NCS", tau=FALSE)
@@ -918,49 +946,49 @@ lincs_tfl_liver <- gess_lincs(qsig_lincs_tfl_liver_res, sortby="NCS", tau=FALSE)
 
 
 
-```{r}
+```{r eval=FALSE}
 lincs_tfl_liver_res <- result(lincs_tfl_liver)
 ```
 
-```{r}
+```{r eval=FALSE}
 write.csv(lincs_tfl_liver_res, file= "~/output/liver_cancer/TFL_res/220808_SR_LINCS_LIVER_TFL_RES.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_tfl_liver_res_HEPG2 <- lincs_tfl_liver_res[lincs_tfl_liver_res$cell == "HEPG2",]
 ```
 tau 
 
 
-```{r}
+```{r eval=FALSE}
 tau_test<- tau_scores(lincs_tfl_liver_res_HEPG2, HEPG2_taudf)
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_tfl_liver_res_HEPG2$jlf_tau<- tau_test
 ```
 
-```{r}
+```{r eval=FALSE}
 write.csv(lincs_tfl_liver_res_HEPG2, file= "~/output/liver_cancer/TFL_res/220808_lincs_tfl_liver_res_HEPG2_tau.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_tfl_liver_res_HEPG2_top <- lincs_tfl_liver_res_HEPG2[lincs_tfl_liver_res_HEPG2$NCS < 0 & lincs_tfl_liver_res_HEPG2$WTCS_FDR < 0.05 & lincs_tfl_liver_res_HEPG2$jlf_tau< -80,]
 ```
 
 clinical trials
 
-```{r}
+```{r eval=FALSE}
 lincs_tfl_liver_res_HEPG2_top$fda_approved<- FDA_APPROVAL_CHECK(lincs_tfl_liver_res_HEPG2_top$pert)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 lincs_tfl_liver_res_HEPG2_top$clinical_trial_LIHC <- clinical_trial_check(lincs_tfl_liver_res_HEPG2_top$pert, clinical_trial_LIHC)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 lincs_tfl_liver_res_HEPG2_top_fda<- lincs_tfl_liver_res_HEPG2_top[lincs_tfl_liver_res_HEPG2_top$fda_approved== TRUE,]
 #lincs_deseq_lihc_res_HEPG2_top_fda$clinical_trial_LIHC<- ifelse(lincs_deseq_lihc_res_HEPG2_top_fda$clinical_trial_LIHC, "star", "")
 
@@ -974,60 +1002,65 @@ ggsave("~/output/liver_cancer/TFL_res/220808_ggplot_tfl_tau_lihc_approved_candid
 ```
 
 ```{r}
+knitr::include_graphics("~/output/liver_cancer/TFL_res/220808_ggplot_tfl_tau_lihc_approved_candidates.png")
+```
+
+```{r eval=FALSE}
 #lincs_deseq_lihc_res_HEPG2_top 
 write.csv(lincs_tfl_liver_res_HEPG2_top , file= "~/output/liver_cancer/TFL_res/220602_SR_LINCS_LIHC_TFL_RES_tau.csv" )
 ```
 
 pathways
 
-```{r}
+```{r eval=FALSE}
 
 hyperG_k_res <- dsea_hyperG(drugs = lincs_tfl_liver_res_HEPG2_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
 hyperG_k_res_v2<- result(hyperG_k_res)
 ```
 
-```{r}
+```{r eval=FALSE}
 #false discovery rate
 hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
 ```
 
-```{r}
+```{r eval=FALSE}
 hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
 ```
 
-```{r}
+```{r eval=FALSE}
 gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
   geom_bar(stat="identity") + scale_fill_viridis()
 gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
 ```
 no kegg pathways are signficant
 
-```{r}
+```{r eval=FALSE}
 write.csv(hyperG_k_res_v2 , file= "~/output/liver_cancer/TFL_res/220808_SR_LINCS_LIHC_TFL_PATHWAY.csv" )
 ```
 
 
-
-
 PRISM
 
-```{r}
+```{r eval=FALSE}
 primary_lihc_res_sub <-primary_lihc_res[ primary_lihc_res$Var2 %in% lincs_tfl_liver_res_HEPG2_top_fda$pert,]
 ```
 
 
-```{r}
+```{r eval=FALSE} 
 write.csv(primary_lihc_res_sub , file= "~/output/liver_cancer/TFL_res/220808_prism_tfl_candidates.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 #primary_lihc_res_sub$Var2 <- factor(primary_lihc_res_sub$Var2, levels=unique(primary_lihc_res_sub$Var2))
 primary_lihc_res_sub$Var2 <- factor(primary_lihc_res_sub$Var2, levels=unique(primary_lihc_res_sub$Var2[order(primary_lihc_res_sub$log_fold_change)]))
 ggplot(primary_lihc_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() +geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
 ggsave("~/output/liver_cancer/TFL_res/220808_ggplot_TFL_candidates_prism_screen1.png")
 ```
-
 ```{r}
+knitr::include_graphics("~/output/liver_cancer/TFL_res/220808_ggplot_TFL_candidates_prism_screen1.png")
+```
+
+```{r eval=FALSE}
 drug_list <- as.vector(unique(primary_lihc_res_sub$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -1045,10 +1078,15 @@ drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_a
 ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity", color ="black") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
 ggsave("~/output/liver_cancer/TFL_res/220808_ggplot_TFL_candidates_prism_screen1_sensitive_cell_lines.png")
 ```
+
+```{r}
+knitr::include_graphics("~/output/liver_cancer/TFL_res/220808_ggplot_TFL_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+
 LINCS pathway & Drug targets
 
 
-```{r}
+```{r eval=FALSE}
 for (i in 1:nrow(lincs_tfl_liver_res_HEPG2_top_fda) ){
   targets<- as.vector(unlist(strsplit(lincs_tfl_liver_res_HEPG2_top_fda$t_gn_sym[i], "; ")))
   #print(targets)
@@ -1057,7 +1095,7 @@ for (i in 1:nrow(lincs_tfl_liver_res_HEPG2_top_fda) ){
 ```
 
 
-```{r}
+```{r eval=FALSE}
 drug_list <- as.vector(unique(primary_lihc_res$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -1073,57 +1111,57 @@ test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
 drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
 ```
 
-```{r}
+```{r eval=FALSE}
 tfl_PRISM_test<- PRISM_testing(101,"HEPG2", lincs_tfl_liver_res_HEPG2_top_fda$pert, drug_senstive_precentage_all_drugs)
 ```
 
-```{r}
+```{r eval=FALSE}
 tfl_PRISM_test
 ```
 
 
-```{r}
+```{r eval=FALSE}
 len<- length(lincs_tfl_liver_res_HEPG2_top_fda$pert)
 num_clin <- nrow(lincs_tfl_liver_res_HEPG2_top_fda[lincs_tfl_liver_res_HEPG2_top_fda$clinical_trial_LIHC == TRUE,])
 fract<- num_clin/len
 tfl_CT_test_res <- clinical_trial_testing(101, "HEPG2", len, fract, clinical_trial_LIHC)
 ```
 
-```{r}
+```{r eval=FALSE}
 tfl_CT_test_res
 ```
 
 
 compare gene list across the different methods
 
-```{r}
+```{r eval=FALSE}
 limma_liver_pathway_res <- method_up_down_gene_set_analysis(limma_liver_list$up, limma_liver_list$down, "~/output/liver_cancer/", "limma", "Liver_cancer_limma_input_genes_SR")
 ```
 
-```{r}
+```{r eval=FALSE}
 deseq2_liver_pathway_res<- method_up_down_gene_set_analysis(deseq2_liver_list$up, deseq2_liver_list$down, "~/output/liver_cancer/", "DESEq2", "Liver_cancer_deseq2_input_genes_SR")
 ```
 
-```{r}
+```{r eval=FALSE}
 tfl_liver_pathway_res<- method_up_down_gene_set_analysis(tfl_liver_list$up, tfl_liver_list$down, "~/output/liver_cancer/", "TFL", "Liver_cancer_tfl_input_genes_SR")
 ```
 
 
-```{r}
+```{r eval=FALSE}
 limma<- limma_liver_pathway_res$term_id[ limma_liver_pathway_res$set == "Up"]
 deseq2<- deseq2_liver_pathway_res$term_id[ deseq2_liver_pathway_res$set == "Up"]
 tfl<-tfl_liver_pathway_res$term_id[ tfl_liver_pathway_res$set == "Up"]
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/liver_cancer/SR_liver_Up_pathway_venn_diagram.png' )
 ```
 
-```{r}
+```{r eval=FALSE}
 limma<- limma_liver_pathway_res$term_id[ limma_liver_pathway_res$set == "Down"]
 deseq2<- deseq2_liver_pathway_res$term_id[ deseq2_liver_pathway_res$set == "Down"]
 tfl<-tfl_liver_pathway_res$term_id[ tfl_liver_pathway_res$set == "Down"]
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/liver_cancer/SR_liver_Down_pathway_venn_diagram.png' )
 ```
 
-```{r}
+```{r eval=FALSE}
 limma<- limma_liver_pathway_res$term_id
 deseq2<- deseq2_liver_pathway_res$term_id
 tfl<-tfl_liver_pathway_res$term_id
@@ -1131,8 +1169,7 @@ venn_dia_methods(limma, deseq2, tfl, file_name='~/output/liver_cancer/SR_liver_a
 ```
 
 
-
-```{r}
+```{r eval=FALSE}
 venn_dia_methods(lincs_limma_liver_res_HEPG2_top_fda$pert, lincs_deseq_lihc_res_HEPG2_top_fda$pert, lincs_tfl_liver_res_HEPG2_top_fda$pert, file_name='~/output/liver_cancer/SR_drug_candidates_venn_diagram.png' )
 ```
 
@@ -1141,10 +1178,13 @@ venn_dia_methods(lincs_limma_liver_res_HEPG2_top_fda$pert, lincs_deseq_lihc_res_
     
 # END
     Location of final scripts:
+    script
     
     Location of data produced:
+    output
     
     Dates when operations were done:
+    220601
     
 ## Versions
 ```{r}

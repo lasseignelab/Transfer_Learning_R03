@@ -15,24 +15,55 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # START 
     Goal/Purpose of operations: 
-    quick summary 
+    Create comparison plots for disease signatures, enriched pathways, and candidates. This was not done in earlier scripts. In addition, the clinical trial summary for each cancer is plotted. Also, the PRISM summary was plot for each cancer. 
     
-    Finished psedocode on: Date
+    Finished psedocode on: 
+    220608
     
-    System which operations were done on: my laptop(on cheaha), lab mac etc... 
+    System which operations were done on: 
+    my laptop(on cheaha)
     
     GitHub Repo:
+    Transfer_Learning_R03
     
-    Directory of operations: /path
+    Docker/Singularity: 
+    rstudio_cancer_dr
     
-    Scripts being edited for operations: filename(s)
+    Directory of operations: 
+    "/home/rstudio"
     
-    Data being used: description and location
+    Scripts being edited for operations:
+    functions were added to the /home/rstudio/script/functions_cancer_signature_reversion_JLF.R
     
-    Papers and tools: deseq with paper 
+    Data being used:
+    results from the singature reversion and PRISM
+    
+    Papers and tools: 
+    NA
 
 # STEPS
 ### Set working directory 
+```{r}
+library(recount3)
+library(SummarizedExperiment)
+source("/home/rstudio/script/functions_cancer_signature_reversion_JLF.R")
+library(signatureSearch)
+library(HDF5Array)
+library(viridis)
+library(tidyr)
+library(gprofiler2)
+library(ggplot2)
+library(ggpubr)
+library(VennDiagram)
+library(ComplexHeatmap)
+library(dplyr)
+library(gplots)
+library(circlize)
+source("~/script/plier_util.R")
+source("~/script/test_LV_differences.R")
+library(dplyr)
+library(readr)
+```
 ### load in data
 
 ```{r}
@@ -54,9 +85,6 @@ venn_dia_methods(limma_gbm_list$down, deseq_gbm_list$down, tfl_gbm_list$down, fi
 ```{r}
 venn_dia_methods(unlist(limma_gbm_list), unlist(deseq_gbm_list), unlist(tfl_gbm_list), file_name='~/output/gbm_plots/SR_all_genes_venn_diagram.png' )
 ```
-
-
-
 
 ```{r}
 limma_gbm_pathway_res <- method_up_down_gene_set_analysis(limma_gbm_list$up, limma_gbm_list$down, "~/output/gbm_plots/", "limma", "GBM_cancer_limma_input_genes_SR")
@@ -93,9 +121,9 @@ venn_dia_methods(limma, deseq2, tfl, file_name='~/output/gbm_plots/SR_gbm_all_pa
 ```
 
 
-```{r eval=FALSE}
+```{r}
 lincs_limma_gbm_res_GI1_fda_approved<- read_csv( "~/output/limma_GBM/220808_SR_LINCS_GBM_top_RES_all.csv")
-lincs_deseq_gbm_res_GI1_fda_approved<- read_csv( "~/output/deseq2_gbm/220427_SR_LINCS_GBM_DESEQ2_RES_all.csv")
+lincs_deseq_gbm_res_GI1_fda_approved<- read_csv( "~/output/deseq2_gbm/220928_SR_LINCS_GBM_DESEQ2_RES_all.csv")
 lincs_tfl_gbm_res_GI1_fda_approved<- read_csv( "~/output/TF_L_GBM/220808_SR_LINCS_GBM_top_RES_all.csv")
 ```
 
@@ -103,6 +131,8 @@ lincs_tfl_gbm_res_GI1_fda_approved<- read_csv( "~/output/TF_L_GBM/220808_SR_LINC
 ```{r}
 venn_dia_methods(lincs_limma_gbm_res_GI1_fda_approved$pert, lincs_deseq_gbm_res_GI1_fda_approved$pert, lincs_tfl_gbm_res_GI1_fda_approved$pert, file_name='~/output/gbm_plots/SR_drug_candidates_venn_diagram.png' )
 ```
+
+Make summary plots of things
 ```{r}
 clinical_trial_cancer_summary <- read_csv("~/output/220608_clinical_trial_cancer_summary.csv")
 ```
@@ -123,334 +153,97 @@ labels_v2 <- ifelse(labels == "TRUE", "*", "")
 clinical_trial_cancer_summary_v2$labels_v2<- labels_v2
 ```
 
-
 ```{r}
-clinical_trial_gbm <- clinical_trial_cancer_summary_v2[clinical_trial_cancer_summary_v2$cancer == "Glioblastoma",]
-t <- ggplot(clinical_trial_gbm ,aes(x=method,y=value,fill=type, label= value))+
-  geom_bar(stat = "identity",color="white")+
-  #facet_wrap(~cancer,ncol=1) +                                                              # Add values on top of bars
-  geom_text(size = 5, position = position_stack(vjust = 0.5)) + scale_fill_manual(values= c("#FDE725FF","#21908CFF")) + ylab("Number of Drug Candidates")
-t + geom_text(aes(label=labels_v2),vjust=- 15,  size= 10)
-
-```
-
-
-
-
-
-
-```{r}
-prism_deseq2_candidates_gbm <- read.csv( "~/output/TF_L_GBM/220808_prism_deseq2_candidates_gbm.csv")
-prism_tfl_candidates_gbm <- read.csv( "~/output/TF_L_GBM/220808_prism_tfl_candidates_gbm.csv")
-prism_limma_candidates_gbm <- read.csv( "~/output/limma_gbm/220808_prism_limma_candidates_gbm.csv")
-```
-```{r}
-#combine and remove duplicates and NAs
-prism_candidates_gbm<- rbind(prism_deseq2_candidates_gbm,prism_tfl_candidates_gbm ,  prism_limma_candidates_gbm)
-prism_candidates_gbm<- prism_candidates_gbm[!duplicated(prism_candidates_gbm),]
-prism_candidates_gbm <- prism_candidates_gbm[!is.na(prism_candidates_gbm$log_fold_change),]
+clinical_trail_summary_bar_plot(clinical_trial_cancer_summary_v2, "Glioblastoma", "~/output/220819_CT_GBM_barplot.png")
 ```
 
 
 ```{r}
-
-drug_list <- c(unique(prism_deseq2_candidates_gbm$Var2), unique(prism_tfl_candidates_gbm$Var2), unique(prism_limma_candidates_gbm$Var2))
-
-drug_median<- c()
-for (i in 1:length(drug_list)){
-  cells <- prism_candidates_gbm$log_fold_change[prism_candidates_gbm$Var2 %in% drug_list[i]]
-  drug_median[i] <- median(cells)
-}
-drug_prism_median_all_drugs <- data.frame( drug_list, drug_median)
-methods<- c(rep("DESeq2", length(unique(prism_deseq2_candidates_gbm$Var2))),  rep("Transfer Learning", length(unique(prism_tfl_candidates_gbm$Var2))),  rep("limma", length(unique(prism_limma_candidates_gbm$Var2))))
-drug_prism_median_all_drugs$methods<- methods
+clinical_trail_summary_bar_plot(clinical_trial_cancer_summary_v2, "Liver hepatocellular carcinoma", "~/output/220819_CT_liver_barplot.png")
 ```
 
 
 ```{r}
-t <- ggplot(drug_prism_median_all_drugs ,aes(x=methods, y=drug_median ,fill=methods))+
-  #geom_point()+
-  geom_violin() +
-  geom_boxplot(width = 0.1, fill = "grey", color = "black") + scale_fill_manual(values= c("#440154FF" ,"#21908CFF" ,"#FDE725FF"))  +
-   ylab("Median log2fold change (PRISM)") + geom_hline(yintercept=0.3, linetype="dashed", color = "red")
-#t + geom_text(aes(label=labels_v2),vjust=- 15,  size= 10) +ylim(0, 90)
-t
-```
-
-
-
-
-#tfl_Prism
-```{r}
-primary_paad_res_sub <-primary_paad_res[ primary_paad_res$Var2 %in% lincs_deseq_gbm_res_GI1C_fda_approved$pert,]
-```
-
-
-```{r eval=FALSE}
-write.csv(primary_paad_res_sub , file= "~/output/TF_L_GBM/220602_prism_tfl_candidates.csv" )
-```
-
-#deseq2_Prism
-
-```{r}
-primary_paad_res_sub <-primary_paad_res[ primary_paad_res$Var2 %in% lincs_deseq_gbm_res_GI1_fda_approved$pert,]
-```
-
-
-```{r eval=FALSE}
-write.csv(primary_paad_res_sub , file= "~/output/deseq2_gbm/220602_prism_deseq2_candidates.csv" )
-```
-
-#limma_Prism
-
-```{r}
-primary_paad_res_sub <-primary_paad_res[ primary_paad_res$Var2 %in% lincs_limma_gbm_res_GI1_fda_approved$pert,]
-```
-
-
-```{r eval=FALSE}
-write.csv(primary_paad_res_sub , file= "~/output/limma_gbm/220602_prism_limma_candidates.csv" )
+clinical_trail_summary_bar_plot(clinical_trial_cancer_summary_v2, "Lung adenocarcinoma", "~/output/220819_CT_lung_barplot.png")
 ```
 
 ```{r}
-dim(drug_senstive_precentage_all_drugs)
+clinical_trail_summary_bar_plot(clinical_trial_cancer_summary_v2, "Pancreatic adenocarcinoma", "~/output/220819_CT_PAAD_barplot.png")
+```
+
+plotting the prism results 
+gbm 
+```{r}
+PRISM_methods_plotting("~/output/TF_L_GBM/220808_prism_deseq2_candidates_gbm.csv", "~/output/TF_L_GBM/220808_prism_tfl_candidates_gbm.csv",  "~/output/limma_gbm/220808_prism_limma_candidates_gbm.csv", "~/output/220822_PRISM_GBM_violin.png")
+```
+
+
+liver 
+```{r}
+PRISM_methods_plotting("~/output/liver_cancer/deseq2_res/220808_prism_deseq2_candidates.csv", "~/output/liver_cancer/TFL_res/220808_prism_tfl_candidates.csv",  "~/output/liver_cancer/limma_res/220808_prism_limma_candidates.csv", "~/output/220822_PRISM_liver_violin.png")
 ```
 
 
 
+pancreas
+deseq2 prism was not saved in script signature reversion scripts
 ```{r}
-fraction_cell_line <- drug_senstive_precentage_all_drugs[1:30,]
+primary_paad_res <-read.csv( "~/output/pancreas_cancer/220808_prism_paad_candidates.csv" )
+
+lincs_deseq_paad_res_YAPC_top <- read.csv("~/output/pancreas_cancer/deseq2_res/220808_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
+```
+
+```{r}
+lincs_deseq_paad_res_YAPC_top_fda<- lincs_deseq_paad_res_YAPC_top[lincs_deseq_paad_res_YAPC_top$fda_approved == TRUE,]
+primary_paad_res_sub <-primary_paad_res[ primary_paad_res$Var2 %in% lincs_deseq_paad_res_YAPC_top_fda$pert,]
+write.csv(primary_paad_res_sub , file= "~/output/pancreas_cancer/deseq2_res/220808_prism_deseq2_candidates.csv" )
 ```
 
 
 ```{r}
-fraction_cell_line
+PRISM_methods_plotting("~/output/pancreas_cancer/deseq2_res/220808_prism_deseq2_candidates.csv", "~/output/pancreas_cancer/TFL_res/220808_prism_tfl_candidates.csv",  "~/output/pancreas_cancer/limma_res/220808_prism_limma_candidates.csv", "~/output/220822_PRISM_PAAD_violin.png")
 ```
 
-# fraction first
 
-data wrangle the cancers
+
+lung 
+deseq2 prism was not saved in script 
 ```{r}
-#Glioblastoma
-##deseq2
-drug_senstive_precentage_gbm_deseq2_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% lincs_deseq_gbm_res_GI1_fda_approved$pert,]
-drug_senstive_precentage_gbm_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_gbm_deseq2_drugs))
-##limma
-drug_senstive_precentage_gbm_limma_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% lincs_limma_gbm_res_GI1_fda_approved$pert,]
-drug_senstive_precentage_gbm_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_gbm_limma_drugs))
-##tfl
-drug_senstive_precentage_gbm_tfl_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% lincs_deseq_gbm_res_GI1C_fda_approved$pert,]
-drug_senstive_precentage_gbm_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_gbm_tfl_drugs))
-
-drug_senstive_precentage_gbm_methods<- rbind(drug_senstive_precentage_gbm_tfl_drugs, drug_senstive_precentage_gbm_limma_drugs, drug_senstive_precentage_gbm_deseq2_drugs)
-drug_senstive_precentage_gbm_methods$cancer <- rep("Glioblastima", nrow(drug_senstive_precentage_gbm_methods))
+lincs_deseq_luad_res_A549_top <- read.csv("~/output/lung_cancer/deseq2_res/220929_SR_LINCS_LUAD_DESEQ2_RES_tau.csv" )
+primary_lung_res <-read.csv( file= "~/output/lung_cancer/220808_lung_prism_candidates.csv" )
+lincs_deseq_luad_res_A549_top_fda<- lincs_deseq_luad_res_A549_top[lincs_deseq_luad_res_A549_top$fda_approved == TRUE,]
 ```
 
 ```{r}
-#Liver hepatocellular carcinoma
-liver_deseq_tau <- read_csv("~/output/liver_cancer/deseq2_res/220602_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
-liver_deseq_tau_fda_approved <- liver_deseq_tau[liver_deseq_tau$fda_approved == TRUE, ]
-
-liver_limma_tau <- read_csv("~/output/liver_cancer/limma_res/220602_SR_LINCS_LIHC_limma_RES_tau.csv")
-liver_limma_tau_fda_approved <- liver_limma_tau[liver_limma_tau$fda_approved == TRUE,]
-
-liver_limma_tau <- read_csv("~/output/liver_cancer/limma_res/220602_SR_LINCS_LIHC_limma_RES_tau.csv")
-liver_limma_tau_fda_approved <- liver_limma_tau[liver_limma_tau$fda_approved == TRUE,]
-
-liver_tfl_tau <- read_csv("~/output/liver_cancer/TFL_res/220602_SR_LINCS_LIHC_TFL_RES_tau.csv")
-liver_tfl_tau_fda_approved <- liver_tfl_tau[liver_tfl_tau$fda_approved == TRUE,]
-
-##deseq2
-drug_senstive_precentage_lihc_deseq2_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% liver_deseq_tau_fda_approved$pert,]
-drug_senstive_precentage_lihc_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_lihc_deseq2_drugs))
-##limma
-drug_senstive_precentage_lihc_limma_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% liver_limma_tau_fda_approved$pert,]
-drug_senstive_precentage_lihc_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_lihc_limma_drugs))
-##tfl
-drug_senstive_precentage_lihc_tfl_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% liver_tfl_tau_fda_approved $pert,]
-drug_senstive_precentage_lihc_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_lihc_tfl_drugs))
-
-drug_senstive_precentage_lihc_methods<- rbind(drug_senstive_precentage_lihc_tfl_drugs, drug_senstive_precentage_lihc_limma_drugs, drug_senstive_precentage_lihc_deseq2_drugs)
-drug_senstive_precentage_lihc_methods$cancer <- rep("Liver hepatocellular carcinoma", nrow(drug_senstive_precentage_lihc_methods))
-```
-
-```{r}
-#lung adenocaracionoma
-lung_deseq_tau <- read_csv("~/output/lung_cancer/deseq2_res/220602_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
-lung_deseq_tau_fda_approved <- lung_deseq_tau[lung_deseq_tau$fda_approved == TRUE, ]
-
-lung_limma_tau <- read_csv("~/output/lung_cancer/limma_res/220602_SR_LINCS_LUAD_limma_RES_tau.csv")
-lung_limma_tau_fda_approved <- lung_limma_tau[lung_limma_tau$fda_approved == TRUE,]
-
-lung_limma_tau <- read_csv("~/output/lung_cancer/limma_res/220602_SR_LINCS_LUAD_limma_RES_tau.csv")
-lung_limma_tau_fda_approved <- lung_limma_tau[lung_limma_tau$fda_approved == TRUE,]
-
-lung_tfl_tau <- read_csv("~/output/lung_cancer/TFL_res/220602_SR_LINCS_LUAD_TFL_RES_tau.csv")
-lung_tfl_tau_fda_approved <- lung_tfl_tau[lung_tfl_tau$fda_approved == TRUE,]
-
-##deseq2
-drug_senstive_precentage_luad_deseq2_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% lung_deseq_tau_fda_approved$pert,]
-drug_senstive_precentage_luad_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_luad_deseq2_drugs))
-##limma
-drug_senstive_precentage_luad_limma_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% lung_limma_tau_fda_approved$pert,]
-drug_senstive_precentage_luad_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_luad_limma_drugs))
-##tfl
-drug_senstive_precentage_luad_tfl_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% lung_tfl_tau_fda_approved $pert,]
-drug_senstive_precentage_luad_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_luad_tfl_drugs))
-
-drug_senstive_precentage_luad_methods<- rbind(drug_senstive_precentage_luad_tfl_drugs, drug_senstive_precentage_luad_limma_drugs, drug_senstive_precentage_luad_deseq2_drugs)
-drug_senstive_precentage_luad_methods$cancer <- rep("Lung adenocaracionoma", nrow(drug_senstive_precentage_luad_methods))
-
-
-
+primary_lung_res_sub <-primary_lung_res[ primary_lung_res$Var2 %in% lincs_deseq_luad_res_A549_top_fda$pert,]
+write.csv(primary_lung_res_sub  , file= "~/output/lung_cancer/deseq2_res/220929_prism_deseq2_candidates.csv" )
 ```
 
 
 ```{r}
-#pancreatic adenicarcinoma
-pancreas_deseq_tau <- read_csv("~/output/pancreas_cancer/deseq2_res/220602_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
-pancreas_deseq_tau_fda_approved <- pancreas_deseq_tau[pancreas_deseq_tau$fda_approved == TRUE, ]
-
-pancreas_limma_tau <- read_csv("~/output/pancreas_cancer/limma_res/220602_SR_LINCS_PAAD_limma_RES_tau.csv")
-pancreas_limma_tau_fda_approved <- pancreas_limma_tau[pancreas_limma_tau$fda_approved == TRUE,]
-
-pancreas_limma_tau <- read_csv("~/output/pancreas_cancer/limma_res/220602_SR_LINCS_PAAD_limma_RES_tau.csv")
-pancreas_limma_tau_fda_approved <- pancreas_limma_tau[pancreas_limma_tau$fda_approved == TRUE,]
-
-pancreas_tfl_tau <- read_csv("~/output/pancreas_cancer/TFL_res/220602_SR_LINCS_PAAD_TFL_RES_tau.csv")
-pancreas_tfl_tau_fda_approved <- pancreas_tfl_tau[pancreas_tfl_tau$fda_approved == TRUE,]
-
-##deseq2
-drug_senstive_precentage_paad_deseq2_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% pancreas_deseq_tau_fda_approved$pert,]
-drug_senstive_precentage_paad_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_paad_deseq2_drugs))
-##limma
-drug_senstive_precentage_paad_limma_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% pancreas_limma_tau_fda_approved$pert,]
-drug_senstive_precentage_paad_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_paad_limma_drugs))
-##tfl
-drug_senstive_precentage_paad_tfl_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% pancreas_tfl_tau_fda_approved $pert,]
-drug_senstive_precentage_paad_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_paad_tfl_drugs))
-
-drug_senstive_precentage_paad_methods<- rbind(drug_senstive_precentage_paad_tfl_drugs, drug_senstive_precentage_paad_limma_drugs, drug_senstive_precentage_paad_deseq2_drugs)
-drug_senstive_precentage_paad_methods$cancer <- rep("Pancreatic adenicarcinoma", nrow(drug_senstive_precentage_paad_methods))
-
+PRISM_methods_plotting("~/output/lung_cancer/deseq2_res/220929_prism_deseq2_candidates.csv", "~/output/lung_cancer/TFL_res/220808_prism_tfl_candidates.csv" ,  "~/output/lung_cancer/limma_res/220808_prism_limma_candidates.csv" , "~/output/220822_PRISM_lung_violin.png")
 ```
 
+### Save Data
+done within the script 
+
+### Save Figures
+done within the script 
+    
+# END
+    Location of final scripts:
+    script 
+    
+    Location of data produced:
+    ~/output/
+    
+    Dates when operations were done:
+    220822
+    
+## Versions
 ```{r}
-drug_senstive_precentage_all_methods_cancers <- rbind(drug_senstive_precentage_paad_methods, drug_senstive_precentage_gbm_methods, drug_senstive_precentage_lihc_methods, drug_senstive_precentage_luad_methods)
+sessionInfo()
 ```
-
-```{r}
-t <- ggplot(drug_senstive_precentage_all_methods_cancers,aes(x=method, y=drug_fraction ,fill=method))+
-  #geom_point()+
-  geom_violin() +
-  geom_boxplot(width = 0.1, fill = "grey", color = "black") +
-  facet_wrap(~cancer,nrow=1) + scale_fill_manual(values= c("#440154FF" ,"#21908CFF" ,"#FDE725FF")) + ylab("Fraction of Sensitive Cell Lines")
-#t + geom_text(aes(label=labels_v2),vjust=- 15,  size= 10) +ylim(0, 90)
-t
-```
-
-```{r}
-primary_paad_res_v2 <- primary_paad_res[!is.na(primary_paad_res$log_fold_change),]
-
-
-drug_list <- as.vector(unique(primary_paad_res_v2$Var2))
-drug_median<- c()
-for (i in 1:length(drug_list)){
-  cells <-primary_paad_res_v2$log_fold_change[primary_paad_res_v2$Var2 %in% drug_list[i]]
-  drug_median[i] <- median(cells)
-}
-drug_prism_median_all_drugs <- data.frame( drug_list, drug_median)
-```
-
-
-```{r}
-#Glioblastoma
-##deseq2
-drug_senstive_precentage_gbm_deseq2_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% lincs_deseq_gbm_res_GI1_fda_approved$pert,]
-drug_senstive_precentage_gbm_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_gbm_deseq2_drugs))
-##limma
-drug_senstive_precentage_gbm_limma_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% lincs_limma_gbm_res_GI1_fda_approved$pert,]
-drug_senstive_precentage_gbm_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_gbm_limma_drugs))
-##tfl
-drug_senstive_precentage_gbm_tfl_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% lincs_deseq_gbm_res_GI1C_fda_approved$pert,]
-drug_senstive_precentage_gbm_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_gbm_tfl_drugs))
-
-drug_senstive_precentage_gbm_methods<- rbind(drug_senstive_precentage_gbm_tfl_drugs, drug_senstive_precentage_gbm_limma_drugs, drug_senstive_precentage_gbm_deseq2_drugs)
-drug_senstive_precentage_gbm_methods$cancer <- rep("Glioblastima", nrow(drug_senstive_precentage_gbm_methods))
-```
-
-```{r}
-#Liver hepatocellular carcinoma
-
-##deseq2
-drug_senstive_precentage_lihc_deseq2_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% liver_deseq_tau_fda_approved$pert,]
-drug_senstive_precentage_lihc_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_lihc_deseq2_drugs))
-##limma
-drug_senstive_precentage_lihc_limma_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% liver_limma_tau_fda_approved$pert,]
-drug_senstive_precentage_lihc_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_lihc_limma_drugs))
-##tfl
-drug_senstive_precentage_lihc_tfl_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% liver_tfl_tau_fda_approved $pert,]
-drug_senstive_precentage_lihc_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_lihc_tfl_drugs))
-
-drug_senstive_precentage_lihc_methods<- rbind(drug_senstive_precentage_lihc_tfl_drugs, drug_senstive_precentage_lihc_limma_drugs, drug_senstive_precentage_lihc_deseq2_drugs)
-drug_senstive_precentage_lihc_methods$cancer <- rep("Liver hepatocellular carcinoma", nrow(drug_senstive_precentage_lihc_methods))
-```
-
-```{r}
-#lung adenocaracionoma
-
-##deseq2
-drug_senstive_precentage_luad_deseq2_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% lung_deseq_tau_fda_approved$pert,]
-drug_senstive_precentage_luad_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_luad_deseq2_drugs))
-##limma
-drug_senstive_precentage_luad_limma_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% lung_limma_tau_fda_approved$pert,]
-drug_senstive_precentage_luad_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_luad_limma_drugs))
-##tfl
-drug_senstive_precentage_luad_tfl_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% lung_tfl_tau_fda_approved $pert,]
-drug_senstive_precentage_luad_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_luad_tfl_drugs))
-
-drug_senstive_precentage_luad_methods<- rbind(drug_senstive_precentage_luad_tfl_drugs, drug_senstive_precentage_luad_limma_drugs, drug_senstive_precentage_luad_deseq2_drugs)
-drug_senstive_precentage_luad_methods$cancer <- rep("Lung adenocaracionoma", nrow(drug_senstive_precentage_luad_methods))
-
-
-
-```
-
-
-```{r}
-#pancreatic adenicarcinoma
-
-##deseq2
-drug_senstive_precentage_paad_deseq2_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% pancreas_deseq_tau_fda_approved$pert,]
-drug_senstive_precentage_paad_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_paad_deseq2_drugs))
-##limma
-drug_senstive_precentage_paad_limma_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% pancreas_limma_tau_fda_approved$pert,]
-drug_senstive_precentage_paad_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_paad_limma_drugs))
-##tfl
-drug_senstive_precentage_paad_tfl_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% pancreas_tfl_tau_fda_approved $pert,]
-drug_senstive_precentage_paad_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_paad_tfl_drugs))
-
-drug_senstive_precentage_paad_methods<- rbind(drug_senstive_precentage_paad_tfl_drugs, drug_senstive_precentage_paad_limma_drugs, drug_senstive_precentage_paad_deseq2_drugs)
-drug_senstive_precentage_paad_methods$cancer <- rep("Pancreatic adenicarcinoma", nrow(drug_senstive_precentage_paad_methods))
-
-```
-
-```{r}
-drug_senstive_precentage_all_methods_cancers <- rbind(drug_senstive_precentage_paad_methods, drug_senstive_precentage_gbm_methods, drug_senstive_precentage_lihc_methods, drug_senstive_precentage_luad_methods)
-```
-
-
-
-```{r}
-t <- ggplot(drug_senstive_precentage_all_methods_cancers,aes(x=method, y=drug_median ,fill=method))+
-  #geom_point()+
-  geom_violin() + geom_hline(yintercept=0.3, linetype="dashed", color = "red") +
-  geom_boxplot(width = 0.1, fill = "grey", color = "black") +
-  facet_wrap(~cancer,nrow=1) + scale_fill_manual(values= c("#440154FF" ,"#21908CFF" ,"#FDE725FF")) + ylab("Median log2fold change (PRISM)")
-#t + geom_text(aes(label=labels_v2),vjust=- 15,  size= 10) +ylim(0, 90)
-t
-```
-
 
 
 

@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE)
     Transfer_Learning_R03
     
     Docker/Singularity: 
-    rstudio_tf_dr_v3
+    rstudio_cancer_dr
     
     Directory of operations: 
     "/home/rstudio"
@@ -47,15 +47,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 GBM_GTEX_limma_res <- readRDS("~/output/TF_L_GBM/220804_GBM_GTEX_limma_res.rds")
 recount3_plier <- readRDS("~/data/recount3/recount3_plier_wo.rds")
-deseq_results <- read.csv("~/output/deseq2_gbm/Deseq2_gbm_normal_gtx_res.csv", sep=",")
+deseq_results <- read.csv("~/output/deseq2_gbm/220927_deseq2_gbm_normal_gtx_res.csv", sep=",")
 ```
 
 ```{r}
 tpm_df <- readRDS("~/output/recount3_gbm_gtex_tpm_df.rds")
 metadata <- readRDS("~/output/recount3_gbm_gtex_metadata.rds")
 ```
-
-
 
 ### Analysis
 ```{r}
@@ -70,20 +68,24 @@ library(ggplot2)
 library(tidyr)
 library(ggpubr)
 library(gprofiler2)
+library(gplots)
+library(ComplexHeatmap)
+library(RColorBrewer)
+library(circlize)
 source("/home/rstudio/script/functions_cancer_signature_reversion_JLF.R")
 source("/home/rstudio/script/plier_util.R")
 source("/home/rstudio/script/test_LV_differences.R")
 ```
 
 organize the LINCS data
-```{r}
+```{r eval=FALSE}
 meta42 <- readr::read_tsv("~/data/LINCS_210914_LEVEL3/siginfo_beta.txt")
 dose <- "10 uM"
 ## filter rows by 'pert_type' as compound, 10uM concentration, and 24h treatment time
 #meta42_filter <- sig_filter(meta42, pert_type="trt_cp", dose=dose, time="24 h") 
 ```
 filter the LINCS data to 10uM and 24 hour treatment and save it 
-```{r}
+```{r eval=FALSE}
 meta42_filter <- sig_filter_JLF(meta42, pert_type="trt_cp", dose=dose, time="24 h") 
 ```
 
@@ -93,19 +95,18 @@ gctx2h5(gctx, cid=meta42_filter$sig_id, new_cid=meta42_filter$pert_cell_factor,
         h5file="~/data/lincs_2020.h5", by_ncol=5000, overwrite=TRUE)
 ```
 
-```{r}
+```{r eval=FALSE}
 se <- SummarizedExperiment(HDF5Array("~/data/lincs_2020.h5", name="assay"))
 rownames(se) <- HDF5Array("~/data/lincs_2020.h5", name="rownames")
 colnames(se) <- HDF5Array("~/data/lincs_2020.h5", name="colnames")
 ```
 
-```{r}
+```{r eval=FALSE}
 se_asssay<- assay(se)
 ```
 
-
 set this path for downstream analysis
-```{r}
+```{r eval=FALSE}
 db_path <- "~/data/lincs_2020.h5"
 ```
 
@@ -135,10 +136,10 @@ identify the top genes
 deseq_results<- deseq_results[complete.cases(deseq_results),]
 deseq_results_sig <- deseq_results[deseq_results$padj < 0.05 & abs(deseq_results$log2FoldChange) > 2,]
 ```
-
+target is around 90-120 genes for a signature.
 ```{r}
-downset<- deseq_results_sig$Symbol[order(deseq_results_sig$log2FoldChange)] [1:700]
-upset<- deseq_results_sig$Symbol[order(-deseq_results_sig$log2FoldChange)] [1:700]
+downset<- deseq_results_sig$Symbol[deseq_results_sig$log2FoldChange < -4.2]
+upset<- deseq_results_sig$Symbol[deseq_results_sig$log2FoldChange > 4.2 ] 
 ```
 
 convert gene symbols to LINCS genes
@@ -162,37 +163,33 @@ names(upset_v2)<- NULL
 names(downset_v2)<- NULL
 ```
 
-```{r}
+```{r eval=FALSE}
 deseq_gbm_list<- list(up= upset_v2, down= downset_v2)
 ```
 save gene signature
-```{r}
+```{r eval=FALSE}
 saveRDS(deseq_gbm_list,"~/output/deseq2_gbm/SR_gene_list_gbm_deseq2.rds")
 ```
 
 signature reversion
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 qsig_lincs_deseq2_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
                    gess_method="LINCS", refdb=db_path)
 ```
-target is around 90-120 genes for a signature. 
+37 / 37 genes in up set share identifiers with reference database
+68 / 68 genes in down set share identifiers with reference database
 
-```{r}
-rm(se, recount3_plier_gbm)
-gc()
-```
-
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 lincs_deseq_gbm <- gess_lincs(qsig_lincs_deseq2_res, sortby="NCS", workers=2)
 #result(lincs)
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_gbm_res <- result(lincs_deseq_gbm)
 ```
-brain tumor cell lines 
+other brain tumor cell lines 
 SHSY5Y- neuroblastoma
 LN229- astrocytoma
 SKNSH- neuroblastoma
@@ -200,156 +197,163 @@ U251MG- astrocytoma
 YH13- astrocytoma
 GI1- glioblastoma
 
-```{r}
-write.csv(lincs_deseq_gbm_res, file= "~/output/deseq2_gbm/220427_SR_LINCS_GBM_DESEQ2_RES.csv" )
+```{r eval=FALSE}
+write.csv(lincs_deseq_gbm_res, file= "~/output/deseq2_gbm/220928_SR_LINCS_GBM_DESEQ2_RES.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_gbm_res_GI1 <- lincs_deseq_gbm_res[lincs_deseq_gbm_res$cell == "GI1",]
 ```
 
-```{r}
+```{r eval=FALSE}
 GI1_taudf <- readRDS("~/data/GI1_taudf.rds")
 ```
 
-```{r}
+```{r eval=FALSE}
 tau_test<- tau_scores(lincs_deseq_gbm_res_GI1, GI1_taudf)
 ```
 Tau (τ) that ranges from -100 to +100 
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_gbm_res_GI1$jlf_tau<- tau_test
 ```
-```{r}
-write.csv(lincs_deseq_gbm_res_GI1, file= "~/output/deseq2_gbm/220427_lincs_deseq_gbm_res_GI1_tau.csv" )
+```{r eval=FALSE}
+write.csv(lincs_deseq_gbm_res_GI1, file= "~/output/deseq2_gbm/220928_lincs_deseq_gbm_res_GI1_tau.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_gbm_res_GI1_top <- lincs_deseq_gbm_res_GI1[lincs_deseq_gbm_res_GI1$WTCS_FDR <0.05 & lincs_deseq_gbm_res_GI1$NCS <0,]
 ```
 
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_gbm_res_GI1_top_order <- lincs_deseq_gbm_res_GI1_top[order(-lincs_deseq_gbm_res_GI1_top$NCS),]
 lincs_deseq_gbm_res_GI1_top$pert <- factor(lincs_deseq_gbm_res_GI1_top$pert, levels = lincs_deseq_gbm_res_GI1_top_order$pert)
 ```
 
 
-```{r}
-p<-ggplot(data=lincs_deseq_gbm_res_GI1_top , aes(x=pert, y=NCS, fill=jlf_tau)) +
-  geom_bar(stat="identity")+ scale_fill_viridis(direction=-1)
-p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]")
-```
-
 filter by tau and fda approved
-
-```{r}
+```{r eval=FALSE}
 lincs_deseq_gbm_res_GI1_top_tau<- lincs_deseq_gbm_res_GI1_top[lincs_deseq_gbm_res_GI1_top$jlf_tau < -80, ]
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_gbm_res_GI1_top_tau$FDA <-FDA_APPROVAL_CHECK(as.character(lincs_deseq_gbm_res_GI1_top_tau$pert))
 ```
 
-```{r}
+```{r eval=FALSE}
 FDA_CT_table<- read.csv("~/data/SearchResults.csv")
 lincs_deseq_gbm_res_GI1_top_tau$GBM_CT<- clinical_trial_check(as.character(lincs_deseq_gbm_res_GI1_top_tau$pert), FDA_CT_table)
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_gbm_res_GI1_top_candidates<- lincs_deseq_gbm_res_GI1_top_tau[lincs_deseq_gbm_res_GI1_top_tau$FDA == TRUE,]
 ```
 
 
-```{r}
+```{r eval=FALSE}
 p<-ggplot(data=lincs_deseq_gbm_res_GI1_top_candidates , aes(x=pert, y=NCS, fill=jlf_tau, shape= GBM_CT)) +
   geom_bar(stat="identity", color= "black")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
 p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]", shape= "Clinical Trials")
 
-ggsave("~/output/deseq2_gbm/220808_ggplot_deseq2_tau_gbm_candidates.pdf")
-```
-```{r}
-write.csv(lincs_deseq_gbm_res_GI1_top_candidates, file = "~/output/deseq2_gbm/220427_SR_LINCS_GBM_DESEQ2_RES_all.csv")
+ggsave("~/output/deseq2_gbm/220928_ggplot_deseq2_tau_gbm_candidates.pdf")
 ```
 
-
 ```{r}
+knitr::include_graphics("~/output/deseq2_gbm/220928_ggplot_deseq2_tau_gbm_candidates.pdf")
+```
+
+```{r eval=FALSE}
+write.csv(lincs_deseq_gbm_res_GI1_top_candidates, file = "~/output/deseq2_gbm/220928_SR_LINCS_GBM_DESEQ2_RES_all.csv")
+```
+
+look brain tumor data
+```{r eval=FALSE}
 lincs_deseq_gbm_res_brain_tumor <- lincs_deseq_gbm_res[lincs_deseq_gbm_res$cell %in% c("GI1","SHSY5Y", "LN229","SKNSH", "U251MG","YH13")   ,]
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_gbm_res_brain_tumor_top <- lincs_deseq_gbm_res_brain_tumor[lincs_deseq_gbm_res_brain_tumor$WTCS_FDR <0.05 & lincs_deseq_gbm_res_brain_tumor$NCS <0,]
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_deseq_gbm_res_brain_tumor_top_order <- lincs_deseq_gbm_res_brain_tumor_top[order(-lincs_deseq_gbm_res_brain_tumor_top$NCS),]
 lincs_deseq_gbm_res_brain_tumor_top$pert <- factor(lincs_deseq_gbm_res_brain_tumor_top$pert, levels = unique(lincs_deseq_gbm_res_brain_tumor_top_order$pert))
 ```
 
 
-```{r}
+```{r eval=FALSE}
 g<-ggplot(data=lincs_deseq_gbm_res_brain_tumor_top , aes(x=pert, y=NCS, color=cell)) +
   geom_point(stat="identity", size = 3)
 g + coord_flip() + scale_color_viridis_d()
 ```
-
 GBM cell line drug target enrichment
-```{r}
+```{r eval=FALSE}
 hyperG_k_res <- dsea_hyperG(drugs = lincs_deseq_gbm_res_GI1_top_candidates$pert, type = "KEGG", 
                             pvalueCutoff = 1, qvalueCutoff = 1, 
                             minGSSize = 10, maxGSSize = 2000)
 hyperG_k_res_v2<- result(hyperG_k_res)
 ```
 
-```{r}
-write.csv(hyperG_k_res_v2, file= "~/output/deseq2_gbm/220808_SR_LINCS_GBM_gbm_cell_drug_pathway_RES.csv" )
+```{r eval=FALSE}
+write.csv(hyperG_k_res_v2, file= "~/output/deseq2_gbm/220928_SR_LINCS_GBM_gbm_cell_drug_pathway_RES.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 #false discovery rate
 hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
 ```
 
-```{r}
+```{r eval=FALSE}
 hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
 ```
 
-```{r}
+```{r eval=FALSE}
 gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
   geom_bar(stat="identity", color= "black") +ylim(0, 8)
 gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
-ggsave("~/output/deseq2_gbm/220808_ggplot_deseq2_tau_gbm_candidates_kegg_pathways.pdf")
+ggsave("~/output/deseq2_gbm/220928_ggplot_deseq2_tau_gbm_candidates_kegg_pathways.pdf")
 ```
-drug target enrichment with Go terms
+
 ```{r}
+knitr::include_graphics("~/output/deseq2_gbm/220928_ggplot_deseq2_tau_gbm_candidates_kegg_pathways.pdf")
+```
+
+drug target enrichment with Go terms
+```{r eval=FALSE}
 hyperG_res_go <- dsea_hyperG(drugs=lincs_deseq_gbm_res_GI1_top$pert, type="GO", ont="ALL")
 hyperG_res_go<- result(hyperG_res_go )
 ```
 
-```{r}
-write.csv(hyperG_res_go, file= "~/output/deseq2_gbm/220808_SR_LINCS_GBM_gbm_cell_drug_Go_terms_RES.csv" )
+```{r eval=FALSE}
+write.csv(hyperG_res_go, file= "~/output/deseq2_gbm/220928_SR_LINCS_GBM_gbm_cell_drug_Go_terms_RES.csv" )
 ```
 
 PRISM plotting
 
-```{r}
+```{r eval=FALSE}
 prism_gbm_cell_lines <- read.csv("~/output/220808_prism_gbm_candidates.csv")
 ```
 
-```{r}
+```{r eval=FALSE}
 primary_gbm_res_sub <-prism_gbm_cell_lines[ prism_gbm_cell_lines$Var2 %in%  lincs_deseq_gbm_res_GI1_top_candidates$pert,]
-write.csv(primary_gbm_res_sub , file= "~/output/TF_L_GBM/220808_prism_deseq2_candidates_gbm.csv" )
+write.csv(primary_gbm_res_sub , file= "~/output/TF_L_GBM/220928_prism_deseq2_candidates_gbm.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 #primary_paad_res_sub$Var2 <- factor(primary_paad_res_sub$Var2, levels=unique(primary_paad_res_sub$Var2))
 primary_gbm_res_sub$Var2 <- factor(primary_gbm_res_sub$Var2, levels=unique(primary_gbm_res_sub$Var2[order(primary_gbm_res_sub$log_fold_change)]))
 ggplot(primary_gbm_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() + geom_point()+ geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
-ggsave("~/output/TF_L_GBM/220808_ggplot_deseq2_candidates_prism_screen1.png")
+ggsave("~/output/TF_L_GBM/220928_ggplot_deseq2_candidates_prism_screen1.png")
 ```
 
-look at the number of sensitive cell lines
 ```{r}
+knitr::include_graphics("~/output/TF_L_GBM/220928_ggplot_deseq2_candidates_prism_screen1.png")
+```
+
+
+look at the number of sensitive cell lines
+```{r eval=FALSE}
 drug_list <- as.vector(unique(primary_gbm_res_sub$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -365,41 +369,59 @@ test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
 drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
 drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_all_drugs$drug_list, levels= unique(drug_senstive_precentage_all_drugs$drug_list[order(drug_senstive_precentage_all_drugs$drug_fraction)]))
 ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity",  color= "black") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
-ggsave("~/output/TF_L_GBM/220808_ggplot_deseq2_candidates_prism_screen1_sensitive_cell_lines.png")
+ggsave("~/output/TF_L_GBM/220928_ggplot_deseq2_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+
+```{r}
+knitr::include_graphics("~/output/TF_L_GBM/220928_ggplot_deseq2_candidates_prism_screen1_sensitive_cell_lines.png")
 ```
 
 Determine if the median log fold change is lower than random drug selection. 
-```{r}
+```{r eval=FALSE}
 deseq2_PRISM_test<- PRISM_testing(101,"GI1",  lincs_deseq_gbm_res_GI1_top_candidates$pert, drug_senstive_precentage_all_drugs)
 ```
-```{r}
+```{r eval=FALSE}
 deseq2_PRISM_test
 ```
 
+	Wilcoxon signed rank test with continuity correction
+
+data:  fraction
+
+V = 5275294, p-value < 2.2e-16
+
+alternative hypothesis: true location is less than 0.9166667
+
+
 determine if there are more drug from clinical trials than compared to random 
-```{r}
+```{r eval=FALSE}
 len<- length( lincs_deseq_gbm_res_GI1_top_candidates$pert)
 num_clin <- nrow( lincs_deseq_gbm_res_GI1_top_candidates[ lincs_deseq_gbm_res_GI1_top_candidates$GBM_CT == TRUE,])
 fract<- num_clin/len
 deseq2_CT_test_res <- clinical_trial_testing(101, "GI1", len, fract, FDA_CT_table)
 ```
 
-```{r}
+```{r eval=FALSE}
 deseq2_CT_test_res 
 ```
 
+	Wilcoxon signed rank test with continuity correction
 
+data:  fraction_adj
+
+V = 81737, p-value < 2.2e-16
+
+alternative hypothesis: true location is less than 0.3076923
 
 LINCS pathways & Drug targets for all the candidates
-```{r}
+```{r eval=FALSE}
+deseq_results<- cbind(rownames(deseq_results), deseq_results)
 for (i in 1:nrow( lincs_deseq_gbm_res_GI1_top_candidates) ){
   targets<- as.vector(unlist( strsplit(lincs_deseq_gbm_res_GI1_top_candidates$t_gn_sym[i], "; ")))
   #print(targets)
-  drug_analysis(  lincs_deseq_gbm_res_GI1_top_candidates$pert[i], targets, as.data.frame(tpm_df) , metadata$status, deseq_results, se= se_asssay, cell_lincs= "__GI1__trt_cp", "~/output/deseq2_gbm/220808_candidate_plots/")
+  try(drug_analysis(  lincs_deseq_gbm_res_GI1_top_candidates$pert[i], targets, as.data.frame(tpm_df) , metadata$status, deseq_results, se= se_asssay, cell_lincs= "__GI1__trt_cp", "~/output/deseq2_gbm/220928_candidate_plots/"))
 }
 ```
-
-
 
 
 ## signature reversion for Transfer Learning GBM vs control 
@@ -429,13 +451,13 @@ SIG_LVs
 5,11,17,42,43,147,187, 223, 382 are the significant latent variables. n= 9
 
 how many genes to use the disease signatures?
-```{r}
+```{r eval=FALSE}
 sig_Z_mt <- recount3_plier$Z[,c(5,11,17,42,43,147,187, 223, 382)]
 colnames(sig_Z_mt) <- SIG_LVs
 ```
 
 see if there is a cut off
-```{r}
+```{r eval=FALSE}
 p <- c(70,80,90,95,98,100)/100
 hist(sig_Z_mt[,1])
 quantile(sig_Z_mt[,1], p)
@@ -459,7 +481,7 @@ quantile(sig_Z_mt[,9],p)
 no cut off 
 
 look at the top genes. Note that some unique features of this dimension reduction approach are its penalties for 1)  latent variables to reflect annotated pathways such as KEGG and 2) most genes have a zero weight meaning that only a fraction of genes has a high and significant gene weight via the L1 and L2 penalties in the loss function of this algorithm. Also the top genes for the latent variables are unique. 
-```{r}
+```{r eval=FALSE}
 topgene_1 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,1])][1:25]
 topgene_2 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,2])][1:25]
 topgene_3 <- rownames(sig_Z_mt)[order(-sig_Z_mt[,3])][1:25]
@@ -509,57 +531,59 @@ Heatmap(as.matrix(GBM_GTEX_B_MATRIX_sig), nam= "LV Score",  col = col_fun, show_
 
 
 use the shrinkage log fold change from DESeq2 to determine if genes are up or down regulated in disease
-```{r}
+```{r eval=FALSE}
 lv_genes_deseq_filtered <- deseq_results[deseq_results$Symbol %in% topgenes,]
 ```
 
-```{r}
+```{r eval=FALSE}
 write.csv(lv_genes_deseq_filtered , file= "~/output/TF_L_GBM/220804_lv_genes_deseq_filtered.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 upset<- lv_genes_deseq_filtered$Symbol[lv_genes_deseq_filtered$log2FoldChange > 0]
 downset<- lv_genes_deseq_filtered$Symbol[lv_genes_deseq_filtered$log2FoldChange < 0 ]
 ```
 
-```{r}
+```{r eval=FALSE}
 upset_v2 <- match_to_LINCS_genes(upset)
 downset_v2 <- match_to_LINCS_genes(downset)
 ```
 
-```{r}
+```{r eval=FALSE}
 downset_v2<- downset_v2[complete.cases(downset_v2)]
 upset_v2<- upset_v2[complete.cases(upset_v2)]
 ```
 
-```{r}
+```{r eval=FALSE}
 names(upset_v2)<- NULL
 names(downset_v2)<- NULL
 ```
 
-```{r}
+```{r eval=FALSE}
 tfl_gbm_list<- list(up= upset_v2, down= downset_v2)
 ```
 
-```{r}
+```{r eval=FALSE}
 saveRDS(tfl_gbm_list,"~/output/TF_L_GBM/22004_SR_gene_list_gbm_tfl.rds")
 ```
 
 signature reversion for GBM transfer learning 
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 qsig_lincs_transfer_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
                    gess_method="LINCS", refdb=db_path)
 ```
+52/ 52 genes in up set share identifiers with reference database
+55 / 55 genes in down set share identifiers with reference database
 
-```{r}
+```{r eval=FALSE}
 set.seed(101)
 lincs_transfer_gbm <- gess_lincs(qsig_lincs_transfer_res, sortby="NCS", tau=FALSE, workers=1)
 #result(lincs)
 ```
 
 
-```{r}
+```{r eval=FALSE}
 lincs_transfer_gbm_res <- result(lincs_transfer_gbm)
 ```
 brain tumor cell lines 
@@ -570,67 +594,64 @@ U251MG- astrocytoma
 YH13- astrocytoma
 GI1- glioblastoma
 
-```{r}
+```{r eval=FALSE}
 lincs_transfer_gbm_res_GI1 <- lincs_transfer_gbm_res[lincs_transfer_gbm_res$cell == "GI1",]
 ```
 
-
-```{r}
+```{r eval=FALSE}
 tau_test<- tau_scores(lincs_transfer_gbm_res_GI1, GI1_taudf)
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_transfer_gbm_res_GI1$jlf_tau<-tau_test
 ```
 
 filter the results
-```{r}
+```{r eval=FALSE}
 lincs_transfer_gbm_res_GI1_top <- lincs_transfer_gbm_res_GI1[lincs_transfer_gbm_res_GI1$WTCS_FDR <0.05 & lincs_transfer_gbm_res_GI1$NCS <0,]
 ```
-```{r}
+
+```{r eval=FALSE}
 lincs_transfer_gbm_res_GI1_top_order <- lincs_transfer_gbm_res_GI1_top[order(-lincs_transfer_gbm_res_GI1_top$NCS),]
 lincs_transfer_gbm_res_GI1_top$pert <- factor(lincs_transfer_gbm_res_GI1_top$pert, levels = lincs_transfer_gbm_res_GI1_top_order$pert)
 ```
 
 plotting the results
-```{r}
+```{r eval=FALSE}
 p<-ggplot(data=lincs_transfer_gbm_res_GI1_top[1:30,] , aes(x=pert, y=NCS, fill=jlf_tau)) +
   geom_bar(stat="identity")+ scale_fill_viridis(direction=-1)
 p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]")
 ```
 
 
-```{r}
+```{r eval=FALSE}
 write.csv(lincs_transfer_gbm_res , file= "~/output/TF_L_GBM/220808_SR_LINCS_GBM_TRL_RES.csv" )
 ```
 
 -80 is the cut off
-```{r}
+```{r eval=FALSE}
 lincs_transfer_gbm_res_GI1_top_v2 <- lincs_transfer_gbm_res_GI1_top[ abs(lincs_transfer_gbm_res_GI1_top$jlf_tau) > 80,]
 ```
 
-
-
-
 FDA_APPROVAL_CHECK
-```{r}
+```{r eval=FALSE}
 lincs_transfer_gbm_res_GI1_top$fda_approval <- FDA_APPROVAL_CHECK( as.character(lincs_transfer_gbm_res_GI1_top$pert))
 ```
 
-```{r}
+```{r eval=FALSE}
 clinical_trial_GBM <- read_csv("~/data/SearchResults.csv")
 ```
 clinical_trial_check
-```{r}
+```{r eval=FALSE}
 lincs_transfer_gbm_res_GI1_top$clinical_trial_GBM <- clinical_trial_check(as.character(lincs_transfer_gbm_res_GI1_top$pert), clinical_trial_GBM)
 ```
 
-```{r}
+```{r eval=FALSE}
 write.csv(lincs_transfer_gbm_res_GI1_top, file=  "~/output/TF_L_GBM/220808_SR_LINCS_GBM_top_RES.csv" )
 ```
 
 
-```{r}
+```{r eval=FALSE}
 lincs_transfer_gbm_res_GI1_top_top_fda<- lincs_transfer_gbm_res_GI1_top[lincs_transfer_gbm_res_GI1_top$fda_approval ,]
 lincs_transfer_gbm_res_GI1_top_top_fda<- lincs_transfer_gbm_res_GI1_top_top_fda[lincs_transfer_gbm_res_GI1_top_top_fda$jlf_tau < -80,]
 lincs_transfer_gbm_res_GI1_top_order <- lincs_transfer_gbm_res_GI1_top[order(-lincs_transfer_gbm_res_GI1_top$NCS),]
@@ -643,22 +664,26 @@ ggsave("~/output/TF_L_GBM/220808_ggplot_tf_l_tau_gbm_approved_candidates.png")
 ```
 
 ```{r}
+knitr::include_graphics("~/output/TF_L_GBM/220808_ggplot_tf_l_tau_gbm_approved_candidates.png")
+```
+
+```{r eval=FALSE}
 write.csv(lincs_transfer_gbm_res_GI1_top_top_fda, file = "~/output/TF_L_GBM/220808_SR_LINCS_GBM_top_RES_all.csv")
 ```
 
 
-```{r}
+```{r eval=FALSE}
 hyperG_k_res.2 <- dsea_hyperG(drugs = lincs_transfer_gbm_res_GI1_top_top_fda$pert, type = "KEGG", 
                             pvalueCutoff = 1, qvalueCutoff = 1, 
                             minGSSize = 10, maxGSSize = 2000)
 hyperG_k_res_v2.2<- result(hyperG_k_res.2)
 ```
 
-```{r}
+```{r eval=FALSE}
 write.csv(hyperG_k_res_v2.2 , file=  "~/output/TF_L_GBM/220808_SR_LINCS_GBM_top_drug_pathway_RES.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 
 #false discovery rate
 hyperG_k_res_v2.2$logqvalue<- -log(hyperG_k_res_v2.2$qvalue)
@@ -671,20 +696,24 @@ gbm.2.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(f
 ggsave("~/output/TF_L_GBM/220808_ggplot_tf_l_tau_gbm_approved_candidates_kegg.png")
 ```
 
-look at the brain tumor cell types 
 ```{r}
+knitr::include_graphics("~/output/TF_L_GBM/220808_ggplot_tf_l_tau_gbm_approved_candidates_kegg.png")
+```
+
+look at the brain tumor cell types 
+```{r eval=FALSE}
 lincs_transfer_gbm_res_brain_tumor <- lincs_transfer_gbm_res[lincs_transfer_gbm_res$cell %in% c("GI1","SHSY5Y", "LN229","SKNSH", "U251MG","YH13")   ,]
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_transfer_gbm_res_brain_tumor_top  <- lincs_transfer_gbm_res_brain_tumor[lincs_transfer_gbm_res_brain_tumor$pert %in% lincs_transfer_gbm_res_GI1_top_top_fda$pert,]
 ```
 
-```{r}
+```{r eval=FALSE}
 lincs_transfer_gbm_res_brain_tumor_top$pert <- factor(lincs_transfer_gbm_res_brain_tumor_top$pert, levels = unique(lincs_transfer_gbm_res_GI1_top_top_fda$pert))
 ```
 
-```{r}
+```{r eval=FALSE}
 g.2<-ggplot(data= lincs_transfer_gbm_res_brain_tumor_top, aes(x=pert, y=NCS, color=cell)) +
   geom_point(stat="identity", size = 3)
 g.2 + coord_flip() + scale_color_viridis_d()
@@ -694,23 +723,27 @@ hard to get an idea if this drug response is common across brain tumor cell line
 
 PRISM plotting
 
-```{r}
+```{r eval=FALSE}
 prism_gbm_cell_lines <- read.csv("~/output/220808_prism_gbm_candidates.csv")
 ```
 
-```{r}
+```{r eval=FALSE}
 primary_gbm_res_sub <-prism_gbm_cell_lines[ prism_gbm_cell_lines$Var2 %in% lincs_transfer_gbm_res_GI1_top_top_fda$pert,]
 write.csv(primary_gbm_res_sub , file= "~/output/TF_L_GBM/220808_prism_tfl_candidates_gbm.csv" )
 ```
 
-```{r}
+```{r eval=FALSE}
 #primary_paad_res_sub$Var2 <- factor(primary_paad_res_sub$Var2, levels=unique(primary_paad_res_sub$Var2))
 primary_gbm_res_sub$Var2 <- factor(primary_gbm_res_sub$Var2, levels=unique(primary_gbm_res_sub$Var2[order(primary_gbm_res_sub$log_fold_change)]))
 ggplot(primary_gbm_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() + geom_point()+ geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
 ggsave("~/output/TF_L_GBM/220808_ggplot_TFL_candidates_prism_screen1.png")
 ```
-look at the number of sensitive cell lines
 ```{r}
+knitr::include_graphics("~/output/TF_L_GBM/220808_ggplot_TFL_candidates_prism_screen1.png")
+```
+
+look at the number of sensitive cell lines
+```{r eval=FALSE}
 drug_list <- as.vector(unique(primary_gbm_res_sub$Var2))
 drug_fraction<- c()
 for (i in 1:length(drug_list)){
@@ -728,39 +761,40 @@ drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_a
 ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity",  color= "black") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
 ggsave("~/output/TF_L_GBM/220808_ggplot_TFL_candidates_prism_screen1_sensitive_cell_lines.png")
 ```
-Determine if the median log fold change is lower than random drug selection. 
+
 ```{r}
+knitr::include_graphics("~/output/TF_L_GBM/220808_ggplot_TFL_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+
+Determine if the median log fold change is lower than random drug selection. 
+```{r eval=FALSE}
 tfl_PRISM_test<- PRISM_testing(101,"GI1", lincs_transfer_gbm_res_GI1_top_top_fda$pert, drug_senstive_precentage_all_drugs)
 ```
-```{r}
+```{r eval=FALSE}
 tfl_PRISM_test
 ```
 
 determine if there are more drug from clinical trials than compared to random 
-```{r}
+```{r eval=FALSE}
 len<- length(lincs_transfer_gbm_res_GI1_top_top_fda$pert)
 num_clin <- nrow(lincs_transfer_gbm_res_GI1_top_top_fda[lincs_transfer_gbm_res_GI1_top_top_fda$clinical_trial_GBM == TRUE,])
 fract<- num_clin/len
 TFL_CT_test_res <- clinical_trial_testing(101, "GI1", len, fract, FDA_CT_table)
 ```
 
-```{r}
+```{r eval=FALSE}
 TFL_CT_test_res 
 ```
 
 
 LINCS pathways & Drug targets for all the candidates
-```{r}
+```{r eval=FALSE}
 for (i in 1:nrow(lincs_transfer_gbm_res_GI1_top_top_fda) ){
   targets<- as.vector(unlist(strsplit(lincs_transfer_gbm_res_GI1_top_top_fda$t_gn_sym[i], "; ")))
   #print(targets)
   drug_analysis( lincs_transfer_gbm_res_GI1_top_top_fda$pert[i], targets, as.data.frame(tpm_df) , metadata$status, deseq_results, se= se_asssay, cell_lincs= "__GI1__trt_cp", "~/output/TF_L_GBM/220808_candidate_plots/")
 }
 ```
-
-
-
-
 
 
 ### Save Data

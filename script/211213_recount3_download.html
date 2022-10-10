@@ -191,7 +191,7 @@ pre code {
 <div id="start" class="section level1">
 <h1>START</h1>
 <pre><code>Goal/Purpose of operations: 
-Donwloading Recount 3 RNA-seq Counts and normlizing counts by gene length via tpm 
+Donwloading Recount 3 RNA-seq Counts and normalizing counts by gene length via tpm 
 
 Finished psedocode on: Date
 211213
@@ -224,6 +224,7 @@ recount3- see details above </code></pre>
 <div id="set-working-directory" class="section level3">
 <h3>Set working directory</h3>
 <p>/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03</p>
+<p>location on UAB Cheaha cluster</p>
 </div>
 <div id="load-in-data" class="section level3">
 <h3>load in data</h3>
@@ -292,11 +293,14 @@ recount3- see details above </code></pre>
 <pre><code>## The following objects are masked from &#39;package:matrixStats&#39;:
 ## 
 ##     anyMissing, rowMedians</code></pre>
+<p>collect human project project ids.</p>
 <pre class="r"><code>human_projects&lt;- available_projects()</code></pre>
-<p>#GBM</p>
+<p>#GBM download the GBM and normal brain data from recount3</p>
 <pre class="r"><code> human_recount_projects_gbm &lt;- human_projects[! (human_projects$project == &quot;GBM&quot; | human_projects$project == &quot;BRAIN&quot;),]</code></pre>
+<p>downloading the rse with the gene expression data</p>
 <pre class="r"><code>test&lt;- create_rse(human_recount_projects_gbm[1,])
 recount3__gbm_tf &lt;- as.data.frame(assay(test))</code></pre>
+<p>Using apply to find all the gene expression url locations for downloading</p>
 <pre class="r"><code>human_projects$gene_url &lt;- apply(human_projects, 1, function(x)
     locate_url(
         project = x[&quot;project&quot;],
@@ -305,8 +309,11 @@ recount3__gbm_tf &lt;- as.data.frame(assay(test))</code></pre>
         organism = x[&quot;organism&quot;],
         annotation = annotation_options(x[&quot;organism&quot;])[1] # Use default annotation
     ))</code></pre>
+<p>create the wget commands to download the data</p>
 <pre class="r"><code>human_projects$command &lt;- paste0(&quot;wget &quot;, human_projects$gene_url, sep=&quot;&quot;)</code></pre>
+<p>save the objects</p>
 <pre class="r"><code>saveRDS(human_projects, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/human_samples.rds&quot;)</code></pre>
+<p>creating the sh files for UAB cheaha to download via the slurm queue system</p>
 <pre class="r"><code>write.table(human_projects$command[1:1000], file = &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_1.sh&quot;, row.names= FALSE, quote= FALSE)
 write.table(human_projects$command[1001:2000], file = &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_2.sh&quot;, row.names= FALSE, quote= FALSE)
 write.table(human_projects$command[2001:3000], file = &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_3.sh&quot;, row.names= FALSE, quote= FALSE)
@@ -315,6 +322,7 @@ write.table(human_projects$command[4001:5000], file = &quot;/data/project/lassei
 write.table(human_projects$command[5001:6000], file = &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_6.sh&quot;, row.names= FALSE, quote= FALSE)
 write.table(human_projects$command[6001:7000], file = &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_7.sh&quot;, row.names= FALSE, quote= FALSE)
 write.table(human_projects$command[7001:8742], file = &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gbm_gene_url_8.sh&quot;, row.names= FALSE, quote= FALSE)</code></pre>
+<p>after the data is download via the sh scripts. This function was used to convert files in one directory to count table in R.</p>
 <pre class="r"><code>count_table&lt;- function(file_dir){
   setwd(file_dir)
   files &lt;- list.files(file_dir)
@@ -322,46 +330,66 @@ write.table(human_projects$command[7001:8742], file = &quot;/data/project/lassei
   test&lt;- read.table( files[1], header= TRUE)
    for (i in 2:length(files)){
      test2&lt;- read.table( files[i], header= TRUE)
-     test&lt;- cbind(test, test2[,-1])
+      #print(colnames(test2))
+     #print(test2)
+     #colnames(test2)
+    # print(colnames(test2))
+    #print(colnames(test))
+     test&lt;- cbind(test, test2)
      #print(files[i])
    }
+  test&lt;- test[,!grepl(&quot;gene_id&quot;, colnames(test))]
   return(test)
 }</code></pre>
+<p>Applying the count_table to all the directories with the recount3 files.</p>
 <pre class="r"><code>group1&lt;- count_table(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_1/&quot;)</code></pre>
+<pre class="r"><code>saveRDS(group1, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1.rds&quot;)
+rm(group1)
+gc()</code></pre>
 <pre class="r"><code>group2&lt;- count_table(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_2/&quot;)
 saveRDS(group2, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2.rds&quot;)
 rm(group2)
+gc()
 group3&lt;- count_table(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_3/&quot;)
 saveRDS(group3, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group3.rds&quot;)
 rm(group3)
+gc()
 group4&lt;- count_table(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_4/&quot;)
 saveRDS(group4, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group4.rds&quot;)
 rm(group4)
+gc()
 group5&lt;- count_table(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_5/&quot;)
 saveRDS(group5, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group5.rds&quot;)
 rm(group5)
+gc()
 group6&lt;- count_table(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_6/&quot;)
 saveRDS(group6, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group6.rds&quot;)
 rm(group6)
+gc()
 group7&lt;- count_table(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_7/&quot;)
 saveRDS(group7, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group7.rds&quot;)
 rm(group7)
+gc()
 group8&lt;- count_table(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/gene_url_8/&quot;)
 saveRDS(group8, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group8.rds&quot;)
-rm(group8)</code></pre>
-<pre class="r"><code>saveRDS(group1, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1.rds&quot;)
-saveRDS(group2, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2.rds&quot;)
-saveRDS(group3, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group3.rds&quot;)
-saveRDS(group4, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group4.rds&quot;)
-saveRDS(group5, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group5.rds&quot;)
-saveRDS(group6, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group6.rds&quot;)
-saveRDS(group7, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group7.rds&quot;)
-saveRDS(group8, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group8.rds&quot;)</code></pre>
-<pre class="r"><code>recount3_Counts&lt;- cbind(recount3_group1, recount3_group2, recount3_group3, recount3_group4, recount3_group5, recount3_group6, recount3_group7, recount3_group8)
-rm(recount3_group1, recount3_group2, recount3_group3, recount3_group4, recount3_group5, recount3_group6, recount3_group7, recount3_group8)
+rm(group8)
+gc()</code></pre>
+<p>read the rds object created from count_table function into R</p>
+<pre class="r"><code>recount3_group1 &lt;- readRDS(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1.rds&quot;)
+recount3_group2 &lt;- readRDS(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2.rds&quot;)
+recount3_group3 &lt;- readRDS(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group3.rds&quot;)
+recount3_group4 &lt;- readRDS(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group4.rds&quot;)
+recount3_group5 &lt;- readRDS(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group5.rds&quot;)
+recount3_group6 &lt;- readRDS(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group6.rds&quot;)
+recount3_group7 &lt;- readRDS(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group7.rds&quot;)
+recount3_group8 &lt;- readRDS(&quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group8.rds&quot;)</code></pre>
+<p>tried to combine the tables.</p>
+<pre class="r"><code>#recount3_Counts&lt;- cbind(recount3_group1, recount3_group2, recount3_group3, recount3_group4, recount3_group5, recount3_group6, recount3_group7, recount3_group8)
+#rm(recount3_group1, recount3_group2, recount3_group3, recount3_group4, recount3_group5, recount3_group6, recount3_group7, recount3_group8)
 #saveRDS(recount3_Counts, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_counts.rds&quot;)
-#crashes R</code></pre>
-<p>#change it to tpm</p>
+#crashes R
+#gc()</code></pre>
+<p>change count tables to tpm</p>
 <pre class="r"><code>Counts_to_tpm &lt;- function(counts, featureLength) {
   # Ensure valid arguments.
   stopifnot(length(featureLength) == nrow(counts))
@@ -378,15 +406,17 @@ rm(recount3_group1, recount3_group2, recount3_group3, recount3_group4, recount3_
   rownames(tpm) &lt;- rownames(counts)
   return(tpm)
 }</code></pre>
+<p>downloaded a random project to gene lengths for tpm calculations</p>
 <pre class="r"><code>#SRP118922
 test&lt;- create_rse(human_projects[(human_projects$project == &quot;SRP118922&quot;),])</code></pre>
 <pre class="r"><code>gene_info &lt;- test@rowRanges
 rm(test)</code></pre>
-<pre class="r"><code>recount3_group1_tpm&lt;- Counts_to_tpm(recount3_group1[,-1] , gene_info$bp_length)
-rownames(recount3_group1_tpm)&lt;- recount3_group2[,1]
+<p>Apply tpm function to all the recount3 data</p>
+<pre class="r"><code>recount3_group1_tpm&lt;- Counts_to_tpm(recount3_group1[,-1], gene_info$bp_length)
+rownames(recount3_group1_tpm)&lt;- recount3_group1[,1]
 saveRDS(recount3_group1_tpm, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group1_tpm.rds&quot;)
 rm(recount3_group1)</code></pre>
-<pre class="r"><code>recount3_group2_tpm&lt;- Counts_to_tpm(recount3_group2[,-1] , gene_info$bp_length)
+<pre class="r"><code>recount3_group2_tpm&lt;- Counts_to_tpm(as.data.frame(recount3_group2[,-1]) , gene_info$bp_length)
 rownames(recount3_group2_tpm)&lt;- recount3_group2[,1]
 saveRDS(recount3_group2_tpm, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group2_tpm.rds&quot;)
 rm(recount3_group2)
@@ -421,6 +451,12 @@ rownames(recount3_group8_tpm)&lt;- recount3_group8[,1]
 saveRDS(recount3_group8_tpm, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group8_tpm.rds&quot;)
 rm(recount3_group8)
 rm(recount3_group8_tpm)</code></pre>
+<p>there was no reason for the removal of the first col from the matrix adding it back as group 9 done 220728</p>
+<pre class="r"><code>#&quot;DRR002593&quot; &quot;DRR001796&quot; &quot;DRR000897&quot; &quot;DRR031682&quot; &quot;DRR006400&quot; &quot;DRR001622&quot; &quot;DRR001173&quot;
+recount3_group9 &lt;- cbind(recount3_group1[,1], recount3_group2[,1], recount3_group3[,1], recount3_group4[,1], recount3_group5[,1], recount3_group6[,1], recount3_group7[,1], recount3_group8[,1])
+recount3_group9_tpm &lt;- Counts_to_tpm(recount3_group9 , gene_info$bp_length)
+colnames(recount3_group9_tpm)&lt;- c( colnames(recount3_group1)[1], colnames(recount3_group2)[1], colnames(recount3_group3)[1], colnames(recount3_group4)[1], colnames(recount3_group5)[1], colnames(recount3_group6)[1], colnames(recount3_group7)[1], colnames(recount3_group8)[1])
+saveRDS(recount3_group9_tpm, &quot;/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/data/recount3/recount3_group9_tpm.rds&quot;)</code></pre>
 </div>
 <div id="save-data" class="section level3">
 <h3>Save Data</h3>
@@ -436,7 +472,7 @@ Location of data produced:
 ./data/recount3
 
 Dates when operations were done:
-211213-220104</code></pre>
+211213-220104 </code></pre>
 <div id="versions" class="section level2">
 <h2>Versions</h2>
 <pre class="r"><code>sessionInfo()</code></pre>

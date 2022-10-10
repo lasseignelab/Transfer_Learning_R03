@@ -1,0 +1,756 @@
+---
+title: "220922_gbm_deseq_test"
+author: "Jennifer Fisher"
+date: "9/22/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+#deseq2 results 
+deseq_results <- read.csv("~/output/deseq2_gbm/Deseq2_gbm_normal_gtx_res.csv", sep=",")
+#add gene symbol to results
+human_projects<- available_projects()
+#get a random project data
+test<- create_rse(human_projects[(human_projects$project == "SRP118922"),])
+gene_info <- test@rowRanges
+deseq_results$Symbol<- gene_info$gene_name
+```
+
+
+
+identify the top genes
+```{r}
+deseq_results<- deseq_results[complete.cases(deseq_results),]
+deseq_results_sig <- deseq_results[deseq_results$padj < 0.05 & abs(deseq_results$log2FoldChange) > 2,]
+```
+
+```{r}
+downset<- deseq_results_sig$Symbol[deseq_results_sig$log2FoldChange < -6 ]
+upset<- deseq_results_sig$Symbol[deseq_results_sig$log2FoldChange > 6]
+```
+
+convert gene symbols to LINCS genes
+```{r}
+upset_v2 <- match_to_LINCS_genes(upset)
+downset_v2 <- match_to_LINCS_genes(downset)
+```
+
+```{r}
+downset_v2<- downset_v2[complete.cases(downset_v2)]
+upset_v2<- upset_v2[complete.cases(upset_v2)]
+```
+```{r}
+db_path <- "~/data/lincs_2020.h5"
+```
+
+
+```{r}
+set.seed(101)
+qsig_lincs_deseq2_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
+                   gess_method="LINCS", refdb=db_path)
+```
+target is around 90-120 genes for a signature. 
+
+
+```{r}
+set.seed(101)
+lincs_deseq_gbm <- gess_lincs(qsig_lincs_deseq2_res, sortby="NCS", workers=2)
+#result(lincs)
+```
+
+```{r}
+lincs_deseq_gbm_res <- result(lincs_deseq_gbm)
+```
+
+```{r}
+lincs_deseq_gbm_res_GI1 <- lincs_deseq_gbm_res[lincs_deseq_gbm_res$cell == "GI1",]
+```
+
+```{r}
+GI1_taudf <- readRDS("~/data/GI1_taudf.rds")
+```
+
+```{r}
+tau_test<- tau_scores(lincs_deseq_gbm_res_GI1, GI1_taudf)
+```
+
+
+```{r}
+lincs_deseq_gbm_res_GI1$jlf_tau<- tau_test
+```
+
+
+```{r}
+lincs_deseq_gbm_res_GI1_top <- lincs_deseq_gbm_res_GI1[lincs_deseq_gbm_res_GI1$WTCS_FDR <0.05 & lincs_deseq_gbm_res_GI1$NCS <0,]
+```
+
+
+```{r}
+lincs_deseq_gbm_res_GI1_top_order <- lincs_deseq_gbm_res_GI1_top[order(-lincs_deseq_gbm_res_GI1_top$NCS),]
+lincs_deseq_gbm_res_GI1_top$pert <- factor(lincs_deseq_gbm_res_GI1_top$pert, levels = lincs_deseq_gbm_res_GI1_top_order$pert)
+```
+
+
+```{r}
+p<-ggplot(data=lincs_deseq_gbm_res_GI1_top , aes(x=pert, y=NCS, fill=jlf_tau)) +
+  geom_bar(stat="identity")+ scale_fill_viridis(direction=-1)
+p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]")
+```
+
+filter by tau and fda approved
+
+```{r}
+lincs_deseq_gbm_res_GI1_top_tau<- lincs_deseq_gbm_res_GI1_top[lincs_deseq_gbm_res_GI1_top$jlf_tau < -80, ]
+```
+
+```{r}
+lincs_deseq_gbm_res_GI1_top_tau$FDA <-FDA_APPROVAL_CHECK(as.character(lincs_deseq_gbm_res_GI1_top_tau$pert))
+```
+
+```{r}
+FDA_CT_table<- read.csv("~/data/SearchResults.csv")
+lincs_deseq_gbm_res_GI1_top_tau$GBM_CT<- clinical_trial_check(as.character(lincs_deseq_gbm_res_GI1_top_tau$pert), FDA_CT_table)
+```
+
+```{r}
+lincs_deseq_gbm_res_GI1_top_candidates<- lincs_deseq_gbm_res_GI1_top_tau[lincs_deseq_gbm_res_GI1_top_tau$FDA == TRUE,]
+```
+
+
+```{r}
+p<-ggplot(data=lincs_deseq_gbm_res_GI1_top_candidates , aes(x=pert, y=NCS, fill=jlf_tau, shape= GBM_CT)) +
+  geom_bar(stat="identity", color= "black")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
+p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]", shape= "Clinical Trials")
+```
+
+PRISM plotting
+
+```{r}
+prism_gbm_cell_lines <- read.csv("~/output/220808_prism_gbm_candidates.csv")
+```
+
+```{r}
+primary_gbm_res_sub <-prism_gbm_cell_lines[ prism_gbm_cell_lines$Var2 %in%  lincs_deseq_gbm_res_GI1_top_candidates$pert,]
+#write.csv(primary_gbm_res_sub , file= "~/output/TF_L_GBM/220808_prism_deseq2_candidates_gbm.csv" )
+```
+
+```{r}
+#primary_paad_res_sub$Var2 <- factor(primary_paad_res_sub$Var2, levels=unique(primary_paad_res_sub$Var2))
+primary_gbm_res_sub$Var2 <- factor(primary_gbm_res_sub$Var2, levels=unique(primary_gbm_res_sub$Var2[order(primary_gbm_res_sub$log_fold_change)]))
+ggplot(primary_gbm_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() + geom_point()+ geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
+#ggsave("~/output/TF_L_GBM/220808_ggplot_deseq2_candidates_prism_screen1.png")
+```
+
+look at the number of sensitive cell lines
+```{r}
+drug_list <- as.vector(unique(primary_gbm_res_sub$Var2))
+drug_fraction<- c()
+for (i in 1:length(drug_list)){
+  cells <-primary_gbm_res_sub$Sensitive[primary_gbm_res_sub$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
+drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_all_drugs$drug_list, levels= unique(drug_senstive_precentage_all_drugs$drug_list[order(drug_senstive_precentage_all_drugs$drug_fraction)]))
+ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity",  color= "black") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
+ggsave("~/output/TF_L_GBM/220808_ggplot_deseq2_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+
+Determine if the median log fold change is lower than random drug selection. 
+```{r}
+deseq2_PRISM_test<- PRISM_testing(101,"GI1",  as.character(lincs_deseq_gbm_res_GI1_top_candidates$pert), drug_senstive_precentage_all_drugs)
+```
+```{r}
+deseq2_PRISM_test
+```
+
+
+determine if there are more drug from clinical trials than compared to random 
+```{r}
+len<- length( lincs_deseq_gbm_res_GI1_top_candidates$pert)
+num_clin <- nrow( lincs_deseq_gbm_res_GI1_top_candidates[ lincs_deseq_gbm_res_GI1_top_candidates$GBM_CT == TRUE,])
+fract<- num_clin/len
+deseq2_CT_test_res <- clinical_trial_testing(101, "GI1", len, fract, FDA_CT_table)
+```
+
+```{r}
+deseq2_CT_test_res 
+```
+signficant in clinical trials and predicted tmz and vornstat but lacks novel candidates
+
+
+```{r}
+LIHC_deseq_results <- read.csv("~/output/liver_cancer/deseq2_res/Deseq2_lihc_normal_gtx_res.csv", sep=",")
+LIHC_deseq_results$Symbol<- gene_info$gene_name
+```
+
+```{r}
+deseq2_lihc_normal<- LIHC_deseq_results
+```
+
+
+```{r}
+deseq2_lihc_normal<- deseq2_lihc_normal[complete.cases(deseq2_lihc_normal),]
+deseq_results_sig_top <- deseq2_lihc_normal[deseq2_lihc_normal$padj < 0.05 & deseq2_lihc_normal$log2FoldChange > 2,]
+deseq_results_sig_bottom <- deseq2_lihc_normal[deseq2_lihc_normal$padj < 0.05 & deseq2_lihc_normal$log2FoldChange < -2,]
+```
+
+```{r}
+downset<- deseq_results_sig_bottom$Symbol[deseq_results_sig_bottom$log2FoldChange< -5] 
+upset<- deseq_results_sig_top$Symbol[deseq_results_sig_top$log2FoldChange > 5] 
+```
+
+
+convert gene symbols to LINCS genes
+```{r}
+upset_v2 <- match_to_LINCS_genes(upset)
+downset_v2 <- match_to_LINCS_genes(downset)
+```
+
+
+```{r}
+downset_v2<- downset_v2[complete.cases(downset_v2)]
+upset_v2<- upset_v2[complete.cases(upset_v2)]
+```
+
+```{r}
+#double check that they didn't overlap 
+ intersect(downset_v2, upset_v2)
+```
+
+
+```{r}
+names(upset_v2)<- NULL
+names(downset_v2)<- NULL
+```
+
+```{r}
+deseq2_liver_list<- list(up= upset_v2, down= downset_v2)
+```
+
+
+```{r}
+set.seed(101)
+qsig_lincs_deseq2_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
+                   gess_method="LINCS", refdb=db_path)
+```
+
+```{r}
+set.seed(101)
+lincs_deseq_gbm <- gess_lincs(qsig_lincs_deseq2_res, sortby="NCS", workers=1)
+#result(lincs)
+```
+
+```{r}
+lincs_deseq_lihc_res <- result(lincs_deseq_gbm)
+```
+
+```{r}
+lincs_deseq_lihc_res_HEPG2 <- lincs_deseq_lihc_res[lincs_deseq_lihc_res$cell == "HEPG2",]
+```
+tau 
+```{r}
+HEPG2_taudf <- readRDS("~/data/HEPG2_taudf.rds")
+```
+
+```{r}
+tau_test<- tau_scores(lincs_deseq_lihc_res_HEPG2 , HEPG2_taudf)
+```
+
+```{r}
+lincs_deseq_lihc_res_HEPG2$jlf_tau<- tau_test
+```
+
+```{r}
+lincs_deseq_lihc_res_HEPG2_top <- lincs_deseq_lihc_res_HEPG2[lincs_deseq_lihc_res_HEPG2$NCS < 0 & lincs_deseq_lihc_res_HEPG2$WTCS_FDR < 0.05 & lincs_deseq_lihc_res_HEPG2$jlf_tau< -80,]
+```
+
+clinical trials
+
+```{r}
+lincs_deseq_lihc_res_HEPG2_top$fda_approved<- FDA_APPROVAL_CHECK(lincs_deseq_lihc_res_HEPG2_top$pert)
+```
+
+
+```{r}
+library(readr)
+clinical_trial_LIHC <- read_tsv("~/data/SearchResults_LIHC.tsv")
+```
+
+```{r}
+lincs_deseq_lihc_res_HEPG2_top$clinical_trial_LIHC <- clinical_trial_check(lincs_deseq_lihc_res_HEPG2_top$pert, clinical_trial_LIHC)
+```
+
+
+
+```{r}
+lincs_deseq_lihc_res_HEPG2_top_fda<- lincs_deseq_lihc_res_HEPG2_top[lincs_deseq_lihc_res_HEPG2_top$fda_approved,]
+#lincs_deseq_lihc_res_HEPG2_top_fda$clinical_trial_LIHC<- ifelse(lincs_deseq_lihc_res_HEPG2_top_fda$clinical_trial_LIHC, "star", "")
+
+lincs_deseq_lihc_res_HEPG2_top_fda_order <- lincs_deseq_lihc_res_HEPG2_top_fda[order(-lincs_deseq_lihc_res_HEPG2_top_fda$NCS),]
+lincs_deseq_lihc_res_HEPG2_top_fda$pert <- factor(lincs_deseq_lihc_res_HEPG2_top_fda$pert, levels = lincs_deseq_lihc_res_HEPG2_top_fda_order$pert)
+p<-ggplot(data=lincs_deseq_lihc_res_HEPG2_top_fda, aes(x=pert, y=NCS, fill=jlf_tau, shape= clinical_trial_LIHC)) +
+  geom_bar(stat="identity")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
+p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]", shape= "Clinical Trials")
+
+#ggsave("~/output/liver_cancer/deseq2_res/220808_ggplot_deseq2_tau_lihc_approved_candidates.png")
+```
+
+
+PRISM
+
+```{r}
+primary_lihc_res <-read.csv( file= "~/output/liver_cancer/220808_prism_candidates.csv" )
+```
+
+
+
+```{r}
+primary_lihc_res_sub <-primary_lihc_res[ primary_lihc_res$Var2 %in% lincs_deseq_lihc_res_HEPG2_top_fda$pert,]
+```
+
+
+
+```{r}
+primary_lihc_res_sub$Var2 <- factor(primary_lihc_res_sub$Var2, levels=unique(primary_lihc_res_sub$Var2[order(-primary_lihc_res_sub$log_fold_change)]))
+ggplot(primary_lihc_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() +geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
+#ggsave("~/output/liver_cancer/deseq2_res/220808_ggplot_deseq2_candidates_prism_screen1.png")
+```
+```{r}
+drug_list <- as.vector(unique(primary_lihc_res_sub$Var2))
+drug_fraction<- c()
+for (i in 1:length(drug_list)){
+  cells <-primary_lihc_res_sub$Sensitive[primary_lihc_res_sub$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
+drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_all_drugs$drug_list, levels= unique(drug_senstive_precentage_all_drugs$drug_list[order(drug_senstive_precentage_all_drugs$drug_fraction)]))
+ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity", color = "black") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
+#ggsave("~/output/liver_cancer/deseq2_res/220808_ggplot_deseq2_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+
+
+```{r}
+len<- length(lincs_deseq_lihc_res_HEPG2_top_fda$pert)
+num_clin <- nrow(lincs_deseq_lihc_res_HEPG2_top_fda[lincs_deseq_lihc_res_HEPG2_top_fda$clinical_trial_LIHC == TRUE,])
+fract<- num_clin/len
+deseq2_CT_test_res <- clinical_trial_testing(101, "HEPG2", len, fract, clinical_trial_LIHC)
+```
+```{r}
+deseq2_CT_test_res
+```
+
+
+```{r}
+drug_list <- as.vector(unique(primary_lihc_res$Var2))
+drug_fraction<- c()
+for (i in 1:length(drug_list)){
+  cells <-primary_lihc_res$Sensitive[primary_lihc_res$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
+```
+
+```{r}
+deseq2_PRISM_test<- PRISM_testing(101,"HEPG2", lincs_deseq_lihc_res_HEPG2_top_fda$pert, drug_senstive_precentage_all_drugs)
+```
+```{r}
+deseq2_PRISM_test
+```
+
+
+```{r}
+lung_deseq_results <- read.csv("~/output/lung_cancer/deseq2_res/Deseq2_luad_normal_gtx_res.csv", sep=",")
+lung_deseq_results$Symbol<- gene_info$gene_name
+```
+
+
+```{r}
+deseq2_luad_normal<- lung_deseq_results
+```
+
+```{r}
+deseq2_luad_normal<- deseq2_luad_normal[complete.cases(deseq2_luad_normal),]
+deseq_results_sig <- deseq2_luad_normal[deseq2_luad_normal$padj < 0.05 & abs(deseq2_luad_normal$log2FoldChange) > 2,]
+```
+
+```{r}
+downset<- deseq_results_sig$Symbol[deseq_results_sig$log2FoldChange < -5] 
+upset<- deseq_results_sig$Symbol[deseq_results_sig$log2FoldChange > 5]
+```
+
+```{r}
+downset_v2 <- match_to_LINCS_genes(downset)
+upset_v2 <- match_to_LINCS_genes(upset)
+```
+
+```{r}
+downset_v2<- downset_v2[complete.cases(downset_v2)]
+upset_v2<- upset_v2[complete.cases(upset_v2)]
+```
+
+```{r}
+#double check that they didn't overlap 
+ intersect(downset_v2, upset_v2)
+```
+
+
+```{r}
+names(upset_v2)<- NULL
+names(downset_v2)<- NULL
+```
+
+```{r}
+deseq_lung_list<- list(up= upset_v2, down= downset_v2)
+```
+
+
+```{r}
+set.seed(101)
+qsig_lincs_deseq2_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
+                   gess_method="LINCS", refdb=db_path)
+```
+
+
+```{r}
+set.seed(101)
+lincs_deseq_gbm <- gess_lincs(qsig_lincs_deseq2_res, sortby="NCS", workers=2)
+#result(lincs)
+```
+
+```{r}
+lincs_deseq_luad_res <- result(lincs_deseq_gbm)
+```
+
+```{r}
+lincs_deseq_luad_res_A549 <- lincs_deseq_luad_res[lincs_deseq_luad_res$cell == "A549",]
+```
+tau 
+```{r}
+A549_taudf <- readRDS("~/data/A549_taudf.rds")
+```
+
+
+```{r}
+tau_test<- tau_scores(lincs_deseq_luad_res_A549 , A549_taudf)
+```
+
+```{r}
+lincs_deseq_luad_res_A549$jlf_tau<- tau_test
+```
+
+```{r}
+lincs_deseq_luad_res_A549_top <- lincs_deseq_luad_res_A549[lincs_deseq_luad_res_A549$NCS < 0 & lincs_deseq_luad_res_A549$WTCS_FDR < 0.05 & lincs_deseq_luad_res_A549$jlf_tau< -80,]
+```
+
+clinical trials
+
+```{r}
+lincs_deseq_luad_res_A549_top$fda_approved<- FDA_APPROVAL_CHECK(lincs_deseq_luad_res_A549_top$pert)
+```
+
+double checking the direction of signature
+
+
+```{r}
+clinical_trial_LUAD <- read_tsv("~/data/SearchResults_LUAD_A.tsv")
+```
+
+```{r}
+lincs_deseq_luad_res_A549_top$clinical_trial_LUAD <- clinical_trial_check(lincs_deseq_luad_res_A549_top$pert, clinical_trial_LUAD)
+```
+
+
+```{r}
+lincs_deseq_luad_res_A549_top_fda<- lincs_deseq_luad_res_A549_top[lincs_deseq_luad_res_A549_top$fda_approved,]
+#lincs_deseq_luad_res_A549_top_fda$clinical_trial_LUAD<- ifelse(lincs_deseq_luad_res_A549_top_fda$clinical_trial_LUAD, "star", "")
+
+lincs_deseq_luad_res_A549_top_fda_order <- lincs_deseq_luad_res_A549_top_fda[order(-lincs_deseq_luad_res_A549_top_fda$NCS),]
+lincs_deseq_luad_res_A549_top_fda$pert <- factor(lincs_deseq_luad_res_A549_top_fda$pert, levels = lincs_deseq_luad_res_A549_top_fda_order$pert)
+p<-ggplot(data=lincs_deseq_luad_res_A549_top_fda, aes(x=pert, y=NCS, fill=jlf_tau, shape= clinical_trial_LUAD)) +
+  geom_bar(stat="identity", color= "black")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
+p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]", shape= "Clinical Trials")
+
+#ggsave("~/output/lung_cancer/deseq2_res/220808_ggplot_deseq2_tau_luad_approved_candidates.png")
+```
+
+
+```{r}
+primary_lung_res <-read.csv( file= "~/output/lung_cancer/220808_lung_prism_candidates.csv" )
+```
+
+```{r}
+primary_lung_res_sub <-primary_lung_res[ primary_lung_res$Var2 %in% lincs_deseq_luad_res_A549_top_fda$pert,]
+primary_lung_res_sub$Var2 <- factor(primary_lung_res_sub$Var2, levels=unique(primary_lung_res_sub$Var2[order(-primary_lung_res_sub$log_fold_change)]))
+ggplot(primary_lung_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() +geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
+#ggsave("~/output/lung_cancer/deseq2_res/220808_ggplot_deseq2_candidates_prism_screen1.png")
+```
+
+```{r}
+drug_list <- as.vector(unique(primary_lung_res_sub$Var2))
+drug_fraction<- c()
+for (i in 1:length(drug_list)){
+  cells <-primary_lung_res_sub$Sensitive[primary_lung_res_sub$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
+drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_all_drugs$drug_list, levels= unique(drug_senstive_precentage_all_drugs$drug_list[order(drug_senstive_precentage_all_drugs$drug_fraction)]))
+ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity", color = "black") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
+#ggsave("~/output/lung_cancer/deseq2_res/220808_ggplot_deseq2_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+
+
+
+```{r}
+len<- length(lincs_deseq_luad_res_A549_top_fda$pert)
+num_clin <- nrow(lincs_deseq_luad_res_A549_top_fda[lincs_deseq_luad_res_A549_top_fda$clinical_trial_LUAD== TRUE,])
+fract<- num_clin/len
+deseq2_CT_test_res <- clinical_trial_testing(101, "A549", len, fract , clinical_trial_LUAD)
+```
+
+
+```{r}
+drug_list <- as.vector(unique(primary_lung_res$Var2))
+drug_fraction<- c()
+for (i in 1:length(drug_list)){
+  cells <-primary_lung_res$Sensitive[primary_lung_res$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
+```
+
+
+```{r}
+deseq2_PRISM_test<- PRISM_testing(101,"A549", lincs_deseq_luad_res_A549_top_fda$pert, drug_senstive_precentage_all_drugs)
+```
+```{r}
+deseq2_PRISM_test
+```
+
+
+```{r}
+paad_deseq_results <-read.csv("~/output/pancreas_cancer/deseq2_res/Deseq2_paad_normal_gtx_res.csv", sep= ",")
+paad_deseq_results$Symbol<- gene_info$gene_name
+```
+
+
+```{r}
+deseq2_paad_normal<- paad_deseq_results
+```
+
+
+```{r}
+deseq2_paad_normal<- deseq2_paad_normal[!is.na(deseq2_paad_normal$padj),]
+deseq_results_sig_top <- deseq2_paad_normal[deseq2_paad_normal$padj < 0.05 & deseq2_paad_normal$log2FoldChange > 0,]
+deseq_results_sig_bottom <- deseq2_paad_normal[deseq2_paad_normal$padj < 0.05 & deseq2_paad_normal$log2FoldChange < 0,]
+```
+
+```{r}
+downset<- deseq_results_sig_bottom$Symbol[deseq_results_sig_bottom$log2FoldChange< -2.5] 
+upset<- deseq_results_sig_top$Symbol[deseq_results_sig_top$log2FoldChange >2.5 ] 
+```
+
+convert gene symbols to LINCS genes
+```{r}
+upset_v2 <- match_to_LINCS_genes(upset)
+downset_v2 <- match_to_LINCS_genes(downset)
+```
+
+```{r}
+downset_v2<- downset_v2[!is.na(downset_v2)]
+upset_v2<- upset_v2[!is.na(upset_v2)]
+```
+
+```{r}
+#double check that they didn't overlap 
+ intersect(downset_v2, upset_v2)
+```
+
+
+```{r}
+names(upset_v2)<- NULL
+names(downset_v2)<- NULL
+```
+```{r}
+deseq_paad_list<- list(up= upset_v2, down= downset_v2)
+```
+
+
+
+```{r}
+set.seed(101)
+qsig_lincs_deseq2_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
+                   gess_method="LINCS", refdb=db_path)
+```
+
+
+```{r}
+set.seed(101)
+lincs_deseq <- gess_lincs(qsig_lincs_deseq2_res, sortby="NCS")
+#result(lincs)
+```
+
+
+
+```{r}
+lincs_deseq_paad_res <- result(lincs_deseq)
+```
+
+
+
+```{r}
+lincs_deseq_paad_res_YAPC <- lincs_deseq_paad_res[lincs_deseq_paad_res$cell == "YAPC",]
+```
+tau 
+```{r}
+YAPC_taudf <- readRDS("~/data/YAPC_taudf.rds")
+```
+
+
+```{r}
+tau_test<- tau_scores(lincs_deseq_paad_res_YAPC , YAPC_taudf)
+```
+
+```{r}
+lincs_deseq_paad_res_YAPC$jlf_tau<- tau_test
+```
+
+```{r}
+lincs_deseq_paad_res_YAPC_top <- lincs_deseq_paad_res_YAPC[lincs_deseq_paad_res_YAPC$NCS < 0 & lincs_deseq_paad_res_YAPC$WTCS_FDR < 0.05 & lincs_deseq_paad_res_YAPC$jlf_tau< -80,]
+```
+
+FDA approved and clinical trials
+
+```{r}
+lincs_deseq_paad_res_YAPC_top$fda_approved<- FDA_APPROVAL_CHECK(lincs_deseq_paad_res_YAPC_top$pert)
+```
+
+
+```{r}
+clinical_trial_PAAD <- read.csv("~/data/SearchResults_PAAD.csv")
+```
+
+
+```{r}
+lincs_deseq_paad_res_YAPC_top$clinical_trial_PAAD <- clinical_trial_check(lincs_deseq_paad_res_YAPC_top$pert, clinical_trial_PAAD)
+```
+
+
+```{r}
+lincs_deseq_paad_res_YAPC_top_fda<- lincs_deseq_paad_res_YAPC_top[lincs_deseq_paad_res_YAPC_top$fda_approved,]
+#lincs_deseq_paad_res_YAPC_top_fda$clinical_trial_PAAD<- ifelse(lincs_deseq_paad_res_YAPC_top_fda$clinical_trial_PAAD, "star", "")
+
+lincs_deseq_paad_res_YAPC_top_fda_order <- lincs_deseq_paad_res_YAPC_top_fda[order(-lincs_deseq_paad_res_YAPC_top_fda$NCS),]
+lincs_deseq_paad_res_YAPC_top_fda$pert <- factor(lincs_deseq_paad_res_YAPC_top_fda$pert, levels = lincs_deseq_paad_res_YAPC_top_fda_order$pert)
+p<-ggplot(data=lincs_deseq_paad_res_YAPC_top_fda, aes(x=pert, y=NCS, fill=jlf_tau, shape= clinical_trial_PAAD)) +
+  geom_bar(stat="identity", color = "black")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)
+p + coord_flip()  + ylab("Normalized Connectivity Score") + xlab("LINCS Small Molecules") +labs(fill = "Tau [-100,100]", shape= "Clinical Trials")
+
+#ggsave("~/output/pancreas_cancer/deseq2_res/220808_ggplot_deseq2_tau_paad_approved_candidates.png")
+```
+
+
+
+
+PRISM
+
+```{r}
+primary_paad_res <-read.csv( file= "~/output/pancreas_cancer/220808_prism_paad_candidates.csv" )
+```
+
+```{r}
+primary_paad_res_sub <-primary_paad_res[ primary_paad_res$Var2 %in% lincs_deseq_paad_res_YAPC_top_fda$pert,]
+primary_paad_res_sub$Var2 <- factor(primary_paad_res_sub$Var2, levels=unique(primary_paad_res_sub$Var2[order(-primary_paad_res_sub$log_fold_change)]))
+ggplot(primary_paad_res_sub, aes(x=log_fold_change, y= Var2))+ geom_violin() +geom_vline(xintercept = 0.3)  + ylab("Drug Candidates") + xlab("log fold change")
+ggsave("~/output/pancreas_cancer/deseq2_res/220808_ggplot_deseq2_candidates_prism_screen1.png")
+```
+
+```{r}
+drug_list <- as.vector(unique(primary_paad_res_sub$Var2))
+drug_fraction<- c()
+for (i in 1:length(drug_list)){
+  cells <-primary_paad_res_sub$Sensitive[primary_paad_res_sub$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
+drug_senstive_precentage_all_drugs$drug_list<- factor(drug_senstive_precentage_all_drugs$drug_list, levels= unique(drug_senstive_precentage_all_drugs$drug_list[order(drug_senstive_precentage_all_drugs$drug_fraction)]))
+ggplot(drug_senstive_precentage_all_drugs, aes( drug_fraction, drug_list, fill= test ))+ geom_bar(stat="identity", color = "black") + scale_fill_viridis_d() + ylab("Drug Candidates") + xlab("Fraction of Sensitive Cell Lines") +labs(fill = "75% of Cell line are Sensitive")
+#ggsave("~/output/pancreas_cancer/deseq2_res/220808_ggplot_deseq2_candidates_prism_screen1_sensitive_cell_lines.png")
+```
+
+
+
+```{r}
+len<- length(lincs_deseq_paad_res_YAPC_top_fda$pert)
+num_clin <- nrow(lincs_deseq_paad_res_YAPC_top_fda[lincs_deseq_paad_res_YAPC_top_fda$clinical_trial_PAAD == TRUE,])
+fract<- num_clin/len
+deseq2_CT_test_res <- clinical_trial_testing(101, "YAPC", len, fract , clinical_trial_PAAD)
+```
+
+
+```{r}
+drug_list <- as.vector(unique(primary_paad_res$Var2))
+drug_fraction<- c()
+for (i in 1:length(drug_list)){
+  cells <-primary_paad_res$Sensitive[primary_paad_res$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+test <- ifelse(drug_fraction > 0.75, TRUE, FALSE)
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list, test)
+```
+
+
+```{r}
+deseq2_PRISM_test<- PRISM_testing(101,"YAPC", lincs_deseq_paad_res_YAPC_top_fda$pert, drug_senstive_precentage_all_drugs)
+```
+```{r}
+deseq2_PRISM_test
+```
+
+test the case of filtering and then by 

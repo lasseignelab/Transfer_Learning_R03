@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # START 
     Goal/Purpose of operations: 
-    I am taking the latent variables from PLIER for GBM and applying it to the GBM tumor and controls. Also using GTEX controls for this experiment, so I am not only looking at 5 controls 
+    I am taking the latent variables from PLIER for GBM and applying it to the GBM tumor and controls. Also using GTEX controls for this experiment, so I am not only looking at 5 controls. Note DESeq2 was also applied in this script
     
     Finished psedocode on: 
     220112
@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE)
     Transfer_Learning_R03
     
     Docker/Singularity: 
-    rstudio_tf_dr_v3
+    rstudio_cancer_dr
     
     Directory of operations:
     "/home/rstudio"
@@ -68,7 +68,7 @@ human_projects<- available_projects()
 ```{r }
 recount3_rse_GBM <- create_rse(human_projects[(human_projects$project == "GBM"),])
 ```
-tcgabiolinks download done by Avery williams 
+tcgabiolinks download done by Avery Williams 
 ```{r}
 load("/home/rstudio/data/TCGA_GBM_GeneExpression_TCGABIOlinks.rda")
 ```
@@ -125,7 +125,7 @@ recount3_count_brain <- as.data.frame(recount3_count_brain)
 
 ### Analysis
 
-#qucik pca analysis of both datasets 
+#pca analysis of both datasets 
 
 TCGA GBM PCA analysis
 ```{r}
@@ -213,7 +213,6 @@ note that brain structures are a major influence in the PCA, but I can not contr
 only covariate at this point is GTex vs TCGA databases
 
 
-
 #GBM vs normal DESeq2
 
 create metadata for DESeq2 - database, tumor/normal, subtype, sex
@@ -286,7 +285,7 @@ count_table<- cbind(recount3_count_GBM, recount3_count_brain)
 identical(rownames(all_metadata), colnames(count_table))
 ```
 
-```{r}
+```{r eval = FALSE}
 saveRDS(count_table, "/home/rstudio/data/recount3_GBM_GTEx_BRAIN_raw_counts.rds")
 saveRDS(all_metadata, "/home/rstudio/data/recount3_GBM_GTEx_BRAIN_metadata.rds")
 ```
@@ -300,12 +299,91 @@ dds_gbm_normal <- DESeqDataSetFromMatrix(countData = count_table,
 ```
 
 Run DESeq2 for GBM tumor vs normal
-```{r eval= FALSE}
-deseq2_gbm_normal <- deseq2_function(dds_gbm_normal, "/data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03/output/deseq2_gbm/Deseq2_gbm_normal_gtx_res.csv", "status", "Primary Tumor", "Solid Tissue Normal")
+```{r eval = FALSE}
+deseq2_gbm_normal <- deseq2_function(dds_gbm_normal, "~/output/deseq2_gbm/220927_deseq2_gbm_normal_gtx_res.csv", "status", "Primary Tumor", "Solid Tissue Normal")
 ```
+estimating size factors
 
+  Note: levels of factors in the design contain characters other than
 
-```{r eval= FALSE}
+  letters, numbers, '_' and '.'. It is recommended (but not required) to use
+
+  only letters, numbers, and delimiters '_' or '.', as these are safe characters
+
+  for column names in R. [This is a message, not a warning or an error]
+
+estimating dispersions
+
+gene-wise dispersion estimates
+
+mean-dispersion relationship
+
+  Note: levels of factors in the design contain characters other than
+
+  letters, numbers, '_' and '.'. It is recommended (but not required) to use
+
+  only letters, numbers, and delimiters '_' or '.', as these are safe characters
+
+  for column names in R. [This is a message, not a warning or an error]
+
+final dispersion estimates
+
+  Note: levels of factors in the design contain characters other than
+
+  letters, numbers, '_' and '.'. It is recommended (but not required) to use
+
+  only letters, numbers, and delimiters '_' or '.', as these are safe characters
+
+  for column names in R. [This is a message, not a warning or an error]
+fitting model and testing
+
+  Note: levels of factors in the design contain characters other than
+
+  letters, numbers, '_' and '.'. It is recommended (but not required) to use
+
+  only letters, numbers, and delimiters '_' or '.', as these are safe characters
+
+  for column names in R. [This is a message, not a warning or an error]
+
+-- replacing outliers and refitting for 15181 genes
+
+-- DESeq argument 'minReplicatesForReplace' = 7 
+
+-- original counts are preserved in counts(dds)
+
+estimating dispersions
+
+  Note: levels of factors in the design contain characters other than
+
+  letters, numbers, '_' and '.'. It is recommended (but not required) to use
+
+  only letters, numbers, and delimiters '_' or '.', as these are safe characters
+
+  for column names in R. [This is a message, not a warning or an error]
+
+fitting model and testing
+
+  Note: levels of factors in the design contain characters other than
+
+  letters, numbers, '_' and '.'. It is recommended (but not required) to use
+
+  only letters, numbers, and delimiters '_' or '.', as these are safe characters
+
+  for column names in R. [This is a message, not a warning or an error]
+
+[1] "Intercept"                                   "database_TCGA_vs_GTEx"                      
+
+[3] "status_Primary.Tumor_vs_Solid.Tissue.Normal"
+
+using 'apeglm' for LFC shrinkage. If used in published research, please cite:
+
+    Zhu, A., Ibrahim, J.G., Love, M.I. (2018) Heavy-tailed prior distributions for
+
+    sequence count data: removing the noise and preserving large differences.
+
+    Bioinformatics. https://doi.org/10.1093/bioinformatics/bty895
+
+```{r eval =}
 deseq2_gbm_normal
 ```
 
@@ -403,3 +481,23 @@ sig_LVs <- LV_test_TCGA_BH$limma[LV_test_TCGA_BH$limma$adj.P.Val < 0.05,]
 sessionInfo()
 ```
 
+
+
+## Code used to donwload TCGA biolinks data
+# TCGAbiolinks Downloads
+#via Avery Williams
+library(SummarizedExperiment)
+library(TCGAbiolinks)
+# GDCquery: searches the genomic data commons for the given project and category, filtering results as needed and returning an object with a summary table
+query.gbmexp <- GDCquery(project = "TCGA-GBM",
+                         data.category = "Transcriptome Profiling",
+                         access = "open",
+                         legacy = FALSE,
+                         experimental.strategy = "RNA-Seq",
+                         workflow.type = "HTSeq - Counts")
+# Downloading data to local computer
+GDCdownload(query = query.gbmexp, method = "api")
+# Bringing data into environment
+TCGAdata <- GDCprepare(query = query.gbmexp, save = TRUE, 
+                   save.filename = "TCGA_GBM_GeneExpression.rda",
+                   summarizedExperiment = TRUE)

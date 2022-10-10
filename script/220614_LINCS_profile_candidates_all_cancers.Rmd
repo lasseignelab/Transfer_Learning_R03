@@ -6,6 +6,8 @@ output:
   html_document:
     toc: true
     theme: united
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -27,7 +29,7 @@ knitr::opts_chunk$set(echo = TRUE)
     Transfer_Learning_R03
     
     Docker/Singularity: 
-    rstudio_tf_dr_v3
+    rstudio_cancer_dr
     
     Directory of operations: 
     "/home/rstudio"
@@ -65,6 +67,8 @@ library(signatureSearch)
 library(HDF5Array)
 library(igraph)
 library(visNetwork)
+library(stringr)
+library(readr)
 ```
 
 get the LINCS data
@@ -80,13 +84,13 @@ get drug candidates
 gbm
 ```{r }
 lincs_limma_gbm_res_GI1_fda_approved<- read_csv( "~/output/limma_GBM/220808_SR_LINCS_GBM_top_RES_all.csv")
-lincs_deseq_gbm_res_GI1_fda_approved<- read_csv( "~/output/deseq2_gbm/220427_SR_LINCS_GBM_DESEQ2_RES_all.csv")
+lincs_deseq_gbm_res_GI1_fda_approved<- read_csv( "~/output/deseq2_gbm/220928_SR_LINCS_GBM_DESEQ2_RES_all.csv")
 lincs_tfl_gbm_res_GI1_fda_approved<- read_csv( "~/output/TF_L_GBM/220808_SR_LINCS_GBM_top_RES_all.csv")
 ```
 
 liver
 ```{r}
-lincs_deseq_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/deseq2_res/220808_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/deseq2_res/220929_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
 lincs_deseq_gbm_res_HEPG2_fda_approved <- lincs_deseq_gbm_res_HEPG2_fda_approved [lincs_deseq_gbm_res_HEPG2_fda_approved$fda_approved== TRUE,]
 
 lincs_limma_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_RES_tau.csv")
@@ -101,7 +105,7 @@ lung
 #comment.   
 lincs_limma_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/limma_res/220808_SR_LINCS_LUAD_limma_RES_tau.csv")
 lincs_limma_gbm_res_A549_fda_approved<- lincs_limma_gbm_res_A549_fda_approved[lincs_limma_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
-lincs_deseq_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/deseq2_res/220808_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/deseq2_res/220929_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
 lincs_deseq_gbm_res_A549_fda_approved<- lincs_deseq_gbm_res_A549_fda_approved[lincs_deseq_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
 lincs_tfl_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/TFL_res/220808_SR_LINCS_LUAD_TFL_RES_tau.csv")
 lincs_tfl_gbm_res_A549_fda_approved<- lincs_tfl_gbm_res_A549_fda_approved[lincs_tfl_gbm_res_A549_fda_approved$fda_approved==TRUE,]
@@ -109,7 +113,7 @@ lincs_tfl_gbm_res_A549_fda_approved<- lincs_tfl_gbm_res_A549_fda_approved[lincs_
 
 pancreatic
 ```{r}
-lincs_deseq_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/deseq2_res/220808_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/deseq2_res/220929_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
 lincs_deseq_gbm_res_YAPC_fda_approved<- lincs_deseq_gbm_res_YAPC_fda_approved[lincs_deseq_gbm_res_YAPC_fda_approved$fda_approved == TRUE,]
 
 lincs_limma_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/limma_res/220808_SR_LINCS_PAAD_limma_RES_tau.csv")

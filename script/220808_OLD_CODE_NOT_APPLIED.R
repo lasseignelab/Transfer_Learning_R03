@@ -35,6 +35,588 @@ go_sim_median<- function(go_sim_matrix, path_list,  title , method){
 ```{r}
 go_gbm_med_tfl <- go_sim_median(go_gbm_up_sim, TFL_bp_up, "gbm_up_paths", "Transfer Learning")
 ```
+```{r}
+p2 <- ggplot(tiagabine_1_test_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3)
+p1 <- ggplot(tiagabine_1_test_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal() +  theme(
+  axis.title.x = element_blank(),
+)+ geom_vline(xintercept = 0.3)
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+
+```{r}
+tiagabine_secondary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/tiagabine AUC (PRISM Repurposing Secondary Screen)  tiagabine log2 fold change Drug sensitivity.csv")
+colnames(tiagabine_secondary)[2]<- "logfoldchange"
+colnames(tiagabine_secondary)[3]<- "AUC"
+colnames(tiagabine_secondary)[5]<- "cell_line"
+```
+
+```{r}
+ggplot(tiagabine_secondary, aes(x=logfoldchange, y= AUC))+geom_point()+ geom_text(
+  label=tiagabine_secondary$cell_line, nudge_x = 0.005, nudge_y = 0.005, 
+  check_overlap = T) + xlab("PRISM Primary Screen log(fold change)") + ylab("PRISM Secondary Screen AUC") + geom_vline(xintercept = 0.3) +geom_hline(yintercept = 0.9) +theme_minimal()
+```
+
+```{r}
+vemurafenib_primary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/vemurafenib (BRDBRD-K56343971-001-10-6) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+colnames(vemurafenib_primary)[2]<- "logfoldchange"
+colnames(vemurafenib_primary)[4]<- "cell_line"
+```
+
+```{r}
+vemurafenib_primary_v2 <- vemurafenib_primary[order(vemurafenib_primary$logfoldchange),]
+#tiagabine_1_test_v2$cell_line <- as.factor(tiagabine_1_test_v2$cell_line)
+vemurafenib_primary_v2$cell_line <- factor(vemurafenib_primary_v2$cell_line, levels= as.character(vemurafenib_primary_v2$cell_line))
+
+```
+
+```{r}
+p2 <- ggplot(vemurafenib_primary_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3)
+p1 <- ggplot(vemurafenib_primary_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal() +  theme(
+  axis.title.x = element_blank(),
+)+ geom_vline(xintercept = 0.3)
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+
+```{r}
+vemurafenib_secondary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/vemurafenib (BRDBRD-K56343971-001-14-8) AUC Drug sensitivity AUC (PRISM Repurposing Secondary Screen) 19Q4 vs vemurafenib (BRDBRD-K56343971-001-10-6) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+```{r}
+colnames(vemurafenib_secondary)[2]<- "logfoldchange"
+colnames(vemurafenib_secondary)[3]<- "AUC"
+colnames(vemurafenib_secondary)[5]<- "cell_line"
+```
+
+```{r}
+ggplot(vemurafenib_secondary, aes(x=logfoldchange, y= AUC))+geom_point()+ geom_text(
+  label=vemurafenib_secondary$cell_line, nudge_x = 0.005, nudge_y = 0.005, 
+  check_overlap = T) + xlab("PRISM Primary Screen log(fold change)") + ylab("PRISM Secondary Screen AUC") + geom_vline(xintercept = 0.3) +geom_hline(yintercept = 0.9) +theme_minimal()
+```
+
+
+```{r}
+saxagliptin_primary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/saxagliptin (BRDBRD-A81513827-001-03-6) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+```{r}
+colnames(saxagliptin_primary)[2]<- "logfoldchange"
+colnames(saxagliptin_primary)[4]<- "cell_line"
+```
+
+```{r}
+saxagliptin_primary_v2 <- saxagliptin_primary[order(saxagliptin_primary$logfoldchange),]
+#tiagabine_1_test_v2$cell_line <- as.factor(tiagabine_1_test_v2$cell_line)
+saxagliptin_primary_v2$cell_line <- factor(saxagliptin_primary_v2$cell_line, levels= as.character(saxagliptin_primary_v2$cell_line))
+```
+
+```{r}
+p2 <- ggplot(saxagliptin_primary_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3)
+p1 <- ggplot(saxagliptin_primary_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal() +  theme(
+  axis.title.x = element_blank(),
+)+ geom_vline(xintercept = 0.3)
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+
+```{r}
+saxagliptin_secondary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/saxagliptin (BRDBRD-A81513827-001-03-6) AUC Drug sensitivity AUC (PRISM Repurposing Secondary Screen) 19Q4 vs saxagliptin (BRDBRD-A81513827-001-03-6) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+
+```{r}
+colnames(saxagliptin_secondary)[2]<- "logfoldchange"
+colnames(saxagliptin_secondary)[3]<- "AUC"
+colnames(saxagliptin_secondary)[5]<- "cell_line"
+```
+
+```{r}
+ggplot(saxagliptin_secondary, aes(x=logfoldchange, y= AUC))+geom_point()+ geom_text(
+  label=saxagliptin_secondary$cell_line, nudge_x = 0.005, nudge_y = 0.005, 
+  check_overlap = T) + xlab("PRISM Primary Screen log(fold change)") + ylab("PRISM Secondary Screen AUC") + geom_vline(xintercept = 0.3) +geom_hline(yintercept = 0.9) +theme_minimal()
+```
+```{r}
+spironolactone_primary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/spironolactone (BRDBRD-K90027355-001-13-3) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+
+```{r}
+colnames(spironolactone_primary)[2]<- "logfoldchange"
+colnames(spironolactone_primary)[4]<- "cell_line"
+```
+
+```{r}
+spironolactone_primary_v2 <- spironolactone_primary[order(spironolactone_primary$logfoldchange),]
+#tiagabine_1_test_v2$cell_line <- as.factor(tiagabine_1_test_v2$cell_line)
+spironolactone_primary_v2$cell_line <- factor(spironolactone_primary_v2$cell_line, levels= as.character(spironolactone_primary_v2$cell_line))
+```
+
+```{r}
+p2 <- ggplot(spironolactone_primary_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3)
+p1 <- ggplot(spironolactone_primary_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal() +  theme(
+  axis.title.x = element_blank(),
+)+ geom_vline(xintercept = 0.3)
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+
+```{r}
+spironolactone_secondary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/spironolactone (BRDBRD-K90027355-001-13-3) AUC Drug sensitivity AUC (PRISM Repurposing Secondary Screen) 19Q4 vs spironolactone (BRDBRD-K90027355-001-13-3) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+
+```{r}
+colnames(spironolactone_secondary)[2]<- "logfoldchange"
+colnames(spironolactone_secondary)[3]<- "AUC"
+colnames(spironolactone_secondary)[5]<- "cell_line"
+```
+
+```{r}
+ggplot(spironolactone_secondary, aes(x=logfoldchange, y= AUC))+geom_point()+ geom_text(
+  label=spironolactone_secondary$cell_line, nudge_x = 0.005, nudge_y = 0.005, 
+  check_overlap = T) + xlab("PRISM Primary Screen log(fold change)") + ylab("PRISM Secondary Screen AUC") + geom_vline(xintercept = 0.3) +geom_hline(yintercept = 0.9) +theme_minimal()
+```
+
+
+```{r}
+icosapent_primary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/icosapent (BRDBRD-K47192521-001-05-4) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+
+```{r}
+colnames(icosapent_primary )[2]<- "logfoldchange"
+colnames(icosapent_primary )[4]<- "cell_line"
+```
+
+```{r}
+icosapent_primary_v2 <- icosapent_primary [order(icosapent_primary$logfoldchange),]
+#tiagabine_1_test_v2$cell_line <- as.factor(tiagabine_1_test_v2$cell_line)
+icosapent_primary_v2$cell_line <- factor(icosapent_primary_v2$cell_line, levels= as.character(icosapent_primary_v2$cell_line))
+```
+
+```{r}
+p2 <- ggplot(icosapent_primary_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3)
+p1 <- ggplot(icosapent_primary_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal() +  theme(
+  axis.title.x = element_blank(),
+)+ geom_vline(xintercept = 0.3)
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+```{r}
+pamidronate_primary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/pamidronate (BRDBRD-K58513245-304-02-7) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+
+```{r}
+colnames(pamidronate_primary )[2]<- "logfoldchange"
+colnames(pamidronate_primary )[4]<- "cell_line"
+```
+
+```{r}
+pamidronate_primary_v2 <- pamidronate_primary[order(pamidronate_primary$logfoldchange),]
+#tiagabine_1_test_v2$cell_line <- as.factor(tiagabine_1_test_v2$cell_line)
+pamidronate_primary_v2$cell_line <- factor(pamidronate_primary_v2$cell_line, levels= as.character(pamidronate_primary_v2$cell_line))
+```
+
+```{r}
+p2 <- ggplot(pamidronate_primary_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3)
+p1 <- ggplot(pamidronate_primary_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal() +  theme(
+  axis.title.x = element_blank(),
+)+ geom_vline(xintercept = 0.3)
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+
+also need to plot tmz
+```{r}
+temozolomide_primary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/temozolomide (BRDBRD-K32107296-001-16-9) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+
+```{r}
+colnames(temozolomide_primary )[2]<- "logfoldchange"
+colnames(temozolomide_primary)[4]<- "cell_line"
+```
+
+```{r}
+temozolomide_primary_v2 <- temozolomide_primary[order(temozolomide_primary$logfoldchange),]
+#tiagabine_1_test_v2$cell_line <- as.factor(tiagabine_1_test_v2$cell_line)
+temozolomide_primary_v2$cell_line <- factor(temozolomide_primary_v2$cell_line, levels= as.character(temozolomide_primary_v2$cell_line))
+```
+
+```{r}
+p2 <- ggplot(temozolomide_primary_v2, aes(x=logfoldchange, y= cell_line))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3)
+p1 <- ggplot(temozolomide_primary_v2, aes(x=logfoldchange)) + geom_density(alpha=.2, fill="#440154FF") +theme_minimal() +  theme(
+  axis.title.x = element_blank(),
+)+ geom_vline(xintercept = 0.3)
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+
+```{r}
+temozolomide_secondary <- read_csv("~/output/TF_L_GBM/220503_PRISM_DEPMAP_candidate_data/temozolomide (BRDBRD-K32107296-001-16-9) AUC Drug sensitivity AUC (PRISM Repurposing Secondary Screen) 19Q4 vs temozolomide (BRDBRD-K32107296-001-16-9) log2 fold change Drug sensitivity (PRISM Repurposing Primary Screen) 19Q4.csv")
+```
+
+```{r}
+colnames(temozolomide_secondary)[2]<- "logfoldchange"
+colnames(temozolomide_secondary)[3]<- "AUC"
+colnames(temozolomide_secondary)[5]<- "cell_line"
+```
+
+```{r}
+ggplot(temozolomide_secondary, aes(x=logfoldchange, y= AUC))+geom_point()+ geom_text(
+  label=temozolomide_secondary$cell_line, nudge_x = 0.00008, nudge_y = 0.00008, 
+  check_overlap = T) + xlab("PRISM Primary Screen log(fold change)") + ylab("PRISM Secondary Screen AUC") + geom_vline(xintercept = 0.3) +theme_minimal()
+```
+
+
+PRISM primary result differences between the three methods
+
+```{r}
+library(readr)
+primary_screen <- read_csv("~/data/DEPMAP_PRISM_220228/primary-screen-replicate-collapsed-logfold-change.csv")
+sample_info <- read_csv("~/data/DEPMAP_PRISM_220228/sample_info.csv")
+primary_screen_treatment_info <- read_csv("~/data/DEPMAP_PRISM_220228/primary-screen-replicate-collapsed-treatment-info.csv")
+```
+different order
+
+```{r}
+names_vector<- c()
+for ( i in 2:ncol(primary_screen)){
+  names_vector[i] <- primary_screen_treatment_info$name[ grep(colnames(primary_screen)[i], primary_screen_treatment_info$column_name)]
+}
+```
+
+```{r}
+good_id <- c()
+for (i in 1:nrow(primary_screen)){
+  good_id[i]<- nchar(primary_screen[i,1]) == 10 
+}
+
+```
+
+```{r}
+table(good_id)
+```
+```{r}
+primary_screen_v2 <- primary_screen[good_id,]
+```
+
+
+```{r}
+cell_vector<- c()
+for ( i in 1:nrow(primary_screen_v2)){
+  cell_vector[i] <-sample_info$stripped_cell_line_name[ grep(primary_screen_v2[i,1], sample_info$DepMap_ID)]
+}
+```
+
+```{r}
+primary_screen_v3<-  as.matrix(primary_screen_v2[,-1])
+rownames(primary_screen_v3)<- cell_vector
+```
+
+
+```{r}
+colnames(primary_screen_v3) <- names_vector[-1]
+```
+
+```{r}
+test2<- as.data.frame.table(primary_screen_v3, responseName = "log_fold_change")
+```
+
+
+filter by gbm cell lines
+
+```{r}
+#table(sample_info$Subtype)
+gbm_sample_info <- sample_info[sample_info$Subtype == "Glioblastoma",]
+```
+
+
+```{r}
+primary_gbm_res <- test2[test2$Var1 %in% gbm_sample_info$stripped_cell_line_name,]
+```
+
+
+deseq2 only 
+```{r}
+primary_gbm_deseq2<- primary_gbm_res[primary_gbm_res$Var2 %in% c("suprofen", "trandolapril", "felbamate", "pralidoxime", "abiraterone", "ethotoin", "floxuridine", "vardenafil", "moxifloxacin", "nimodipine", "diltiazem"),]
+```
+
+```{r}
+unique(primary_gbm_deseq2$Var2)
+```
+
+```{r}
+primary_gbm_deseq2$method <- rep("DESeq2", nrow(primary_gbm_deseq2))
+```
+
+limma- only 
+```{r}
+primary_gbm_limma<- primary_gbm_res[primary_gbm_res$Var2 %in% c("lonafarnib", "dabrafenib", "apremilast", "rivastigmine", "crizotinib", "ixazomib", "imatinib", "sulfasalazine", "maraviroc", "amiodarone"),]
+```
+
+```{r}
+unique(primary_gbm_limma$Var2)
+```
+
+```{r}
+primary_gbm_limma$method <- rep("limma", nrow(primary_gbm_limma))
+```
+
+tf-only 
+```{r}
+primary_gbm_tfl<- primary_gbm_res[primary_gbm_res$Var2 %in% c("fludarabine", "tiagabine", "vemurafenib", "dasatinib", "nifedipine", "spironolactone", "lapatinib", "pentoxifylline", "erlotinib"),]
+```
+nifedipine not in prism
+```{r}
+unique(primary_gbm_tfl$Var2)
+```
+
+```{r}
+primary_gbm_tfl$method <- rep("Transfer Learning", nrow(primary_gbm_tfl))
+```
+
+deseq2/tf 
+```{r}
+primary_gbm_deseq2_tfl<- primary_gbm_res[primary_gbm_res$Var2 %in% c("diflunisal", "rucaparib"),]
+```
+nifedipine not in prism
+```{r}
+unique(primary_gbm_deseq2_tfl$Var2)
+```
+
+```{r}
+primary_gbm_deseq2_tfl$method <- rep("Transfer Learning and DESeq2", nrow(primary_gbm_deseq2_tfl))
+```
+
+
+limma/tf
+```{r}
+primary_gbm_limma_tfl<- primary_gbm_res[primary_gbm_res$Var2 %in% c("vorinostat", "thioridazine", "saxagliptin", "icosapent"),]
+```
+nifedipine not in prism
+```{r}
+unique(primary_gbm_limma_tfl$Var2)
+```
+
+```{r}
+primary_gbm_limma_tfl$method <- rep("Transfer Learning and limma", nrow(primary_gbm_limma_tfl))
+```
+
+all 
+```{r}
+primary_gbm_all<- primary_gbm_res[primary_gbm_res$Var2 %in% c("pamidronate"),]
+```
+nifedipine not in prism
+```{r}
+unique(primary_gbm_all$Var2)
+```
+
+```{r}
+primary_gbm_all$method <- rep("ALL", nrow(primary_gbm_all))
+```
+
+TMZ
+```{r}
+primary_gbm_tmz<- primary_gbm_res[primary_gbm_res$Var2 %in% c("temozolomide"),]
+```
+nifedipine not in prism
+```{r}
+unique(primary_gbm_tmz$Var2)
+```
+
+```{r}
+primary_gbm_tmz$method <- rep("TMZ Treatment", nrow(primary_gbm_tmz))
+```
+
+```{r}
+primary_gbm_candidates <- rbind(primary_gbm_deseq2, primary_gbm_limma, primary_gbm_tfl, primary_gbm_deseq2_tfl, primary_gbm_limma_tfl, primary_gbm_all, primary_gbm_tmz)
+```
+
+```{r}
+library(ggplot2)
+library(viridis)
+```
+
+
+```{r}
+primary_gbm_candidates$Var2 <- factor(primary_gbm_candidates$Var2, levels=unique(primary_gbm_candidates$Var2))
+ggplot(primary_gbm_candidates, aes(x=log_fold_change, y= Var2))+ geom_violin(aes(fill=method)) +geom_vline(xintercept = -1) +scale_fill_viridis_d()+ theme_minimal()
+```
+
+```{r}
+primary_gbm_candidates_v2 <- rbind(primary_gbm_deseq2, primary_gbm_limma, primary_gbm_tfl,  primary_gbm_tmz)
+```
+```{r}
+primary_gbm_candidates_v2$Var2 <- factor(primary_gbm_candidates_v2$Var2, levels=unique(primary_gbm_candidates_v2$Var2))
+ggplot(primary_gbm_candidates_v2, aes(x=log_fold_change, y= Var2))+ geom_violin(aes(fill=method)) +theme_minimal()
+```
+
+look to see how many gbm cell lines are senstive
+```{r}
+primary_gbm_candidates$Sensitive <- primary_gbm_candidates$log_fold_change < 0.3
+```
+
+```{r}
+table(primary_gbm_candidates$Sensitive)
+```
+```{r}
+drug_fraction <- c()
+drug_list <- as.vector(unique(primary_gbm_candidates$Var2))
+for (i in 1:length(drug_list)){
+  cells <- primary_gbm_candidates$Sensitive[primary_gbm_candidates$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+```
+
+```{r}
+hist(drug_fraction)
+```
+
+```{r}
+drug_senstive_precentage <- data.frame(drug_fraction, drug_list)
+```
+
+```{r}
+ggplot(drug_senstive_precentage, aes( drug_fraction, drug_list ))+ geom_point()
+```
+
+```{r}
+deseq2<- c("suprofen", "trandolapril", "felbamate", "pralidoxime", "abiraterone", "ethotoin", "floxuridine", "vardenafil", "moxifloxacin", "nimodipine", "diltiazem")
+limma<- c("lonafarnib", "dabrafenib", "apremilast", "rivastigmine", "crizotinib", "ixazomib", "imatinib", "sulfasalazine", "maraviroc", "amiodarone")
+transfer_learning<- c("fludarabine", "tiagabine", "vemurafenib", "dasatinib", "nifedipine", "spironolactone", "lapatinib", "pentoxifylline", "erlotinib")
+limma_transfer_learning<- c("vorinostat", "thioridazine", "saxagliptin", "icosapent")
+deseq2_transfer_learning <- c("diflunisal", "rucaparib")
+
+```
+
+```{r}
+drug_senstive_precentage$method<- ifelse(drug_senstive_precentage$drug_list %in% deseq2, "DESeq2", ifelse(
+  drug_senstive_precentage$drug_list %in% limma, "limma", ifelse(
+    drug_senstive_precentage$drug_list %in% transfer_learning, "Transfer Learning", ifelse(
+      drug_senstive_precentage$drug_list %in% limma_transfer_learning, "limma and Transfer Learning", ifelse(
+        drug_senstive_precentage$drug_list %in% deseq2_transfer_learning, "DESeq2 and Transfer Learning", ifelse(
+          drug_senstive_precentage$drug_list == "pamidronate", "ALL", "temozolomide"
+        )
+      )
+    )
+  )
+) )
+```
+
+
+```{r}
+drug_senstive_precentage$drug_list<- factor(drug_senstive_precentage$drug_list,levels= drug_senstive_precentage$drug_list[order(drug_senstive_precentage$drug_fraction)])
+ggplot(drug_senstive_precentage, aes( drug_fraction, drug_list, fill=method ))+ geom_bar(stat="identity")
+```
+
+```{r}
+drug_senstive_precentage_v2 <- drug_senstive_precentage[! drug_senstive_precentage$drug_list == "temozolomide",]
+ggplot(drug_senstive_precentage_v2, aes( drug_fraction, drug_list, fill=method ))+  geom_bar(stat="identity", color = "black")+ scale_fill_viridis_d()+ geom_vline(xintercept = 0.75)+  xlab("PRISM Primary Screen log(fold change)") + ylab("Drug Candidates (All Methods)")
+```
+
+```{r}
+primary_gbm_res$Sensitive <- primary_gbm_res$log_fold_change < 0.3
+drug_fraction <- c()
+drug_list <- as.vector(unique(primary_gbm_res$Var2))
+for (i in 1:length(drug_list)){
+  cells <- primary_gbm_res$Sensitive[primary_gbm_res$Var2 %in% drug_list[i]]
+  cells<- cells[!is.na(cells)]
+  if( length(cells) < 12){
+    print(drug_list[i])
+  }
+  #x<- table(cells)
+  drug_fraction[i] <- length(cells[cells== TRUE])/ length(cells)
+}
+drug_senstive_precentage_all_drugs <- data.frame(drug_fraction, drug_list)
+```
+
+```{r}
+table(drug_senstive_precentage_all_drugs$drug_fraction >= 0.75)
+```
+
+```{r}
+drug_senstive_precentage_all_drugs$tmz <-drug_senstive_precentage_all_drugs$drug_fraction >= 0.75
+```
+
+```{r}
+drug_senstive_precentage_all_drugs<- drug_senstive_precentage_all_drugs[!drug_senstive_precentage_all_drugs$drug_list == "temozolomide",]
+```
+
+
+
+```{r}
+drug_senstive_precentage_all_drugs_tfl<- drug_senstive_precentage_all_drugs[!drug_senstive_precentage_all_drugs$drug_list %in% c("fludarabine", "tiagabine", "vemurafenib", "dasatinib", "nifedipine", "spironolactone", "lapatinib", "pentoxifylline", "erlotinib", "vorinostat", "thioridazine", "saxagliptin", "icosapent","diflunisal", "rucaparib", "pamidronate"),]
+number_of_drugs<- c()
+for ( i in 1:10000){
+  test3 <- table(drug_senstive_precentage_all_drugs_tfl$tmz[sample(1:nrow(drug_senstive_precentage_all_drugs_tfl), 15)])
+  number_of_drugs[i]<- test3[names(test3) == TRUE]
+}
+```
+
+```{r}
+hist(number_of_drugs)
+```
+
+```{r}
+t.test(mu=11, number_of_drugs)
+```
+
+```{r}
+
+drug_senstive_precentage_all_drugs_limma <- drug_senstive_precentage_all_drugs[drug_senstive_precentage_all_drugs$drug_list %in%c("lonafarnib", "dabrafenib", "apremilast", "rivastigmine", "crizotinib", "ixazomib", "imatinib", "sulfasalazine", "maraviroc", "amiodarone", "vorinostat", "thioridazine", "saxagliptin", "icosapent", "pamidronate"),]
+
+drug_senstive_precentage_all_drugs_deseq2 <- drug_senstive_precentage_all_drugs[drug_senstive_precentage_all_drugs$drug_list %in%c("suprofen", "trandolapril", "felbamate", "pralidoxime", "abiraterone", "ethotoin", "floxuridine", "vardenafil", "moxifloxacin", "nimodipine", "diltiazem", "diflunisal", "rucaparib", "pamidronate"),]
+
+```
+
+
+```{r}
+number_of_drugs_v2 <- c()
+for ( i in 1:10000){
+  test3 <- table(drug_senstive_precentage_all_drugs_tfl$tmz[sample(1:nrow(drug_senstive_precentage_all_drugs_tfl), 14)])
+  number_of_drugs_v2[i]<- test3[names(test3) == TRUE]
+}
+```
+
+```{r}
+hist(number_of_drugs_v2)
+```
+
+```{r}
+t.test(mu=9, number_of_drugs_v2, alternative = "less")
+```
+
+```{r}
+hist(drug_senstive_precentage_all_drugs$drug_fraction)
+```
+
+
+
+```{r}
+drug_senstive_precentage$bi_method<- grepl("Transfer Learning",drug_senstive_precentage$method)
+```
+
+```{r}
+ggplot(drug_senstive_precentage, aes( drug_fraction, drug_list, fill=bi_method ))+ geom_bar(stat="identity") +geom_vline(xintercept = 0.75)
+```
+
+```{r}
+drug_senstive_precentage$bi_method<- grepl("DES",drug_senstive_precentage$method)
+```
+
+```{r}
+ggplot(drug_senstive_precentage, aes( drug_fraction, drug_list, fill=bi_method ))+ geom_bar(stat="identity")
+```
+
+```{r}
+drug_senstive_precentage$bi_method<- grepl("limma",drug_senstive_precentage$method)
+```
+
+```{r}
+ggplot(drug_senstive_precentage, aes( drug_fraction, drug_list, fill=bi_method ))+ geom_bar(stat="identity") 
+```
+
+```{r}
+drug_senstive_precentage$drug_list
+```
 
 ```{r}
 go_gbm_med_limma <- go_sim_median(go_gbm_up_sim, limma_bp_up, "gbm_up_paths", "limma")
@@ -1409,5 +1991,622 @@ ggplot(temozolomide_secondary, aes(x=logfoldchange, y= AUC))+geom_point()+ geom_
   check_overlap = T) + xlab("PRISM Primary Screen log(fold change)") + ylab("PRISM Secondary Screen AUC") + geom_vline(xintercept = 0.3) +theme_minimal()
 ```
 
+#tfl_Prism
+```{r}
+primary_paad_res_sub <-primary_paad_res[ primary_paad_res$Var2 %in% lincs_deseq_gbm_res_GI1C_fda_approved$pert,]
+```
 
+
+```{r eval=FALSE}
+write.csv(primary_paad_res_sub , file= "~/output/TF_L_GBM/220602_prism_tfl_candidates.csv" )
+```
+
+#deseq2_Prism
+
+```{r}
+primary_paad_res_sub <-primary_paad_res[ primary_paad_res$Var2 %in% lincs_deseq_gbm_res_GI1_fda_approved$pert,]
+```
+
+
+```{r eval=FALSE}
+write.csv(primary_paad_res_sub , file= "~/output/deseq2_gbm/220602_prism_deseq2_candidates.csv" )
+```
+
+#limma_Prism
+
+```{r}
+primary_paad_res_sub <-primary_paad_res[ primary_paad_res$Var2 %in% lincs_limma_gbm_res_GI1_fda_approved$pert,]
+```
+
+
+```{r eval=FALSE}
+write.csv(primary_paad_res_sub , file= "~/output/limma_gbm/220602_prism_limma_candidates.csv" )
+```
+
+```{r}
+dim(drug_senstive_precentage_all_drugs)
+```
+
+
+
+```{r}
+fraction_cell_line <- drug_senstive_precentage_all_drugs[1:30,]
+```
+
+
+```{r}
+fraction_cell_line
+```
+
+# fraction first
+
+data wrangle the cancers
+```{r}
+#Glioblastoma
+##deseq2
+drug_senstive_precentage_gbm_deseq2_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% lincs_deseq_gbm_res_GI1_fda_approved$pert,]
+drug_senstive_precentage_gbm_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_gbm_deseq2_drugs))
+##limma
+drug_senstive_precentage_gbm_limma_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% lincs_limma_gbm_res_GI1_fda_approved$pert,]
+drug_senstive_precentage_gbm_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_gbm_limma_drugs))
+##tfl
+drug_senstive_precentage_gbm_tfl_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% lincs_deseq_gbm_res_GI1C_fda_approved$pert,]
+drug_senstive_precentage_gbm_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_gbm_tfl_drugs))
+
+drug_senstive_precentage_gbm_methods<- rbind(drug_senstive_precentage_gbm_tfl_drugs, drug_senstive_precentage_gbm_limma_drugs, drug_senstive_precentage_gbm_deseq2_drugs)
+drug_senstive_precentage_gbm_methods$cancer <- rep("Glioblastima", nrow(drug_senstive_precentage_gbm_methods))
+```
+
+```{r}
+#Liver hepatocellular carcinoma
+liver_deseq_tau <- read_csv("~/output/liver_cancer/deseq2_res/220602_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
+liver_deseq_tau_fda_approved <- liver_deseq_tau[liver_deseq_tau$fda_approved == TRUE, ]
+
+liver_limma_tau <- read_csv("~/output/liver_cancer/limma_res/220602_SR_LINCS_LIHC_limma_RES_tau.csv")
+liver_limma_tau_fda_approved <- liver_limma_tau[liver_limma_tau$fda_approved == TRUE,]
+
+liver_limma_tau <- read_csv("~/output/liver_cancer/limma_res/220602_SR_LINCS_LIHC_limma_RES_tau.csv")
+liver_limma_tau_fda_approved <- liver_limma_tau[liver_limma_tau$fda_approved == TRUE,]
+
+liver_tfl_tau <- read_csv("~/output/liver_cancer/TFL_res/220602_SR_LINCS_LIHC_TFL_RES_tau.csv")
+liver_tfl_tau_fda_approved <- liver_tfl_tau[liver_tfl_tau$fda_approved == TRUE,]
+
+##deseq2
+drug_senstive_precentage_lihc_deseq2_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% liver_deseq_tau_fda_approved$pert,]
+drug_senstive_precentage_lihc_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_lihc_deseq2_drugs))
+##limma
+drug_senstive_precentage_lihc_limma_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% liver_limma_tau_fda_approved$pert,]
+drug_senstive_precentage_lihc_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_lihc_limma_drugs))
+##tfl
+drug_senstive_precentage_lihc_tfl_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% liver_tfl_tau_fda_approved $pert,]
+drug_senstive_precentage_lihc_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_lihc_tfl_drugs))
+
+drug_senstive_precentage_lihc_methods<- rbind(drug_senstive_precentage_lihc_tfl_drugs, drug_senstive_precentage_lihc_limma_drugs, drug_senstive_precentage_lihc_deseq2_drugs)
+drug_senstive_precentage_lihc_methods$cancer <- rep("Liver hepatocellular carcinoma", nrow(drug_senstive_precentage_lihc_methods))
+```
+
+```{r}
+#lung adenocaracionoma
+lung_deseq_tau <- read_csv("~/output/lung_cancer/deseq2_res/220602_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
+lung_deseq_tau_fda_approved <- lung_deseq_tau[lung_deseq_tau$fda_approved == TRUE, ]
+
+lung_limma_tau <- read_csv("~/output/lung_cancer/limma_res/220602_SR_LINCS_LUAD_limma_RES_tau.csv")
+lung_limma_tau_fda_approved <- lung_limma_tau[lung_limma_tau$fda_approved == TRUE,]
+
+lung_limma_tau <- read_csv("~/output/lung_cancer/limma_res/220602_SR_LINCS_LUAD_limma_RES_tau.csv")
+lung_limma_tau_fda_approved <- lung_limma_tau[lung_limma_tau$fda_approved == TRUE,]
+
+lung_tfl_tau <- read_csv("~/output/lung_cancer/TFL_res/220602_SR_LINCS_LUAD_TFL_RES_tau.csv")
+lung_tfl_tau_fda_approved <- lung_tfl_tau[lung_tfl_tau$fda_approved == TRUE,]
+
+##deseq2
+drug_senstive_precentage_luad_deseq2_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% lung_deseq_tau_fda_approved$pert,]
+drug_senstive_precentage_luad_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_luad_deseq2_drugs))
+##limma
+drug_senstive_precentage_luad_limma_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% lung_limma_tau_fda_approved$pert,]
+drug_senstive_precentage_luad_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_luad_limma_drugs))
+##tfl
+drug_senstive_precentage_luad_tfl_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% lung_tfl_tau_fda_approved $pert,]
+drug_senstive_precentage_luad_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_luad_tfl_drugs))
+
+drug_senstive_precentage_luad_methods<- rbind(drug_senstive_precentage_luad_tfl_drugs, drug_senstive_precentage_luad_limma_drugs, drug_senstive_precentage_luad_deseq2_drugs)
+drug_senstive_precentage_luad_methods$cancer <- rep("Lung adenocaracionoma", nrow(drug_senstive_precentage_luad_methods))
+
+
+
+```
+
+
+```{r}
+#pancreatic adenicarcinoma
+pancreas_deseq_tau <- read_csv("~/output/pancreas_cancer/deseq2_res/220602_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
+pancreas_deseq_tau_fda_approved <- pancreas_deseq_tau[pancreas_deseq_tau$fda_approved == TRUE, ]
+
+pancreas_limma_tau <- read_csv("~/output/pancreas_cancer/limma_res/220602_SR_LINCS_PAAD_limma_RES_tau.csv")
+pancreas_limma_tau_fda_approved <- pancreas_limma_tau[pancreas_limma_tau$fda_approved == TRUE,]
+
+pancreas_limma_tau <- read_csv("~/output/pancreas_cancer/limma_res/220602_SR_LINCS_PAAD_limma_RES_tau.csv")
+pancreas_limma_tau_fda_approved <- pancreas_limma_tau[pancreas_limma_tau$fda_approved == TRUE,]
+
+pancreas_tfl_tau <- read_csv("~/output/pancreas_cancer/TFL_res/220602_SR_LINCS_PAAD_TFL_RES_tau.csv")
+pancreas_tfl_tau_fda_approved <- pancreas_tfl_tau[pancreas_tfl_tau$fda_approved == TRUE,]
+
+##deseq2
+drug_senstive_precentage_paad_deseq2_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% pancreas_deseq_tau_fda_approved$pert,]
+drug_senstive_precentage_paad_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_paad_deseq2_drugs))
+##limma
+drug_senstive_precentage_paad_limma_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% pancreas_limma_tau_fda_approved$pert,]
+drug_senstive_precentage_paad_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_paad_limma_drugs))
+##tfl
+drug_senstive_precentage_paad_tfl_drugs<-drug_senstive_precentage_all_drugs[ drug_senstive_precentage_all_drugs$drug_list %in% pancreas_tfl_tau_fda_approved $pert,]
+drug_senstive_precentage_paad_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_paad_tfl_drugs))
+
+drug_senstive_precentage_paad_methods<- rbind(drug_senstive_precentage_paad_tfl_drugs, drug_senstive_precentage_paad_limma_drugs, drug_senstive_precentage_paad_deseq2_drugs)
+drug_senstive_precentage_paad_methods$cancer <- rep("Pancreatic adenicarcinoma", nrow(drug_senstive_precentage_paad_methods))
+
+```
+
+```{r}
+drug_senstive_precentage_all_methods_cancers <- rbind(drug_senstive_precentage_paad_methods, drug_senstive_precentage_gbm_methods, drug_senstive_precentage_lihc_methods, drug_senstive_precentage_luad_methods)
+```
+
+```{r}
+t <- ggplot(drug_senstive_precentage_all_methods_cancers,aes(x=method, y=drug_fraction ,fill=method))+
+  #geom_point()+
+  geom_violin() +
+  geom_boxplot(width = 0.1, fill = "grey", color = "black") +
+  facet_wrap(~cancer,nrow=1) + scale_fill_manual(values= c("#440154FF" ,"#21908CFF" ,"#FDE725FF")) + ylab("Fraction of Sensitive Cell Lines")
+#t + geom_text(aes(label=labels_v2),vjust=- 15,  size= 10) +ylim(0, 90)
+t
+```
+
+```{r}
+primary_paad_res_v2 <- primary_paad_res[!is.na(primary_paad_res$log_fold_change),]
+
+
+drug_list <- as.vector(unique(primary_paad_res_v2$Var2))
+drug_median<- c()
+for (i in 1:length(drug_list)){
+  cells <-primary_paad_res_v2$log_fold_change[primary_paad_res_v2$Var2 %in% drug_list[i]]
+  drug_median[i] <- median(cells)
+}
+drug_prism_median_all_drugs <- data.frame( drug_list, drug_median)
+```
+
+
+```{r}
+#Glioblastoma
+##deseq2
+drug_senstive_precentage_gbm_deseq2_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% lincs_deseq_gbm_res_GI1_fda_approved$pert,]
+drug_senstive_precentage_gbm_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_gbm_deseq2_drugs))
+##limma
+drug_senstive_precentage_gbm_limma_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% lincs_limma_gbm_res_GI1_fda_approved$pert,]
+drug_senstive_precentage_gbm_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_gbm_limma_drugs))
+##tfl
+drug_senstive_precentage_gbm_tfl_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% lincs_deseq_gbm_res_GI1C_fda_approved$pert,]
+drug_senstive_precentage_gbm_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_gbm_tfl_drugs))
+
+drug_senstive_precentage_gbm_methods<- rbind(drug_senstive_precentage_gbm_tfl_drugs, drug_senstive_precentage_gbm_limma_drugs, drug_senstive_precentage_gbm_deseq2_drugs)
+drug_senstive_precentage_gbm_methods$cancer <- rep("Glioblastima", nrow(drug_senstive_precentage_gbm_methods))
+```
+
+```{r}
+#Liver hepatocellular carcinoma
+
+##deseq2
+drug_senstive_precentage_lihc_deseq2_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% liver_deseq_tau_fda_approved$pert,]
+drug_senstive_precentage_lihc_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_lihc_deseq2_drugs))
+##limma
+drug_senstive_precentage_lihc_limma_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% liver_limma_tau_fda_approved$pert,]
+drug_senstive_precentage_lihc_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_lihc_limma_drugs))
+##tfl
+drug_senstive_precentage_lihc_tfl_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% liver_tfl_tau_fda_approved $pert,]
+drug_senstive_precentage_lihc_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_lihc_tfl_drugs))
+
+drug_senstive_precentage_lihc_methods<- rbind(drug_senstive_precentage_lihc_tfl_drugs, drug_senstive_precentage_lihc_limma_drugs, drug_senstive_precentage_lihc_deseq2_drugs)
+drug_senstive_precentage_lihc_methods$cancer <- rep("Liver hepatocellular carcinoma", nrow(drug_senstive_precentage_lihc_methods))
+```
+
+```{r}
+#lung adenocaracionoma
+
+##deseq2
+drug_senstive_precentage_luad_deseq2_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% lung_deseq_tau_fda_approved$pert,]
+drug_senstive_precentage_luad_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_luad_deseq2_drugs))
+##limma
+drug_senstive_precentage_luad_limma_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% lung_limma_tau_fda_approved$pert,]
+drug_senstive_precentage_luad_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_luad_limma_drugs))
+##tfl
+drug_senstive_precentage_luad_tfl_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% lung_tfl_tau_fda_approved $pert,]
+drug_senstive_precentage_luad_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_luad_tfl_drugs))
+
+drug_senstive_precentage_luad_methods<- rbind(drug_senstive_precentage_luad_tfl_drugs, drug_senstive_precentage_luad_limma_drugs, drug_senstive_precentage_luad_deseq2_drugs)
+drug_senstive_precentage_luad_methods$cancer <- rep("Lung adenocaracionoma", nrow(drug_senstive_precentage_luad_methods))
+
+
+
+```
+
+
+```{r}
+#pancreatic adenicarcinoma
+
+##deseq2
+drug_senstive_precentage_paad_deseq2_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% pancreas_deseq_tau_fda_approved$pert,]
+drug_senstive_precentage_paad_deseq2_drugs$method <- rep("DESeq2", nrow(drug_senstive_precentage_paad_deseq2_drugs))
+##limma
+drug_senstive_precentage_paad_limma_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% pancreas_limma_tau_fda_approved$pert,]
+drug_senstive_precentage_paad_limma_drugs$method <- rep("limma", nrow(drug_senstive_precentage_paad_limma_drugs))
+##tfl
+drug_senstive_precentage_paad_tfl_drugs<-drug_prism_median_all_drugs[ drug_prism_median_all_drugs$drug_list %in% pancreas_tfl_tau_fda_approved $pert,]
+drug_senstive_precentage_paad_tfl_drugs$method <- rep("Transfer Learning", nrow(drug_senstive_precentage_paad_tfl_drugs))
+
+drug_senstive_precentage_paad_methods<- rbind(drug_senstive_precentage_paad_tfl_drugs, drug_senstive_precentage_paad_limma_drugs, drug_senstive_precentage_paad_deseq2_drugs)
+drug_senstive_precentage_paad_methods$cancer <- rep("Pancreatic adenicarcinoma", nrow(drug_senstive_precentage_paad_methods))
+
+```
+
+```{r}
+drug_senstive_precentage_all_methods_cancers <- rbind(drug_senstive_precentage_paad_methods, drug_senstive_precentage_gbm_methods, drug_senstive_precentage_lihc_methods, drug_senstive_precentage_luad_methods)
+```
+
+
+
+```{r}
+t <- ggplot(drug_senstive_precentage_all_methods_cancers,aes(x=method, y=drug_median ,fill=method))+
+  #geom_point()+
+  geom_violin() + geom_hline(yintercept=0.3, linetype="dashed", color = "red") +
+  geom_boxplot(width = 0.1, fill = "grey", color = "black") +
+  facet_wrap(~cancer,nrow=1) + scale_fill_manual(values= c("#440154FF" ,"#21908CFF" ,"#FDE725FF")) + ylab("Median log2fold change (PRISM)")
+#t + geom_text(aes(label=labels_v2),vjust=- 15,  size= 10) +ylim(0, 90)
+t
+```
+
+
+add the limma gene set list 
+
+```{r}
+GBM_GTEX_gene_limma_res <- readRDS("~/output/limma_gbm/220421_GBM_GTEX_gene_limma_res.rds")
+```
+
+
+```{r}
+GBM_gene_limma_sig<- GBM_GTEX_gene_limma_res$limma[abs(GBM_GTEX_gene_limma_res$limma$logFC) > 2 & GBM_GTEX_gene_limma_res$limma$adj.P.Val < 0.05,]
+```
+filter to genes only in latent varaibles 
+
+GBM_gene_limma_sig
+```{r}
+limma_genes_v2 <- GBM_gene_limma_sig$LV[GBM_gene_limma_sig$LV %in% rownames(Z_mtx)]
+```
+
+
+compare gene list across different methods
+
+```{r}
+library(VennDiagram)
+```
+```{r}
+# Prepare a palette of 3 colors with R colorbrewer:
+myCol <- c("#440154FF" , "#31688EFF" ,"#35B779FF")
+```
+
+```{r}
+venn.diagram(
+  x = list(limma_genes_v2, deseq2_genes_v2, topgenes),
+  category.names = c("limma" , "DESeq2" , "Transfer Learning"),
+  filename = '~/output/gene_gbm_venn_diagramm.png',
+  output=TRUE,
+  
+  # Output features
+  imagetype="png" ,
+  height = 480 , 
+  width = 480 , 
+  resolution = 300,
+  compression = "lzw",
+  
+  # Circles
+  lwd = 2,
+  lty = 'blank',
+  fill = myCol,
+  
+  # Numbers
+  cex = .4,
+  fontface = "bold",
+  fontfamily = "sans",
+  
+  # Set names
+  cat.cex = 0.3,
+  cat.fontface = "bold",
+  cat.default.pos = "outer",
+  cat.pos = c(-27, 27, 135),
+  cat.dist = c(0.055, 0.055, 0.085),
+  cat.fontfamily = "sans",
+  rotation = 1
+)
+```
+
+
+pathway analysis for each unique gene set
+```{r}
+un_tf_genes <- setdiff(topgenes, c(limma_genes_v2, deseq2_genes_v2))
+```
+
+```{r}
+deseq_results<- deseq_results[complete.cases(deseq_results),]
+up_genes<- deseq_results$Symbol[deseq_results$log2FoldChange >0]
+down_genes<- deseq_results$Symbol[deseq_results$log2FoldChange <0]
+```
+
+
+```{r}
+pathway_geneset_analysis<- function(geneset , method ){
+  #get up down gene set 
+  up <- geneset[geneset %in% up_genes]
+  #print(up)
+  down <- geneset[geneset %in% down_genes]
+  downset_pathway_results <- gost(query = down, 
+                                  organism = "hsapiens", ordered_query = TRUE, 
+                                  multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                                  measure_underrepresentation = FALSE, evcodes = FALSE, 
+                                  user_threshold = 0.05, correction_method = "g_SCS", 
+                                  domain_scope = "annotated", custom_bg = rownames(Z_mtx), 
+                                  numeric_ns = "", sources = NULL, as_short_link = FALSE)
+  downset_pathway_results<- downset_pathway_results$result
+  
+  upset_pathway_results <- gost(query = up, 
+                                organism = "hsapiens", ordered_query = TRUE, 
+                                multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
+                                measure_underrepresentation = FALSE, evcodes = FALSE, 
+                                user_threshold = 0.05, correction_method = "g_SCS", 
+                                domain_scope = "annotated", custom_bg = rownames(Z_mtx), 
+                                numeric_ns = "", sources = NULL, as_short_link = FALSE)
+  upset_pathway_results<- upset_pathway_results$result
+  
+  pathway_results<- rbind(upset_pathway_results, downset_pathway_results)
+  pathway_results$set<- c(rep("Up", nrow(upset_pathway_results)), rep("Down", nrow(downset_pathway_results)))
+  file_name<- paste0("~/output/gbm_",  method, "_gene_pathways.csv")
+  write.csv2(as.data.frame(pathway_results[,-14]), file_name )
+  
+  file_name<- paste0("~/output/gbm_", method, "_gene_pathways.png")
+  if(nrow(pathway_results)<50){
+    ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value))+geom_tile()+scale_fill_viridis(direction=-1)+theme_classic()+ labs(title=name,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
+    
+  }else{
+    pathway_results<- pathway_results[pathway_results$source %in% c("KEGG","REAC","GO:MF" ),]
+    ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value)) + geom_tile()+ scale_fill_viridis(direction=-1)+ theme_classic() + labs(title=method,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
+  }
+  ggsave(file_name, width = 12, height = 14)
+}
+```
+
+note due to the overlapping of genes between the different methods. A direct statistical test can not be done due to the independence assumption. 
+
+pathways analysi of genes from limma and DESEQ2
+```{r}
+library(gprofiler2)
+#no signifcant pathways
+#pathway_geneset_analysis(un_tf_genes, "transfer_learning")
+```
+
+```{r}
+pathway_geneset_analysis(limma_genes_v2, "limma")
+```
+
+```{r}
+pathway_geneset_analysis(deseq2_genes_v2, "DESeq2")
+```
+
+
+To compare the different centrality metrics for the GBM output genes from limma, deseq2, and the transfer learning approach. For each method, I randomly selected the same number of genes and calculated the median of each of the three log2 transformed centrality metrics. This was done 100,000 times. A one-way t-test was conducted to determine if the genes determined if one of the methods had a higher median of the centrality metrics than by chance. We used this approach over a comparison of one method vs another via Wilcox test and ANOVA due to the assumption of independence because of the overlap of genes between methods. 
+
+
+```{r}
+network_metric_anaylsis<- function(geneset){
+  #calculate the median for each metric for method
+  degree_med <- median(string_ppi_details$degree_log[ rownames(string_ppi_details) %in% geneset ])
+  print(degree_med)
+  betweenness_med <- median(string_ppi_details$log_betweness[ rownames(string_ppi_details) %in% geneset ])
+  print(betweenness_med)
+  eign_cent_med <- median(string_ppi_details$eign_cent_log[ rownames(string_ppi_details) %in% geneset ])
+  print(eign_cent_med)
+  
+  random_degree_med <- c()
+  random_betweenness_med<- c()
+  random_eign_cent_med<- c() 
+  
+  for( i in 1:100000){
+    sub_genes <- rownames(Z_mtx)[sample(1:nrow(Z_mtx), length(geneset))]
+    sub_ppi <- string_ppi_details[rownames(string_ppi_details) %in% sub_genes,]
+    random_degree_med[i] <- median(sub_ppi$degree_log)
+    random_betweenness_med[i] <- median(sub_ppi$log_betweness)
+    random_eign_cent_med[i] <- median(sub_ppi$eign_cent_log)
+  }
+  #print(hist(random_degree_med))
+  #print("wilcox degree")
+  #print(random_degree_med[1:5])
+  print(t.test(random_degree_med,mu= degree_med, alternative = "less" ))
+  
+  #print(hist(random_betweenness_med))
+  # print("wilcox betweenness")
+  print(t.test(random_betweenness_med,mu=betweenness_med, alternative = "less" ))
+  
+  #print(hist(random_eign_cent_med))
+  #print("wilcox betweenness")
+  print(t.test(random_eign_cent_med, mu=eign_cent_med, alternative ="less"))
+  
+  #degree
+  
+  #Print plot   
+  
+  #betweeness 
+  
+  #Print plot
+  
+  #eignvector 
+  #print plot 
+  
+  
+}
+```
+
+print("kruskal and pairwise.wilcox degree")
+print(kruskal.test(degree ~ method, data = ppi_details_sig_3_methods_filtered))
+print(pairwise.wilcox.test(ppi_details_sig_3_methods_filtered$degree, ppi_details_sig_3_methods_filtered$method, p.adjust.method = "bonf"))
+
+print("kruskal and pairwise.wilcox betweenness")
+print(kruskal.test(betweenness ~ method, data = ppi_details_sig_3_methods_filtered))
+print(pairwise.wilcox.test(ppi_details_sig_3_methods_filtered$betweenness, ppi_details_sig_3_methods_filtered$method, p.adjust.method = "bonf"))
+
+print("kruskal and pairwise.wilcox betweenness")
+print(kruskal.test(eign_cent ~ method, data = ppi_details_sig_3_methods_filtered))
+print(pairwise.wilcox.test(ppi_details_sig_3_methods_filtered$eign_cent, ppi_details_sig_3_methods_filtered$method, p.adjust.method = "bonf"))
+
+
+#plot each metric 
+#ppi_details_sig_3_methods$degree_log <- log(ppi_details_sig_3_methods$degree)
+p1 <- ggplot(ppi_details_sig_3_methods, aes(x=method , y=degree_log, fill=method )) + 
+  geom_violin()+ geom_boxplot(width = 0.1, fill = "grey", color = "black")+labs(title="PPI Degree",x="Genes from Disease Signature for Signature Reversion", y = "PPI log(Degree)", color= "Method") + scale_colour_manual(values = c("#440154FF" ,"#21908CFF" ,"#FDE725FF"), aesthetics = c("colour", "fill"))+ theme_minimal()
+
+
+#ppi_details_sig_3_methods$log_betweness <- log(ppi_details_sig_3_methods$betweenness)
+p2<- ggplot(ppi_details_sig_3_methods, aes(x=method, y=log_betweness , fill=method)) + 
+  geom_violin()+ geom_boxplot(width = 0.1, fill = "grey", color = "black")+labs(title="PPI Betweeness",x="Genes from Disease Signature for Signature Reversion", y = "PPI log(Betweeness)", color= "Method") + scale_colour_manual(values =  c("#440154FF" ,"#21908CFF" ,"#FDE725FF"), aesthetics = c("colour", "fill"))+ theme_minimal()
+
+
+#ppi_details_sig_3_methods$eign_cent_log <- log(ppi_details_sig_3_methods$eign_cent)
+p3<- ggplot(ppi_details_sig_3_methods, aes(x=method, y=eign_cent_log, fill=method)) + 
+  geom_violin()+ geom_boxplot(width = 0.1, fill = "grey", color = "black")  +labs(title="PPI Eigenvector Centrality Scores",x="Genes from Disease Signature for Signature Reversion", y = "PPI log(Eigenvector Centrality Scores)", color= "Method") + scale_colour_manual(values =  c("#440154FF" ,"#21908CFF" ,"#FDE725FF"), aesthetics = c("colour", "fill"))+ theme_minimal()
+
+#print(p1)
+#print(p2)
+#print(p3)
+
+
+#return(ppi_details_sig_3_methods)
+print("wilcox limma")
+#print(limma_genes_v2$target)
+network_metric_anaylsis(limma_genes_v2$target)
+print("wilcox deseq2")
+network_metric_anaylsis(deseq2_genes_v2$target)
+print("wilcox transfer learning")
+network_metric_anaylsis(topgenes$target)
+
+
+```{r}
+transfer_gbm_res_GI1_tau_fda_approved <- read_csv("~/Documents/Transfer_Learning_R03/output/TF_L_GBM/220207_lincs_transfer_gbm_res_GI1_tau_fda_approved.csv")
+```
+
+
+```{r}
+#some deprecated or multiple ids 
+tfl_gbm_ids <- unique(lincs_commpound_info$pert_id[grepl(paste(transfer_gbm_res_GI1_tau_fda_approved$pert,collapse="|"), lincs_commpound_info$cmap_name) ])
+```
+
+
+```{r}
+qres <- queryAnnotDB(tfl_gbm_ids, annot=c("lincsAnnot"))
+qres
+```
+
+```{r}
+#if there are multiples keep the toouchstone case
+qres[qres$is_touchstone == 1,]
+```
+
+
+
+```{r}
+IDs <- lincs_sdfset@ID[grepl(paste(transfer_gbm_res_GI1_tau_fda_approved$pert,collapse="|"), lincs_sdfset@ID)]
+```
+two of the candidates sxagliptin and pamidronte were not in the dataset 
+
+
+```{r}
+tfl_gbm_sdfset <- lincs_sdfset[IDs]
+```
+
+```{r}
+
+```
+
+
+```{r}
+d <- sapply(cid(tfl_gbm_sdfset), function(x) fmcsBatch(tfl_gbm_sdfset[x], tfl_gbm_sdfset, au=0, bu=0, matching.mode = "aromatic")[,"Overlap_Coefficient"])
+```
+
+```{r}
+hc <- hclust(as.dist(1-d), method="complete")
+plot(as.dendrogram(hc), edgePar=list(col=4, lwd=2), horiz=TRUE) 
+```
+
+
+```{r}
+drug_list <- unique(c(lincs_tfl_gbm_res_GI1_fda_approved$pert,lincs_limma_gbm_res_GI1_fda_approved$pert,  lincs_deseq2_gbm_res_GI1_fda_approved$pert))
+```
+
+
+```{r}
+IDs <- lincs_sdfset@ID[grepl(paste(drug_list,collapse="|"), lincs_sdfset@ID)]
+```
+
+```{r}
+drug_gbm_sdfset <- lincs_sdfset[IDs]
+```
+
+```{r}
+drug_gbm_res <- sapply(cid(drug_gbm_sdfset ), function(x) fmcsBatch(drug_gbm_sdfset[x], drug_gbm_sdfset , au=0, bu=0, matching.mode = "aromatic")[,"Tanimoto_Coefficient"])
+```
+```{r}
+hc <- hclust(as.dist(1-drug_gbm_res ), method="complete")
+plot(as.dendrogram(hc), edgePar=list(col=4, lwd=2), horiz=TRUE) 
+```
+
+```{r}
+library(dendextend)
+dendro <- as.dendrogram(hc)
+tfl_drugs2 <-  IDs %in% lincs_tfl_gbm_res_GI1_fda_approved$pert
+limma_drugs2 <- IDs %in% lincs_limma_gbm_res_GI1_fda_approved$pert
+deseq2_drugs2<- IDs %in% lincs_deseq2_gbm_res_GI1_fda_approved$pert
+
+test<- ifelse(tfl_drugs2== TRUE, "#440154FF", "#228C8DFF")
+test2<- ifelse(limma_drugs2== TRUE, "#440154FF", "#228C8DFF")
+test3<- ifelse(deseq2_drugs2== TRUE, "#440154FF", "#228C8DFF")
+#test<- ifelse(tfl_drugs== TRUE, "#440154FF", "#228C8DFF")
+#test2<- ifelse(limma_drugs== TRUE, "#440154FF", "#228C8DFF")
+#test3<- ifelse(deseq2_drugs== TRUE, "#440154FF", "#228C8DFF")
+
+par(oma=c(0.5,0.5,0.5,20), mar = c(4, 0.01, 0.01, 12))
+#dend2 <-prune( dend, med_bottom, reindex_dend=FALSE)
+dendro %>%
+  set("labels_col",value =c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), k=5) %>%
+  set("branches_k_color",value =c("#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"),  k = 5) %>%
+  set("leaves_pch", 19)  %>% 
+  set("nodes_cex", 0.6) %>% 
+  set("branches_lwd", 3) %>% 
+  set("labels_cex", 0.5) %>%
+  plot( horiz=TRUE, axes=FALSE)
+#addjust eh y shift
+colored_bars(cbind(test, test2, test3), dendro ,rowLabels = c("Transfer", "limma", "DESeq2"), y_shift = 4, horiz = TRUE)
+#note have to save manually via export function as a pdf
+```
+
+
+```{r}
+library(ComplexHeatmap)
+library(circlize)
+```
+
+
+```{r}
+row_ha = HeatmapAnnotation(Transfer_Learning=tfl_drugs2,DESeq2= deseq2_drugs2, limma= limma_drugs2 , col = list(Transfer_Learning = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),DESeq2 = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),limma = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF") ))
+col_fun = colorRamp2(c(0,  1), c( "black", "yellow"))
+#ha = rowAnnotation(foo = anno_mark(at = c(1:4, 20, 60, 97:100), labels = TFL_bp_up[1:10]))
+
+Heatmap(drug_gbm_res, nam= "Overlap_Coefficient drug structure", col = col_fun, show_column_names = FALSE,  top_annotation = row_ha,  
+        clustering_distance_rows= "euclidean",
+        clustering_distance_columns=  "euclidean",
+        clustering_method_rows = "ward.D2" ,
+        clustering_method_columns="ward.D2")
+```
 

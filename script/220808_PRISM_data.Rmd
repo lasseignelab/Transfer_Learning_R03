@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE)
     Transfer_Learning_R03
     
     Docker/Singularity: 
-    rstudio_tf_dr_v3
+    rstudio_cancer_dr
     
     Directory of operations: 
     "/home/rstudio"
@@ -57,15 +57,14 @@ library(ggplot2)
 library(ggpubr)
 ```
 
-
+Downloaded dat aon Feb 28, 2022
 ```{r}
 library(readr)
 primary_screen <- read_csv("~/data/DEPMAP_PRISM_220228/primary-screen-replicate-collapsed-logfold-change.csv")
 sample_info <- read_csv("~/data/DEPMAP_PRISM_220228/sample_info.csv")
 primary_screen_treatment_info <- read_csv("~/data/DEPMAP_PRISM_220228/primary-screen-replicate-collapsed-treatment-info.csv")
 ```
-different order
-
+different order between files. Also some of the ids are not matching between cell line info and PRISM primary screen results. 
 ```{r}
 names_vector<- c()
 for ( i in 2:ncol(primary_screen)){
@@ -93,6 +92,8 @@ test2<- as.data.frame.table(primary_screen_v3, responseName = "log_fold_change")
 test2$Sensitive <- test2$log_fold_change < 0.3
 ```
 overall
+
+make table files for each cancer
 
 liver
 ```{r}
