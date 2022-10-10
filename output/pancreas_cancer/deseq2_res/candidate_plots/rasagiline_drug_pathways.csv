@@ -1,0 +1,4 @@
+"";"query";"significant";"p_value";"term_size";"query_size";"intersection_size";"precision";"recall";"term_id";"source";"term_name";"effective_domain_size";"source_order";"set"
+"1";"query_1";TRUE;0,0107861695069705;12241;17;17;1;0,00138877542684421;"GO:0005737";"GO:CC";"cytoplasm";21698;384;"Up"
+"2";"query_1";TRUE;0,0230394014540949;793;5;4;0,8;0,00504413619167718;"TF:M04411";"TF";"Factor: NKX2-3; motif: NCCACTTRAN";19958;5782;"Up"
+"3";"query_1";TRUE;0,0258055459214565;1;2;1;0,5;1;"GO:0004132";"GO:MF";"dCMP deaminase activity";20183;784;"Down"
