@@ -1,0 +1,121 @@
+"","go","cluster","parent","parentSimScore","score","size","term","parentTerm","tfl_drugs","deseq2_drugs","limma_drugs"
+"GO:0031175","GO:0031175",1,"GO:0030154",0.429,135,135,"neuron projection development","cell differentiation",TRUE,FALSE,TRUE
+"GO:0000902","GO:0000902",1,"GO:0030154",0.276,82,82,"cell morphogenesis","cell differentiation",TRUE,FALSE,FALSE
+"GO:0048812","GO:0048812",1,"GO:0030154",0.348,71,71,"neuron projection morphogenesis","cell differentiation",TRUE,FALSE,TRUE
+"GO:0120039","GO:0120039",1,"GO:0030154",0.333,0,0,"plasma membrane bounded cell projection morphogenesis","cell differentiation",TRUE,FALSE,TRUE
+"GO:0048858","GO:0048858",1,"GO:0030154",0.338,3,3,"cell projection morphogenesis","cell differentiation",TRUE,FALSE,TRUE
+"GO:0032990","GO:0032990",1,"GO:0030154",0.441,1,1,"cell part morphogenesis","cell differentiation",TRUE,FALSE,TRUE
+"GO:0007399","GO:0007399",1,"GO:0030154",0.214,335,335,"nervous system development","cell differentiation",TRUE,TRUE,TRUE
+"GO:0048667","GO:0048667",1,"GO:0030154",0.439,8,8,"cell morphogenesis involved in neuron differentiation","cell differentiation",TRUE,FALSE,FALSE
+"GO:0048666","GO:0048666",1,"GO:0030154",0.532,55,55,"neuron development","cell differentiation",TRUE,FALSE,TRUE
+"GO:0032989","GO:0032989",1,"GO:0030154",0.48,0,0,"cellular component morphogenesis","cell differentiation",TRUE,FALSE,TRUE
+"GO:0030182","GO:0030182",1,"GO:0030154",0.614,170,170,"neuron differentiation","cell differentiation",TRUE,FALSE,TRUE
+"GO:0048699","GO:0048699",1,"GO:0030154",0.586,8,8,"generation of neurons","cell differentiation",TRUE,FALSE,TRUE
+"GO:0022008","GO:0022008",1,"GO:0030154",0.623,45,45,"neurogenesis","cell differentiation",TRUE,FALSE,TRUE
+"GO:0007409","GO:0007409",1,"GO:0030154",0.308,83,83,"axonogenesis","cell differentiation",TRUE,FALSE,FALSE
+"GO:0120036","GO:0120036",2,"GO:0007268",0.102,1,1,"plasma membrane bounded cell projection organization","chemical synaptic transmission",TRUE,FALSE,TRUE
+"GO:0000904","GO:0000904",1,"GO:0030154",0.593,2,2,"cell morphogenesis involved in differentiation","cell differentiation",TRUE,FALSE,FALSE
+"GO:0030030","GO:0030030",2,"GO:0007268",0.134,42,42,"cell projection organization","chemical synaptic transmission",TRUE,FALSE,TRUE
+"GO:0061564","GO:0061564",1,"GO:0030154",0.439,19,19,"axon development","cell differentiation",TRUE,FALSE,FALSE
+"GO:0048468","GO:0048468",1,"GO:0030154",0.772,21,21,"cell development","cell differentiation",TRUE,FALSE,TRUE
+"GO:0098916","GO:0098916",2,"GO:0007268",0.851,0,0,"anterograde trans-synaptic signaling","chemical synaptic transmission",TRUE,TRUE,TRUE
+"GO:0007268","GO:0007268",2,"GO:0007268",1,252,252,"chemical synaptic transmission","chemical synaptic transmission",TRUE,TRUE,TRUE
+"GO:0099537","GO:0099537",2,"GO:0007268",0.746,0,0,"trans-synaptic signaling","chemical synaptic transmission",TRUE,TRUE,TRUE
+"GO:0048167","GO:0048167",2,"GO:0007268",0.566,52,52,"regulation of synaptic plasticity","chemical synaptic transmission",TRUE,FALSE,TRUE
+"GO:0099536","GO:0099536",2,"GO:0007268",0.674,5,5,"synaptic signaling","chemical synaptic transmission",TRUE,TRUE,TRUE
+"GO:0010975","GO:0010975",1,"GO:0030154",0.357,34,34,"regulation of neuron projection development","cell differentiation",TRUE,FALSE,FALSE
+"GO:0065008","GO:0065008",4,"GO:0042391",0.788,0,0,"regulation of biological quality","regulation of membrane potential",TRUE,TRUE,TRUE
+"GO:0031344","GO:0031344",2,"GO:0007268",0.099,5,5,"regulation of cell projection organization","chemical synaptic transmission",TRUE,FALSE,FALSE
+"GO:0014003","GO:0014003",1,"GO:0030154",0.425,24,24,"oligodendrocyte development","cell differentiation",TRUE,FALSE,FALSE
+"GO:0006810","GO:0006810",3,"GO:0055085",0.728,21,21,"transport","transmembrane transport",TRUE,TRUE,TRUE
+"GO:0050804","GO:0050804",2,"GO:0007268",0.653,65,65,"modulation of chemical synaptic transmission","chemical synaptic transmission",TRUE,TRUE,TRUE
+"GO:0099177","GO:0099177",2,"GO:0007268",0.472,0,0,"regulation of trans-synaptic signaling","chemical synaptic transmission",TRUE,TRUE,TRUE
+"GO:0061387","GO:0061387",2,"GO:0007268",0.076,0,0,"regulation of extent of cell growth","chemical synaptic transmission",TRUE,FALSE,FALSE
+"GO:0099003","GO:0099003",3,"GO:0055085",0.632,7,7,"vesicle-mediated transport in synapse","transmembrane transport",TRUE,TRUE,TRUE
+"GO:0022010","GO:0022010",1,"GO:0030154",0.357,13,13,"central nervous system myelination","cell differentiation",TRUE,FALSE,FALSE
+"GO:0032291","GO:0032291",1,"GO:0030154",0.291,0,0,"axon ensheathment in central nervous system","cell differentiation",TRUE,FALSE,FALSE
+"GO:0051234","GO:0051234",3,"GO:0055085",0.594,0,0,"establishment of localization","transmembrane transport",TRUE,TRUE,TRUE
+"GO:0051049","GO:0051049",3,"GO:0055085",0.489,3,3,"regulation of transport","transmembrane transport",TRUE,TRUE,TRUE
+"GO:0051641","GO:0051641",2,"GO:0007268",0.229,1,1,"cellular localization","chemical synaptic transmission",TRUE,FALSE,FALSE
+"GO:0048588","GO:0048588",1,"GO:0030154",0.566,2,2,"developmental cell growth","cell differentiation",TRUE,FALSE,FALSE
+"GO:0120035","GO:0120035",2,"GO:0007268",0.076,3,3,"regulation of plasma membrane bounded cell projection organization","chemical synaptic transmission",TRUE,FALSE,FALSE
+"GO:0006836","GO:0006836",3,"GO:0055085",0.584,38,38,"neurotransmitter transport","transmembrane transport",TRUE,TRUE,TRUE
+"GO:0048731","GO:0048731",1,"GO:0030154",0.247,2,2,"system development","cell differentiation",TRUE,FALSE,TRUE
+"GO:0001505","GO:0001505",4,"GO:0042391",0.605,3,3,"regulation of neurotransmitter levels","regulation of membrane potential",TRUE,TRUE,TRUE
+"GO:0051179","GO:0051179",3,"GO:0055085",0.467,0,0,"localization","transmembrane transport",TRUE,TRUE,TRUE
+"GO:0009653","GO:0009653",1,"GO:0030154",0.342,131,131,"anatomical structure morphogenesis","cell differentiation",TRUE,FALSE,FALSE
+"GO:0060560","GO:0060560",1,"GO:0030154",0.23,3,3,"developmental growth involved in morphogenesis","cell differentiation",TRUE,FALSE,FALSE
+"GO:0007411","GO:0007411",1,"GO:0030154",0.282,188,188,"axon guidance","cell differentiation",TRUE,FALSE,FALSE
+"GO:0097485","GO:0097485",1,"GO:0030154",0.31,3,3,"neuron projection guidance","cell differentiation",TRUE,FALSE,FALSE
+"GO:0023052","GO:0023052",2,"GO:0007268",0.394,7,7,"signaling","chemical synaptic transmission",TRUE,TRUE,TRUE
+"GO:0051129","GO:0051129",2,"GO:0007268",0.114,0,0,"negative regulation of cellular component organization","chemical synaptic transmission",TRUE,FALSE,FALSE
+"GO:0007275","GO:0007275",1,"GO:0030154",0.283,219,219,"multicellular organism development","cell differentiation",TRUE,FALSE,TRUE
+"GO:0007154","GO:0007154",2,"GO:0007268",0.469,18,18,"cell communication","chemical synaptic transmission",TRUE,TRUE,TRUE
+"GO:0007267","GO:0007267",2,"GO:0007268",0.623,231,231,"cell-cell signaling","chemical synaptic transmission",FALSE,TRUE,TRUE
+"GO:0007610","GO:0007610",4,"GO:0042391",0.246,5,5,"behavior","regulation of membrane potential",FALSE,TRUE,TRUE
+"GO:0060078","GO:0060078",4,"GO:0042391",0.812,31,31,"regulation of postsynaptic membrane potential","regulation of membrane potential",FALSE,TRUE,TRUE
+"GO:0050877","GO:0050877",4,"GO:0042391",0.135,54,54,"nervous system process","regulation of membrane potential",FALSE,TRUE,TRUE
+"GO:0055085","GO:0055085",3,"GO:0055085",1,230,230,"transmembrane transport","transmembrane transport",FALSE,TRUE,TRUE
+"GO:0003008","GO:0003008",4,"GO:0042391",0.176,0,0,"system process","regulation of membrane potential",FALSE,TRUE,TRUE
+"GO:0050890","GO:0050890",4,"GO:0042391",0.11,51,51,"cognition","regulation of membrane potential",FALSE,TRUE,TRUE
+"GO:0042391","GO:0042391",4,"GO:0042391",1,113,113,"regulation of membrane potential","regulation of membrane potential",FALSE,TRUE,TRUE
+"GO:0007611","GO:0007611",4,"GO:0042391",0.128,63,63,"learning or memory","regulation of membrane potential",FALSE,TRUE,TRUE
+"GO:0007214","GO:0007214",2,"GO:0007268",0.226,29,29,"gamma-aminobutyric acid signaling pathway","chemical synaptic transmission",FALSE,TRUE,FALSE
+"GO:0006811","GO:0006811",3,"GO:0055085",0.584,103,103,"ion transport","transmembrane transport",FALSE,TRUE,TRUE
+"GO:0007269","GO:0007269",3,"GO:0055085",0.31,26,26,"neurotransmitter secretion","transmembrane transport",FALSE,TRUE,TRUE
+"GO:0099643","GO:0099643",3,"GO:0055085",0.393,0,0,"signal release from synapse","transmembrane transport",FALSE,TRUE,TRUE
+"GO:0099504","GO:0099504",3,"GO:0055085",0.506,2,2,"synaptic vesicle cycle","transmembrane transport",FALSE,TRUE,TRUE
+"GO:0032501","GO:0032501",4,"GO:0042391",0.246,0,0,"multicellular organismal process","regulation of membrane potential",FALSE,TRUE,TRUE
+"GO:0046928","GO:0046928",3,"GO:0055085",0.217,19,19,"regulation of neurotransmitter secretion","transmembrane transport",FALSE,TRUE,TRUE
+"GO:0034220","GO:0034220",3,"GO:0055085",0.788,147,147,"ion transmembrane transport","transmembrane transport",FALSE,TRUE,TRUE
+"GO:0030534","GO:0030534",4,"GO:0042391",0.154,28,28,"adult behavior","regulation of membrane potential",FALSE,TRUE,FALSE
+"GO:0051932","GO:0051932",2,"GO:0007268",0.85,18,18,"synaptic transmission, GABAergic","chemical synaptic transmission",FALSE,TRUE,FALSE
+"GO:0051588","GO:0051588",3,"GO:0055085",0.399,0,0,"regulation of neurotransmitter transport","transmembrane transport",FALSE,TRUE,TRUE
+"GO:0007612","GO:0007612",4,"GO:0042391",0.109,60,60,"learning","regulation of membrane potential",FALSE,TRUE,TRUE
+"GO:1902476","GO:1902476",3,"GO:0055085",0.49,85,85,"chloride transmembrane transport","transmembrane transport",FALSE,TRUE,FALSE
+"GO:0098660","GO:0098660",3,"GO:0055085",0.717,0,0,"inorganic ion transmembrane transport","transmembrane transport",FALSE,TRUE,TRUE
+"GO:0016079","GO:0016079",3,"GO:0055085",0.257,21,21,"synaptic vesicle exocytosis","transmembrane transport",FALSE,TRUE,FALSE
+"GO:0043269","GO:0043269",3,"GO:0055085",0.399,1,1,"regulation of ion transport","transmembrane transport",FALSE,TRUE,TRUE
+"GO:0060627","GO:0060627",3,"GO:0055085",0.466,9,9,"regulation of vesicle-mediated transport","transmembrane transport",FALSE,TRUE,TRUE
+"GO:0017157","GO:0017157",3,"GO:0055085",0.336,37,37,"regulation of exocytosis","transmembrane transport",FALSE,TRUE,FALSE
+"GO:0007613","GO:0007613",4,"GO:0042391",0.109,83,83,"memory","regulation of membrane potential",FALSE,TRUE,TRUE
+"GO:0098661","GO:0098661",3,"GO:0055085",0.531,0,0,"inorganic anion transmembrane transport","transmembrane transport",FALSE,TRUE,FALSE
+"GO:0006812","GO:0006812",3,"GO:0055085",0.49,27,27,"cation transport","transmembrane transport",FALSE,TRUE,TRUE
+"GO:0045055","GO:0045055",3,"GO:0055085",0.482,24,24,"regulated exocytosis","transmembrane transport",FALSE,TRUE,FALSE
+"GO:0051046","GO:0051046",3,"GO:0055085",0.399,2,2,"regulation of secretion","transmembrane transport",FALSE,TRUE,FALSE
+"GO:0050808","GO:0050808",2,"GO:0007268",0.102,57,57,"synapse organization","chemical synaptic transmission",FALSE,TRUE,TRUE
+"GO:2000300","GO:2000300",3,"GO:0055085",0.188,45,45,"regulation of synaptic vesicle exocytosis","transmembrane transport",FALSE,TRUE,FALSE
+"GO:0006887","GO:0006887",3,"GO:0055085",0.514,99,99,"exocytosis","transmembrane transport",FALSE,TRUE,FALSE
+"GO:0006821","GO:0006821",3,"GO:0055085",0.383,56,56,"chloride transport","transmembrane transport",FALSE,TRUE,FALSE
+"GO:0035637","GO:0035637",2,"GO:0007268",0.237,0,0,"multicellular organismal signaling","chemical synaptic transmission",FALSE,TRUE,FALSE
+"GO:0032879","GO:0032879",3,"GO:0055085",0.285,1,1,"regulation of localization","transmembrane transport",FALSE,TRUE,TRUE
+"GO:1903305","GO:1903305",3,"GO:0055085",0.325,2,2,"regulation of regulated secretory pathway","transmembrane transport",FALSE,TRUE,FALSE
+"GO:0140352","GO:0140352",3,"GO:0055085",0.731,0,0,"export from cell","transmembrane transport",FALSE,TRUE,FALSE
+"GO:1903530","GO:1903530",3,"GO:0055085",0.394,0,0,"regulation of secretion by cell","transmembrane transport",FALSE,TRUE,FALSE
+"GO:0034762","GO:0034762",3,"GO:0055085",0.633,0,0,"regulation of transmembrane transport","transmembrane transport",FALSE,TRUE,TRUE
+"GO:0071625","GO:0071625",4,"GO:0042391",0.176,18,18,"vocalization behavior","regulation of membrane potential",FALSE,TRUE,FALSE
+"GO:0036465","GO:0036465",3,"GO:0055085",0.506,6,6,"synaptic vesicle recycling","transmembrane transport",FALSE,FALSE,TRUE
+"GO:0048488","GO:0048488",3,"GO:0055085",0.41,44,44,"synaptic vesicle endocytosis","transmembrane transport",FALSE,FALSE,TRUE
+"GO:0140238","GO:0140238",3,"GO:0055085",0.469,0,0,"presynaptic endocytosis","transmembrane transport",FALSE,FALSE,TRUE
+"GO:0048856","GO:0048856",1,"GO:0030154",0.388,50,50,"anatomical structure development","cell differentiation",FALSE,FALSE,TRUE
+"GO:0048168","GO:0048168",2,"GO:0007268",0.552,18,18,"regulation of neuronal synaptic plasticity","chemical synaptic transmission",FALSE,FALSE,TRUE
+"GO:0034765","GO:0034765",3,"GO:0055085",0.506,114,114,"regulation of ion transmembrane transport","transmembrane transport",FALSE,FALSE,TRUE
+"GO:0031644","GO:0031644",4,"GO:0042391",0.186,3,3,"regulation of nervous system process","regulation of membrane potential",FALSE,FALSE,TRUE
+"GO:0007417","GO:0007417",1,"GO:0030154",0.193,140,140,"central nervous system development","cell differentiation",FALSE,FALSE,TRUE
+"GO:0098815","GO:0098815",2,"GO:0007268",0.332,7,7,"modulation of excitatory postsynaptic potential","chemical synaptic transmission",FALSE,FALSE,TRUE
+"GO:0060384","GO:0060384",1,"GO:0030154",0.213,17,17,"innervation","cell differentiation",FALSE,FALSE,TRUE
+"GO:0032502","GO:0032502",1,"GO:0030154",0.536,24,24,"developmental process","cell differentiation",FALSE,FALSE,TRUE
+"GO:1904062","GO:1904062",3,"GO:0055085",0.455,3,3,"regulation of cation transmembrane transport","transmembrane transport",FALSE,FALSE,TRUE
+"GO:0050806","GO:0050806",2,"GO:0007268",0.518,17,17,"positive regulation of synaptic transmission","chemical synaptic transmission",FALSE,FALSE,TRUE
+"GO:0099601","GO:0099601",2,"GO:0007268",0.159,5,5,"regulation of neurotransmitter receptor activity","chemical synaptic transmission",FALSE,FALSE,TRUE
+"GO:0030154","GO:0030154",1,"GO:0030154",1,618,618,"cell differentiation","cell differentiation",FALSE,FALSE,TRUE
+"GO:0048869","GO:0048869",1,"GO:0030154",0.831,0,0,"cellular developmental process","cell differentiation",FALSE,FALSE,TRUE
+"GO:0098655","GO:0098655",3,"GO:0055085",0.657,45,45,"cation transmembrane transport","transmembrane transport",FALSE,FALSE,TRUE
+"GO:0051128","GO:0051128",2,"GO:0007268",0.135,2,2,"regulation of cellular component organization","chemical synaptic transmission",FALSE,FALSE,TRUE
+"GO:0097484","GO:0097484",1,"GO:0030154",0.348,12,12,"dendrite extension","cell differentiation",FALSE,FALSE,TRUE
+"GO:0010646","GO:0010646",2,"GO:0007268",0.261,0,0,"regulation of cell communication","chemical synaptic transmission",FALSE,FALSE,TRUE
+"GO:0050896","GO:0050896",4,"GO:0042391",0.246,67,67,"response to stimulus","regulation of membrane potential",FALSE,FALSE,TRUE
+"GO:0023051","GO:0023051",2,"GO:0007268",0.219,1,1,"regulation of signaling","chemical synaptic transmission",FALSE,FALSE,TRUE
+"GO:0050794","GO:0050794",2,"GO:0007268",0.212,2,2,"regulation of cellular process","chemical synaptic transmission",FALSE,FALSE,TRUE
+"GO:0008306","GO:0008306",4,"GO:0042391",0.094,28,28,"associative learning","regulation of membrane potential",FALSE,FALSE,TRUE
+"GO:0035418","GO:0035418",4,"GO:0042391",0.093,12,12,"protein localization to synapse","regulation of membrane potential",FALSE,FALSE,TRUE
