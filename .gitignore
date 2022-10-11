@@ -4,3 +4,9 @@
 .Ruserdata
 data
 rstudio_tf_dr_v3_latest.sif
+output/lung_cancer/220616_cosine_sim_LINCS_A549.rds
+output/lung_cancer/limma_res/220601_LUAD_GTEX_gene_limma_res.rds
+output/pancreas_cancer/limma_res/220601_PAAD_GTEX_gene_limma_res.rds
+output/liver_cancer/limma_res/220601_LIHC_GTEX_gene_limma_res.rds
+output/liver_cancer/limma_res/220808_LIHC_GTEX_gene_limma_res.rds
+output/TF_L_GBM/220804_LV_TCGA_GTEX_T_vs_NT_B_long_sample_info.tsv
