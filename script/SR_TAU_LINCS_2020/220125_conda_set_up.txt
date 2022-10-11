@@ -1,0 +1,14 @@
+#done 220125 at 11 am
+module load intel/2017a
+module load Anaconda3/2019.10
+conda create --name SR_TAU
+source activate
+conda activate SR_TAU
+conda install -c conda-forge r-base
+conda install -c bioconda bioconductor-signaturesearch
+conda install -c bioconda bioconductor-signaturesearchdata
+conda install -c r r-mass
+conda install -c conda-forge parallel
+conda install -c r r-tidyverse
+conda install -c r r-magrittr
+conda install -c conda-forge r-dplyr
