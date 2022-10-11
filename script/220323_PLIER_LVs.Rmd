@@ -312,12 +312,12 @@ ggplot(string_ppi_details, aes(x=top_10_weights, y=degree, fill=top_10_weights )
 ```
 
 ```{r}
-string_ppi_details$degree_log<- log(string_ppi_details$degree)
+string_ppi_details$degree_log<- log(string_ppi_details$degree +1)
 ```
 
 ```{r}
 ggplot(string_ppi_details, aes(x=top_10_weights, y=degree_log, fill=top_10_weights )) + 
-  geom_violin()+ geom_point() +labs(title="LV PPI Degree",x="Top 10 Weight?", y = "PPI log(Degree)", color= "Top 10 Weight?") + scale_colour_manual(values =  c("#440154FF","#228C8DFF"), aesthetics = c("colour", "fill"))+ theme_minimal()
+  geom_violin()+ geom_point() +labs(title="LV PPI Degree",x="Top 10 Weight?", y = "PPI log(Degree + 1)", color= "Top 10 Weight?") + scale_colour_manual(values =  c("#440154FF","#228C8DFF"), aesthetics = c("colour", "fill"))+ theme_minimal()
 ```
 ```{r}
 plot(string_ppi_details$degree, string_ppi_details$degree_log)
@@ -330,9 +330,9 @@ ggplot(string_ppi_details, aes(x=top_10_weights, y=betweenness, fill=top_10_weig
 ```
 
 ```{r}
-string_ppi_details$log_betweness <- log(string_ppi_details$betweenness)
+string_ppi_details$log_betweness <- log(string_ppi_details$betweenness + 1)
 ggplot(string_ppi_details, aes(x=top_10_weights, y=log_betweness , fill=top_10_weights)) + 
-  geom_violin()+ geom_point() +labs(title="LV PPI Betweeness",x="Top 10 Weight?", y = "PPI log(Betweeness)", color= "Top 10 Weight?") + scale_colour_manual(values =  c("#440154FF","#228C8DFF"), aesthetics = c("colour", "fill"))+ theme_minimal()
+  geom_violin()+ geom_point() +labs(title="LV PPI Betweeness",x="Top 10 Weight?", y = "PPI log(Betweeness + 1)", color= "Top 10 Weight?") + scale_colour_manual(values =  c("#440154FF","#228C8DFF"), aesthetics = c("colour", "fill"))+ theme_minimal()
 ```
 ```{r}
 plot(string_ppi_details$betweenness, string_ppi_details$log_betweness)

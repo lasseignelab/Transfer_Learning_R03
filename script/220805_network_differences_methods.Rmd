@@ -25,7 +25,7 @@ knitr::opts_chunk$set(echo = TRUE)
     my laptop
     
     GitHub Repo:
-    Transfer_leanring_R03
+    Transfer_learning_R03
     
     Docker:
     rstudio_cancer_dr
@@ -102,8 +102,8 @@ paad_deseq2_input <- readRDS("~/output/pancreas_cancer/deseq2_res/SR_gene_list_p
 
 
 ```{r}
-string_ppi_details$degree_log <- log(string_ppi_details$degree)
-string_ppi_details$log_betweness <- log(string_ppi_details$betweenness)
+string_ppi_details$degree_log <- log(string_ppi_details$degree + 1)
+string_ppi_details$log_betweness <- log(string_ppi_details$betweenness +1)
 string_ppi_details$eign_cent_log <- log(string_ppi_details$eign_cent)
 string_ppi_details$genes<- rownames(string_ppi_details)
 ```

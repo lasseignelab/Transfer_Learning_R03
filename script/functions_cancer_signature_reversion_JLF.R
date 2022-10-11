@@ -1638,7 +1638,7 @@ network_cent_method_plotting<- function(limma_lists, deseq2_lists, tfl_lists, st
   #plot each metric 
   #ppi_details_sig_3_methods$degree_log <- log(ppi_details_sig_3_methods$degree)
   p1 <- ggplot(ppi_details_sig_3_methods_filtered, aes(x=method , y=degree_log, fill=method )) + 
-    geom_violin()+ geom_boxplot(width = 0.1, fill = "grey", color = "black")+labs(title="PPI Degree",x="Genes from Disease Signature for Signature Reversion", y = "PPI log(Degree)", color= "Method") + scale_colour_manual(values = c("#440154FF" ,"#21908CFF" ,"#FDE725FF"), aesthetics = c("colour", "fill"))+ theme_minimal()+ stat_compare_means(comparisons = my_comparisons, p.adjust.method = "bonf")+ # Add pairwise comparisons p-value
+    geom_violin()+ geom_boxplot(width = 0.1, fill = "grey", color = "black")+labs(title="PPI Degree",x="Genes from Disease Signature for Signature Reversion", y = "PPI log(Degree + 1)", color= "Method") + scale_colour_manual(values = c("#440154FF" ,"#21908CFF" ,"#FDE725FF"), aesthetics = c("colour", "fill"))+ theme_minimal()+ stat_compare_means(comparisons = my_comparisons, p.adjust.method = "bonf")+ # Add pairwise comparisons p-value
     stat_compare_means(label.y = 10)
   file<- paste(filepath, "ppi_degree_methods.png", sep="")
   p1
@@ -1646,7 +1646,7 @@ network_cent_method_plotting<- function(limma_lists, deseq2_lists, tfl_lists, st
   
   #ppi_details_sig_3_methods$log_betweness <- log(ppi_details_sig_3_methods$betweenness)
   p2<- ggplot(ppi_details_sig_3_methods_filtered, aes(x=method, y=log_betweness , fill=method)) + 
-    geom_violin()+ geom_boxplot(width = 0.1, fill = "grey", color = "black")+labs(title="PPI Betweeness",x="Genes from Disease Signature for Signature Reversion", y = "PPI log(Betweeness)", color= "Method") + scale_colour_manual(values =  c("#440154FF" ,"#21908CFF" ,"#FDE725FF"), aesthetics = c("colour", "fill"))+ theme_minimal()+ 
+    geom_violin()+ geom_boxplot(width = 0.1, fill = "grey", color = "black")+labs(title="PPI Betweeness",x="Genes from Disease Signature for Signature Reversion", y = "PPI log(Betweeness + 1)", color= "Method") + scale_colour_manual(values =  c("#440154FF" ,"#21908CFF" ,"#FDE725FF"), aesthetics = c("colour", "fill"))+ theme_minimal()+ 
     stat_compare_means(comparisons = my_comparisons, p.adjust.method = "bonf")+ # Add pairwise comparisons p-value
     stat_compare_means(label.y = 20)
   file<- paste(filepath, "ppi_betweeness_methods.png", sep="")
