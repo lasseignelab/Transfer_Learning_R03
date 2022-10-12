@@ -2,7 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-data
 rstudio_tf_dr_v3_latest.sif
 output/lung_cancer/220616_cosine_sim_LINCS_A549.rds
 output/lung_cancer/limma_res/220601_LUAD_GTEX_gene_limma_res.rds
