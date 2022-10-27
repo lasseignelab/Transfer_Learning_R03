@@ -383,7 +383,7 @@ using 'apeglm' for LFC shrinkage. If used in published research, please cite:
 
     Bioinformatics. https://doi.org/10.1093/bioinformatics/bty895
 
-```{r eval =}
+```{r eval = FALSE}
 deseq2_gbm_normal
 ```
 
@@ -408,6 +408,14 @@ tpm_table<- Counts_to_tpm(count_table, gene_info$bp_length)
 ```{r}
 rownames(tpm_table)<- gene_info$gene_name
 ```
+
+
+```{r eval=FALSE}
+saveRDS(tpm_table, "~/output/recount3_gbm_gtex_tpm_df.rds")
+saveRDS(all_metadata, "~/output/recount3_gbm_gtex_metadata.rds")
+```
+
+
 
 differential latent variable analysis
 

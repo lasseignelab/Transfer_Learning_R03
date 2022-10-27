@@ -526,20 +526,20 @@ source(&quot;/home/rstudio/script/plier_util.R&quot;)
 source(&quot;/home/rstudio/script/test_LV_differences.R&quot;)</code></pre>
 <p>Download GBM dataset: make raw count and metadata table</p>
 <pre class="r"><code>human_projects&lt;- available_projects()</code></pre>
-<pre><code>## 2022-10-05 18:22:18 caching file sra.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-05 18:22:19 caching file gtex.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-05 18:22:20 caching file tcga.recount_project.MD.gz.</code></pre>
+<pre><code>## 2022-10-27 19:40:26 caching file sra.recount_project.MD.gz.</code></pre>
+<pre><code>## 2022-10-27 19:40:27 caching file gtex.recount_project.MD.gz.</code></pre>
+<pre><code>## 2022-10-27 19:40:27 caching file tcga.recount_project.MD.gz.</code></pre>
 <pre class="r"><code>recount3_rse_GBM &lt;- create_rse(human_projects[(human_projects$project == &quot;GBM&quot;),])</code></pre>
-<pre><code>## 2022-10-05 18:22:25 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-10-05 18:22:25 caching file tcga.tcga.GBM.MD.gz.</code></pre>
-<pre><code>## 2022-10-05 18:22:26 caching file tcga.recount_project.GBM.MD.gz.</code></pre>
-<pre><code>## 2022-10-05 18:22:27 caching file tcga.recount_qc.GBM.MD.gz.</code></pre>
-<pre><code>## 2022-10-05 18:22:27 caching file tcga.recount_seq_qc.GBM.MD.gz.</code></pre>
-<pre><code>## 2022-10-05 18:22:29 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-10-05 18:22:29 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-10-05 18:22:30 downloading and reading the counts: 175 samples across 63856 features.</code></pre>
-<pre><code>## 2022-10-05 18:22:30 caching file tcga.gene_sums.GBM.G026.gz.</code></pre>
-<pre><code>## 2022-10-05 18:22:33 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
+<pre><code>## 2022-10-27 19:40:32 downloading and reading the metadata.</code></pre>
+<pre><code>## 2022-10-27 19:40:32 caching file tcga.tcga.GBM.MD.gz.</code></pre>
+<pre><code>## 2022-10-27 19:40:33 caching file tcga.recount_project.GBM.MD.gz.</code></pre>
+<pre><code>## 2022-10-27 19:40:33 caching file tcga.recount_qc.GBM.MD.gz.</code></pre>
+<pre><code>## 2022-10-27 19:40:34 caching file tcga.recount_seq_qc.GBM.MD.gz.</code></pre>
+<pre><code>## 2022-10-27 19:40:35 downloading and reading the feature information.</code></pre>
+<pre><code>## 2022-10-27 19:40:36 caching file human.gene_sums.G026.gtf.gz.</code></pre>
+<pre><code>## 2022-10-27 19:40:37 downloading and reading the counts: 175 samples across 63856 features.</code></pre>
+<pre><code>## 2022-10-27 19:40:37 caching file tcga.gene_sums.GBM.G026.gz.</code></pre>
+<pre><code>## 2022-10-27 19:40:40 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
 <p>tcgabiolinks download done by Avery Williams</p>
 <pre class="r"><code>load(&quot;/home/rstudio/data/TCGA_GBM_GeneExpression_TCGABIOlinks.rda&quot;)</code></pre>
 <pre class="r"><code>metadata_gbm&lt;- colData(data)</code></pre>
@@ -603,16 +603,16 @@ recount_metadata&lt;- as.data.frame(recount_metadata)</code></pre>
 <pre class="r"><code>recount3_count_GBM&lt;- recount3_count_GBM[,colnames(recount3_count_GBM) %in% recount_1ds]</code></pre>
 <p>Download GTEx Brain dataset: make raw count and metadata table</p>
 <pre class="r"><code>recount3_rse_BRIAN &lt;- create_rse(human_projects[(human_projects$project == &quot;BRAIN&quot;),])</code></pre>
-<pre><code>## 2022-10-05 18:22:35 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-10-05 18:22:35 caching file gtex.gtex.BRAIN.MD.gz.</code></pre>
-<pre><code>## 2022-10-05 18:22:36 caching file gtex.recount_project.BRAIN.MD.gz.</code></pre>
-<pre><code>## 2022-10-05 18:22:37 caching file gtex.recount_qc.BRAIN.MD.gz.</code></pre>
-<pre><code>## 2022-10-05 18:22:37 caching file gtex.recount_seq_qc.BRAIN.MD.gz.</code></pre>
-<pre><code>## 2022-10-05 18:22:38 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-10-05 18:22:39 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-10-05 18:22:40 downloading and reading the counts: 2931 samples across 63856 features.</code></pre>
-<pre><code>## 2022-10-05 18:22:40 caching file gtex.gene_sums.BRAIN.G026.gz.</code></pre>
-<pre><code>## 2022-10-05 18:22:56 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
+<pre><code>## 2022-10-27 19:40:42 downloading and reading the metadata.</code></pre>
+<pre><code>## 2022-10-27 19:40:42 caching file gtex.gtex.BRAIN.MD.gz.</code></pre>
+<pre><code>## 2022-10-27 19:40:43 caching file gtex.recount_project.BRAIN.MD.gz.</code></pre>
+<pre><code>## 2022-10-27 19:40:43 caching file gtex.recount_qc.BRAIN.MD.gz.</code></pre>
+<pre><code>## 2022-10-27 19:40:44 caching file gtex.recount_seq_qc.BRAIN.MD.gz.</code></pre>
+<pre><code>## 2022-10-27 19:40:45 downloading and reading the feature information.</code></pre>
+<pre><code>## 2022-10-27 19:40:45 caching file human.gene_sums.G026.gtf.gz.</code></pre>
+<pre><code>## 2022-10-27 19:40:46 downloading and reading the counts: 2931 samples across 63856 features.</code></pre>
+<pre><code>## 2022-10-27 19:40:47 caching file gtex.gene_sums.BRAIN.G026.gz.</code></pre>
+<pre><code>## 2022-10-27 19:41:05 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
 <pre class="r"><code>recount3_count_brain&lt;- assay(recount3_rse_BRIAN)
 recount3_count_brain &lt;- as.data.frame(recount3_count_brain)</code></pre>
 </div>
@@ -991,6 +991,8 @@ Bioinformatics. https://doi.org/10.1093/bioinformatics/bty895</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <pre class="r"><code>tpm_table&lt;- Counts_to_tpm(count_table, gene_info$bp_length)</code></pre>
 <pre class="r"><code>rownames(tpm_table)&lt;- gene_info$gene_name</code></pre>
+<pre class="r"><code>saveRDS(tpm_table, &quot;~/output/recount3_gbm_gtex_tpm_df.rds&quot;)
+saveRDS(all_metadata, &quot;~/output/recount3_gbm_gtex_metadata.rds&quot;)</code></pre>
 <p>differential latent variable analysis</p>
 <p>bring in PLIER object</p>
 <pre class="r"><code>recount3_plier &lt;- readRDS(&quot;~/data/recount3/recount3_plier_wo.rds&quot;)</code></pre>
