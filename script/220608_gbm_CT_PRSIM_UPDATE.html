@@ -665,7 +665,7 @@ venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/gbm_plots/SR_gbm_al
 ## • `` -&gt; `...1`</code></pre>
 <pre class="r"><code>lincs_tfl_gbm_res_GI1_fda_approved&lt;- read_csv( &quot;~/output/TF_L_GBM/220808_SR_LINCS_GBM_top_RES_all.csv&quot;)</code></pre>
 <pre><code>## New names:
-## Rows: 18 Columns: 17
+## Rows: 17 Columns: 17
 ## ── Column specification
 ## ──────────────────────────────────────────────────────── Delimiter: &quot;,&quot; chr
 ## (5): pert, cell, type, trend, t_gn_sym dbl (10): ...1, PCID, WTCS, WTCS_Pval,
@@ -705,16 +705,16 @@ clinical_trial_cancer_summary_v2$labels_v2&lt;- labels_v2</code></pre>
 <pre class="r"><code>clinical_trail_summary_bar_plot(clinical_trial_cancer_summary_v2, &quot;Pancreatic adenocarcinoma&quot;, &quot;~/output/220819_CT_PAAD_barplot.png&quot;)</code></pre>
 <pre><code>## Saving 7 x 5 in image</code></pre>
 <p>plotting the prism results gbm</p>
-<pre class="r"><code>PRISM_methods_plotting(&quot;~/output/TF_L_GBM/220808_prism_deseq2_candidates_gbm.csv&quot;, &quot;~/output/TF_L_GBM/220808_prism_tfl_candidates_gbm.csv&quot;,  &quot;~/output/limma_gbm/220808_prism_limma_candidates_gbm.csv&quot;, &quot;~/output/220822_PRISM_GBM_violin.png&quot;)</code></pre>
+<pre class="r"><code>PRISM_methods_plotting(&quot;~/output/TF_L_GBM/220928_prism_deseq2_candidates_gbm.csv&quot;, &quot;~/output/TF_L_GBM/220808_prism_tfl_candidates_gbm.csv&quot;,  &quot;~/output/limma_gbm/220808_prism_limma_candidates_gbm.csv&quot;, &quot;~/output/220822_PRISM_GBM_violin.png&quot;)</code></pre>
 <pre><code>## Saving 7 x 5 in image</code></pre>
 <p>liver</p>
-<pre class="r"><code>PRISM_methods_plotting(&quot;~/output/liver_cancer/deseq2_res/220808_prism_deseq2_candidates.csv&quot;, &quot;~/output/liver_cancer/TFL_res/220808_prism_tfl_candidates.csv&quot;,  &quot;~/output/liver_cancer/limma_res/220808_prism_limma_candidates.csv&quot;, &quot;~/output/220822_PRISM_liver_violin.png&quot;)</code></pre>
+<pre class="r"><code>PRISM_methods_plotting(&quot;~/output/liver_cancer/deseq2_res/220929_prism_deseq2_candidates.csv&quot;, &quot;~/output/liver_cancer/TFL_res/220808_prism_tfl_candidates.csv&quot;,  &quot;~/output/liver_cancer/limma_res/220808_prism_limma_candidates.csv&quot;, &quot;~/output/220822_PRISM_liver_violin.png&quot;)</code></pre>
 <pre><code>## Saving 7 x 5 in image</code></pre>
 <p>pancreas deseq2 prism was not saved in script signature reversion
 scripts</p>
 <pre class="r"><code>primary_paad_res &lt;-read.csv( &quot;~/output/pancreas_cancer/220808_prism_paad_candidates.csv&quot; )
 
-lincs_deseq_paad_res_YAPC_top &lt;- read.csv(&quot;~/output/pancreas_cancer/deseq2_res/220808_SR_LINCS_PAAD_DESEQ2_RES_tau.csv&quot;)</code></pre>
+lincs_deseq_paad_res_YAPC_top &lt;- read.csv(&quot;~/output/pancreas_cancer/deseq2_res/220929_SR_LINCS_PAAD_DESEQ2_RES_tau.csv&quot;)</code></pre>
 <pre class="r"><code>lincs_deseq_paad_res_YAPC_top_fda&lt;- lincs_deseq_paad_res_YAPC_top[lincs_deseq_paad_res_YAPC_top$fda_approved == TRUE,]
 primary_paad_res_sub &lt;-primary_paad_res[ primary_paad_res$Var2 %in% lincs_deseq_paad_res_YAPC_top_fda$pert,]
 write.csv(primary_paad_res_sub , file= &quot;~/output/pancreas_cancer/deseq2_res/220808_prism_deseq2_candidates.csv&quot; )</code></pre>

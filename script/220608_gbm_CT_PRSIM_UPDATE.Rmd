@@ -174,13 +174,13 @@ clinical_trail_summary_bar_plot(clinical_trial_cancer_summary_v2, "Pancreatic ad
 plotting the prism results 
 gbm 
 ```{r}
-PRISM_methods_plotting("~/output/TF_L_GBM/220808_prism_deseq2_candidates_gbm.csv", "~/output/TF_L_GBM/220808_prism_tfl_candidates_gbm.csv",  "~/output/limma_gbm/220808_prism_limma_candidates_gbm.csv", "~/output/220822_PRISM_GBM_violin.png")
+PRISM_methods_plotting("~/output/TF_L_GBM/220928_prism_deseq2_candidates_gbm.csv", "~/output/TF_L_GBM/220808_prism_tfl_candidates_gbm.csv",  "~/output/limma_gbm/220808_prism_limma_candidates_gbm.csv", "~/output/220822_PRISM_GBM_violin.png")
 ```
 
 
 liver 
 ```{r}
-PRISM_methods_plotting("~/output/liver_cancer/deseq2_res/220808_prism_deseq2_candidates.csv", "~/output/liver_cancer/TFL_res/220808_prism_tfl_candidates.csv",  "~/output/liver_cancer/limma_res/220808_prism_limma_candidates.csv", "~/output/220822_PRISM_liver_violin.png")
+PRISM_methods_plotting("~/output/liver_cancer/deseq2_res/220929_prism_deseq2_candidates.csv", "~/output/liver_cancer/TFL_res/220808_prism_tfl_candidates.csv",  "~/output/liver_cancer/limma_res/220808_prism_limma_candidates.csv", "~/output/220822_PRISM_liver_violin.png")
 ```
 
 
@@ -190,7 +190,7 @@ deseq2 prism was not saved in script signature reversion scripts
 ```{r}
 primary_paad_res <-read.csv( "~/output/pancreas_cancer/220808_prism_paad_candidates.csv" )
 
-lincs_deseq_paad_res_YAPC_top <- read.csv("~/output/pancreas_cancer/deseq2_res/220808_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
+lincs_deseq_paad_res_YAPC_top <- read.csv("~/output/pancreas_cancer/deseq2_res/220929_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
 ```
 
 ```{r}
