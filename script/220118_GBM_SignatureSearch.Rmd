@@ -64,7 +64,7 @@ library(magrittr)
 library(dplyr)
 library(recount3)
 library(ggplot2)
- library(viridis)
+library(viridis)
 library(tidyr)
 library(ggpubr)
 library(gprofiler2)
@@ -75,6 +75,8 @@ library(circlize)
 source("/home/rstudio/script/functions_cancer_signature_reversion_JLF.R")
 source("/home/rstudio/script/plier_util.R")
 source("/home/rstudio/script/test_LV_differences.R")
+library(stringr)
+library(readr)
 ```
 
 organize the LINCS data
@@ -523,7 +525,7 @@ col_fun = colorRamp2(c(-1, 0, 1), c("blue", "black", "yellow"))
 Heatmap(as.matrix(GBM_GTEX_B_MATRIX_sig), nam= "LV Score",  col = col_fun, show_column_names = FALSE, clustering_distance_rows= "euclidean",
              clustering_distance_columns=  "euclidean",
              clustering_method_rows = "ward.D2" ,
-             clustering_method_columns="ward.D2", top_annotation = column_ha, row_names_gp = gpar(fontsize = 8))
+             clustering_method_columns="ward.D2", top_annotation = column_ha, row_names_gp = gpar(fontsize = 9, fontface="bold"))
 ```
 
 
@@ -573,8 +575,8 @@ set.seed(101)
 qsig_lincs_transfer_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
                    gess_method="LINCS", refdb=db_path)
 ```
-52/ 52 genes in up set share identifiers with reference database
-55 / 55 genes in down set share identifiers with reference database
+53/ 53 genes in up set share identifiers with reference database
+54 / 54 genes in down set share identifiers with reference database
 
 ```{r eval=FALSE}
 set.seed(101)
@@ -654,7 +656,8 @@ write.csv(lincs_transfer_gbm_res_GI1_top, file=  "~/output/TF_L_GBM/220808_SR_LI
 ```{r eval=FALSE}
 lincs_transfer_gbm_res_GI1_top_top_fda<- lincs_transfer_gbm_res_GI1_top[lincs_transfer_gbm_res_GI1_top$fda_approval ,]
 lincs_transfer_gbm_res_GI1_top_top_fda<- lincs_transfer_gbm_res_GI1_top_top_fda[lincs_transfer_gbm_res_GI1_top_top_fda$jlf_tau < -80,]
-lincs_transfer_gbm_res_GI1_top_order <- lincs_transfer_gbm_res_GI1_top[order(-lincs_transfer_gbm_res_GI1_top$NCS),]
+
+lincs_transfer_gbm_res_GI1_top_order <- lincs_transfer_gbm_res_GI1_top_top_fda[order(-lincs_transfer_gbm_res_GI1_top_top_fda$NCS),]
 lincs_transfer_gbm_res_GI1_top_top_fda$pert <- factor(lincs_transfer_gbm_res_GI1_top_top_fda$pert, levels = lincs_transfer_gbm_res_GI1_top_order$pert)
 p<-ggplot(data=lincs_transfer_gbm_res_GI1_top_top_fda, aes(x=pert, y=NCS, fill=jlf_tau, shape= clinical_trial_GBM)) +
   geom_bar(stat="identity", color = "black")+ scale_fill_viridis(direction=-1) + geom_point(aes(y = NCS - 0.15), position = position_dodge(0.9), size= 4, show.legend = TRUE)

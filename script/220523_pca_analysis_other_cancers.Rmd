@@ -89,7 +89,7 @@ normal_ids<-  rownames(recount3_rse_PANCREAS@colData)[rownames(recount3_rse_PANC
 
 tumor_norm <- ifelse( rownames(recount3_rse_PANCREAS@colData) %in% normal_ids, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of Gtex pancreas", xlab = "PC1 (10.84%)", ylab = "PC2 (7.17%)", cex.axis = "1.5", cex.lab = "1.5")
-legend("topleft", legend = c("female", "male/normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
+legend("topleft", legend = c("female", "male"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 
 ```{r}
@@ -99,7 +99,7 @@ normal_ids<-  rownames(recount3_rse_PANCREAS@colData)[rownames(recount3_rse_PANC
 
 tumor_norm <- ifelse( rownames(recount3_rse_PANCREAS@colData) %in% normal_ids, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of Gtex pancreas", xlab = "PC1 (10.84%)", ylab = "PC2 (7.17%)", cex.axis = "1.5", cex.lab = "1.5")
-legend("topleft", legend = c(">39", "<= 39"), pch = 21, pt.bg = c("red", "black"), col = "black")
+legend("topleft", legend = c("70-79", "! 70-79"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 ```{r}
 sex<- rownames(recount3_rse_PANCREAS@colData)[recount3_rse_PANCREAS$gtex.age == "20-29"]
@@ -108,7 +108,7 @@ normal_ids<-  rownames(recount3_rse_PANCREAS@colData)[rownames(recount3_rse_PANC
 
 tumor_norm <- ifelse( rownames(recount3_rse_PANCREAS@colData) %in% normal_ids, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of Gtex pancreas", xlab = "PC1 (10.84%)", ylab = "PC2 (7.17%)", cex.axis = "1.5", cex.lab = "1.5")
-legend("topleft", legend = c(">39", "<= 39"), pch = 21, pt.bg = c("red", "black"), col = "black")
+legend("topleft", legend = c("20-29", "! 20-29"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 looking at RIN scores
 ```{r}
