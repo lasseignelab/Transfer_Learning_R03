@@ -1,234 +1,234 @@
 "","ID","Description","GeneRatio","BgRatio","pvalue","p.adjust","qvalue","itemID","Count"
-"1","hsa04725","Cholinergic synapse","10/18","1042/20540",3.26260980542859e-09,7.60188084664861e-07,2.7131176276722e-07,"nimodipine/pentoxifylline/imatinib/galantamine/thioridazine/gabapentin/spironolactone/dasatinib/nifedipine/amantadine",10
-"2","hsa05410","Hypertrophic cardiomyopathy","7/18","419/20540",3.66520504614994e-08,4.26996387876468e-06,1.5239536770834e-06,"nimodipine/pentoxifylline/gabapentin/atorvastatin/spironolactone/nifedipine/amiodarone",7
-"3","hsa05020","Prion disease","9/18","1382/20540",7.68068070651555e-07,5.96532868206041e-05,2.12903079233238e-05,"nimodipine/pentoxifylline/imatinib/gabapentin/atorvastatin/spironolactone/dasatinib/nifedipine/amantadine",9
-"4","hsa05412","Arrhythmogenic right ventricular cardiomyopathy","5/18","228/20540",1.22837736732411e-06,5.99603336099805e-05,2.13998931790759e-05,"nimodipine/gabapentin/spironolactone/nifedipine/amiodarone",5
-"5","hsa04927","Cortisol synthesis and secretion","6/18","434/20540",1.28670243798241e-06,5.99603336099805e-05,2.13998931790759e-05,"nimodipine/atorvastatin/spironolactone/simvastatin/nifedipine/amiodarone",6
-"6","hsa04015","Rap1 signaling pathway","9/18","1566/20540",2.19683712561588e-06,7.15895352186777e-05,2.55503649526792e-05,"lapatinib/pentoxifylline/imatinib/gabapentin/atorvastatin/dasatinib/simvastatin/nifedipine/amantadine",9
-"7","hsa01523","Antifolate resistance","6/18","484/20540",2.42179013795605e-06,7.15895352186777e-05,2.55503649526792e-05,"pentoxifylline/imatinib/atorvastatin/floxuridine/nifedipine/amiodarone",6
-"8","hsa04921","Oxytocin signaling pathway","8/18","1148/20540",2.45800979291597e-06,7.15895352186777e-05,2.55503649526792e-05,"lapatinib/nimodipine/gabapentin/atorvastatin/spironolactone/dasatinib/nifedipine/amiodarone",8
-"9","hsa05414","Dilated cardiomyopathy","6/18","520/20540",3.66491942004002e-06,9.48806916521472e-05,3.38629981500774e-05,"nimodipine/pentoxifylline/gabapentin/spironolactone/nifedipine/amiodarone",6
-"10","hsa05416","Viral myocarditis","5/18","318/20540",6.25855447537485e-06,0.000145824319276234,5.20448214268014e-05,"pentoxifylline/imatinib/atorvastatin/dasatinib/simvastatin",5
-"11","hsa05031","Amphetamine addiction","7/18","916/20540",7.08172000480944e-06,0.000150003705556418,5.35364478832484e-05,"vorinostat/nimodipine/thioridazine/gabapentin/spironolactone/nifedipine/amantadine",7
-"12","hsa04934","Cushing syndrome","7/18","945/20540",8.691525486563e-06,0.000168760453197432,6.02307467928489e-05,"lapatinib/nimodipine/atorvastatin/spironolactone/simvastatin/nifedipine/amiodarone",7
-"13","hsa04726","Serotonergic synapse","8/18","1377/20540",9.52955975471282e-06,0.000170799032526776,6.09583174592966e-05,"nimodipine/imatinib/thioridazine/gabapentin/spironolactone/simvastatin/nifedipine/amiodarone",8
-"14","hsa05033","Nicotine addiction","5/18","392/20540",1.72287468972684e-05,0.000279864535276321,9.9883886545423e-05,"galantamine/thioridazine/gabapentin/spironolactone/amantadine",5
-"15","hsa04022","cGMP-PKG signaling pathway","8/18","1509/20540",1.86913983283963e-05,0.000279864535276321,9.9883886545423e-05,"nimodipine/pentoxifylline/thioridazine/gabapentin/atorvastatin/spironolactone/nifedipine/amiodarone",8
-"16","hsa04260","Cardiac muscle contraction","5/18","401/20540",1.92181655125371e-05,0.000279864535276321,9.9883886545423e-05,"nimodipine/gabapentin/spironolactone/nifedipine/amiodarone",5
-"17","hsa04261","Adrenergic signaling in cardiomyocytes","7/18","1089/20540",2.19354277474032e-05,0.000300631712625618,0.000107295709498188,"nimodipine/thioridazine/gabapentin/spironolactone/dasatinib/nifedipine/amiodarone",7
-"18","hsa02010","ABC transporters","4/18","199/20540",2.35184437587606e-05,0.000300631712625618,0.000107295709498188,"nimodipine/imatinib/nifedipine/amiodarone",4
-"19","hsa00830","Retinol metabolism","6/18","732/20540",2.58052972210831e-05,0.000300631712625618,0.000107295709498188,"lapatinib/imatinib/atorvastatin/simvastatin/nifedipine/amiodarone",6
-"20","hsa05204","Chemical carcinogenesis - DNA adducts","6/18","732/20540",2.58052972210831e-05,0.000300631712625618,0.000107295709498188,"lapatinib/imatinib/atorvastatin/simvastatin/nifedipine/amiodarone",6
-"21","hsa04924","Renin secretion","6/18","740/20540",2.74376967942526e-05,0.000304427778717184,0.000108650528658945,"nimodipine/pentoxifylline/gabapentin/spironolactone/nifedipine/amiodarone",6
-"22","hsa04064","NF-kappa B signaling pathway","6/18","747/20540",2.8933732291291e-05,0.000306434528357764,0.00010936673928287,"rucaparib/pentoxifylline/imatinib/thioridazine/atorvastatin/dasatinib",6
-"23","hsa04713","Circadian entrainment","6/18","766/20540",3.33300887298425e-05,0.00033764829017623,0.000120506956963732,"nimodipine/gabapentin/spironolactone/nifedipine/amantadine/amiodarone",6
-"24","hsa05014","Amyotrophic lateral sclerosis","7/18","1174/20540",3.5662818267118e-05,0.000346226527343271,0.000123568536978172,"vorinostat/lapatinib/pentoxifylline/imatinib/gabapentin/dasatinib/amantadine",7
-"25","hsa04925","Aldosterone synthesis and secretion","6/18","781/20540",3.71697349339117e-05,0.000346421929584057,0.000123638276201222,"nimodipine/atorvastatin/spironolactone/simvastatin/nifedipine/amiodarone",6
-"26","hsa04976","Bile secretion","6/18","810/20540",4.56060518940951e-05,0.000408700388127853,0.00014586551010662,"nimodipine/imatinib/atorvastatin/simvastatin/nifedipine/amiodarone",6
-"27","hsa00982","Drug metabolism - cytochrome P450","6/18","853/20540",6.08987114873998e-05,0.000525533325057932,0.000187563282943649,"lapatinib/imatinib/atorvastatin/simvastatin/nifedipine/amiodarone",6
-"28","hsa00980","Metabolism of xenobiotics by cytochrome P450","6/18","869/20540",6.75454773868389e-05,0.000542692973487361,0.00019368757580981,"lapatinib/imatinib/atorvastatin/simvastatin/nifedipine/amiodarone",6
-"29","hsa04530","Tight junction","6/18","869/20540",6.75454773868389e-05,0.000542692973487361,0.00019368757580981,"lapatinib/nimodipine/atorvastatin/spironolactone/dasatinib/nifedipine",6
-"30","hsa05322","Systemic lupus erythematosus","4/18","266/20540",7.29320771227471e-05,0.00056381821363094,0.000201227191673116,"pentoxifylline/gabapentin/atorvastatin/amantadine",4
-"31","hsa04728","Dopaminergic synapse","7/18","1323/20540",7.6667973002067e-05,0.00056381821363094,0.000201227191673116,"nimodipine/thioridazine/gabapentin/spironolactone/dasatinib/nifedipine/amantadine",7
-"32","hsa04014","Ras signaling pathway","8/18","1836/20540",7.74342610995282e-05,0.00056381821363094,0.000201227191673116,"lapatinib/imatinib/thioridazine/gabapentin/atorvastatin/dasatinib/nifedipine/amantadine",8
-"33","hsa00140","Steroid hormone biosynthesis","6/18","906/20540",8.51675858235045e-05,0.000601334772632623,0.000214616882936423,"lapatinib/imatinib/atorvastatin/spironolactone/simvastatin/nifedipine",6
-"34","hsa04727","GABAergic synapse","5/18","612/20540",0.000143387736515547,0.00098262772376831,0.00035070065587394,"nimodipine/gabapentin/spironolactone/dasatinib/nifedipine",5
-"35","hsa05202","Transcriptional misregulation in cancer","6/18","1001/20540",0.000147737761684442,0.000983511384927857,0.000351016035280328,"vorinostat/pentoxifylline/imatinib/atorvastatin/dasatinib/amiodarone",6
-"36","hsa04650","Natural killer cell mediated cytotoxicity","5/18","707/20540",0.000280973911249066,0.0018126474471703,0.000646935388870359,"pentoxifylline/imatinib/atorvastatin/dasatinib/simvastatin",5
-"37","hsa05034","Alcoholism","6/18","1131/20540",0.000287845302769533,0.0018126474471703,0.000646935388870359,"vorinostat/pentoxifylline/thioridazine/gabapentin/nifedipine/amantadine",6
-"38","hsa04929","GnRH secretion","5/18","729/20540",0.000323785314032828,0.00198531521499076,0.000708560659517823,"nimodipine/gabapentin/spironolactone/nifedipine/amiodarone",5
-"39","hsa04810","Regulation of actin cytoskeleton","6/18","1187/20540",0.000373871344577412,0.00215043874733762,0.000767493386219435,"lapatinib/pentoxifylline/imatinib/atorvastatin/dasatinib/simvastatin",6
-"40","hsa04742","Taste transduction","5/18","756/20540",0.000382944205542746,0.00215043874733762,0.000767493386219435,"nimodipine/thioridazine/gabapentin/spironolactone/nifedipine",5
-"41","hsa05133","Pertussis","5/18","757/20540",0.000385283031075311,0.00215043874733762,0.000767493386219435,"pentoxifylline/atorvastatin/dasatinib/simvastatin/nifedipine",5
-"42","hsa04144","Endocytosis","5/18","758/20540",0.000387632735571588,0.00215043874733762,0.000767493386219435,"lapatinib/imatinib/atorvastatin/dasatinib/simvastatin",5
-"43","hsa04720","Long-term potentiation","5/18","777/20540",0.000434389603439873,0.00232761795490238,0.000830728793482214,"nimodipine/gabapentin/spironolactone/nifedipine/amantadine",5
-"44","hsa04930","Type II diabetes mellitus","5/18","779/20540",0.000439550171741222,0.00232761795490238,0.000830728793482214,"nimodipine/pentoxifylline/gabapentin/spironolactone/nifedipine",5
-"45","hsa04218","Cellular senescence","6/18","1248/20540",0.000489533952222638,0.00253331443879758,0.000904142040501507,"nimodipine/pentoxifylline/atorvastatin/spironolactone/dasatinib/nifedipine",6
-"46","hsa04270","Vascular smooth muscle contraction","6/18","1253/20540",0.000500139331264758,0.00253331443879758,0.000904142040501507,"nimodipine/pentoxifylline/thioridazine/atorvastatin/spironolactone/nifedipine",6
-"47","hsa00591","Linoleic acid metabolism","4/18","443/20540",0.000513762827617422,0.00254695189010339,0.000909009258270467,"imatinib/simvastatin/nifedipine/amiodarone",4
-"48","hsa05134","Legionellosis","4/18","448/20540",0.000535960007805538,0.00260163920455605,0.000928527206505208,"pentoxifylline/atorvastatin/dasatinib/simvastatin",4
-"49","hsa04724","Glutamatergic synapse","5/18","824/20540",0.000568507789967364,0.00270331255229379,0.000964814509289404,"nimodipine/gabapentin/spironolactone/nifedipine/amantadine",5
-"50","hsa05152","Tuberculosis","6/18","1298/20540",0.000603978001693608,0.00281453748789222,0.00100451078176411,"pentoxifylline/thioridazine/atorvastatin/dasatinib/simvastatin/nifedipine",6
-"51","hsa04630","JAK-STAT signaling pathway","5/18","880/20540",0.000766892438045485,0.00350364584440388,0.0012504541301464,"lapatinib/pentoxifylline/imatinib/atorvastatin/dasatinib",5
-"52","hsa04514","Cell adhesion molecules","3/18","216/20540",0.000832839519855033,0.00373176169473505,0.00133186886778436,"pentoxifylline/atorvastatin/simvastatin",3
-"53","hsa05100","Bacterial invasion of epithelial cells","3/18","218/20540",0.000855360578557008,0.00373238658171203,0.00133209189046872,"imatinib/atorvastatin/dasatinib",3
-"54","hsa04640","Hematopoietic cell lineage","4/18","509/20540",0.000865016632671458,0.00373238658171203,0.00133209189046872,"pentoxifylline/imatinib/atorvastatin/dasatinib",4
-"55","hsa04723","Retrograde endocannabinoid signaling","5/18","914/20540",0.000910467157957183,0.0038255167221166,0.00136533011541546,"nimodipine/gabapentin/spironolactone/dasatinib/nifedipine",5
-"56","hsa05169","Epstein-Barr virus infection","6/18","1405/20540",0.000919437495444333,0.0038255167221166,0.00136533011541546,"vorinostat/pentoxifylline/imatinib/atorvastatin/dasatinib/simvastatin",6
-"57","hsa00900","Terpenoid backbone biosynthesis","3/18","233/20540",0.00103672711857396,0.00423784944960936,0.00151249201047725,"pamidronate/atorvastatin/simvastatin",3
-"58","hsa05165","Human papillomavirus infection","6/18","1478/20540",0.00119983539708595,0.00482002840553492,0.00172027216642087,"vorinostat/lapatinib/pentoxifylline/imatinib/atorvastatin/dasatinib",6
-"59","hsa04540","Gap junction","5/18","994/20540",0.00132759367752856,0.00524286994685008,0.00187118466591894,"lapatinib/imatinib/thioridazine/dasatinib/amiodarone",5
-"60","hsa05166","Human T-cell leukemia virus 1 infection","6/18","1523/20540",0.00140327280781394,0.00544937607034415,0.00194488687398775,"pamidronate/pentoxifylline/imatinib/atorvastatin/dasatinib/simvastatin",6
-"61","hsa04152","AMPK signaling pathway","5/18","1016/20540",0.00146394509272933,0.0055744054122325,0.00198950995060478,"nimodipine/thioridazine/atorvastatin/simvastatin/amiodarone",5
-"62","hsa04625","C-type lectin receptor signaling pathway","5/18","1019/20540",0.0014833181783623,0.0055744054122325,0.00198950995060478,"pentoxifylline/thioridazine/atorvastatin/dasatinib/nifedipine",5
-"63","hsa05131","Shigellosis","6/18","1579/20540",0.00169276333864161,0.00622283926519256,0.00222093653467455,"lapatinib/pentoxifylline/imatinib/thioridazine/atorvastatin/dasatinib",6
-"64","hsa01521","EGFR tyrosine kinase inhibitor resistance","5/18","1052/20540",0.00170927773807864,0.00622283926519256,0.00222093653467455,"lapatinib/pentoxifylline/imatinib/atorvastatin/dasatinib",5
-"65","hsa04659","Th17 cell differentiation","5/18","1076/20540",0.00188902436611344,0.00677142580468358,0.0024167275291168,"nimodipine/pentoxifylline/imatinib/atorvastatin/dasatinib",5
-"66","hsa04217","Necroptosis","5/18","1107/20540",0.00214153331990065,0.00756026156874016,0.00269826367260209,"rucaparib/pentoxifylline/imatinib/atorvastatin/dasatinib",5
-"67","hsa04660","T cell receptor signaling pathway","5/18","1113/20540",0.00219315683181776,0.00762694838527667,0.00272206425315951,"pentoxifylline/imatinib/thioridazine/atorvastatin/dasatinib",5
-"68","hsa04912","GnRH signaling pathway","5/18","1132/20540",0.00236272104200637,0.00809579415863947,0.00288939570152482,"lapatinib/nimodipine/spironolactone/dasatinib/nifedipine",5
-"69","hsa05016","Huntington disease","5/18","1185/20540",0.0028869467474047,0.0096416264492967,0.00344110453803677,"vorinostat/gabapentin/spironolactone/amantadine/amiodarone",5
-"70","hsa04670","Leukocyte transendothelial migration","4/18","707/20540",0.00289662597189171,0.0096416264492967,0.00344110453803677,"pentoxifylline/atorvastatin/dasatinib/simvastatin",4
-"71","hsa04060","Cytokine-cytokine receptor interaction","4/18","720/20540",0.00309382682891141,0.0101529810019205,0.00362360740524835,"pentoxifylline/imatinib/atorvastatin/dasatinib",4
-"72","hsa04933","AGE-RAGE signaling pathway in diabetic complications","5/18","1208/20540",0.00313920689860419,0.0101588223246497,0.00362569217821245,"pentoxifylline/imatinib/atorvastatin/dasatinib/nifedipine",5
-"73","hsa04935","Growth hormone synthesis, secretion and action","5/18","1217/20540",0.00324219075472785,0.0103483622719396,0.00369333914381399,"nimodipine/imatinib/spironolactone/dasatinib/nifedipine",5
-"74","hsa04520","Adherens junction","4/18","749/20540",0.00356682478541947,0.0112306780405775,0.00400823837906313,"lapatinib/imatinib/atorvastatin/dasatinib",4
-"75","hsa05160","Hepatitis C","5/18","1262/20540",0.00379465268525881,0.0117887210088707,0.00420740438084837,"lapatinib/pentoxifylline/atorvastatin/dasatinib/simvastatin",5
-"76","hsa00590","Arachidonic acid metabolism","4/18","773/20540",0.00399415777815791,0.0122452468725104,0.00437033884313677,"imatinib/simvastatin/nifedipine/amiodarone",4
-"77","hsa05163","Human cytomegalovirus infection","6/18","1904/20540",0.00438881669886156,0.0132039199879015,0.00471249007926007,"lapatinib/pentoxifylline/imatinib/atorvastatin/dasatinib/nifedipine",6
-"78","hsa05143","African trypanosomiasis","3/18","388/20540",0.00442019639079964,0.0132039199879015,0.00471249007926007,"pentoxifylline/atorvastatin/simvastatin",3
-"79","hsa05214","Glioma","4/18","816/20540",0.00484539356295014,0.0142908443059162,0.00510041427678963,"lapatinib/imatinib/dasatinib/nifedipine",4
-"80","hsa05032","Morphine addiction","4/18","825/20540",0.00503800978563464,0.0146732035006609,0.00523687859296233,"pentoxifylline/thioridazine/gabapentin/spironolactone",4
-"81","hsa05320","Autoimmune thyroid disease","2/18","125/20540",0.00527402250219385,0.0151709536174218,0.00541452602564411,"pentoxifylline/atorvastatin",2
-"82","hsa04915","Estrogen signaling pathway","5/18","1374/20540",0.00546468389122319,0.0155276993494513,0.00554184887556652,"lapatinib/gabapentin/spironolactone/dasatinib/nifedipine",5
-"83","hsa04061","Viral protein interaction with cytokine and cytokine receptor","3/18","429/20540",0.00584630242152387,0.0164119092074104,0.00585742411287743,"pentoxifylline/imatinib/atorvastatin",3
-"84","hsa04071","Sphingolipid signaling pathway","5/18","1401/20540",0.00593578888827632,0.0164431930956099,0.00586858935872229,"pentoxifylline/imatinib/gabapentin/atorvastatin/dasatinib",5
-"85","hsa04350","TGF-beta signaling pathway","3/18","433/20540",0.00599858975590917,0.0164431930956099,0.00586858935872229,"pentoxifylline/atorvastatin/dasatinib",3
-"86","hsa05144","Malaria","3/18","437/20540",0.00615326110478227,0.0166710446210961,0.00594990975860219,"pentoxifylline/atorvastatin/simvastatin",3
-"87","hsa04390","Hippo signaling pathway","3/18","473/20540",0.00765426847061014,0.020499362685657,0.00731623967547732,"atorvastatin/dasatinib/simvastatin",3
-"88","hsa05206","MicroRNAs in cancer","5/18","1500/20540",0.00791464951878076,0.0209558333849536,0.00747915444956555,"vorinostat/lapatinib/imatinib/atorvastatin/dasatinib",5
-"89","hsa05332","Graft-versus-host disease","2/18","157/20540",0.00819680054332346,0.0214590396246558,0.00765874917708519,"pentoxifylline/atorvastatin",2
-"90","hsa05330","Allograft rejection","2/18","164/20540",0.0089141444247213,0.0230777294551118,0.00823646093044424,"pentoxifylline/atorvastatin",2
-"91","hsa05310","Asthma","2/18","165/20540",0.00901885648779228,0.0230922369412703,0.0082416386643793,"pentoxifylline/atorvastatin",2
-"92","hsa04973","Carbohydrate digestion and absorption","3/18","506/20540",0.00920657488443007,0.0231650652873502,0.00826763116196371,"nimodipine/spironolactone/nifedipine",3
-"93","hsa05167","Kaposi sarcoma-associated herpesvirus infection","5/18","1557/20540",0.00924614193872777,0.0231650652873502,0.00826763116196371,"pentoxifylline/imatinib/atorvastatin/dasatinib/nifedipine",5
-"94","hsa05323","Rheumatoid arthritis","3/18","528/20540",0.0103376125548619,0.0256240821838599,0.00914525634752624,"pentoxifylline/atorvastatin/simvastatin",3
-"95","hsa04672","Intestinal immune network for IgA production","2/18","183/20540",0.0109978002001333,0.0267378617094642,0.00954276519108953,"pentoxifylline/atorvastatin",2
-"96","hsa04668","TNF signaling pathway","4/18","1032/20540",0.0110164580433844,0.0267378617094642,0.00954276519108953,"pentoxifylline/atorvastatin/dasatinib/nifedipine",4
-"97","hsa05224","Breast cancer","4/18","1048/20540",0.0116132990906374,0.0278958627641084,0.0099560567353267,"lapatinib/imatinib/spironolactone/dasatinib",4
-"98","hsa04940","Type I diabetes mellitus","2/18","192/20540",0.0120530964133815,0.0286568516767131,0.010227654314255,"pentoxifylline/atorvastatin",2
-"99","hsa05170","Human immunodeficiency virus 1 infection","5/18","1673/20540",0.0124317953441476,0.0292586698503676,0.0104424437234201,"pentoxifylline/imatinib/atorvastatin/dasatinib/nifedipine",5
-"100","hsa04911","Insulin secretion","3/18","595/20540",0.0142693695129032,0.0332476309650645,0.0118661072791511,"nimodipine/spironolactone/nifedipine",3
-"101","hsa05162","Measles","4/18","1120/20540",0.0145613714000334,0.0335920746159187,0.0119890395060202,"pentoxifylline/imatinib/atorvastatin/dasatinib",4
-"102","hsa04730","Long-term depression","3/18","616/20540",0.0156557672170361,0.0355690219098607,0.012694613647522,"imatinib/spironolactone/dasatinib",3
-"103","hsa05030","Cocaine addiction","3/18","617/20540",0.015723644878608,0.0355690219098607,0.012694613647522,"thioridazine/gabapentin/amantadine",3
-"104","hsa05130","Pathogenic Escherichia coli infection","4/18","1155/20540",0.016154515202315,0.0361923273282634,0.0129170718722964,"pentoxifylline/imatinib/atorvastatin/dasatinib",4
-"105","hsa04722","Neurotrophin signaling pathway","4/18","1164/20540",0.0165815784004495,0.0365359345063136,0.0130397055613227,"imatinib/atorvastatin/dasatinib/nifedipine",4
-"106","hsa05140","Leishmaniasis","3/18","630/20540",0.0166214981015847,0.0365359345063136,0.0130397055613227,"pentoxifylline/dasatinib/simvastatin",3
-"107","hsa05145","Toxoplasmosis","4/18","1175/20540",0.0171133275188711,0.0367908512490904,0.0131306855598741,"pentoxifylline/atorvastatin/dasatinib/simvastatin",4
-"108","hsa05203","Viral carcinogenesis","4/18","1175/20540",0.0171133275188711,0.0367908512490904,0.0131306855598741,"vorinostat/imatinib/atorvastatin/dasatinib",4
-"109","hsa04072","Phospholipase D signaling pathway","4/18","1177/20540",0.0172111707560122,0.0367908512490904,0.0131306855598741,"lapatinib/imatinib/atorvastatin/dasatinib",4
-"110","hsa04750","Inflammatory mediator regulation of TRP channels","4/18","1195/20540",0.0181079467058262,0.0383559234768864,0.0136892611460313,"imatinib/thioridazine/dasatinib/nifedipine",4
-"111","hsa04923","Regulation of lipolysis in adipocytes","3/18","654/20540",0.0183547393969217,0.0385197244924848,0.0137477218654001,"pentoxifylline/gabapentin/amiodarone",3
-"112","hsa05135","Yersinia infection","4/18","1203/20540",0.0185159190693489,0.0385197244924848,0.0137477218654001,"pentoxifylline/imatinib/atorvastatin/dasatinib",4
-"113","hsa04658","Th1 and Th2 cell differentiation","3/18","662/20540",0.0189543973212021,0.0390829608481423,0.0139487413914761,"pentoxifylline/imatinib/dasatinib",3
-"114","hsa04977","Vitamin digestion and absorption","2/18","246/20540",0.0192646657479811,0.0393742729761368,0.0140527109334303,"atorvastatin/simvastatin",2
-"115","hsa04613","Neutrophil extracellular trap formation","4/18","1237/20540",0.0203151253247706,0.0411602104406222,0.0146901135071568,"vorinostat/pentoxifylline/dasatinib/simvastatin",4
-"116","hsa04380","Osteoclast differentiation","4/18","1250/20540",0.0210312908368785,0.0422438859051093,0.015076878186147,"pentoxifylline/imatinib/dasatinib/amiodarone",4
-"117","hsa04932","Non-alcoholic fatty liver disease","4/18","1260/20540",0.0215929219998926,0.0426937927765154,0.0152374503245752,"pentoxifylline/atorvastatin/dasatinib/amiodarone",4
-"118","hsa05218","Melanoma","3/18","700/20540",0.0219532227598342,0.0426937927765154,0.0152374503245752,"lapatinib/imatinib/dasatinib",3
-"119","hsa04623","Cytosolic DNA-sensing pathway","2/18","264/20540",0.0219882194557161,0.0426937927765154,0.0152374503245752,"pentoxifylline/atorvastatin",2
-"120","hsa05340","Primary immunodeficiency","2/18","264/20540",0.0219882194557161,0.0426937927765154,0.0152374503245752,"atorvastatin/dasatinib",2
-"121","hsa05208","Chemical carcinogenesis - reactive oxygen species","5/18","1937/20540",0.0223796935017103,0.0427707486713957,0.0152649159477762,"lapatinib/nimodipine/imatinib/atorvastatin/dasatinib",5
-"122","hsa05215","Prostate cancer","4/18","1274/20540",0.0223949842828767,0.0427707486713957,0.0152649159477762,"lapatinib/imatinib/spironolactone/dasatinib",4
-"123","hsa04916","Melanogenesis","3/18","710/20540",0.0227838463133805,0.0431596438294118,0.0154037129547031,"imatinib/dasatinib/nifedipine",3
-"124","hsa04610","Complement and coagulation cascades","3/18","721/20540",0.0237175419402382,0.0445660263877057,0.0159056520651852,"pentoxifylline/atorvastatin/simvastatin",3
-"125","hsa04110","Cell cycle","3/18","730/20540",0.0244970832284132,0.0456625631377623,0.0162970069477444,"vorinostat/imatinib/dasatinib",3
-"126","hsa05164","Influenza A","4/18","1317/20540",0.0249747758561009,0.0461835140831071,0.0164829347755386,"pamidronate/pentoxifylline/atorvastatin/dasatinib",4
-"127","hsa04068","FoxO signaling pathway","4/18","1326/20540",0.0255371587643613,0.0468516377330408,0.0167213886646046,"lapatinib/pentoxifylline/atorvastatin/dasatinib",4
-"128","hsa04979","Cholesterol metabolism","2/18","290/20540",0.0261884299889087,0.0473025398938351,0.0168823160226473,"atorvastatin/simvastatin",2
-"129","hsa03320","PPAR signaling pathway","3/18","749/20540",0.0261889598553851,0.0473025398938351,0.0168823160226473,"atorvastatin/simvastatin/amiodarone",3
-"130","hsa04662","B cell receptor signaling pathway","3/18","752/20540",0.0264618303537549,0.0474277420955762,0.0169270007930902,"imatinib/thioridazine/dasatinib",3
-"131","hsa05171","Coronavirus disease - COVID-19","4/18","1356/20540",0.0274684645530268,0.0488561239759942,0.017436791480025,"lapatinib/pentoxifylline/atorvastatin/dasatinib",4
-"132","hsa05150","Staphylococcus aureus infection","2/18","300/20540",0.0278849699868812,0.0492211970222978,0.0175670863553717,"pentoxifylline/simvastatin",2
-"133","hsa05146","Amoebiasis","3/18","773/20540",0.0284157119734211,0.0497809089459181,0.0177668480087081,"pentoxifylline/atorvastatin/simvastatin",3
-"134","hsa05120","Epithelial cell signaling in Helicobacter pylori infection","3/18","788/20540",0.0298582540139637,0.051917710337713,0.0185294742113365,"lapatinib/imatinib/dasatinib",3
-"135","hsa04066","HIF-1 signaling pathway","4/18","1400/20540",0.0304604348858725,0.0525724542845058,0.018763152873169,"lapatinib/pentoxifylline/atorvastatin/nifedipine",4
-"136","hsa00290","Valine, leucine and isoleucine biosynthesis","1/18","36/20540",0.0310952447750664,0.0532734708278711,0.019013346263392,"gabapentin",1
-"137","hsa04928","Parathyroid hormone synthesis, secretion and action","3/18","806/20540",0.0316408750613251,0.0538125831334946,0.0192057558958485,"lapatinib/pentoxifylline/atorvastatin",3
-"138","hsa05220","Chronic myeloid leukemia","3/18","822/20540",0.0332726020350778,0.0561776541606749,0.0200498517221293,"vorinostat/imatinib/dasatinib",3
-"139","hsa03013","Nucleocytoplasmic transport","1/18","39/20540",0.0336448685747305,0.0562388948189914,0.0200717085642662,"imatinib",1
-"140","hsa05221","Acute myeloid leukemia","3/18","827/20540",0.0337916106208532,0.0562388948189914,0.0200717085642662,"pentoxifylline/imatinib/dasatinib",3
-"141","hsa04210","Apoptosis","4/18","1454/20540",0.034395035935086,0.0568371870416669,0.02028523955858,"rucaparib/pentoxifylline/imatinib/atorvastatin",4
-"142","hsa00564","Glycerophospholipid metabolism","2/18","352/20540",0.0373949563893489,0.0613593298501287,0.0218991961064385,"pentoxifylline/galantamine",2
-"143","hsa04721","Synaptic vesicle cycle","2/18","357/20540",0.0383677003375291,0.0623680485557881,0.0222592086555557,"gabapentin/spironolactone",2
-"144","hsa04114","Oocyte meiosis","3/18","871/20540",0.0385450600516459,0.0623680485557881,0.0222592086555557,"spironolactone/dasatinib/nifedipine",3
-"145","hsa04664","Fc epsilon RI signaling pathway","3/18","879/20540",0.0394451291974502,0.0633842420896958,0.0226218889771221,"pentoxifylline/imatinib/dasatinib",3
-"146","hsa04970","Salivary secretion","3/18","884/20540",0.0400132458850262,0.0638567554192541,0.0227905293793588,"thioridazine/nifedipine/amiodarone",3
-"147","hsa05321","Inflammatory bowel disease","2/18","373/20540",0.0415461123111129,0.0658520011461858,0.0235026342468881,"pentoxifylline/atorvastatin",2
-"148","hsa05017","Spinocerebellar ataxia","3/18","906/20540",0.0425637532936386,0.0670091521447149,0.0239156224053873,"gabapentin/spironolactone/amantadine",3
-"149","hsa05418","Fluid shear stress and atherosclerosis","4/18","1559/20540",0.0428883294320039,0.0670669849507174,0.0239362629821851,"pentoxifylline/atorvastatin/dasatinib/nifedipine",4
-"150","hsa05231","Choline metabolism in cancer","3/18","912/20540",0.0432736724338345,0.067114081549106,0.0239530717975124,"lapatinib/imatinib/dasatinib",3
-"151","hsa05161","Hepatitis B","4/18","1566/20540",0.0434945335361159,0.067114081549106,0.0239530717975124,"pentoxifylline/imatinib/atorvastatin/dasatinib",4
-"152","hsa04510","Focal adhesion","4/18","1575/20540",0.0442813237530794,0.0678786081214967,0.024225931970175,"lapatinib/imatinib/atorvastatin/dasatinib",4
-"153","hsa04360","Axon guidance","3/18","939/20540",0.0465439031531358,0.0708805845403964,0.0252973398630735,"imatinib/atorvastatin/dasatinib",3
-"154","hsa04657","IL-17 signaling pathway","3/18","954/20540",0.0484138871323991,0.0732495824795389,0.0261428372075156,"pentoxifylline/atorvastatin/dasatinib",3
-"155","hsa04612","Antigen processing and presentation","2/18","415/20540",0.0503463562359599,0.0754455545870528,0.0269265814880378,"pentoxifylline/dasatinib",2
-"156","hsa05230","Central carbon metabolism in cancer","3/18","971/20540",0.05057883057345,0.0754455545870528,0.0269265814880378,"lapatinib/imatinib/dasatinib",3
-"157","hsa05223","Non-small cell lung cancer","3/18","973/20540",0.0508367041638081,0.0754455545870528,0.0269265814880378,"lapatinib/imatinib/dasatinib",3
-"158","hsa04620","Toll-like receptor signaling pathway","3/18","981/20540",0.051874858894574,0.0764990007749097,0.0273025573129337,"pentoxifylline/atorvastatin/dasatinib",3
-"159","hsa04012","ErbB signaling pathway","3/18","987/20540",0.0526604538912591,0.0771690928092036,0.027541713720023,"lapatinib/imatinib/dasatinib",3
-"160","hsa00240","Pyrimidine metabolism","2/18","446/20540",0.0572420961728334,0.0831707593586163,0.0296837135275839,"pentoxifylline/floxuridine",2
-"161","hsa04975","Fat digestion and absorption","2/18","447/20540",0.0574699238486576,0.0831707593586163,0.0296837135275839,"atorvastatin/simvastatin",2
-"162","hsa05235","PD-L1 expression and PD-1 checkpoint pathway in cancer","3/18","1027/20540",0.0580495051665361,0.0834909549617463,0.0297979916059542,"lapatinib/pentoxifylline/dasatinib",3
-"163","hsa04960","Aldosterone-regulated sodium reabsorption","2/18","453/20540",0.0588437752006016,0.0841141081088354,0.0300203954849695,"nimodipine/spironolactone",2
-"164","hsa05216","Thyroid cancer","2/18","475/20540",0.0639802161432123,0.0908987217156614,0.032441829751693,"imatinib/amiodarone",2
-"165","hsa04145","Phagosome","2/18","480/20540",0.0651687891698672,0.0920150383952568,0.0328402441076363,"pentoxifylline/simvastatin",2
-"166","hsa05205","Proteoglycans in cancer","4/18","1790/20540",0.0655557784275221,0.0920150383952568,0.0328402441076363,"lapatinib/pentoxifylline/atorvastatin/dasatinib",4
-"167","hsa04611","Platelet activation","3/18","1121/20540",0.0717303798278559,0.0996954458225097,0.0355813879375571,"imatinib/atorvastatin/dasatinib",3
-"168","hsa05168","Herpes simplex virus 1 infection","3/18","1122/20540",0.0718834115801787,0.0996954458225097,0.0355813879375571,"pentoxifylline/atorvastatin/dasatinib",3
-"169","hsa05142","Chagas disease","3/18","1129/20540",0.0729589643020884,0.100588394570335,0.035900082091965,"pentoxifylline/atorvastatin/dasatinib",3
-"170","hsa03040","Spliceosome","1/18","88/20540",0.0744022741662145,0.101439525483384,0.0362038514261908,"dasatinib",1
-"171","hsa04971","Gastric acid secretion","2/18","518/20540",0.0744470337238569,0.101439525483384,0.0362038514261908,"nimodipine/nifedipine",2
-"172","hsa04371","Apelin signaling pathway","3/18","1167/20540",0.0789286641704624,0.106920806696033,0.038160125272133,"vorinostat/atorvastatin/nifedipine",3
-"173","hsa04919","Thyroid hormone signaling pathway","3/18","1175/20540",0.0802133152759078,0.108032962192408,0.0385570544983068,"vorinostat/dasatinib/amiodarone",3
-"174","hsa04913","Ovarian steroidogenesis","2/18","554/20540",0.0836144154863419,0.11196642993286,0.0399609124223896,"atorvastatin/simvastatin",2
-"175","hsa04621","NOD-like receptor signaling pathway","3/18","1226/20540",0.0886259450341896,0.117999115388378,0.0421139829034645,"pentoxifylline/atorvastatin/dasatinib",3
-"176","hsa04213","Longevity regulating pathway - multiple species","2/18","578/20540",0.0899156690294548,0.119036084567403,0.0424840780701371,"vorinostat/dasatinib",2
-"177","hsa03015","mRNA surveillance pathway","1/18","108/20540",0.0905667627472487,0.119220653785926,0.0425499509784874,"imatinib",1
-"178","hsa01232","Nucleotide metabolism","2/18","583/20540",0.0912465988627447,0.119440772668649,0.0426285115917021,"pentoxifylline/floxuridine",2
-"179","hsa04926","Relaxin signaling pathway","3/18","1253/20540",0.0932325713011877,0.121353530576676,0.0433111764877227,"lapatinib/dasatinib/nifedipine",3
-"180","hsa05012","Parkinson disease","3/18","1257/20540",0.0939238525345848,0.121353530576676,0.0433111764877227,"pentoxifylline/thioridazine/nifedipine",3
-"181","hsa01522","Endocrine resistance","3/18","1259/20540",0.0942703392033408,0.121353530576676,0.0433111764877227,"lapatinib/spironolactone/dasatinib",3
-"182","hsa03050","Proteasome","1/18","120/20540",0.100137091122326,0.128197484788473,0.0457537894659559,"pentoxifylline",1
-"183","hsa04622","RIG-I-like receptor signaling pathway","2/18","636/20540",0.105715664350773,0.134599725648799,0.048038754579874,"pentoxifylline/dasatinib",2
-"184","hsa04666","Fc gamma R-mediated phagocytosis","2/18","643/20540",0.107673500603636,0.136347421960039,0.048662508854046,"imatinib/dasatinib",2
-"185","hsa05219","Bladder cancer","2/18","656/20540",0.111336758322516,0.140224133454845,0.0500461104266219,"lapatinib/dasatinib",2
-"186","hsa04062","Chemokine signaling pathway","3/18","1400/20540",0.120062291129058,0.15020088974274,0.0536068230841492,"imatinib/atorvastatin/dasatinib",3
-"187","hsa04330","Notch signaling pathway","1/18","146/20540",0.120547495201255,0.15020088974274,0.0536068230841492,"vorinostat",1
-"188","hsa04744","Phototransduction","1/18","151/20540",0.124422108606066,0.154203996304327,0.0550355351616979,"nifedipine",1
-"189","hsa04936","Alcoholic liver disease","3/18","1482/20540",0.136217060218651,0.167653084501329,0.0598355259796928,"pentoxifylline/atorvastatin/dasatinib",3
-"190","hsa01210","2-Oxocarboxylic acid metabolism","1/18","167/20540",0.136712815687779,0.167653084501329,0.0598355259796928,"gabapentin",1
-"191","hsa01524","Platinum drug resistance","2/18","758/20540",0.141187658363597,0.171448777515444,0.0611902119887963,"lapatinib/atorvastatin",2
-"192","hsa00770","Pantothenate and CoA biosynthesis","1/18","173/20540",0.141279679326031,0.171448777515444,0.0611902119887963,"gabapentin",1
-"193","hsa05132","Salmonella infection","3/18","1549/20540",0.149986981629237,0.181072366422861,0.0646248789130608,"pentoxifylline/atorvastatin/dasatinib",3
-"194","hsa04310","Wnt signaling pathway","2/18","797/20540",0.153052204325549,0.183820430968315,0.0656056654461118,"atorvastatin/dasatinib",2
-"195","hsa00983","Drug metabolism - other enzymes","2/18","820/20540",0.16014829103418,0.191356675953662,0.0682953575800284,"pentoxifylline/simvastatin",2
-"196","hsa05110","Vibrio cholerae infection","1/18","206/20540",0.165992324970215,0.19714636958139,0.0703617040746771,"nimodipine",1
-"197","hsa04150","mTOR signaling pathway","2/18","841/20540",0.166685986298428,0.19714636958139,0.0703617040746771,"pentoxifylline/atorvastatin",2
-"198","hsa04972","Pancreatic secretion","2/18","857/20540",0.171702197133645,0.202053595616866,0.072113097148102,"nimodipine/atorvastatin",2
-"199","hsa00510","N-Glycan biosynthesis","1/18","218/20540",0.174811024630004,0.204678234868296,0.0730498330905598,"spironolactone",1
-"200","hsa00670","One carbon pool by folate","1/18","223/20540",0.178459427643579,0.207905233204769,0.074201551493909,"floxuridine",1
-"201","hsa04922","Glucagon signaling pathway","2/18","910/20540",0.188513218826778,0.21852527356537,0.0779918527746294,"dasatinib/nifedipine",2
-"202","hsa03410","Base excision repair","1/18","240/20540",0.190750373792855,0.22002394600859,0.0785267302221759,"rucaparib",1
-"203","hsa05210","Colorectal cancer","2/18","949/20540",0.201049878043368,0.230761682680319,0.0823590374147061,"lapatinib/atorvastatin",2
-"204","hsa00230","Purine metabolism","2/18","963/20540",0.205579765951153,0.234804340522641,0.0838018653774052,"pentoxifylline/dasatinib",2
-"205","hsa04740","Olfactory transduction","1/18","267/20540",0.209914975863536,0.238586289640019,0.0851516461782766,"nifedipine",1
-"206","hsa04714","Thermogenesis","2/18","1003/20540",0.218596574319482,0.247247581633201,0.0882428685295815,"dasatinib/amiodarone",2
-"207","hsa04917","Prolactin signaling pathway","2/18","1009/20540",0.220557650678112,0.248260544000001,0.0886043956449066,"imatinib/dasatinib",2
-"208","hsa00520","Amino sugar and nucleotide sugar metabolism","1/18","294/20540",0.228650371252518,0.256132387028061,0.0914138630007537,"pentoxifylline",1
-"209","hsa04070","Phosphatidylinositol signaling system","1/18","306/20540",0.236841819487376,0.264038966222768,0.0942357277235089,"nifedipine",1
-"210","hsa04914","Progesterone-mediated oocyte maturation","2/18","1085/20540",0.245550207024469,0.272443801127149,0.097235420325479,"spironolactone/dasatinib",2
-"211","hsa00250","Alanine, aspartate and glutamate metabolism","1/18","331/20540",0.253644208145397,0.279499965490961,0.0997537712843275,"dasatinib",1
-"212","hsa00760","Nicotinate and nicotinamide metabolism","1/18","332/20540",0.254308981476754,0.279499965490961,0.0997537712843275,"pentoxifylline",1
-"213","hsa04931","Insulin resistance","2/18","1226/20540",0.292331373014374,0.319780328226991,0.114129866410356,"pentoxifylline/atorvastatin",2
-"214","hsa00561","Glycerolipid metabolism","1/18","395/20540",0.295080513142175,0.321279250290312,0.114664832947525,"atorvastatin",1
-"215","hsa00270","Cysteine and methionine metabolism","1/18","421/20540",0.311285238149826,0.337346327855393,0.120399186359051,"gabapentin",1
-"216","hsa04910","Insulin signaling pathway","2/18","1427/20540",0.358744685654575,0.386979221099611,0.138113207440114,"imatinib/nifedipine",2
-"217","hsa04115","p53 signaling pathway","1/18","512/20540",0.365274663712771,0.392207357811409,0.139979133802129,"atorvastatin",1
-"218","hsa00280","Valine, leucine and isoleucine degradation","1/18","516/20540",0.367553576533344,0.392843960239767,0.14020633774087,"gabapentin",1
-"219","hsa04137","Mitophagy - animal","1/18","523/20540",0.371523090509938,0.395273425063084,0.141073415766811,"dasatinib",1
-"220","hsa01230","Biosynthesis of amino acids","1/18","528/20540",0.374344038630472,0.396448828330544,0.141492918175347,"gabapentin",1
-"221","hsa04974","Protein digestion and absorption","1/18","531/20540",0.376030862922962,0.396448828330544,0.141492918175347,"atorvastatin",1
-"222","hsa05415","Diabetic cardiomyopathy","2/18","1542/20540",0.396033282403784,0.415656553153521,0.148348171218108,"rucaparib/dasatinib",2
-"223","hsa04141","Protein processing in endoplasmic reticulum","1/18","600/20540",0.413662776110009,0.432212676384,0.15425706543635,"dasatinib",1
-"224","hsa05213","Endometrial cancer","1/18","647/20540",0.438057467335551,0.455657990576712,0.162624717666864,"lapatinib",1
-"225","hsa04550","Signaling pathways regulating pluripotency of stem cells","1/18","657/20540",0.443122640570671,0.458878112235406,0.163773981778166,"dasatinib",1
-"226","hsa04211","Longevity regulating pathway","1/18","694/20540",0.461491368991234,0.47419070707786,0.169239059675405,"amiodarone",1
-"227","hsa05211","Renal cell carcinoma","1/18","695/20540",0.461979787582293,0.47419070707786,0.169239059675405,"imatinib",1
-"228","hsa04920","Adipocytokine signaling pathway","1/18","718/20540",0.473098617315367,0.483473586993335,0.172552127275688,"pentoxifylline",1
-"229","hsa04370","VEGF signaling pathway","1/18","885/20540",0.547559770819685,0.557124133628763,0.198838068925558,"dasatinib",1
-"230","hsa01240","Biosynthesis of cofactors","1/18","947/20540",0.572582268089677,0.580050732456064,0.207020591208625,"gabapentin",1
-"231","hsa05226","Gastric cancer","1/18","1023/20540",0.601473186278932,0.606680746333295,0.216524865418253,"lapatinib",1
-"232","hsa05212","Pancreatic cancer","1/18","1067/20540",0.617345979570859,0.620006953620733,0.221280999936923,"lapatinib",1
-"233","hsa05225","Hepatocellular carcinoma","1/18","1131/20540",0.639371244258085,0.639371244258085,0.228192131449689,"lapatinib",1
+"1","hsa04725","Cholinergic synapse","9/16","1042/20548",1.77580469344578e-08,4.13762493572866e-06,1.42064375475662e-06,"nimodipine/pentoxifylline/gabapentin/galantamine/imatinib/spironolactone/dasatinib/nifedipine/thioridazine",9
+"2","hsa05410","Hypertrophic cardiomyopathy","6/16","419/20548",4.67207083545449e-07,5.44296252330448e-05,1.8688283341818e-05,"nimodipine/pentoxifylline/gabapentin/atorvastatin/spironolactone/nifedipine",6
+"3","hsa05020","Prion disease","8/16","1382/20548",3.24237772295942e-06,0.000190288319382371,6.53350452815009e-05,"nimodipine/pentoxifylline/gabapentin/atorvastatin/imatinib/spironolactone/dasatinib/nifedipine",8
+"4","hsa05416","Viral myocarditis","5/16","318/20548",3.26675226407505e-06,0.000190288319382371,6.53350452815009e-05,"pentoxifylline/atorvastatin/imatinib/simvastatin/dasatinib",5
+"5","hsa04015","Rap1 signaling pathway","8/16","1566/20548",8.25694344231194e-06,0.000384773564411736,0.000132111095076991,"lapatinib/pentoxifylline/gabapentin/atorvastatin/imatinib/simvastatin/dasatinib/nifedipine",8
+"6","hsa04921","Oxytocin signaling pathway","7/16","1148/20548",1.22178726063155e-05,0.000431171687703917,0.000148041781185894,"nimodipine/lapatinib/gabapentin/atorvastatin/spironolactone/dasatinib/nifedipine",7
+"7","hsa04064","NF-kappa B signaling pathway","6/16","747/20548",1.32556099801325e-05,0.000431171687703917,0.000148041781185894,"rucaparib/pentoxifylline/atorvastatin/imatinib/dasatinib/thioridazine",6
+"8","hsa04927","Cortisol synthesis and secretion","5/16","434/20548",1.48041781185894e-05,0.000431171687703917,0.000148041781185894,"nimodipine/atorvastatin/spironolactone/simvastatin/nifedipine",5
+"9","hsa05412","Arrhythmogenic right ventricular cardiomyopathy","4/16","228/20548",2.41989357686398e-05,0.000583096496728655,0.000200204805743744,"nimodipine/gabapentin/spironolactone/nifedipine",4
+"10","hsa01523","Antifolate resistance","5/16","484/20548",2.5025600717968e-05,0.000583096496728655,0.000200204805743744,"pentoxifylline/atorvastatin/imatinib/floxuridine/nifedipine",5
+"11","hsa04530","Tight junction","6/16","869/20548",3.12682912561715e-05,0.000653478464234531,0.000224370288149195,"nimodipine/lapatinib/atorvastatin/spironolactone/dasatinib/nifedipine",6
+"12","hsa05414","Dilated cardiomyopathy","5/16","520/20548",3.52956684120937e-05,0.000653478464234531,0.000224370288149195,"nimodipine/pentoxifylline/gabapentin/spironolactone/nifedipine",5
+"13","hsa00140","Steroid hormone biosynthesis","6/16","907/20548",3.97968412180177e-05,0.000653478464234531,0.000224370288149195,"lapatinib/atorvastatin/imatinib/spironolactone/simvastatin/nifedipine",6
+"14","hsa04726","Serotonergic synapse","7/16","1377/20548",3.99292722409226e-05,0.000653478464234531,0.000224370288149195,"nimodipine/gabapentin/imatinib/spironolactone/simvastatin/nifedipine/thioridazine",7
+"15","hsa05031","Amphetamine addiction","6/16","916/20548",4.20694290279741e-05,0.000653478464234531,0.000224370288149195,"vorinostat/nimodipine/gabapentin/spironolactone/nifedipine/thioridazine",6
+"16","hsa04934","Cushing syndrome","6/16","945/20548",5.01164875786359e-05,0.000729821350363886,0.00025058243789318,"nimodipine/lapatinib/atorvastatin/spironolactone/simvastatin/nifedipine",6
+"17","hsa04022","cGMP-PKG signaling pathway","7/16","1509/20548",7.19382494101815e-05,0.000985977183092487,0.000338532938400854,"nimodipine/pentoxifylline/gabapentin/atorvastatin/spironolactone/nifedipine/thioridazine",7
+"18","hsa04727","GABAergic synapse","5/16","612/20548",7.66660697759299e-05,0.000992399680988426,0.000340738087893022,"nimodipine/gabapentin/spironolactone/dasatinib/nifedipine",5
+"19","hsa04261","Adrenergic signaling in cardiomyocytes","6/16","1089/20548",0.000110526114788424,0.00135539919714226,0.000465373114898629,"nimodipine/gabapentin/spironolactone/dasatinib/nifedipine/thioridazine",6
+"20","hsa04650","Natural killer cell mediated cytotoxicity","5/16","707/20548",0.000151404952354891,0.00165819967336733,0.000569338943645435,"pentoxifylline/atorvastatin/imatinib/simvastatin/dasatinib",5
+"21","hsa05014","Amyotrophic lateral sclerosis","6/16","1174/20548",0.00016739315176731,0.00165819967336733,0.000569338943645435,"vorinostat/lapatinib/pentoxifylline/gabapentin/imatinib/dasatinib",6
+"22","hsa00830","Retinol metabolism","5/16","732/20548",0.000178181941433278,0.00165819967336733,0.000569338943645435,"lapatinib/atorvastatin/imatinib/simvastatin/nifedipine",5
+"23","hsa05204","Chemical carcinogenesis - DNA adducts","5/16","732/20548",0.000178181941433278,0.00165819967336733,0.000569338943645435,"lapatinib/atorvastatin/imatinib/simvastatin/nifedipine",5
+"24","hsa04924","Renin secretion","5/16","740/20548",0.000187477012504563,0.00165819967336733,0.000569338943645435,"nimodipine/pentoxifylline/gabapentin/spironolactone/nifedipine",5
+"25","hsa05033","Nicotine addiction","4/16","392/20548",0.000197934463936911,0.00165819967336733,0.000569338943645435,"gabapentin/galantamine/spironolactone/thioridazine",4
+"26","hsa04742","Taste transduction","5/16","756/20548",0.000207183675945584,0.00165819967336733,0.000569338943645435,"nimodipine/gabapentin/spironolactone/nifedipine/thioridazine",5
+"27","hsa05133","Pertussis","5/16","757/20548",0.000208466153262509,0.00165819967336733,0.000569338943645435,"pentoxifylline/atorvastatin/simvastatin/dasatinib/nifedipine",5
+"28","hsa04144","Endocytosis","5/16","758/20548",0.000209754726610024,0.00165819967336733,0.000569338943645435,"lapatinib/atorvastatin/imatinib/simvastatin/dasatinib",5
+"29","hsa04260","Cardiac muscle contraction","4/16","401/20548",0.000215905204048829,0.00165819967336733,0.000569338943645435,"nimodipine/gabapentin/spironolactone/nifedipine",4
+"30","hsa04218","Cellular senescence","6/16","1248/20548",0.000234087055553073,0.00165819967336733,0.000569338943645435,"nimodipine/pentoxifylline/atorvastatin/spironolactone/dasatinib/nifedipine",6
+"31","hsa04930","Type II diabetes mellitus","5/16","779/20548",0.000238258417633122,0.00165819967336733,0.000569338943645435,"nimodipine/pentoxifylline/gabapentin/spironolactone/nifedipine",5
+"32","hsa04270","Vascular smooth muscle contraction","6/16","1253/20548",0.000239261095399512,0.00165819967336733,0.000569338943645435,"nimodipine/pentoxifylline/atorvastatin/spironolactone/nifedipine/thioridazine",6
+"33","hsa04925","Aldosterone synthesis and secretion","5/16","781/20548",0.000241120516647146,0.00165819967336733,0.000569338943645435,"nimodipine/atorvastatin/spironolactone/simvastatin/nifedipine",5
+"34","hsa04810","Regulation of actin cytoskeleton","6/16","1261/20548",0.000247728939937173,0.00165819967336733,0.000569338943645435,"lapatinib/pentoxifylline/atorvastatin/imatinib/simvastatin/dasatinib",6
+"35","hsa04014","Ras signaling pathway","7/16","1836/20548",0.000249085787844878,0.00165819967336733,0.000569338943645435,"lapatinib/gabapentin/atorvastatin/imatinib/dasatinib/nifedipine/thioridazine",7
+"36","hsa04976","Bile secretion","5/16","810/20548",0.000285663727585436,0.00182656698620655,0.000627147463075209,"nimodipine/atorvastatin/imatinib/simvastatin/nifedipine",5
+"37","hsa05152","Tuberculosis","6/16","1298/20548",0.000290055701672284,0.00182656698620655,0.000627147463075209,"pentoxifylline/atorvastatin/simvastatin/dasatinib/nifedipine/thioridazine",6
+"38","hsa04728","Dopaminergic synapse","6/16","1323/20548",0.000321775030311556,0.00196857469445708,0.000675905474491702,"nimodipine/gabapentin/spironolactone/dasatinib/nifedipine/thioridazine",6
+"39","hsa05134","Legionellosis","4/16","448/20548",0.000329503918814705,0.00196857469445708,0.000675905474491702,"pentoxifylline/atorvastatin/simvastatin/dasatinib",4
+"40","hsa00982","Drug metabolism - cytochrome P450","5/16","853/20548",0.0003630059652017,0.0021145097472999,0.000726011930403399,"lapatinib/atorvastatin/imatinib/simvastatin/nifedipine",5
+"41","hsa00980","Metabolism of xenobiotics by cytochrome P450","5/16","869/20548",0.00039553417845122,0.00224779179461303,0.000771774006734087,"lapatinib/atorvastatin/imatinib/simvastatin/nifedipine",5
+"42","hsa04630","JAK-STAT signaling pathway","5/16","880/20548",0.000419156113923322,0.002325318441527,0.000798392597949185,"lapatinib/pentoxifylline/atorvastatin/imatinib/dasatinib",5
+"43","hsa05169","Epstein-Barr virus infection","6/16","1405/20548",0.00044563624735623,0.0024147266426512,0.000829090692755776,"vorinostat/pentoxifylline/atorvastatin/imatinib/simvastatin/dasatinib",6
+"44","hsa02010","ABC transporters","3/16","199/20548",0.000456556543077618,0.00241767442129738,0.000830102805595669,"nimodipine/imatinib/nifedipine",3
+"45","hsa04723","Retrograde endocannabinoid signaling","5/16","914/20548",0.000499020770064447,0.00258381865388925,0.000887148035670128,"nimodipine/gabapentin/spironolactone/dasatinib/nifedipine",5
+"46","hsa04640","Hematopoietic cell lineage","4/16","509/20548",0.000534340405443024,0.00270655031452662,0.000929287661640041,"pentoxifylline/atorvastatin/imatinib/dasatinib",4
+"47","hsa04514","Cell adhesion molecules","3/16","216/20548",0.00057983810936124,0.00283215949882994,0.00097241527856822,"pentoxifylline/atorvastatin/simvastatin",3
+"48","hsa05165","Human papillomavirus infection","6/16","1478/20548",0.000585209941945285,0.00283215949882994,0.00097241527856822,"vorinostat/lapatinib/pentoxifylline/atorvastatin/imatinib/dasatinib",6
+"49","hsa05100","Bacterial invasion of epithelial cells","3/16","218/20548",0.000595604358123035,0.00283215949882994,0.00097241527856822,"atorvastatin/imatinib/dasatinib",3
+"50","hsa05166","Human T-cell leukemia virus 1 infection","6/16","1523/20548",0.000687096430270038,0.00320186936505838,0.00109935428843206,"pamidronate/pentoxifylline/atorvastatin/imatinib/simvastatin/dasatinib",6
+"51","hsa00900","Terpenoid backbone biosynthesis","3/16","233/20548",0.000722681602007954,0.00330166300525203,0.00113361819922816,"pamidronate/atorvastatin/simvastatin",3
+"52","hsa05202","Transcriptional misregulation in cancer","5/16","1001/20548",0.00075622032789205,0.00338844877690092,0.00116341588906469,"vorinostat/pentoxifylline/atorvastatin/imatinib/dasatinib",5
+"53","hsa04625","C-type lectin receptor signaling pathway","5/16","1019/20548",0.000820042397861504,0.00359362910393326,0.00123386407002,"pentoxifylline/atorvastatin/dasatinib/nifedipine/thioridazine",5
+"54","hsa05131","Shigellosis","6/16","1579/20548",0.000832858247263502,0.00359362910393326,0.00123386407002,"lapatinib/pentoxifylline/atorvastatin/imatinib/dasatinib/thioridazine",6
+"55","hsa01521","EGFR tyrosine kinase inhibitor resistance","5/16","1052/20548",0.000947529913174587,0.00401408126853962,0.00137822532825395,"lapatinib/pentoxifylline/atorvastatin/imatinib/dasatinib",5
+"56","hsa04659","Th17 cell differentiation","5/16","1076/20548",0.00104924022260174,0.00433400863835433,0.00148807163548646,"nimodipine/pentoxifylline/atorvastatin/imatinib/dasatinib",5
+"57","hsa05322","Systemic lupus erythematosus","3/16","266/20548",0.00106025104028411,0.00433400863835433,0.00148807163548646,"pentoxifylline/gabapentin/atorvastatin",3
+"58","hsa04217","Necroptosis","5/16","1107/20548",0.00119253028646858,0.00479068201288238,0.00164486936064631,"rucaparib/pentoxifylline/atorvastatin/imatinib/dasatinib",5
+"59","hsa04660","T cell receptor signaling pathway","5/16","1113/20548",0.00122188009033159,0.0048253908652078,0.00165678656316148,"pentoxifylline/atorvastatin/imatinib/dasatinib/thioridazine",5
+"60","hsa05034","Alcoholism","5/16","1131/20548",0.00131319017527141,0.00503588896511247,0.00172906058887982,"vorinostat/pentoxifylline/gabapentin/nifedipine/thioridazine",5
+"61","hsa04912","GnRH signaling pathway","5/16","1132/20548",0.00131840869902086,0.00503588896511247,0.00172906058887982,"nimodipine/lapatinib/spironolactone/dasatinib/nifedipine",5
+"62","hsa04933","AGE-RAGE signaling pathway in diabetic complications","5/16","1208/20548",0.00176267782500308,0.00662425698751159,0.00227442300000398,"pentoxifylline/atorvastatin/imatinib/dasatinib/nifedipine",5
+"63","hsa04670","Leukocyte transendothelial migration","4/16","707/20548",0.00181711354631578,0.0066326811932591,0.00227731543116192,"pentoxifylline/atorvastatin/simvastatin/dasatinib",4
+"64","hsa04935","Growth hormone synthesis, secretion and action","5/16","1217/20548",0.00182185234492954,0.0066326811932591,0.00227731543116192,"nimodipine/imatinib/spironolactone/dasatinib/nifedipine",5
+"65","hsa04060","Cytokine-cytokine receptor interaction","4/16","720/20548",0.00194278528155116,0.00696413800925263,0.00239112034652451,"pentoxifylline/atorvastatin/imatinib/dasatinib",4
+"66","hsa04929","GnRH secretion","4/16","729/20548",0.00203327684663742,0.00717808341312906,0.00246457799592414,"nimodipine/gabapentin/spironolactone/nifedipine",4
+"67","hsa05160","Hepatitis C","5/16","1262/20548",0.00214020242677422,0.00744279351400587,0.00255546558420802,"lapatinib/pentoxifylline/atorvastatin/simvastatin/dasatinib",5
+"68","hsa05163","Human cytomegalovirus infection","6/16","1904/20548",0.00222095665918818,0.00758048213051632,0.00260274064567084,"lapatinib/pentoxifylline/atorvastatin/imatinib/dasatinib/nifedipine",6
+"69","hsa04520","Adherens junction","4/16","749/20548",0.0022448638068911,0.00758048213051632,0.00260274064567084,"lapatinib/atorvastatin/imatinib/dasatinib",4
+"70","hsa04713","Circadian entrainment","4/16","766/20548",0.00243642219560557,0.00810980530822997,0.00278448250926351,"nimodipine/gabapentin/spironolactone/nifedipine",4
+"71","hsa04720","Long-term potentiation","4/16","777/20548",0.00256627271707995,0.00842171187436097,0.00289157489248445,"nimodipine/gabapentin/spironolactone/nifedipine",4
+"72","hsa05214","Glioma","4/16","816/20548",0.00306548179056842,0.00977855421491826,0.00335744350726807,"lapatinib/imatinib/dasatinib/nifedipine",4
+"73","hsa04915","Estrogen signaling pathway","5/16","1374/20548",0.00311065171071271,0.00977855421491826,0.00335744350726807,"lapatinib/gabapentin/spironolactone/dasatinib/nifedipine",5
+"74","hsa05143","African trypanosomiasis","3/16","388/20548",0.0031160632792982,0.00977855421491826,0.00335744350726807,"pentoxifylline/atorvastatin/simvastatin",3
+"75","hsa04724","Glutamatergic synapse","4/16","824/20548",0.00317561483717184,0.00977855421491826,0.00335744350726807,"nimodipine/gabapentin/spironolactone/nifedipine",4
+"76","hsa05032","Morphine addiction","4/16","825/20548",0.00318957133190467,0.00977855421491826,0.00335744350726807,"pentoxifylline/gabapentin/spironolactone/thioridazine",4
+"77","hsa04071","Sphingolipid signaling pathway","5/16","1401/20548",0.00338633613036573,0.0102469651737041,0.00351827130427608,"pentoxifylline/gabapentin/atorvastatin/imatinib/dasatinib",5
+"78","hsa04061","Viral protein interaction with cytokine and cytokine receptor","3/16","429/20548",0.00413364000726929,0.0122880525179319,0.00421907382589935,"pentoxifylline/atorvastatin/imatinib",3
+"79","hsa05320","Autoimmune thyroid disease","2/16","125/20548",0.00416633540307561,0.0122880525179319,0.00421907382589935,"pentoxifylline/atorvastatin",2
+"80","hsa04350","TGF-beta signaling pathway","3/16","433/20548",0.00424254008646719,0.0123563980018357,0.00424254008646719,"pentoxifylline/atorvastatin/dasatinib",3
+"81","hsa05144","Malaria","3/16","437/20548",0.0043531891243781,0.0125221366170382,0.0042994460487685,"pentoxifylline/atorvastatin/simvastatin",3
+"82","hsa00591","Linoleic acid metabolism","3/16","444/20548",0.00455106017579757,0.0127791139356209,0.00438767860450503,"imatinib/simvastatin/nifedipine",3
+"83","hsa05206","MicroRNAs in cancer","5/16","1500/20548",0.00455221655217397,0.0127791139356209,0.00438767860450503,"vorinostat/lapatinib/atorvastatin/imatinib/dasatinib",5
+"84","hsa05167","Kaposi sarcoma-associated herpesvirus infection","5/16","1557/20548",0.00534305705807372,0.0148206225539426,0.00508862576959402,"pentoxifylline/atorvastatin/imatinib/dasatinib/nifedipine",5
+"85","hsa04390","Hippo signaling pathway","3/16","473/20548",0.00542917154474235,0.0148823172932349,0.00510980851269868,"atorvastatin/simvastatin/dasatinib",3
+"86","hsa04540","Gap junction","4/16","994/20548",0.0062098831056904,0.0168244507398356,0.00577663544715386,"lapatinib/imatinib/dasatinib/thioridazine",4
+"87","hsa05332","Graft-versus-host disease","2/16","157/20548",0.00648859616942401,0.0173313930268668,0.00595069288476114,"pentoxifylline/atorvastatin",2
+"88","hsa04973","Carbohydrate digestion and absorption","3/16","506/20548",0.00654576217323725,0.0173313930268668,0.00595069288476114,"nimodipine/spironolactone/nifedipine",3
+"89","hsa04152","AMPK signaling pathway","4/16","1016/20548",0.00670836248085966,0.0175623422251719,0.00602998874684015,"nimodipine/atorvastatin/simvastatin/thioridazine",4
+"90","hsa05330","Allograft rejection","2/16","164/20548",0.00705961936258513,0.0180904375290182,0.00621130902283885,"pentoxifylline/atorvastatin",2
+"91","hsa04668","TNF signaling pathway","4/16","1032/20548",0.00708741554327703,0.0180904375290182,0.00621130902283885,"pentoxifylline/atorvastatin/dasatinib/nifedipine",4
+"92","hsa05310","Asthma","2/16","165/20548",0.00714300537626468,0.0180904375290182,0.00621130902283885,"pentoxifylline/atorvastatin",2
+"93","hsa05170","Human immunodeficiency virus 1 infection","5/16","1673/20548",0.00725287933325923,0.0181711923080581,0.00623903598559933,"pentoxifylline/atorvastatin/imatinib/dasatinib/nifedipine",5
+"94","hsa05323","Rheumatoid arthritis","3/16","528/20548",0.00736155855581775,0.0182472674841014,0.00626515621771723,"pentoxifylline/atorvastatin/simvastatin",3
+"95","hsa05224","Breast cancer","4/16","1048/20548",0.00748065317516151,0.018347286208554,0.00629949741066232,"lapatinib/imatinib/spironolactone/dasatinib",4
+"96","hsa04672","Intestinal immune network for IgA production","2/16","183/20548",0.00872040684609097,0.0211651541160333,0.00726700570507581,"pentoxifylline/atorvastatin",2
+"97","hsa05162","Measles","4/16","1120/20548",0.00943203293762396,0.0226563265408905,0.00777899623721564,"pentoxifylline/atorvastatin/imatinib/dasatinib",4
+"98","hsa04940","Type I diabetes mellitus","2/16","192/20548",0.0095626871477129,0.0227357765858888,0.00780627522262277,"pentoxifylline/atorvastatin",2
+"99","hsa04911","Insulin secretion","3/16","595/20548",0.010210423328367,0.0240305922778738,0.00825084713403393,"nimodipine/spironolactone/nifedipine",3
+"100","hsa05130","Pathogenic Escherichia coli infection","4/16","1155/20548",0.010492325887298,0.0244471193174044,0.00839386070983843,"pentoxifylline/atorvastatin/imatinib/dasatinib",4
+"101","hsa04722","Neurotrophin signaling pathway","4/16","1164/20548",0.0107771934582536,0.0248622383739911,0.00853639085802269,"atorvastatin/imatinib/dasatinib/nifedipine",4
+"102","hsa05145","Toxoplasmosis","4/16","1175/20548",0.011132258265779,0.024896229930701,0.00854806177878144,"pentoxifylline/atorvastatin/simvastatin/dasatinib",4
+"103","hsa05203","Viral carcinogenesis","4/16","1175/20548",0.011132258265779,0.024896229930701,0.00854806177878144,"vorinostat/atorvastatin/imatinib/dasatinib",4
+"104","hsa04072","Phospholipase D signaling pathway","4/16","1177/20548",0.0111976350045242,0.024896229930701,0.00854806177878144,"lapatinib/atorvastatin/imatinib/dasatinib",4
+"105","hsa04730","Long-term depression","3/16","616/20548",0.0112193310846506,0.024896229930701,0.00854806177878144,"imatinib/spironolactone/dasatinib",3
+"106","hsa04750","Inflammatory mediator regulation of TRP channels","4/16","1195/20548",0.0117974657820692,0.0259321653511521,0.00890374776005221,"imatinib/dasatinib/nifedipine/thioridazine",4
+"107","hsa05140","Leishmaniasis","3/16","630/20548",0.0119233473818523,0.0259639246726316,0.00891465224811385,"pentoxifylline/simvastatin/dasatinib",3
+"108","hsa05135","Yersinia infection","4/16","1203/20548",0.0120707151431706,0.0260414502625811,0.00894127047642269,"pentoxifylline/atorvastatin/imatinib/dasatinib",4
+"109","hsa04613","Neutrophil extracellular trap formation","4/16","1237/20548",0.0132784271550348,0.0282636533955285,0.00970425867657631,"vorinostat/pentoxifylline/simvastatin/dasatinib",4
+"110","hsa05208","Chemical carcinogenesis - reactive oxygen species","5/16","1937/20548",0.0133433556802924,0.0282636533955285,0.00970425867657631,"nimodipine/lapatinib/atorvastatin/imatinib/dasatinib",5
+"111","hsa04658","Th1 and Th2 cell differentiation","3/16","662/20548",0.0136280034095829,0.0286065296795749,0.00982198443933903,"pentoxifylline/imatinib/dasatinib",3
+"112","hsa05215","Prostate cancer","4/16","1274/20548",0.0146796911117274,0.0305390002592187,0.0104854936512339,"lapatinib/imatinib/spironolactone/dasatinib",4
+"113","hsa04977","Vitamin digestion and absorption","2/16","246/20548",0.0153370102889275,0.0316241008612398,0.0108580603815416,"atorvastatin/simvastatin",2
+"114","hsa05218","Melanoma","3/16","700/20548",0.0158270245781593,0.0323482169009746,0.0111066839144977,"lapatinib/imatinib/dasatinib",3
+"115","hsa03265","Virion - Lyssavirus","1/16","21/20548",0.016233095322066,0.0327346680343749,0.011239370998927,"galantamine",1
+"116","hsa05164","Influenza A","4/16","1317/20548",0.0164250412019586,0.0327346680343749,0.011239370998927,"pamidronate/pentoxifylline/atorvastatin/dasatinib",4
+"117","hsa04916","Melanogenesis","3/16","710/20548",0.0164375800859307,0.0327346680343749,0.011239370998927,"imatinib/dasatinib/nifedipine",3
+"118","hsa04068","FoxO signaling pathway","4/16","1326/20548",0.0168065432864639,0.0331858015741193,0.0113942666348908,"lapatinib/pentoxifylline/atorvastatin/dasatinib",4
+"119","hsa04610","Complement and coagulation cascades","3/16","721/20548",0.0171246292883155,0.0335297363376262,0.0115123558240777,"pentoxifylline/atorvastatin/simvastatin",3
+"120","hsa04623","Cytosolic DNA-sensing pathway","2/16","264/20548",0.0175253573106905,0.0337471756478586,0.0115870130979772,"pentoxifylline/atorvastatin",2
+"121","hsa05340","Primary immunodeficiency","2/16","264/20548",0.0175253573106905,0.0337471756478586,0.0115870130979772,"atorvastatin/dasatinib",2
+"122","hsa04110","Cell cycle","3/16","730/20548",0.0176988264290778,0.0338018570325831,0.0116057878223461,"vorinostat/imatinib/dasatinib",3
+"123","hsa05171","Coronavirus disease - COVID-19","4/16","1356/20548",0.0181193636805797,0.034323672663212,0.0117849519873689,"lapatinib/pentoxifylline/atorvastatin/dasatinib",4
+"124","hsa04662","B cell receptor signaling pathway","3/16","752/20548",0.0191483107626471,0.0359802936104579,0.0123537488791272,"imatinib/dasatinib/thioridazine",3
+"125","hsa04066","HIF-1 signaling pathway","4/16","1400/20548",0.0201610932886744,0.0375802778900891,0.0129030997047516,"lapatinib/pentoxifylline/atorvastatin/nifedipine",4
+"126","hsa05146","Amoebiasis","3/16","773/20548",0.0205929238506236,0.0380805655332959,0.0130748722861102,"pentoxifylline/atorvastatin/simvastatin",3
+"127","hsa04979","Cholesterol metabolism","2/16","290/20548",0.0209075663656868,0.0383579760882286,0.0131701205453145,"atorvastatin/simvastatin",2
+"128","hsa05120","Epithelial cell signaling in Helicobacter pylori infection","3/16","788/20548",0.0216614218464764,0.0393863918459912,0.0135232246681515,"lapatinib/imatinib/dasatinib",3
+"129","hsa00590","Arachidonic acid metabolism","3/16","790/20548",0.0218061997773943,0.0393863918459912,0.0135232246681515,"imatinib/simvastatin/nifedipine",3
+"130","hsa05150","Staphylococcus aureus infection","2/16","300/20548",0.0222761207369556,0.0399256625516205,0.0137083819919727,"pentoxifylline/simvastatin",2
+"131","hsa04210","Apoptosis","4/16","1454/20548",0.022859935881036,0.0405703046599951,0.0139297183381957,"rucaparib/pentoxifylline/atorvastatin/imatinib",4
+"132","hsa04928","Parathyroid hormone synthesis, secretion and action","3/16","806/20548",0.022984035258023,0.0405703046599951,0.0139297183381957,"lapatinib/pentoxifylline/atorvastatin",3
+"133","hsa05220","Chronic myeloid leukemia","3/16","822/20548",0.024196786187194,0.0423898585083924,0.0145544578569588,"vorinostat/imatinib/dasatinib",3
+"134","hsa05221","Acute myeloid leukemia","3/16","827/20548",0.0245829407469417,0.0427449641346076,0.0146763825354876,"pentoxifylline/imatinib/dasatinib",3
+"135","hsa00290","Valine, leucine and isoleucine biosynthesis","1/16","36/20548",0.0276765521642613,0.04776767892054,0.0164009198010438,"gabapentin",1
+"136","hsa04114","Oocyte meiosis","3/16","871/20548",0.0281285506589022,0.0481908257612074,0.0165462062699424,"spironolactone/dasatinib/nifedipine",3
+"137","hsa05418","Fluid shear stress and atherosclerosis","4/16","1559/20548",0.0287351689734565,0.048628921792713,0.0166966255082276,"pentoxifylline/atorvastatin/dasatinib/nifedipine",4
+"138","hsa04664","Fc epsilon RI signaling pathway","3/16","879/20548",0.0288016790016927,0.048628921792713,0.0166966255082276,"pentoxifylline/imatinib/dasatinib",3
+"139","hsa05161","Hepatitis B","4/16","1566/20548",0.0291569425938634,0.0488745872256848,0.0167809741547416,"pentoxifylline/atorvastatin/imatinib/dasatinib",4
+"140","hsa04510","Focal adhesion","4/16","1575/20548",0.0297048246216743,0.049436677112421,0.0169739663905308,"lapatinib/atorvastatin/imatinib/dasatinib",4
+"141","hsa03013","Nucleocytoplasmic transport","1/16","39/20548",0.0299502164427287,0.049436677112421,0.0169739663905308,"imatinib",1
+"142","hsa00564","Glycerophospholipid metabolism","2/16","353/20548",0.0301287903431922,0.049436677112421,0.0169739663905308,"pentoxifylline/galantamine",2
+"143","hsa04721","Synaptic vesicle cycle","2/16","357/20548",0.0307609316551799,0.0501209585710274,0.0172089128140866,"gabapentin/spironolactone",2
+"144","hsa05231","Choline metabolism in cancer","3/16","912/20548",0.0316709422857524,0.051245344115141,0.0175949679365291,"lapatinib/imatinib/dasatinib",3
+"145","hsa05321","Inflammatory bowel disease","2/16","373/20548",0.03334276435568,0.0535783730680926,0.0183960079203752,"pentoxifylline/atorvastatin",2
+"146","hsa04360","Axon guidance","3/16","939/20548",0.0341292991442709,0.0544666212370899,0.0187009858324772,"atorvastatin/imatinib/dasatinib",3
+"147","hsa04657","IL-17 signaling pathway","3/16","954/20548",0.03553805327016,0.0563290232105256,0.0193404371538285,"pentoxifylline/atorvastatin/dasatinib",3
+"148","hsa05230","Central carbon metabolism in cancer","3/16","971/20548",0.0371716924502705,0.0584321303029457,0.0200625340095951,"lapatinib/imatinib/dasatinib",3
+"149","hsa05223","Non-small cell lung cancer","3/16","973/20548",0.0373664695928708,0.0584321303029457,0.0200625340095951,"lapatinib/imatinib/dasatinib",3
+"150","hsa04620","Toll-like receptor signaling pathway","3/16","981/20548",0.0381510116537622,0.0592612381021773,0.0203472062153398,"pentoxifylline/atorvastatin/dasatinib",3
+"151","hsa04012","ErbB signaling pathway","3/16","987/20548",0.0387451185755789,0.059785514093443,0.0205272151393796,"lapatinib/imatinib/dasatinib",3
+"152","hsa04612","Antigen processing and presentation","2/16","415/20548",0.0405120547472219,0.0621007155006757,0.0213221340774852,"pentoxifylline/dasatinib",2
+"153","hsa05235","PD-L1 expression and PD-1 checkpoint pathway in cancer","3/16","1027/20548",0.042830300153928,0.0652252283389883,0.0223949281850604,"lapatinib/pentoxifylline/dasatinib",3
+"154","hsa05205","Proteoglycans in cancer","4/16","1790/20548",0.0447032515161702,0.0676354389822575,0.0232224683200884,"lapatinib/pentoxifylline/atorvastatin/dasatinib",4
+"155","hsa00240","Pyrimidine metabolism","2/16","446/20548",0.0461502094882831,0.0692081443859771,0.0237624530080608,"pentoxifylline/floxuridine",2
+"156","hsa04975","Fat digestion and absorption","2/16","447/20548",0.0463367833657186,0.0692081443859771,0.0237624530080608,"atorvastatin/simvastatin",2
+"157","hsa04960","Aldosterone-regulated sodium reabsorption","2/16","453/20548",0.0474622591029312,0.0704376201973438,0.0241845906256974,"nimodipine/spironolactone",2
+"158","hsa04145","Phagosome","2/16","480/20548",0.0526523819077922,0.0776456011678202,0.0266594338773632,"pentoxifylline/simvastatin",2
+"159","hsa04611","Platelet activation","3/16","1121/20548",0.0532736143971258,0.0777506366289554,0.0266954975550061,"atorvastatin/imatinib/dasatinib",3
+"160","hsa05168","Herpes simplex virus 1 infection","3/16","1122/20548",0.0533909951100123,0.0777506366289554,0.0266954975550061,"pentoxifylline/atorvastatin/dasatinib",3
+"161","hsa05142","Chagas disease","3/16","1129/20548",0.0542163232188746,0.0784621323602347,0.0269397879348445,"pentoxifylline/atorvastatin/dasatinib",3
+"162","hsa04371","Apelin signaling pathway","3/16","1167/20548",0.0588079178482499,0.0845817583866804,0.0290409470855555,"vorinostat/atorvastatin/nifedipine",3
+"163","hsa04971","Gastric acid secretion","2/16","518/20548",0.060290692808037,0.0861824013759056,0.0295905240775641,"nimodipine/nifedipine",2
+"164","hsa05016","Huntington disease","3/16","1185/20548",0.0610479392347956,0.0867327429372401,0.0297794825535588,"vorinostat/gabapentin/spironolactone",3
+"165","hsa04621","NOD-like receptor signaling pathway","3/16","1226/20548",0.0663042806873087,0.0931837064325984,0.0319944056420939,"pentoxifylline/atorvastatin/dasatinib",3
+"166","hsa03040","Spliceosome","1/16","88/20548",0.0663883917073448,0.0931837064325984,0.0319944056420939,"dasatinib",1
+"167","hsa04913","Ovarian steroidogenesis","2/16","554/20548",0.0678657562806332,0.0946869533735781,0.0325105419308423,"atorvastatin/simvastatin",2
+"168","hsa04380","Osteoclast differentiation","3/16","1250/20548",0.0694793105911029,0.0959409746556274,0.0329411071778978,"pentoxifylline/imatinib/dasatinib",3
+"169","hsa04926","Relaxin signaling pathway","3/16","1253/20548",0.0698812315410881,0.0959409746556274,0.0329411071778978,"lapatinib/dasatinib/nifedipine",3
+"170","hsa05012","Parkinson disease","3/16","1257/20548",0.0704188603410196,0.0959409746556274,0.0329411071778978,"pentoxifylline/nifedipine/thioridazine",3
+"171","hsa01522","Endocrine resistance","3/16","1259/20548",0.0706884168599608,0.0959409746556274,0.0329411071778978,"lapatinib/spironolactone/dasatinib",3
+"172","hsa04932","Non-alcoholic fatty liver disease","3/16","1260/20548",0.0708233804324803,0.0959409746556274,0.0329411071778978,"pentoxifylline/atorvastatin/dasatinib",3
+"173","hsa04213","Longevity regulating pathway - multiple species","2/16","578/20548",0.0730881901899201,0.0984366954581004,0.0337980070242405,"vorinostat/dasatinib",2
+"174","hsa01232","Nucleotide metabolism","2/16","583/20548",0.074192858981781,0.0993502077169827,0.0341116593019683,"pentoxifylline/floxuridine",2
+"175","hsa03015","mRNA surveillance pathway","1/16","108/20548",0.0808890445588697,0.107697985041238,0.0369778489411976,"imatinib",1
+"176","hsa05030","Cocaine addiction","2/16","617/20548",0.0818509566353642,0.108359505091136,0.0372049802888019,"gabapentin/thioridazine",2
+"177","hsa04622","RIG-I-like receptor signaling pathway","2/16","636/20548",0.0862375068367928,0.113521689790806,0.0389774042200193,"pentoxifylline/dasatinib",2
+"178","hsa04666","Fc gamma R-mediated phagocytosis","2/16","643/20548",0.0878721909923353,0.115023710680978,0.039493119547117,"imatinib/dasatinib",2
+"179","hsa03050","Proteasome","1/16","120/20548",0.0894878032018931,0.116415373270443,0.0399709436121693,"pentoxifylline",1
+"180","hsa04923","Regulation of lipolysis in adipocytes","2/16","655/20548",0.0906972025102611,0.116415373270443,0.0399709436121693,"pentoxifylline/gabapentin",2
+"181","hsa04062","Chemokine signaling pathway","3/16","1400/20548",0.0909067681011394,0.116415373270443,0.0399709436121693,"atorvastatin/imatinib/dasatinib",3
+"182","hsa05219","Bladder cancer","2/16","656/20548",0.0909338967176852,0.116415373270443,0.0399709436121693,"lapatinib/dasatinib",2
+"183","hsa04936","Alcoholic liver disease","3/16","1482/20548",0.103718058906092,0.132056326366773,0.0453412279370893,"pentoxifylline/atorvastatin/dasatinib",3
+"184","hsa04330","Notch signaling pathway","1/16","146/20548",0.10786039472161,0.136584086794212,0.0468958237920043,"vorinostat",1
+"185","hsa04744","Phototransduction","1/16","151/20548",0.111353497749236,0.140245216084173,0.0481528638915615,"nifedipine",1
+"186","hsa03320","PPAR signaling pathway","2/16","749/20548",0.113744483919269,0.142486369640805,0.0489223586749544,"atorvastatin/simvastatin",2
+"187","hsa05132","Salmonella infection","3/16","1549/20548",0.114723897500287,0.142944749291802,0.0490797422461122,"pentoxifylline/atorvastatin/dasatinib",3
+"188","hsa01524","Platinum drug resistance","2/16","758/20548",0.116029785615568,0.143802872598017,0.0493743768576883,"lapatinib/atorvastatin",2
+"189","hsa01210","2-Oxocarboxylic acid metabolism","1/16","167/20548",0.122445457846141,0.150951278720375,0.05182876522588,"gabapentin",1
+"190","hsa04310","Wnt signaling pathway","2/16","797/20548",0.126075421068411,0.154403826701058,0.053014189425256,"atorvastatin/dasatinib",2
+"191","hsa00770","Pantothenate and CoA biosynthesis","1/16","173/20548",0.126571377252799,0.154403826701058,0.053014189425256,"gabapentin",1
+"192","hsa00983","Drug metabolism - other enzymes","2/16","820/20548",0.132102564918925,0.160311966802653,0.0550427353828852,"pentoxifylline/simvastatin",2
+"193","hsa04150","mTOR signaling pathway","2/16","841/20548",0.137667877729613,0.166200080367875,0.0570644052765237,"pentoxifylline/atorvastatin",2
+"194","hsa04972","Pancreatic secretion","2/16","857/20548",0.141946056755129,0.17048160424714,0.0585344563938678,"nimodipine/atorvastatin",2
+"195","hsa05110","Vibrio cholerae infection","1/16","206/20548",0.148940763625724,0.17740798658434,0.0609126134195158,"nimodipine",1
+"196","hsa04970","Salivary secretion","2/16","884/20548",0.149235902877814,0.17740798658434,0.0609126134195158,"nifedipine/thioridazine",2
+"197","hsa05017","Spinocerebellar ataxia","2/16","906/20548",0.155237492403329,0.183605765126781,0.0630406060521135,"gabapentin/spironolactone",2
+"198","hsa04922","Glucagon signaling pathway","2/16","910/20548",0.156334361423507,0.183755117571339,0.0630918858614041,"dasatinib/nifedipine",2
+"199","hsa00510","N-Glycan biosynthesis","1/16","218/20548",0.156941066080243,0.183755117571339,0.0630918858614041,"spironolactone",1
+"200","hsa00670","One carbon pool by folate","1/16","223/20548",0.160253670774371,0.186695526452142,0.0641014683097482,"floxuridine",1
+"201","hsa05210","Colorectal cancer","2/16","949/20548",0.167114827735728,0.193720173444898,0.0665133642729264,"lapatinib/atorvastatin",2
+"202","hsa00230","Purine metabolism","2/16","963/20548",0.171020720314994,0.196759294519012,0.0675568393198323,"pentoxifylline/dasatinib",2
+"203","hsa03410","Base excision repair","1/16","240/20548",0.171425479774075,0.196759294519012,0.0675568393198323,"rucaparib",1
+"204","hsa04917","Prolactin signaling pathway","2/16","1009/20548",0.183975250315262,0.210128594722824,0.0721471569863773,"imatinib/dasatinib",2
+"205","hsa04740","Olfactory transduction","1/16","267/20548",0.188882967970971,0.214681617254811,0.073710426525257,"nifedipine",1
+"206","hsa04914","Progesterone-mediated oocyte maturation","2/16","1085/20548",0.205727691329922,0.231868961819236,0.0796116607104674,"spironolactone/dasatinib",2
+"207","hsa00520","Amino sugar and nucleotide sugar metabolism","1/16","294/20548",0.205995172088335,0.231868961819236,0.0796116607104674,"pentoxifylline",1
+"208","hsa04070","Phosphatidylinositol signaling system","1/16","306/20548",0.213491437499302,0.239151466044891,0.0821120913458852,"nifedipine",1
+"209","hsa00250","Alanine, aspartate and glutamate metabolism","1/16","331/20548",0.228896066033172,0.254642735174573,0.0874309820341883,"dasatinib",1
+"210","hsa00760","Nicotinate and nicotinamide metabolism","1/16","332/20548",0.229506327839744,0.254642735174573,0.0874309820341883,"pentoxifylline",1
+"211","hsa04919","Thyroid hormone signaling pathway","2/16","1175/20548",0.231916647189839,0.256097529835225,0.0879304823468584,"vorinostat/dasatinib",2
+"212","hsa04931","Insulin resistance","2/16","1226/20548",0.246903154239777,0.271360542159755,0.0931710015999159,"pentoxifylline/atorvastatin",2
+"213","hsa00561","Glycerolipid metabolism","1/16","395/20548",0.267052902968035,0.292128292918085,0.100301559800201,"atorvastatin",1
+"214","hsa00270","Cysteine and methionine metabolism","1/16","421/20548",0.28204247121173,0.307083625197819,0.105436437836161,"gabapentin",1
+"215","hsa04910","Insulin signaling pathway","2/16","1427/20548",0.306406088485412,0.33205869124233,0.114011567808525,"imatinib/nifedipine",2
+"216","hsa05216","Thyroid cancer","1/16","475/20548",0.312261095091718,0.33683719979801,0.115652257441377,"imatinib",1
+"217","hsa04115","p53 signaling pathway","1/16","512/20548",0.332273502911682,0.356772931697796,0.122497143930574,"atorvastatin",1
+"218","hsa00280","Valine, leucine and isoleucine degradation","1/16","516/20548",0.334403994319508,0.357413443469932,0.122717062135599,"gabapentin",1
+"219","hsa04137","Mitophagy - animal","1/16","523/20548",0.338117027315984,0.359259953664296,0.123351057052119,"dasatinib",1
+"220","hsa05415","Diabetic cardiomyopathy","2/16","1542/20548",0.340372819467941,0.359259953664296,0.123351057052119,"rucaparib/dasatinib",2
+"221","hsa01230","Biosynthesis of amino acids","1/16","528/20548",0.340757295106478,0.359259953664296,0.123351057052119,"gabapentin",1
+"222","hsa04974","Protein digestion and absorption","1/16","531/20548",0.342336712946119,0.359299342866873,0.123364581241845,"atorvastatin",1
+"223","hsa04141","Protein processing in endoplasmic reticulum","1/16","600/20548",0.377698977738035,0.394636151627633,0.135497391116784,"dasatinib",1
+"224","hsa05213","Endometrial cancer","1/16","647/20548",0.400756980522672,0.416858823490101,0.143127493043811,"lapatinib",1
+"225","hsa04550","Signaling pathways regulating pluripotency of stem cells","1/16","657/20548",0.405558461616876,0.419978318029921,0.144198564130445,"dasatinib",1
+"226","hsa05211","Renal cell carcinoma","1/16","695/20548",0.423477136564212,0.436593685041865,0.149903411173173,"imatinib",1
+"227","hsa04920","Adipocytokine signaling pathway","1/16","718/20548",0.434075319121722,0.445548675574279,0.152978086034087,"pentoxifylline",1
+"228","hsa04370","VEGF signaling pathway","1/16","885/20548",0.505724206125121,0.5168146492419,0.177447089868464,"dasatinib",1
+"229","hsa01240","Biosynthesis of cofactors","1/16","947/20548",0.530088421952918,0.539347608362576,0.185183728193159,"gabapentin",1
+"230","hsa04714","Thermogenesis","1/16","1003/20548",0.551122681660004,0.558311238377308,0.191694845794784,"dasatinib",1
+"231","hsa05226","Gastric cancer","1/16","1023/20548",0.558418558436981,0.563253351150721,0.193391708549604,"lapatinib",1
+"232","hsa05212","Pancreatic cancer","1/16","1067/20548",0.574079992038218,0.576554474762521,0.197958617944213,"lapatinib",1
+"233","hsa05225","Hepatocellular carcinoma","1/16","1131/20548",0.595933014317545,0.595933014317545,0.204612193757097,"lapatinib",1
