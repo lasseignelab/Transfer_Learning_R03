@@ -616,33 +616,33 @@ library(VennDiagram)</code></pre>
 source(&quot;~/script/test_LV_differences.R&quot;)
 library(dplyr)</code></pre>
 <pre class="r"><code>human_projects&lt;- available_projects()</code></pre>
-<pre><code>## 2022-10-07 14:11:38 caching file sra.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:11:40 caching file gtex.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:11:41 caching file tcga.recount_project.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:18:55 caching file sra.recount_project.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:18:56 caching file gtex.recount_project.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:18:57 caching file tcga.recount_project.MD.gz.</code></pre>
 <pre class="r"><code>#SRP118922
 recount3_rse_PAAD&lt;- create_rse(human_projects[(human_projects$project == &quot;PAAD&quot;),])</code></pre>
-<pre><code>## 2022-10-07 14:11:44 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-10-07 14:11:45 caching file tcga.tcga.PAAD.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:11:45 caching file tcga.recount_project.PAAD.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:11:46 caching file tcga.recount_qc.PAAD.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:11:47 caching file tcga.recount_seq_qc.PAAD.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:11:47 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-10-07 14:11:48 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-10-07 14:11:49 downloading and reading the counts: 183 samples across 63856 features.</code></pre>
-<pre><code>## 2022-10-07 14:11:49 caching file tcga.gene_sums.PAAD.G026.gz.</code></pre>
-<pre><code>## 2022-10-07 14:11:52 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
+<pre><code>## 2022-11-08 20:19:01 downloading and reading the metadata.</code></pre>
+<pre><code>## 2022-11-08 20:19:01 caching file tcga.tcga.PAAD.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:02 caching file tcga.recount_project.PAAD.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:03 caching file tcga.recount_qc.PAAD.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:03 caching file tcga.recount_seq_qc.PAAD.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:04 downloading and reading the feature information.</code></pre>
+<pre><code>## 2022-11-08 20:19:04 caching file human.gene_sums.G026.gtf.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:05 downloading and reading the counts: 183 samples across 63856 features.</code></pre>
+<pre><code>## 2022-11-08 20:19:06 caching file tcga.gene_sums.PAAD.G026.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:08 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
 <pre class="r"><code>#SRP118922
 recount3_rse_PANCREAS&lt;- create_rse(human_projects[(human_projects$project == &quot;PANCREAS&quot;),])</code></pre>
-<pre><code>## 2022-10-07 14:11:52 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-10-07 14:11:52 caching file gtex.gtex.PANCREAS.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:11:53 caching file gtex.recount_project.PANCREAS.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:11:53 caching file gtex.recount_qc.PANCREAS.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:11:54 caching file gtex.recount_seq_qc.PANCREAS.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:11:55 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-10-07 14:11:55 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-10-07 14:11:56 downloading and reading the counts: 360 samples across 63856 features.</code></pre>
-<pre><code>## 2022-10-07 14:11:56 caching file gtex.gene_sums.PANCREAS.G026.gz.</code></pre>
-<pre><code>## 2022-10-07 14:11:59 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
+<pre><code>## 2022-11-08 20:19:08 downloading and reading the metadata.</code></pre>
+<pre><code>## 2022-11-08 20:19:09 caching file gtex.gtex.PANCREAS.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:10 caching file gtex.recount_project.PANCREAS.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:11 caching file gtex.recount_qc.PANCREAS.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:12 caching file gtex.recount_seq_qc.PANCREAS.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:13 downloading and reading the feature information.</code></pre>
+<pre><code>## 2022-11-08 20:19:15 caching file human.gene_sums.G026.gtf.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:16 downloading and reading the counts: 360 samples across 63856 features.</code></pre>
+<pre><code>## 2022-11-08 20:19:16 caching file gtex.gene_sums.PANCREAS.G026.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:20 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
 <pre class="r"><code>PAAD_counts&lt;- assay(recount3_rse_PAAD)
 PAAD_metadata&lt;- as.data.frame(colData(recount3_rse_PAAD))
 PANCREAS_counts&lt;- assay(recount3_rse_PANCREAS)
@@ -768,21 +768,21 @@ colnames(se) &lt;- HDF5Array(&quot;~/data/lincs_2020.h5&quot;, name=&quot;colnam
 <pre class="r"><code>#SRP118922
 library(recount3)
 human_projects&lt;- available_projects()</code></pre>
-<pre><code>## 2022-10-07 14:12:03 caching file sra.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:12:03 caching file gtex.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:12:04 caching file tcga.recount_project.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:25 caching file sra.recount_project.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:25 caching file gtex.recount_project.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:26 caching file tcga.recount_project.MD.gz.</code></pre>
 <pre class="r"><code>test&lt;- create_rse(human_projects[(human_projects$project == &quot;SRP118922&quot;),])</code></pre>
-<pre><code>## 2022-10-07 14:12:06 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-10-07 14:12:06 caching file sra.sra.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:12:08 caching file sra.recount_project.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:12:09 caching file sra.recount_qc.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:12:09 caching file sra.recount_seq_qc.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:12:10 caching file sra.recount_pred.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-10-07 14:12:10 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-10-07 14:12:10 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-10-07 14:12:11 downloading and reading the counts: 35 samples across 63856 features.</code></pre>
-<pre><code>## 2022-10-07 14:12:11 caching file sra.gene_sums.SRP118922.G026.gz.</code></pre>
-<pre><code>## 2022-10-07 14:12:12 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
+<pre><code>## 2022-11-08 20:19:30 downloading and reading the metadata.</code></pre>
+<pre><code>## 2022-11-08 20:19:30 caching file sra.sra.SRP118922.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:30 caching file sra.recount_project.SRP118922.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:31 caching file sra.recount_qc.SRP118922.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:32 caching file sra.recount_seq_qc.SRP118922.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:32 caching file sra.recount_pred.SRP118922.MD.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:33 downloading and reading the feature information.</code></pre>
+<pre><code>## 2022-11-08 20:19:33 caching file human.gene_sums.G026.gtf.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:34 downloading and reading the counts: 35 samples across 63856 features.</code></pre>
+<pre><code>## 2022-11-08 20:19:34 caching file sra.gene_sums.SRP118922.G026.gz.</code></pre>
+<pre><code>## 2022-11-08 20:19:34 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
 <pre class="r"><code>gene_info &lt;- test@rowRanges
 rm(test)</code></pre>
 <pre class="r"><code>dim(as.data.frame(gene_info))</code></pre>
@@ -1088,8 +1088,8 @@ topgene_9 &lt;- rownames(sig_Z_mt)[order(-sig_Z_mt[,9])][1:30]
 topgene_10 &lt;- rownames(sig_Z_mt)[order(-sig_Z_mt[,10])][1:30]</code></pre>
 <pre class="r"><code>topgenes&lt;- unique(c(topgene_1, topgene_2,topgene_3, topgene_4, topgene_5, topgene_6, topgene_7, topgene_8, topgene_9, topgene_10))</code></pre>
 <pre class="r"><code>deseq2_paad_tfl &lt;- deseq2_paad_normal[deseq2_paad_normal$Symbol %in% topgenes,]</code></pre>
-<pre class="r"><code>downset&lt;- deseq2_paad_tfl$Symbol[deseq2_paad_tfl[,2] &lt; 0]
-upset&lt;- deseq2_paad_tfl$Symbol[deseq2_paad_tfl[,2] &gt; 0]</code></pre>
+<pre class="r"><code>downset&lt;- deseq2_paad_tfl$Symbol[deseq2_paad_tfl$log2FoldChange &lt; 0]
+upset&lt;- deseq2_paad_tfl$Symbol[deseq2_paad_tfl$log2FoldChange &gt; 0]</code></pre>
 <pre class="r"><code>upset_v2 &lt;- match_to_LINCS_genes(upset)
 downset_v2 &lt;- match_to_LINCS_genes(downset)</code></pre>
 <pre class="r"><code>downset_v2&lt;- downset_v2[complete.cases(downset_v2)]

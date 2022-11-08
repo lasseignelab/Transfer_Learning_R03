@@ -891,8 +891,8 @@ deseq2_paad_tfl <- deseq2_paad_normal[deseq2_paad_normal$Symbol %in% topgenes,]
 
 
 ```{r eval=FALSE}
-downset<- deseq2_paad_tfl$Symbol[deseq2_paad_tfl[,2] < 0]
-upset<- deseq2_paad_tfl$Symbol[deseq2_paad_tfl[,2] > 0]
+downset<- deseq2_paad_tfl$Symbol[deseq2_paad_tfl$log2FoldChange < 0]
+upset<- deseq2_paad_tfl$Symbol[deseq2_paad_tfl$log2FoldChange > 0]
 ```
 
 ```{r eval=FALSE}
