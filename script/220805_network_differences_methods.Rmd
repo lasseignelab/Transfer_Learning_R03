@@ -112,20 +112,24 @@ string_ppi_details$genes<- rownames(string_ppi_details)
 
 
 ```{r}
+set.seed(101)
 network_cent_method_plotting(gbm_limma_input, gbm_deseq2_input, gbm_tfl_input, string_ppi_details= string_ppi_details, "~/output/gbm_plots/220822_network_gbm_")
 ```
 
 
 
 ```{r}
+set.seed(101)
 network_cent_method_plotting(liver_limma_input, liver_deseq2_input, liver_tfl_input, string_ppi_details= string_ppi_details,"~/output/liver_cancer/220822_network_liver_" )
 ```
 
 ```{r}
+set.seed(101)
 network_cent_method_plotting(lung_limma_input, lung_deseq2_input, lung_tfl_input, string_ppi_details= string_ppi_details, "~/output/lung_cancer/220822_network_lung_" )
 ```
 
 ```{r}
+set.seed(101)
 network_cent_method_plotting(paad_limma_input, paad_deseq2_input, paad_tfl_input, string_ppi_details= string_ppi_details, "~/output/pancreas_cancer/220822_network_paad_" )
 ```
 ### Save Data

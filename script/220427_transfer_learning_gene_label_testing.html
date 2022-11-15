@@ -406,7 +406,7 @@ GitHub Repo:
 Transfer_Leanring_R03
 
 Docker:
-rstudio_tf_dr_v3
+rstudio_cancer_dr
 
 Directory of operations:
 /home/rstudio (Docker)
@@ -493,6 +493,10 @@ library(signatureSearch)</code></pre>
 ##   method      from 
 ##   identify.gg ggfun</code></pre>
 <pre><code>## The ExperimentHub cache is at /home/rstudio/.cache/R/ExperimentHub</code></pre>
+<pre><code>## Warning: Could not check database for updates.
+##   Database source currently unreachable.
+##   This should only be a temporary interruption. 
+##   Using previously cached version.</code></pre>
 <pre class="r"><code>library(HDF5Array)</code></pre>
 <pre><code>## Loading required package: DelayedArray</code></pre>
 <pre><code>## Loading required package: Matrix</code></pre>
@@ -614,21 +618,21 @@ library(dplyr)</code></pre>
 <div id="load-in-data" class="section level3">
 <h3>load in data</h3>
 <pre class="r"><code>human_projects&lt;- available_projects()</code></pre>
-<pre><code>## 2022-10-06 18:04:33 caching file sra.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 18:04:36 caching file gtex.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 18:04:37 caching file tcga.recount_project.MD.gz.</code></pre>
+<pre><code>## 2022-11-15 16:58:25 caching file sra.recount_project.MD.gz.</code></pre>
+<pre><code>## 2022-11-15 16:58:25 caching file gtex.recount_project.MD.gz.</code></pre>
+<pre><code>## 2022-11-15 16:58:26 caching file tcga.recount_project.MD.gz.</code></pre>
 <pre class="r"><code>#SRP118922
 recount3_rse_BRIAN &lt;- create_rse(human_projects[(human_projects$project == &quot;BRAIN&quot;),])</code></pre>
-<pre><code>## 2022-10-06 18:04:46 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-10-06 18:04:46 caching file gtex.gtex.BRAIN.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 18:04:47 caching file gtex.recount_project.BRAIN.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 18:04:48 caching file gtex.recount_qc.BRAIN.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 18:04:49 caching file gtex.recount_seq_qc.BRAIN.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 18:04:51 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-10-06 18:04:51 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-10-06 18:04:53 downloading and reading the counts: 2931 samples across 63856 features.</code></pre>
-<pre><code>## 2022-10-06 18:04:53 caching file gtex.gene_sums.BRAIN.G026.gz.</code></pre>
-<pre><code>## 2022-10-06 18:05:30 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
+<pre><code>## 2022-11-15 16:58:30 downloading and reading the metadata.</code></pre>
+<pre><code>## 2022-11-15 16:58:31 caching file gtex.gtex.BRAIN.MD.gz.</code></pre>
+<pre><code>## 2022-11-15 16:58:31 caching file gtex.recount_project.BRAIN.MD.gz.</code></pre>
+<pre><code>## 2022-11-15 16:58:32 caching file gtex.recount_qc.BRAIN.MD.gz.</code></pre>
+<pre><code>## 2022-11-15 16:58:33 caching file gtex.recount_seq_qc.BRAIN.MD.gz.</code></pre>
+<pre><code>## 2022-11-15 16:58:33 downloading and reading the feature information.</code></pre>
+<pre><code>## 2022-11-15 16:58:34 caching file human.gene_sums.G026.gtf.gz.</code></pre>
+<pre><code>## 2022-11-15 16:58:35 downloading and reading the counts: 2931 samples across 63856 features.</code></pre>
+<pre><code>## 2022-11-15 16:58:35 caching file gtex.gene_sums.BRAIN.G026.gz.</code></pre>
+<pre><code>## 2022-11-15 16:58:57 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
 <pre class="r"><code>recount3_count_brain&lt;- assay(recount3_rse_BRIAN)
 recount3_count_brain &lt;- as.data.frame(recount3_count_brain)</code></pre>
 <pre class="r"><code>meta_brain_gtex_data&lt;- colData(recount3_rse_BRIAN)</code></pre>

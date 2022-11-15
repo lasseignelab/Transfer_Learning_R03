@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # START 
     Goal/Purpose of operations: 
-    We investigated the centraility of the highest weighted genes from all the latent variables and found that the top 10 highest weighted genes (aka. an important gene for the latent variable) for all the latent variables compared to genes that were not a top gene in any of latent gene were higher across all three centrality metrics 
+    We investigated the centrality of the highest weighted genes from all the latent variables and found that the top 10 highest weighted genes (aka. an important gene for the latent variable) for all the latent variables compared to genes that were not a top gene in any of latent gene were higher across all three centrality metrics 
     
     Finished psedocode on: 
     220323
@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE)
     Transfer_leanring_R03
     
     Docker:
-    jenfisher7/rstudio_tf_dr_v3
+    jenfisher7/rstudio_cancer_dr
     
     Directory of operations: 
     /home/rstudio/ "Docker"

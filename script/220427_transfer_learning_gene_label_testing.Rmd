@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE)
     Transfer_Leanring_R03
     
     Docker:
-    rstudio_tf_dr_v3
+    rstudio_cancer_dr
     
     Directory of operations:
     /home/rstudio (Docker)
