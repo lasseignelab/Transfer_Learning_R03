@@ -149,7 +149,7 @@ cos_lung_candidates <- candidate_cosine_data_heatmap(lincs=se_assay, "A549",linc
 ```
 
 ```{r}
-candidate_network_analysis( cos_lung_candidates, lincs_deseq_gbm_res_A549_fda_approved$pert, lincs_limma_gbm_res_A549_fda_approved$pert, lincs_tfl_gbm_res_A549_fda_approved$pert, quantile= 9, header= "~/output/lung_cancer/220817_network_analysis_liver")
+candidate_network_analysis( cos_lung_candidates, lincs_deseq_gbm_res_A549_fda_approved$pert, lincs_limma_gbm_res_A549_fda_approved$pert, lincs_tfl_gbm_res_A549_fda_approved$pert, quantile= 9, header= "~/output/lung_cancer/220817_network_analysis_lung")
 ```
 
 heatmap and network stuff for pancreatic
@@ -158,7 +158,7 @@ cos_PAAD_candidates <- candidate_cosine_data_heatmap(lincs=se_assay, "YAPC",linc
 ```
 
 ```{r}
-candidate_network_analysis( cos_PAAD_candidates, lincs_deseq_gbm_res_YAPC_fda_approved$pert, lincs_limma_gbm_res_YAPC_fda_approved$pert, lincs_tfl_gbm_res_YAPC_fda_approved$pert, quantile= 9, header= "~/output/pancreas_cancer/220817_network_analysis_liver")
+candidate_network_analysis( cos_PAAD_candidates, lincs_deseq_gbm_res_YAPC_fda_approved$pert, lincs_limma_gbm_res_YAPC_fda_approved$pert, lincs_tfl_gbm_res_YAPC_fda_approved$pert, quantile= 9, header= "~/output/pancreas_cancer/220817_network_analysis_paad")
 ```
 
 ### Save Data
