@@ -1980,4 +1980,445 @@ lincs_method_comparsion<- function(deseq_results_all,limma_results_all , tfl_res
   
 } 
 
+#plotting drug target and mechanism of action for all candidate results
+drug_moa_target_plotting_ct_info <- function(fda_approved_res, lincs_commpound_info=lincs_commpound_info, method, cancer, file_path_header ){
+  #fda_approved_res- the signaturesearch results with only fda approved
+  #lincs_commpound_info- the lincs compound info from the LINCS database
+  #method- what method found these candidates
+  #cancer- which cancer was this result for 
+  #file_path_header- path and header for output files
+  
+  #output
+  #several plots including alluvial and bar plots for the candidates
+  file_starter<- paste0(file_path_header, "_", cancer, "_", method, "_", sep= "")
+  
+  test_fda <- fda_approved_res
+  lincs_commpound_info[lincs_commpound_info$cmap_name %in% test_fda$pert,]
+  
+  summ_df <- as.data.frame(matrix(nrow=1, ncol=3))
+  colnames(summ_df)<- c("Var1", "Var2", "Var3")
+  for (i in 1:nrow(test_fda)){
+    #get the target from the data results data frame
+    targets1 <- as.vector(unlist(strsplit(test_fda$t_gn_sym[i], "; ")))
+    
+    targets2 <- lincs_commpound_info$target[lincs_commpound_info$cmap_name == test_fda$pert[i]]
+    targets2<- ifelse(targets2 == "", NA, targets2)
+    targets<- unique(c(targets1, targets2))
+    
+    moa <- unique(lincs_commpound_info$moa[lincs_commpound_info$cmap_name == test_fda$pert[i]])
+    moa<- ifelse(moa == "", NA, moa)
+    
+    df<- expand.grid(test_fda$pert[i], targets, moa )
+    
+    summ_df<- rbind(summ_df, df)
+    
+  }
+  
+  
+  summ_df<- summ_df[-1,]
+  colnames(summ_df)<- c( "cmap_name", "target", "moa")
+  
+  summ_df<- summ_df[!duplicated(summ_df), ]
+  #  return(summ_df)
+  #}   
+  TEST_LODES<- to_lodes_form(as.data.frame(summ_df),
+                             axes = 1:3,
+                             id = "INDEX")
+  
+  TEST_LODES$stratum = str_wrap(TEST_LODES$stratum, width = 20)
+  TEST_LODES$x <- factor(TEST_LODES$x, levels= c("moa", "cmap_name", "target"))
+  
+  TEST_LODES$drug <- rep(NA, nrow(summ_df))
+  drugs<- unique(summ_df$cmap_name)
+  for (i in 1:length(drugs)){
+    ind <- TEST_LODES$INDEX[TEST_LODES$stratum == drugs[i]]
+    TEST_LODES$drug<- ifelse(TEST_LODES$INDEX %in% ind, drugs[i], TEST_LODES$drug)
+  }
+  
+  #not need for this analysis but many for future.
+  TEST_LODES$drug<- factor(TEST_LODES$drug, levels= test_fda$pert)
+  
+  #moa
+  moa_df <- TEST_LODES[TEST_LODES$x == "moa", 2:4]
+  moa_df<- moa_df[!duplicated(moa_df), ]
+  counts<- as.data.frame(table(moa_df$stratum))
+  
+  #counts<- as.data.frame(table(TEST_LODES$stratum[TEST_LODES$x == "moa"]))
+  moa_order <- counts$Var1[ order(-counts$Freq)]
+  counts_moa<- counts
+  #targets
+  target_df <- TEST_LODES[TEST_LODES$x == "target", 2:4]
+  target_df<- target_df[!duplicated(target_df), ]
+  counts<- as.data.frame(table(target_df$stratum))
+  #counts
+  target_order <- counts$Var1[ order(-counts$Freq)]
+  
+  #factor the stratum column
+  TEST_LODES$stratum<- factor(TEST_LODES$stratum, levels= unique(c(test_fda$pert, as.character(moa_order), as.character(target_order))))
+  
+  
+  counts_moa_v2<- counts_moa[counts_moa$Freq >0,]
+  counts_moa_v2$Var1<- factor(counts_moa_v2$Var1, levels= counts_moa_v2$Var1[order(-counts_moa_v2$Freq)])
+  if (nrow(counts_moa_v2) < 20){
+    ggplot(counts_moa_v2, aes(x= Freq, y= Var1)) + geom_bar(stat= "identity", fill="deepskyblue4", color= "black") + ylab("Mechanism of Action") + xlab("Number of Drugs")+ theme(text = element_text(size = 20,  face="bold"))
+    
+    file_name<- paste0(file_starter, "_", "barplot_moa_v2.png")
+    ggsave(file_name, width = 8, height=10, units= "in")
+  }else{
+    counts_moa_v2<- counts_moa_v2[order(-counts_moa_v2$Freq),]
+    ggplot(counts_moa_v2[1:20,], aes(x= Freq, y= Var1)) + geom_bar(stat= "identity", fill="deepskyblue4", color= "black") + ylab("Mechanism of Action") + xlab("Number of Drugs")+ theme(text = element_text(size = 20,  face="bold"))
+    
+    file_name<- paste0(file_starter, "_", "barplot_moa_v2.png")
+    ggsave(file_name, width = 8, height=10, units= "in")
+  }
+  
+  
+  counts$Var1<- factor(counts$Var1, levels= counts$Var1[order(-counts$Freq)])
+  if( nrow(counts)< 20 ){
+    #counts$Var1<- factor(counts$Var1, levels= counts$Var1[order(-counts$Freq),])
+    ggplot(counts, aes(x= Freq, y= Var1)) + geom_bar(stat= "identity", fill="deepskyblue4", color= "black") + ylab("Targets") + xlab("Number of Drugs")+ theme(text = element_text(size = 20,  face="bold"))
+    file_name<- paste0(file_starter, "_", "barplot_target_v2.png")
+    ggsave(file_name, width = 8, height=10, units= "in")
+  }else{
+    
+    counts<- counts[order(-counts$Freq),]
+    
+    ggplot(counts[1:20,], aes(x= Freq, y= Var1)) + geom_bar(stat= "identity", fill="deepskyblue4", color= "black") + ylab("Targets") + xlab("Number of Drugs")+ theme(text = element_text(size = 20,  face="bold"))
+    file_name<- paste0(file_starter, "_", "barplot_target_v2.png")
+    ggsave(file_name, width = 8, height=10, units= "in")
+    
+    
+    
+  }
+  #add ploting function
+  target_count <- counts
+  
+  
+  #reduce to the top 20 drugs
+  summ_df<- summ_df[summ_df$cmap_name %in% test_fda$pert[1:20],]
+  
+  summ_df_moa<- summ_df[,c(1,3)]
+  summ_df_moa<- summ_df_moa[!duplicated(summ_df_moa), ]
+  TEST_LODES_moa<- to_lodes_form(as.data.frame(summ_df_moa),
+                                 axes = 1:2,
+                                 id = "INDEX")
+  
+  TEST_LODES_moa$stratum = str_wrap(TEST_LODES_moa$stratum, width = 20)
+  
+  TEST_LODES_moa$drug <- rep(NA, nrow(summ_df_moa))
+  drugs<- unique(summ_df_moa$cmap_name)
+  for (i in 1:length(drugs)){
+    ind <- TEST_LODES_moa$INDEX[TEST_LODES_moa$stratum == drugs[i]]
+    TEST_LODES_moa$drug<- ifelse(TEST_LODES_moa$INDEX %in% ind, drugs[i], TEST_LODES_moa$drug)
+  }
+  
+  #not need for this analysis but many for future.
+  TEST_LODES_moa$drug<- factor(TEST_LODES_moa$drug, levels= test_fda$pert)
+  ct_drugs<- test_fda$pert[as.logical(unlist(test_fda[,17]))]
+  TEST_LODES_moa$ct<- TEST_LODES_moa$drug %in% ct_drugs
+  TEST_LODES_moa$ct<- factor(TEST_LODES_moa$ct, levels= c(TRUE, FALSE))
+  #moa
+  moa_df <- TEST_LODES_moa[TEST_LODES_moa$x == "moa", 2:4]
+  moa_df<- moa_df[!duplicated(moa_df), ]
+  counts<- as.data.frame(table(moa_df$stratum))
+  
+  #counts<- as.data.frame(table(TEST_LODES_moa$stratum[TEST_LODES_moa$x == "moa"]))
+  moa_order <- counts$Var1[ order(-counts$Freq)]
+  counts_moa<- counts
+  
+  #factor the stratum column
+  TEST_LODES_moa$stratum<- factor(TEST_LODES_moa$stratum, levels= unique(c(test_fda$pert, as.character(moa_order))))
+  
+  TEST_LODES_moa_com <- TEST_LODES_moa[ complete.cases(TEST_LODES_moa),]
+  #TEST_LODES_com$index2 <- as.numeric(TEST_LODES_com$drug)
+  #TEST_LODES_com_v2 <- TEST_LODES_com[!TEST_LODES_com$x == "cmap_name",]
+  
+  ct2<-  TEST_LODES_moa_com$ct 
+  ggplot(TEST_LODES_moa_com,
+         aes(x = x, stratum = stratum, alluvium = INDEX, label= stratum, fill= ct))+ geom_flow(aes(fill=ct), stat = "alluvium", color= "black") + geom_stratum() +geom_label(stat = "stratum", fill="white",   size= 6 ,  face="bold") + theme_bw() + theme(axis.title.x = element_blank(), axis.title.y = element_blank(), axis.ticks = element_blank(), legend.position="none", axis.text=element_text(size=25)) + scale_x_discrete(labels=c("cmap_name" = "Drug", "moa" = "Mechanism of Action")) +  scale_fill_manual(values=c("#0066CC", "#E0E0E0"))+ theme(text = element_text(size = 20,  face="bold"))
+  
+  file_name<- paste0(file_starter, "_", "alluvial_moa_v2.png")
+  ggsave(file_name, width =10, height=20, units= "in")
+  
+  #add saving plot function
+  
+  summ_df_tar<- summ_df[,c(1,2)]
+  #keep only the top targets
+  summ_df_tar<- summ_df_tar[summ_df_tar[,2] %in% target_count$Var1[1:20], ]
+  
+  summ_df_tar<- summ_df_tar[!duplicated(summ_df_tar), ]
+  TEST_LODES_tar<- to_lodes_form(as.data.frame(summ_df_tar),
+                                 axes = 1:2,
+                                 id = "INDEX")
+  
+  TEST_LODES_tar$stratum = str_wrap(TEST_LODES_tar$stratum, width = 20)
+  
+  TEST_LODES_tar$drug <- rep(NA, nrow(summ_df_tar))
+  drugs<- unique(summ_df_tar$cmap_name)
+  for (i in 1:length(drugs)){
+    ind <- TEST_LODES_tar$INDEX[TEST_LODES_tar$stratum == drugs[i]]
+    TEST_LODES_tar$drug<- ifelse(TEST_LODES_tar$INDEX %in% ind, drugs[i], TEST_LODES_tar$drug)
+  }
+  
+  #not need for this analysis but many for future.
+  TEST_LODES_tar$drug<- factor(TEST_LODES_tar$drug, levels= test_fda$pert)
+  TEST_LODES_tar$ct<- TEST_LODES_tar$drug %in% ct_drugs
+  TEST_LODES_tar$ct<- factor(TEST_LODES_tar$ct, levels= c(TRUE, FALSE))
+  #targets
+  target_df <- TEST_LODES[TEST_LODES$x == "target", 2:4]
+  target_df<- target_df[!duplicated(target_df), ]
+  counts<- as.data.frame(table(target_df$stratum))
+  #counts
+  target_order <- counts$Var1[ order(-counts$Freq)]
+  
+  #factor the stratum column
+  TEST_LODES_tar$stratum<- factor(TEST_LODES_tar$stratum, levels= unique(c(test_fda$pert, as.character(target_order))))
+  
+  TEST_LODES_tar_com <- TEST_LODES_tar[ complete.cases(TEST_LODES_tar),]
+  #TEST_LODES_com$index2 <- as.numeric(TEST_LODES_com$drug)
+  #TEST_LODES_com_v2 <- TEST_LODES_com[!TEST_LODES_com$x == "cmap_name",]
+  cts<- c(TRUE, FALSE)
+  ggplot(TEST_LODES_tar_com,
+         aes(x = x, stratum = stratum, alluvium = INDEX, label= stratum, fill= ct))+ geom_flow( aes(fill= ct), stat = "alluvium", color= "black") +
+    geom_stratum() +geom_label(stat = "stratum", fill="white",  size= 10,  face="bold") + theme_bw() + theme(axis.title.x = element_blank(), axis.title.y = element_blank(), axis.ticks = element_blank(), legend.position="none", axis.text=element_text(size=25)) + scale_y_continuous(breaks=NULL) + scale_x_discrete(labels=c("cmap_name" = "Drug", "target" = "Targets")) +  scale_fill_viridis_d()+ theme(text = element_text(size = 20,  face="bold"))
+  file_name<- paste0(file_starter, "_", "alluvial_target_v2.png")
+  ggsave(file_name, width = 10, height=20, units= "in")
+}
+
+
+
+#plotting drug target and mechanism of action for all candidate results
+drug_moa_target_plotting_all_info <- function(fda_approved_res, lincs_commpound_info=lincs_commpound_info, method, cancer, file_path_header ){
+  #fda_approved_res- drug info with the methods and target info
+  #lincs_commpound_info- the lincs compound info from the LINCS database
+  #method- what method found these candidates
+  #cancer- which cancer was this result for 
+  #file_path_header- path and header for output files
+  
+  #output
+  #several plots including alluvial and bar plots for the candidates
+  file_starter<- paste0(file_path_header, "_", cancer, "_", method, "_", sep= "")
+  
+  test_fda <- fda_approved_res
+  lincs_commpound_info[lincs_commpound_info$cmap_name %in% test_fda$pert,]
+  
+  summ_df <- as.data.frame(matrix(nrow=1, ncol=3))
+  colnames(summ_df)<- c("Var1", "Var2", "Var3")
+  for (i in 1:nrow(test_fda)){
+    #get the target from the data results data frame
+    targets1 <- as.vector(unlist(strsplit(test_fda$t_gn_sym[i], "; ")))
+    
+    targets2 <- lincs_commpound_info$target[lincs_commpound_info$cmap_name == test_fda$pert[i]]
+    targets2<- ifelse(targets2 == "", NA, targets2)
+    targets<- unique(c(targets1, targets2))
+    
+    moa <- unique(lincs_commpound_info$moa[lincs_commpound_info$cmap_name == test_fda$pert[i]])
+    moa<- ifelse(moa == "", NA, moa)
+    
+    df<- expand.grid(test_fda[i,1], targets, moa )
+    
+    summ_df<- rbind(summ_df, df)
+    
+  }
+  
+  
+  summ_df<- summ_df[-1,]
+  colnames(summ_df)<- c( "cmap_name", "target", "moa")
+  
+  summ_df<- summ_df[!duplicated(summ_df), ]
+  #  return(summ_df)
+  #}   
+  TEST_LODES<- to_lodes_form(as.data.frame(summ_df),
+                             axes = 1:3,
+                             id = "INDEX")
+  
+  TEST_LODES$stratum = str_wrap(TEST_LODES$stratum, width = 20)
+  TEST_LODES$x <- factor(TEST_LODES$x, levels= c("moa", "cmap_name", "target"))
+  
+  TEST_LODES$drug <- rep(NA, nrow(summ_df))
+  
+  drugs<- unique(summ_df$cmap_name)
+  
+  for (i in 1:length(drugs)){
+    ind <- TEST_LODES$INDEX[TEST_LODES$stratum == drugs[i]]
+    TEST_LODES$drug<- ifelse(TEST_LODES$INDEX %in% ind, drugs[i], TEST_LODES$drug)
+  }
+  TEST_LODES$method<- rep(NA, nrow(summ_df))
+  for (i in 1:nrow(TEST_LODES)){
+    TEST_LODES$method[i]<- test_fda$group[test_fda$pert %in% TEST_LODES$drug[i] ]
+  }
+  
+  #not need for this analysis but many for future.
+  TEST_LODES$drug<- factor(TEST_LODES$drug, levels= test_fda$pert)
+  
+  #moa
+  moa_df <- TEST_LODES[TEST_LODES$x == "moa", 2:4]
+  moa_df<- moa_df[!duplicated(moa_df), ]
+  counts<- as.data.frame(table(moa_df$stratum))
+  
+  #counts<- as.data.frame(table(TEST_LODES$stratum[TEST_LODES$x == "moa"]))
+  moa_order <- counts$Var1[ order(-counts$Freq)]
+  counts_moa<- counts
+  #targets
+  target_df <- TEST_LODES[TEST_LODES$x == "target", 2:4]
+  target_df<- target_df[!duplicated(target_df), ]
+  counts<- as.data.frame(table(target_df$stratum))
+  #counts
+  target_order <- counts$Var1[ order(-counts$Freq)]
+  
+  #factor the stratum column
+  TEST_LODES$stratum<- factor(TEST_LODES$stratum, levels= unique(c(test_fda$pert, as.character(moa_order), as.character(target_order))))
+  
+  
+  counts_moa_v2<- counts_moa[counts_moa$Freq >0,]
+  counts_moa_v2$Var1<- factor(counts_moa_v2$Var1, levels= counts_moa_v2$Var1[order(-counts_moa_v2$Freq)])
+  if (nrow(counts_moa_v2) < 20){
+    ggplot(counts_moa_v2, aes(x= Freq, y= Var1)) + geom_bar(stat= "identity", fill="deepskyblue4", color= "black") + ylab("Mechanism of Action") + xlab("Number of Drugs")+ theme(text = element_text(size = 20,  face="bold"))
+    
+    file_name<- paste0(file_starter, "_", "barplot_moa_all.png")
+    ggsave(file_name, width = 8, height=10, units= "in")
+  }else{
+    counts_moa_v2<- counts_moa_v2[order(-counts_moa_v2$Freq),]
+    ggplot(counts_moa_v2[1:20,], aes(x= Freq, y= Var1)) + geom_bar(stat= "identity", fill="deepskyblue4", color= "black") + ylab("Mechanism of Action") + xlab("Number of Drugs")+ theme(text = element_text(size = 20,  face="bold"))
+    
+    file_name<- paste0(file_starter, "_", "barplot_moa_all.png")
+    ggsave(file_name, width = 8, height=10, units= "in")
+  }
+  
+  
+  counts$Var1<- factor(counts$Var1, levels= counts$Var1[order(-counts$Freq)])
+  if( nrow(counts)< 20 ){
+    #counts$Var1<- factor(counts$Var1, levels= counts$Var1[order(-counts$Freq),])
+    ggplot(counts, aes(x= Freq, y= Var1)) + geom_bar(stat= "identity", fill="deepskyblue4", color= "black") + ylab("Targets") + xlab("Number of Drugs")+ theme(text = element_text(size = 20,  face="bold"))
+    file_name<- paste0(file_starter, "_", "barplot_target_all.png")
+    ggsave(file_name, width = 8, height=10, units= "in")
+  }else{
+    
+    counts<- counts[order(-counts$Freq),]
+    
+    ggplot(counts[1:20,], aes(x= Freq, y= Var1)) + geom_bar(stat= "identity", fill="deepskyblue4", color= "black") + ylab("Targets") + xlab("Number of Drugs")+ theme(text = element_text(size = 20,  face="bold"))
+    file_name<- paste0(file_starter, "_", "barplot_target_all.png")
+    ggsave(file_name, width = 8, height=10, units= "in")
+    
+    
+    
+  }
+  #add ploting function
+  target_count <- counts
+  
+  
+  #reduce to the top 20 drugs<= looking at all the drugs
+  #summ_df<- summ_df[summ_df$cmap_name %in% test_fda$pert[1:20],]
+  
+  summ_df_moa<- summ_df[,c(1,3)]
+  summ_df_moa<- summ_df_moa[!duplicated(summ_df_moa), ]
+  TEST_LODES_moa<- to_lodes_form(as.data.frame(summ_df_moa),
+                                 axes = 1:2,
+                                 id = "INDEX")
+  
+  #TEST_LODES_moa$stratum = str_wrap(TEST_LODES_moa$stratum, width = 30)
+  
+  TEST_LODES_moa$drug <- rep(NA, nrow(summ_df_moa))
+  drugs<- unique(summ_df_moa$cmap_name)
+  for (i in 1:length(drugs)){
+    ind <- TEST_LODES_moa$INDEX[TEST_LODES_moa$stratum == drugs[i]]
+    TEST_LODES_moa$drug<- ifelse(TEST_LODES_moa$INDEX %in% ind, drugs[i], TEST_LODES_moa$drug)
+  }
+  
+  #not need for this analysis but many for future.
+  TEST_LODES_moa$drug<- factor(TEST_LODES_moa$drug, levels= test_fda$pert)
+  ct_drugs<- test_fda$pert[as.logical(unlist(test_fda[,4]))]
+  TEST_LODES_moa$ct<- TEST_LODES_moa$drug %in% ct_drugs
+  TEST_LODES_moa$ct<- factor(TEST_LODES_moa$ct, levels= c(TRUE, FALSE))
+  
+  #add the methods info
+  TEST_LODES_moa$method<- rep(NA, nrow(TEST_LODES_moa))
+  for (i in 1:nrow(TEST_LODES_moa)){
+    TEST_LODES_moa$method[i]<- test_fda$group[test_fda$pert %in% TEST_LODES_moa$drug[i] ]
+  }
+  
+  
+  
+  #moa
+  moa_df <- TEST_LODES_moa[TEST_LODES_moa$x == "moa", 2:4]
+  moa_df<- moa_df[!duplicated(moa_df), ]
+  counts<- as.data.frame(table(moa_df$stratum))
+  
+  #counts<- as.data.frame(table(TEST_LODES_moa$stratum[TEST_LODES_moa$x == "moa"]))
+  moa_order <- counts$Var1[ order(-counts$Freq)]
+  counts_moa<- counts
+  
+  #factor the stratum column
+  TEST_LODES_moa$stratum<- factor(TEST_LODES_moa$stratum, levels= unique(c(test_fda$pert, as.character(moa_order))))
+  
+  TEST_LODES_moa_com <- TEST_LODES_moa[ complete.cases(TEST_LODES_moa),]
+  #TEST_LODES_com$index2 <- as.numeric(TEST_LODES_com$drug)
+  #TEST_LODES_com_v2 <- TEST_LODES_com[!TEST_LODES_com$x == "cmap_name",]
+  
+  ct2<-  TEST_LODES_moa_com$ct 
+  print(TEST_LODES_moa_com)
+  ggplot(TEST_LODES_moa_com,
+         aes(x = x, stratum = stratum, alluvium = INDEX, label= stratum))+ geom_flow(aes(fill=method), stat = "alluvium", color= "gray") + geom_stratum(aes(fill=method), color="gray") + theme_bw() + theme(axis.title.x = element_blank(), axis.title.y = element_blank(), axis.ticks = element_blank(), legend.position="none", axis.text=element_text(size=40))+ theme(text = element_text(size = 20,  face="bold")) +scale_fill_manual(values=c("All Methods"="#FDE725FF","DESeq2 and Transfer Learning" ="#8FD744FF", "DESeq2"="#35B779FF", "DESeq2 and limma"= "#21908CFF", "limma"= "#31688EFF", "limma and Transfer Learning"= "#443A83FF", "Transfer Learning" = "#440154FF", "TRUE"= "maroon", "FALSE"= "white")) + theme(axis.text.y=element_blank(),axis.ticks.y=element_blank() )+  scale_x_discrete(expand = expansion(add = 2),labels=c("cmap_name" = "Drug", "moa" = "Mechanism of Action") )+
+    ggrepel::geom_text_repel(
+      aes(color= ct, label = ifelse(after_stat(x) == 1, as.character(after_stat(stratum)), NA)),
+      stat = "stratum", size = 20, direction = "y", nudge_x = -.8, segment.size      = 4, segment.color = "gray", fontface= 2
+    ) +  ggrepel::geom_text_repel(
+      aes( label = ifelse(after_stat(x) == 2, as.character(after_stat(stratum)), NA)),
+      stat = "stratum", size = 18, direction = "y", nudge_x = +1, segment.size      = 3, segment.color= "gray", fontface= 2
+    )+ scale_color_manual(values=c("TRUE"="darkgray","FALSE" ="maroon")) 
+  file_name<- paste0(file_starter, "_", "alluvial_moa_all.png")
+  ggsave(file_name, width =49, height=25, units= "in")
+  
+  #add saving plot function
+  
+  summ_df_tar<- summ_df[,c(1,2)]
+  #keep only the top targets
+  summ_df_tar<- summ_df_tar[summ_df_tar[,2] %in% target_count$Var1[1:20], ]
+  
+  summ_df_tar<- summ_df_tar[!duplicated(summ_df_tar), ]
+  TEST_LODES_tar<- to_lodes_form(as.data.frame(summ_df_tar),
+                                 axes = 1:2,
+                                 id = "INDEX")
+  
+  TEST_LODES_tar$stratum = str_wrap(TEST_LODES_tar$stratum, width = 20)
+  
+  TEST_LODES_tar$drug <- rep(NA, nrow(summ_df_tar))
+  drugs<- unique(summ_df_tar$cmap_name)
+  for (i in 1:length(drugs)){
+    ind <- TEST_LODES_tar$INDEX[TEST_LODES_tar$stratum == drugs[i]]
+    TEST_LODES_tar$drug<- ifelse(TEST_LODES_tar$INDEX %in% ind, drugs[i], TEST_LODES_tar$drug)
+  }
+  
+  #not need for this analysis but many for future.
+  TEST_LODES_tar$drug<- factor(TEST_LODES_tar$drug, levels= test_fda$pert)
+  TEST_LODES_tar$ct<- TEST_LODES_tar$drug %in% ct_drugs
+  TEST_LODES_tar$ct<- factor(TEST_LODES_tar$ct, levels= c(TRUE, FALSE))
+  
+  #add the methods info
+  TEST_LODES_tar$method<- rep(NA, nrow(TEST_LODES_tar))
+  for (i in 1:nrow(TEST_LODES_tar)){
+    TEST_LODES_tar$method[i]<- test_fda$group[test_fda$pert %in% TEST_LODES_tar$drug[i] ]
+  }
+  
+  
+  #targets
+  target_df <- TEST_LODES[TEST_LODES$x == "target", 2:4]
+  target_df<- target_df[!duplicated(target_df), ]
+  counts<- as.data.frame(table(target_df$stratum))
+  #counts
+  target_order <- counts$Var1[ order(-counts$Freq)]
+  
+  #factor the stratum column
+  TEST_LODES_tar$stratum<- factor(TEST_LODES_tar$stratum, levels= unique(c(test_fda$pert, as.character(target_order))))
+  
+  TEST_LODES_tar_com <- TEST_LODES_tar[ complete.cases(TEST_LODES_tar),]
+  #TEST_LODES_com$index2 <- as.numeric(TEST_LODES_com$drug)
+  #TEST_LODES_com_v2 <- TEST_LODES_com[!TEST_LODES_com$x == "cmap_name",]
+  cts<- c(TRUE, FALSE)
+  #ggplot(TEST_LODES_tar_com,
+  #    aes(x = x, stratum = stratum, alluvium = INDEX, label= stratum, fill= ct))+ geom_flow( aes(fill= method), stat = "alluvium", color= "black") +
+  #geom_stratum(aes(fill= method)) +geom_label(stat = "stratum", fill=ct,  size= 10,  face="bold") + theme_bw() + theme(axis.title.x = element_blank(), axis.title.y = element_blank(), axis.ticks = element_blank(), legend.position="none", axis.text=element_text(size=25)) + scale_y_continuous(breaks=NULL) + scale_x_discrete(labels=c("cmap_name" = "Drug", "target" = "Targets")) +  scale_fill_viridis_d()+ theme(text = element_text(size = 20,  face="bold"))
+  # file_name<- paste0(file_starter, "_", "alluvial_target_all.png")
+  #ggsave(file_name, width = 20, height=10, units= "in")
+}
 
