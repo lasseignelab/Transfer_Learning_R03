@@ -1016,17 +1016,22 @@ go_term_heatmap<- function(limma_pathways, deseq2_pathways, TFL_pathways, list_t
   names(bp_color)<- unique(res_v2$parentTerm)
   
   #create heatmap
-  row_ha = HeatmapAnnotation(Transfer_Learning=tfl_drugs,DESeq2= deseq2_drugs, limma= limma_drugs,GO_BP_Group= res_v2$parentTerm , col = list(Transfer_Learning = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),DESeq2 = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),limma = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"), GO_BP_Group= bp_color ))
+  row_ha = HeatmapAnnotation(Transfer_Learning=tfl_drugs,DESeq2= deseq2_drugs, limma= limma_drugs,GO_BP_Group= res_v2$parentTerm , col = list(Transfer_Learning = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),DESeq2 = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"),limma = c("TRUE" = "#440154FF", "FALSE" = "#228C8DFF"), GO_BP_Group= bp_color ), annotation_name_gp= gpar(fontsize = 16,  fontface = "bold"), 
+                             annotation_legend_param = list(limma = list(title_gp = gpar(fontsize = 15, fontface = "bold"), labels_gp = gpar(fontsize = 13, fontface = "bold")), 
+                                                            Transfer_Learning = list(title_gp = gpar(fontsize = 15, fontface = "bold"), labels_gp = gpar(fontsize = 13, fontface = "bold")), 
+                                                            DESeq2= list(title_gp = gpar(fontsize = 15, fontface = "bold"), labels_gp = gpar(fontsize = 13, fontface = "bold")),
+                                                            GO_BP_Group = list(title_gp = gpar(fontsize = 15, fontface = "bold"), labels_gp = gpar(fontsize = 13, fontface = "bold"))))
   col_fun = colorRamp2(c(0,  1), c( "black", "yellow"))
   
   #SAVE THE PARENT MATCHES
   res_v3<- cbind(res_v2,tfl_drugs, deseq2_drugs, limma_drugs )
   write.csv(res_v3, file_name)
-  print(Heatmap(go_gbm_up_sim, nam= "GO Term Similarity (Wang)", col = col_fun, show_column_names = FALSE,  show_row_names = FALSE, top_annotation = row_ha,  
+  heatmap <- Heatmap(go_gbm_up_sim, nam= "GO Term Similarity (Wang)", col = col_fun, show_column_names = FALSE,  show_row_names = FALSE, top_annotation = row_ha,  
           clustering_distance_rows= "euclidean",
           clustering_distance_columns=  "euclidean",
           clustering_method_rows = "ward.D2" ,
-          clustering_method_columns="ward.D2"))
+          clustering_method_columns="ward.D2", heatmap_legend_param = list( title_gp = gpar(fontsize = 15 , fontface = "bold"), labels_gp = gpar(fontsize = 12, fontface = "bold")))
+  draw(heatmap, annotation_legend_side = "bottom")
   
   column_dend = hclust(dist(t(go_gbm_up_sim)), method = "ward.D2")
   
@@ -1034,8 +1039,7 @@ go_term_heatmap<- function(limma_pathways, deseq2_pathways, TFL_pathways, list_t
           cluster_columns = column_dend, 
           show_column_names = FALSE,  
           show_row_names = FALSE, 
-          top_annotation = row_ha
-  )
+          top_annotation = row_ha) 
   draw(heatmap_v2, annotation_legend_side = "bottom")
   
 }
@@ -1531,18 +1535,19 @@ candidate_network_analysis<- function( cos_matrix, deseq_cand, limma_cand, tfl_c
                     clustering_distance_rows= "euclidean",
                     clustering_distance_columns=  "euclidean",
                     clustering_method_rows = "ward.D2" ,
-                    clustering_method_columns="ward.D2",column_names_rot = 45, 
+                    clustering_method_columns="ward.D2",column_names_rot = 45, column_names_gp = grid::gpar(fontsize = 20, fontface= "bold"),
+                    row_names_gp = grid::gpar(fontsize = 20, fontface= "bold"),
                     layer_fun = function(j, i, x, y, width, height, fill) {
                       v = pindex(t(counts_wider), i, j)
-                      grid.text(sprintf("%.0f", v), x, y, gp = gpar(fontsize = 10))
+                      grid.text(sprintf("%.0f", v), x, y, gp = gpar(fontsize = 20, frontface= "bold"))
                       if(min(i)==1) {
                         grid.rect(gp = gpar(lwd = 2, fill = "transparent",col="black"))
                       }})
-  print(heatmap)
+  draw(heatmap,legend_title_gp = gpar(fontsize = 20, fontface = "bold"))
 }
 
 #clinical trial summary bar plots
-clinical_trail_summary_bar_plot <- function(summary_table, cancer, file ){
+clinical_trial_summary_bar_plot <- function(summary_table, cancer, file ){
   #input
   #summary_table- table with infromation about how many candidates are in clinical trial vs not 
   #cancer - name of cancer
@@ -1552,10 +1557,10 @@ clinical_trail_summary_bar_plot <- function(summary_table, cancer, file ){
   t <- ggplot(clinical_trial_gbm ,aes(x=method,y=value,fill=type, label= value))+
     geom_bar(stat = "identity",color="white")+
     #facet_wrap(~cancer,ncol=1) +                                                              # Add values on top of bars
-    geom_text(size = 5, position = position_stack(vjust = 0.5)) + scale_fill_manual(values= c("#FDE725FF","#21908CFF"), name="Legend") + ylab("Number of Drug   Candidates")
+    geom_text(size = 5, position = position_stack(vjust = 0.5)) + scale_fill_manual(values= c("#FDE725FF","#21908CFF"), name="Legend") + ylab("Number of Drug Candidates")
   #dodger = position_dodge(width = 0.9)
-  t + geom_text(aes(label=labels_v2),  position= position_stack(vjust = 1),  size= 10)
-  ggsave(file)
+  t + geom_text(aes(label=labels_v2),  position= position_stack(vjust = 1),  size= 10) + theme(text = element_text(size = 20,  face="bold"))
+  ggsave(file, width= 10, height=7)
 }
 
 #Prism summary plot 
@@ -1590,9 +1595,9 @@ PRISM_methods_plotting<- function(deseq2_prism_path, tfl_prism_path, limma_prism
     #geom_point()+
     geom_violin() +
     geom_boxplot(width = 0.1, fill = "grey", color = "black") + scale_fill_manual(values= c("#440154FF" ,"#21908CFF" ,"#FDE725FF"), name="Methods")  +
-    ylab("Median log2fold change (PRISM)") + geom_hline(yintercept=0.3, linetype="dashed", color = "red")
+    ylab("Median log2fold change (PRISM)") + geom_hline(yintercept=0.3, linetype="dashed", color = "red") +theme(text = element_text(size = 20,  face="bold"))
   #t + geom_text(aes(label=labels_v2),vjust=- 15,  size= 10) +ylim(0, 90)
-  ggsave(filename)
+  ggsave(filename, width= 10, height=7)
 }
 
 #plotting and determine differences in centrality metrics in ppi networks 
@@ -1826,7 +1831,7 @@ volcano_plots<- function(results, method, method_genes, transfer_learning_genes)
   p_value_cut<- -log(0.05)
   
   pmain <- ggplot(res_lincs_only, aes(x = log2FoldChange, y = neg_log_adj_p_value, color = groups))+
-    geom_point() + scale_color_manual(values=color_groups)   +theme_bw() + xlab("log(Fold Change)") + ylab("-log(adj. p-value)") + guides(color=guide_legend(title="Method")) + geom_hline(yintercept=p_value_cut, linetype="dashed", color = "black")+ theme(legend.position="bottom")
+    geom_point() + scale_color_manual(values=color_groups)   +theme_bw() + xlab("log(Fold Change)") + ylab("-log(adj. p-value)") + guides(color=guide_legend(title="Method", override.aes = list(size = 10))) + geom_hline(yintercept=p_value_cut, linetype="dashed", color = "black")+ theme(legend.position="bottom", text = element_text(size = 20,  face="bold"))
   
   # Marginal densities along x axis
   xdens <- axis_canvas(pmain, axis = "x")+
@@ -1879,12 +1884,12 @@ compare_deseq2_limma <- function(deseq_results, limma_results, x_p1=3, y_p1=30, 
   P1<-ggplot(diff_metrics, aes(x=limma_logFC, y=DESeq2_logFC) ) +
     geom_bin2d(bins = 60) +
     scale_fill_continuous(type = "viridis") +
-    theme_bw()+ stat_cor(method = "spearman", label.x = x_p1, label.y = y_p1) + xlab("limma log(Fold Change)") + ylab("DESeq2 log(Fold Change)") 
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p1, label.y = y_p1) + xlab("limma log(Fold Change)") + ylab("DESeq2 log(Fold Change)") +theme(text = element_text(size = 20,  face="bold"))
   
   P2 <- ggplot(diff_metrics, aes(x=limma_padj, y=DESeq2_padj) ) +
     geom_bin2d(bins = 60) +
     scale_fill_continuous(type = "viridis") +
-    theme_bw()+ stat_cor(method = "spearman", label.x = x_p2, label.y = y_p2) + xlab("limma -log(adj. p-value)") + ylab("DESeq2 -log(adj. p-value)") 
+    theme_bw( )+ stat_cor(method = "spearman", label.x = x_p2, label.y = y_p2) + xlab("limma -log(adj. p-value)") + ylab("DESeq2 -log(adj. p-value)") +theme(text = element_text(size = 20,  face="bold"))
   # Add correlation coefficient
   print(P1)
   print(P2)
@@ -1932,12 +1937,12 @@ lincs_method_comparsion<- function(deseq_results_all,limma_results_all , tfl_res
   P1<-ggplot(diff_metrics, aes(x=DESeq2_NCS, y=limma_NCS) ) +
     geom_bin2d(bins = 60) +
     scale_fill_continuous(type = "viridis") +
-    theme_bw()+ stat_cor(method = "spearman", label.x = x_p1, label.y = y_p1) + xlab("DESeq2 NCS") + ylab("limma NCS") 
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p1, label.y = y_p1) + xlab("DESeq2 NCS") + ylab("limma NCS") +theme(text = element_text(size = 20,  face="bold"))
   
   P2 <- ggplot(diff_metrics, aes(x=DESeq2_FDR, y=limma_FDR) ) +
     geom_bin2d(bins = 60) +
     scale_fill_continuous(type = "viridis") +
-    theme_bw()+ stat_cor(method = "spearman", label.x = x_p2, label.y = y_p2) + xlab("DESeq2 -log(FDR)") + ylab("limma -log(FDR)") 
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p2, label.y = y_p2) + xlab("DESeq2 -log(FDR)") + ylab("limma -log(FDR)") +theme(text = element_text(size = 20,  face="bold"))
   
   # Add correlation coefficient
   print(P1)
@@ -1947,12 +1952,12 @@ lincs_method_comparsion<- function(deseq_results_all,limma_results_all , tfl_res
   P1<-ggplot(diff_metrics, aes(x=DESeq2_NCS, y=TFL_NCS) ) +
     geom_bin2d(bins = 60) +
     scale_fill_continuous(type = "viridis") +
-    theme_bw()+ stat_cor(method = "spearman", label.x = x_p1, label.y = y_p1) + xlab("DESeq2 NCS") + ylab("Transfer Learning NCS") 
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p1, label.y = y_p1) + xlab("DESeq2 NCS") + ylab("Transfer Learning NCS") +theme(text = element_text(size = 20,  face="bold"))
   
   P2 <- ggplot(diff_metrics, aes(x=DESeq2_FDR, y=TFL_FDR) ) +
     geom_bin2d(bins = 60) +
     scale_fill_continuous(type = "viridis") +
-    theme_bw()+ stat_cor(method = "spearman", label.x = x_p2, label.y = y_p2) + xlab("DESeq2 -log(FDR)") + ylab("Transfer Learning -log(FDR)") 
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p2, label.y = y_p2) + xlab("DESeq2 -log(FDR)") + ylab("Transfer Learning -log(FDR)") +theme(text = element_text(size = 20,  face="bold"))
   
   # Add correlation coefficient
   print(P1)
@@ -1962,12 +1967,12 @@ lincs_method_comparsion<- function(deseq_results_all,limma_results_all , tfl_res
   P1<-ggplot(diff_metrics, aes(x=limma_NCS, y=TFL_NCS) ) +
     geom_bin2d(bins = 60) +
     scale_fill_continuous(type = "viridis") +
-    theme_bw()+ stat_cor(method = "spearman", label.x = x_p1, label.y = y_p1) + xlab("limma NCS") + ylab("Transfer Learning NCS") 
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p1, label.y = y_p1) + xlab("limma NCS") + ylab("Transfer Learning NCS") +theme(text = element_text(size = 20,  face="bold"))
   
   P2 <- ggplot(diff_metrics, aes(x=limma_FDR, y=TFL_FDR) ) +
     geom_bin2d(bins = 60) +
     scale_fill_continuous(type = "viridis") +
-    theme_bw()+ stat_cor(method = "spearman", label.x = x_p2, label.y = y_p2) + xlab("limma -log(FDR)") + ylab("Transfer Learning -log(FDR)") 
+    theme_bw()+ stat_cor(method = "spearman", label.x = x_p2, label.y = y_p2) + xlab("limma -log(FDR)") + ylab("Transfer Learning -log(FDR)") +theme(text = element_text(size = 20,  face="bold"))
   
   # Add correlation coefficient
   print(P1)

@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # START 
     Goal/Purpose of operations: 
-    The goal of this script is compare the drug candidates for each method across the different cancers. This is done with cosinine similairty and network analysis 
+    The goal of this script is compare the drug candidates for each method across the different cancers. This is done with cosine similarity and network analysis 
     
     Finished psedocode on: 
     220614

@@ -154,21 +154,21 @@ clinical_trial_cancer_summary_v2$labels_v2<- labels_v2
 ```
 
 ```{r}
-clinical_trail_summary_bar_plot(clinical_trial_cancer_summary_v2, "Glioblastoma", "~/output/220819_CT_GBM_barplot.png")
+clinical_trial_summary_bar_plot(clinical_trial_cancer_summary_v2, "Glioblastoma", "~/output/220819_CT_GBM_barplot.png")
 ```
 
 
 ```{r}
-clinical_trail_summary_bar_plot(clinical_trial_cancer_summary_v2, "Liver hepatocellular carcinoma", "~/output/220819_CT_liver_barplot.png")
+clinical_trial_summary_bar_plot(clinical_trial_cancer_summary_v2, "Liver hepatocellular carcinoma", "~/output/220819_CT_liver_barplot.png")
 ```
 
 
 ```{r}
-clinical_trail_summary_bar_plot(clinical_trial_cancer_summary_v2, "Lung adenocarcinoma", "~/output/220819_CT_lung_barplot.png")
+clinical_trial_summary_bar_plot(clinical_trial_cancer_summary_v2, "Lung adenocarcinoma", "~/output/220819_CT_lung_barplot.png")
 ```
 
 ```{r}
-clinical_trail_summary_bar_plot(clinical_trial_cancer_summary_v2, "Pancreatic adenocarcinoma", "~/output/220819_CT_PAAD_barplot.png")
+clinical_trial_summary_bar_plot(clinical_trial_cancer_summary_v2, "Pancreatic adenocarcinoma", "~/output/220819_CT_PAAD_barplot.png")
 ```
 
 plotting the prism results 

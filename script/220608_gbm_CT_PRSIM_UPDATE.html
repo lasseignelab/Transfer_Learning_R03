@@ -696,20 +696,14 @@ clinical_trial_cancer_summary$symbol &lt;- ifelse(clinical_trial_cancer_summary$
 labels &lt;- clinical_trial_cancer_summary_v2$significant == TRUE &amp; clinical_trial_cancer_summary_v2$type ==&quot;Clinical Trial&quot;
 labels_v2 &lt;- ifelse(labels == &quot;TRUE&quot;, &quot;*&quot;, &quot;&quot;)
 clinical_trial_cancer_summary_v2$labels_v2&lt;- labels_v2</code></pre>
-<pre class="r"><code>clinical_trail_summary_bar_plot(clinical_trial_cancer_summary_v2, &quot;Glioblastoma&quot;, &quot;~/output/220819_CT_GBM_barplot.png&quot;)</code></pre>
-<pre><code>## Saving 7 x 5 in image</code></pre>
-<pre class="r"><code>clinical_trail_summary_bar_plot(clinical_trial_cancer_summary_v2, &quot;Liver hepatocellular carcinoma&quot;, &quot;~/output/220819_CT_liver_barplot.png&quot;)</code></pre>
-<pre><code>## Saving 7 x 5 in image</code></pre>
-<pre class="r"><code>clinical_trail_summary_bar_plot(clinical_trial_cancer_summary_v2, &quot;Lung adenocarcinoma&quot;, &quot;~/output/220819_CT_lung_barplot.png&quot;)</code></pre>
-<pre><code>## Saving 7 x 5 in image</code></pre>
-<pre class="r"><code>clinical_trail_summary_bar_plot(clinical_trial_cancer_summary_v2, &quot;Pancreatic adenocarcinoma&quot;, &quot;~/output/220819_CT_PAAD_barplot.png&quot;)</code></pre>
-<pre><code>## Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>clinical_trial_summary_bar_plot(clinical_trial_cancer_summary_v2, &quot;Glioblastoma&quot;, &quot;~/output/220819_CT_GBM_barplot.png&quot;)</code></pre>
+<pre class="r"><code>clinical_trial_summary_bar_plot(clinical_trial_cancer_summary_v2, &quot;Liver hepatocellular carcinoma&quot;, &quot;~/output/220819_CT_liver_barplot.png&quot;)</code></pre>
+<pre class="r"><code>clinical_trial_summary_bar_plot(clinical_trial_cancer_summary_v2, &quot;Lung adenocarcinoma&quot;, &quot;~/output/220819_CT_lung_barplot.png&quot;)</code></pre>
+<pre class="r"><code>clinical_trial_summary_bar_plot(clinical_trial_cancer_summary_v2, &quot;Pancreatic adenocarcinoma&quot;, &quot;~/output/220819_CT_PAAD_barplot.png&quot;)</code></pre>
 <p>plotting the prism results gbm</p>
 <pre class="r"><code>PRISM_methods_plotting(&quot;~/output/TF_L_GBM/220928_prism_deseq2_candidates_gbm.csv&quot;, &quot;~/output/TF_L_GBM/220808_prism_tfl_candidates_gbm.csv&quot;,  &quot;~/output/limma_gbm/220808_prism_limma_candidates_gbm.csv&quot;, &quot;~/output/220822_PRISM_GBM_violin.png&quot;)</code></pre>
-<pre><code>## Saving 7 x 5 in image</code></pre>
 <p>liver</p>
 <pre class="r"><code>PRISM_methods_plotting(&quot;~/output/liver_cancer/deseq2_res/220929_prism_deseq2_candidates.csv&quot;, &quot;~/output/liver_cancer/TFL_res/220808_prism_tfl_candidates.csv&quot;,  &quot;~/output/liver_cancer/limma_res/220808_prism_limma_candidates.csv&quot;, &quot;~/output/220822_PRISM_liver_violin.png&quot;)</code></pre>
-<pre><code>## Saving 7 x 5 in image</code></pre>
 <p>pancreas deseq2 prism was not saved in script signature reversion
 scripts</p>
 <pre class="r"><code>primary_paad_res &lt;-read.csv( &quot;~/output/pancreas_cancer/220808_prism_paad_candidates.csv&quot; )
@@ -719,7 +713,6 @@ lincs_deseq_paad_res_YAPC_top &lt;- read.csv(&quot;~/output/pancreas_cancer/dese
 primary_paad_res_sub &lt;-primary_paad_res[ primary_paad_res$Var2 %in% lincs_deseq_paad_res_YAPC_top_fda$pert,]
 write.csv(primary_paad_res_sub , file= &quot;~/output/pancreas_cancer/deseq2_res/220808_prism_deseq2_candidates.csv&quot; )</code></pre>
 <pre class="r"><code>PRISM_methods_plotting(&quot;~/output/pancreas_cancer/deseq2_res/220808_prism_deseq2_candidates.csv&quot;, &quot;~/output/pancreas_cancer/TFL_res/220808_prism_tfl_candidates.csv&quot;,  &quot;~/output/pancreas_cancer/limma_res/220808_prism_limma_candidates.csv&quot;, &quot;~/output/220822_PRISM_PAAD_violin.png&quot;)</code></pre>
-<pre><code>## Saving 7 x 5 in image</code></pre>
 <p>lung deseq2 prism was not saved in script</p>
 <pre class="r"><code>lincs_deseq_luad_res_A549_top &lt;- read.csv(&quot;~/output/lung_cancer/deseq2_res/220929_SR_LINCS_LUAD_DESEQ2_RES_tau.csv&quot; )
 primary_lung_res &lt;-read.csv( file= &quot;~/output/lung_cancer/220808_lung_prism_candidates.csv&quot; )
@@ -727,7 +720,6 @@ lincs_deseq_luad_res_A549_top_fda&lt;- lincs_deseq_luad_res_A549_top[lincs_deseq
 <pre class="r"><code>primary_lung_res_sub &lt;-primary_lung_res[ primary_lung_res$Var2 %in% lincs_deseq_luad_res_A549_top_fda$pert,]
 write.csv(primary_lung_res_sub  , file= &quot;~/output/lung_cancer/deseq2_res/220929_prism_deseq2_candidates.csv&quot; )</code></pre>
 <pre class="r"><code>PRISM_methods_plotting(&quot;~/output/lung_cancer/deseq2_res/220929_prism_deseq2_candidates.csv&quot;, &quot;~/output/lung_cancer/TFL_res/220808_prism_tfl_candidates.csv&quot; ,  &quot;~/output/lung_cancer/limma_res/220808_prism_limma_candidates.csv&quot; , &quot;~/output/220822_PRISM_lung_violin.png&quot;)</code></pre>
-<pre><code>## Saving 7 x 5 in image</code></pre>
 </div>
 <div id="save-data" class="section level3">
 <h3>Save Data</h3>

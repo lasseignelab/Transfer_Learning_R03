@@ -194,12 +194,13 @@ deseq2_limma_sum<- data.frame(cancers= cancers, spearman =c(0.94, 0.69, 0.81, 0.
 
 ```{r}
 ggplot(deseq2_limma_sum, aes(x=Metric, y= spearman, fill=Metric)) + geom_bar(stat="identity", position=position_dodge(), color = "black")+ ylab("Spearman Coefficient") +
-  facet_wrap(~ cancers, ncol = 4)+ xlab("Metric") + scale_fill_viridis_d(option= "E") +theme(axis.text.x=element_blank(),axis.ticks.x=element_blank())
+  facet_wrap(~ cancers, ncol = 4)+ xlab("Metric") + scale_fill_viridis_d(option= "E") +theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) +theme(text = element_text(size = 20,  face="bold"))
 ```
 
 ```{r}
 library(readr)
 deseq_results_all <- read_csv("~/output/deseq2_gbm/220928_SR_LINCS_GBM_DESEQ2_RES.csv")
+#correct file based on limma gbm script
 limma_results_all <- read_csv("~/output/limma_gbm/220421_SR_LINCS_GBM_LIMMA_RES.csv")
 tfl_results_all  <- read_csv("~/output/TF_L_GBM/220808_SR_LINCS_GBM_TRL_RES.csv")
 ```
@@ -273,19 +274,20 @@ lincs_result_compare_longer2$symbol <- ifelse(lincs_result_compare_longer2$Signi
 
 
 ```{r}
-ggplot(lincs_result_compare_longer2, aes(x=metric, y= spearman, fill=metric)) + geom_bar(stat="identity", position=position_dodge(), color = "black")+ ylab("Spearman Coefficient") + xlab("Metric")  +theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) +facet_grid( comp ~ cancer) + scale_fill_viridis_d(option= "E")
+ggplot(lincs_result_compare_longer2, aes(x=metric, y= spearman, fill=metric)) + geom_bar(stat="identity", position=position_dodge(), color = "black")+ ylab("Spearman Coefficient") + xlab("Metric")  +theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) +facet_grid( comp ~ cancer) + scale_fill_viridis_d(option= "E")+theme(text = element_text(size = 20,  face="bold"))
 ```
 
 
-### Save Data
-### Save Figures
-    
+
 # END
     Location of final scripts:
+    scripts
     
     Location of data produced:
+    output
     
     Dates when operations were done:
+    220920
     
 ## Versions
 ```{r}
