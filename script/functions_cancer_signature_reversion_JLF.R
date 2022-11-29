@@ -1557,10 +1557,10 @@ clinical_trial_summary_bar_plot <- function(summary_table, cancer, file ){
   t <- ggplot(clinical_trial_gbm ,aes(x=method,y=value,fill=type, label= value))+
     geom_bar(stat = "identity",color="white")+
     #facet_wrap(~cancer,ncol=1) +                                                              # Add values on top of bars
-    geom_text(size = 5, position = position_stack(vjust = 0.5)) + scale_fill_manual(values= c("#FDE725FF","#21908CFF"), name="Legend") + ylab("Number of Drug Candidates")
+    geom_text(size = 10, position = position_stack(vjust = 0.5)) + scale_fill_manual(values= c("#FDE725FF","#21908CFF"), name="Legend") + ylab("Number of Drug Candidates")
   #dodger = position_dodge(width = 0.9)
-  t + geom_text(aes(label=labels_v2),  position= position_stack(vjust = 1),  size= 10) + theme(text = element_text(size = 20,  face="bold"))
-  ggsave(file, width= 10, height=7)
+  t + geom_text(aes(label=labels_v2),  position= position_stack(vjust = 1),  size= 20, face= "bold") + theme(text = element_text(size = 25,  face="bold"))
+  ggsave(file, width= 12, height=7)
 }
 
 #Prism summary plot 
@@ -1595,9 +1595,9 @@ PRISM_methods_plotting<- function(deseq2_prism_path, tfl_prism_path, limma_prism
     #geom_point()+
     geom_violin() +
     geom_boxplot(width = 0.1, fill = "grey", color = "black") + scale_fill_manual(values= c("#440154FF" ,"#21908CFF" ,"#FDE725FF"), name="Methods")  +
-    ylab("Median log2fold change (PRISM)") + geom_hline(yintercept=0.3, linetype="dashed", color = "red") +theme(text = element_text(size = 20,  face="bold"))
+    ylab("Median log2fold change (PRISM)") + geom_hline(yintercept=0.3, linetype="dashed", color = "red") +theme(text = element_text(size = 25,  face="bold"))
   #t + geom_text(aes(label=labels_v2),vjust=- 15,  size= 10) +ylim(0, 90)
-  ggsave(filename, width= 10, height=7)
+  ggsave(filename, width= 12, height=7)
 }
 
 #plotting and determine differences in centrality metrics in ppi networks 
@@ -2422,3 +2422,41 @@ drug_moa_target_plotting_all_info <- function(fda_approved_res, lincs_commpound_
   #ggsave(file_name, width = 20, height=10, units= "in")
 }
 
+drug_target_analysis <- function(drug_name, target_list,  tpm_df, sample_vector, deseq_results, result_path){
+  #input
+  #drug_name- character of the name of drug
+  #target_list- the list of genes that are drug targets
+  #tpm_df- a data frame with the transcript per million for the gene expression for tummor and control 
+  #sample_vector- same order as the column names of the tpm_df, but the sample group (tumor or control)
+  #deseq2_result- deseq2 result data frame with the symbol included for each gene
+  #result_path- the path to the directory to store csv and plot images 
+  
+  #output
+  #target different expression plots
+  
+  #drug target expression
+  tpm_sub <- tpm_df[rownames(tpm_df) %in% target_list,]
+  tpm_sub$genes<- rownames(tpm_sub)
+  tpm_sub_v2 <- tpm_sub %>%
+    pivot_longer(!genes, names_to = "sample", values_to = "tpm")
+  tpm_sub_v2$type <- factor(rep(sample_vector, nrow(tpm_sub)))
+  name<- drug_name
+  y_max<- max(tpm_sub_v2$tpm) +5
+  
+  
+  deseq_sub <-  deseq_results[ deseq_results$Symbol %in% unique( tpm_sub$genes),]
+  if (nrow(deseq_sub)>0 ){
+    stat_table <- deseq_sub[,c(6,5)]
+    stat_table$group1 <- rep("Primary Tumor" ,  nrow(deseq_sub))
+    stat_table$group2 <- rep("Solid Tissue Normal" ,  nrow(deseq_sub))
+    stat_table$padj <- ifelse(stat_table$padj < 0.05, formatC(stat_table$padj, format = "e", digits = 2), "")
+    colnames(stat_table)<- c("genes", "padj" ,  "group1" ,"group2")
+    
+    
+    file_name<- paste0(result_path, "/", drug_name, "_drug_target_expression_deseq2_padj.png")
+    
+    ggplot(tpm_sub_v2, aes(x=genes, y=tpm, color= type)) + geom_boxplot()+ stat_pvalue_manual(stat_table, x="genes" , label = "{padj}", y.position= y_max,  size = 6) + labs(title=name,x="Drug Targets", y = "Gene Expression (TPM)", color= "Sample Type") + scale_colour_manual(values =  c("#440154FF","#228C8DFF"), aesthetics = c("colour", "fill"))+ theme(text = element_text(size = 30,  face="bold")) + theme(axis.text.x=element_text(angle=45, size=20, vjust = 0.5, hjust = 0.5))
+    #return(tpm_sub_v2$type)
+    ggsave(file_name, width = 20, height = 8)
+  }
+}

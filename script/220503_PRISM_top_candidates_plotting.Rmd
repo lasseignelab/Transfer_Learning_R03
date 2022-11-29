@@ -568,13 +568,35 @@ cell_gbm_info_longer_v3<- cell_gbm_info_longer_v2[cell_gbm_info_longer_v2$drug %
 
 
 ```{r}
-p2 <- ggplot(cell_gbm_info_longer_v3, aes(x=log2change, y= drug, color= drug))+ geom_point(stat = "identity") +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3) + theme(text = element_text(size = 12,  face="bold"))
+cell_gbm_info_longer_v3$drug<- factor(cell_gbm_info_longer_v3$drug , levels= c("pamidronate", "temozolomide", "nimodipine"))
+p2 <- ggplot(cell_gbm_info_longer_v3, aes(x=log2change, y= displayName, color= drug))+ geom_point(stat = "identity", size= 4) +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3) + theme(text = element_text(size = 20,  face="bold"))+ scale_color_brewer(palette = "Set2")
 
-p1 <- ggplot(cell_gbm_info_longer_v3, aes(x=log2change, fill= drug)) + geom_density(alpha=.2) +theme_minimal() +  theme(
-    axis.title.x = element_blank())+ geom_vline(xintercept = 0.3)+ theme(text = element_text(size = 12,  face="bold"))
+p1 <- ggplot(cell_gbm_info_longer_v3, aes(x=log2change, fill= drug)) + geom_density(alpha=.8) +theme_minimal() +  theme(
+    axis.title.x = element_blank())+ geom_vline(xintercept = 0.3)+ theme(text = element_text(size = 20,  face="bold")) + scale_fill_brewer(palette = "Set2")
 
 plot_grid(p1, p2, ncol = 1, align = "v")
 ```
+
+
+
+```{r}
+cell_gbm_info_longer_v3<- cell_gbm_info_longer_v2[cell_gbm_info_longer_v2$drug %in% c("saxagliptin", "icosapent","temozolomide"),]
+```
+
+
+
+```{r}
+cell_gbm_info_longer_v3$drug<- factor(cell_gbm_info_longer_v3$drug , levels= c("saxagliptin", "temozolomide", "icosapent"))
+p2 <- ggplot(cell_gbm_info_longer_v3, aes(x=log2change, y= displayName, color= drug))+ geom_point(stat = "identity", size= 4) +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3) + theme(text = element_text(size = 20,  face="bold"))+ scale_color_brewer(palette = "Set2")
+
+p1 <- ggplot(cell_gbm_info_longer_v3, aes(x=log2change, fill= drug)) + geom_density(alpha=.8) +theme_minimal() +  theme(
+    axis.title.x = element_blank())+ geom_vline(xintercept = 0.3)+ theme(text = element_text(size = 20,  face="bold")) + scale_fill_brewer(palette = "Set2")
+
+plot_grid(p1, p2, ncol = 1, align = "v")
+```
+
+
+
 
 make adjustment to the alluvial plot to plot with FDA approved or not 
 
@@ -832,6 +854,47 @@ all_cand<- all_cand[order(all_cand$drug_ranks),]
 drug_moa_target_plotting_all_info(all_cand, lincs_commpound_info=lincs_commpound_info, "all", "gbm", file_path_header= "~/output/candidate_moa_target_plots/221128" )
 ```
 
+update the target plots
+
+```{r}
+deseq_results <- read.csv("~/output/deseq2_gbm/220927_deseq2_gbm_normal_gtx_res.csv", sep=",")
+```
+
+```{r}
+tpm_df <- readRDS("~/output/recount3_gbm_gtex_tpm_df.rds")
+metadata <- readRDS("~/output/recount3_gbm_gtex_metadata.rds")
+```
+
+```{r}
+library(recount3)
+human_projects<- available_projects()
+#get a random project data
+test<- create_rse(human_projects[(human_projects$project == "SRP118922"),])
+gene_info <- test@rowRanges
+rm(test)
+```
+```{r}
+dim(as.data.frame(gene_info))
+```
+
+```{r}
+identical(gene_info$gene_id, rownames(deseq_results))
+```
+
+```{r}
+deseq_results$Symbol<- gene_info$gene_name
+```
+
+```{r}
+library(ggpubr)
+drug_target_analysis( "pamidronate" , c("FDPS"), as.data.frame(tpm_df) , metadata$status, deseq_results, "~/output/gbm_plots/")
+drug_target_analysis( "icosapent" , c("ACSL3", "ACSL4", "FADS1", "FFAR1", "PPARD", "PPARG", "PTGS1", "PTGS2", "SLC8A1", "TRPV1"), as.data.frame(tpm_df) , metadata$status, deseq_results, "~/output/gbm_plots/")
+
+drug_target_analysis( "nimodipine" , c("AHR", "CACNA1C", "CACNA1D", "CACNA1F", "CACNA1S", "CACNB1","CACNB2", "CACNB3", "CACNB4", "CFTR", "NR3C2" ), as.data.frame(tpm_df) , metadata$status, deseq_results, "~/output/gbm_plots/")
+
+drug_target_analysis( "saxagliptin" , c("DPP4" ), as.data.frame(tpm_df) , metadata$status, deseq_results, "~/output/gbm_plots/")
+
+```
 
 
 ### Save Data
