@@ -1514,7 +1514,7 @@ candidate_network_analysis<- function( cos_matrix, deseq_cand, limma_cand, tfl_c
   names(com)<- colnames(cos_matrix_v2)
   
   method_list<- c("tfl_drugs", "deseq2_drugs", "limma_drugs")
-  method<- c("Transfer Learning",  "DESeq2", "limma")
+  method<- c("Transfer\nLearning",  "DESeq2", "limma")
   current_method <- get(method_list[1])
   counts <- as.data.frame(table(com[current_method]))
   counts$method <- rep(method[1], nrow(counts))
@@ -1535,15 +1535,15 @@ candidate_network_analysis<- function( cos_matrix, deseq_cand, limma_cand, tfl_c
                     clustering_distance_rows= "euclidean",
                     clustering_distance_columns=  "euclidean",
                     clustering_method_rows = "ward.D2" ,
-                    clustering_method_columns="ward.D2",column_names_rot = 45, column_names_gp = grid::gpar(fontsize = 20, fontface= "bold"),
+                    clustering_method_columns="ward.D2",column_names_rot = 45, column_names_gp = grid::gpar(fontsize = 30, fontface= "bold"),
                     row_names_gp = grid::gpar(fontsize = 20, fontface= "bold"),
                     layer_fun = function(j, i, x, y, width, height, fill) {
                       v = pindex(t(counts_wider), i, j)
-                      grid.text(sprintf("%.0f", v), x, y, gp = gpar(fontsize = 20, frontface= "bold"))
+                      grid.text(sprintf("%.0f", v), x, y, gp = gpar(fontsize = 30, frontface= "bold"))
                       if(min(i)==1) {
                         grid.rect(gp = gpar(lwd = 2, fill = "transparent",col="black"))
                       }})
-  draw(heatmap,legend_title_gp = gpar(fontsize = 20, fontface = "bold"))
+  draw(heatmap,legend_title_gp = gpar(fontsize = 30, fontface = "bold"))
 }
 
 #clinical trial summary bar plots
@@ -1831,7 +1831,7 @@ volcano_plots<- function(results, method, method_genes, transfer_learning_genes)
   p_value_cut<- -log(0.05)
   
   pmain <- ggplot(res_lincs_only, aes(x = log2FoldChange, y = neg_log_adj_p_value, color = groups))+
-    geom_point() + scale_color_manual(values=color_groups)   +theme_bw() + xlab("log(Fold Change)") + ylab("-log(adj. p-value)") + guides(color=guide_legend(title="Method", override.aes = list(size = 10))) + geom_hline(yintercept=p_value_cut, linetype="dashed", color = "black")+ theme(legend.position="bottom", text = element_text(size = 20,  face="bold"))
+    geom_point( size =3) + scale_color_manual(values=color_groups)   +theme_bw() + xlab("log(Fold Change)") + ylab("-log(adj. p-value)") + guides(color=guide_legend(title="Method", override.aes = list(size = 10))) + geom_hline(yintercept=p_value_cut, linetype="dashed", color = "black")+ theme(legend.position="bottom", text = element_text(size = 35,  face="bold"))
   
   # Marginal densities along x axis
   xdens <- axis_canvas(pmain, axis = "x")+
@@ -2459,4 +2459,199 @@ drug_target_analysis <- function(drug_name, target_list,  tpm_df, sample_vector,
     #return(tpm_sub_v2$type)
     ggsave(file_name, width = 20, height = 8)
   }
+}
+
+#these next four function are from the pzfx r package version 0.3.0 which is used to read and write "GraphPad Prism files
+read_col <- function(col, strike_action="exclude", format="", col_name="") {
+  if ("Title" %in% names(col)) {
+    col_name <- paste(unlist(col[["Title"]]), collapse="")
+  }
+  subcol_lst <- list()
+  for (i in seq_len(length(col))) {
+    if (names(col)[i] == "Subcolumn") {
+      this_subcol <- read_subcol(col[[i]], strike_action=strike_action)
+      subcol_lst[[length(subcol_lst) + 1]] <- this_subcol
+    }
+  }
+  
+  if (length(subcol_lst) == 1) {
+    col_names <- col_name
+  } else if (format == "error") {
+    col_names <- paste0(col_name, c("_X", "_ERROR"))
+  } else if (format == "replicates") {
+    col_names <- paste(col_name, seq_len(length(subcol_lst)), sep="_")
+  } else if (format == "SDN") {
+    col_names <- paste0(col_name, c("_MEAN", "_SD", "_N"))
+  } else if (format == "SEN") {
+    col_names <- paste0(col_name, c("_MEAN", "_SEM", "_N"))
+  } else if (format == "CVN") {
+    col_names <- paste0(col_name, c("_MEAN", "_CV", "_N"))
+  } else if (format == "SD") {
+    col_names <- paste0(col_name, c("_MEAN", "_SD"))
+  } else if (format == "SE") {
+    col_names <- paste0(col_name, c("_MEAN", "_SE"))
+  } else if (format == "CV") {
+    col_names <- paste0(col_name, c("_MEAN", "_CV"))
+  } else if (format == "SD") {
+    col_names <- paste0(col_name, c("_MEAN", "_SD"))
+  } else if (format == "low-high") {
+    col_names <- paste0(col_name, c("_MEAN", "_PLUSERROR", "_MINUSERROR"))
+  } else if (format == "upper-lower-limits") {
+    col_names <- paste0(col_name, c("_MEAN", "_UPPERLIMIT", "_LOWERLIMIT"))
+  } else {
+    stop("Sorry, don't know how to parse column format.")
+  }
+  
+  names(subcol_lst) <- col_names
+  max_len <- max(sapply(subcol_lst, length))
+  long_subcol_lst <- lapply(subcol_lst, function(s) {
+    length(s) <- max_len
+    s
+  })
+  
+  ret <- as.data.frame(long_subcol_lst, stringsAsFactors=FALSE)
+  names(ret) <- col_names
+  return(ret)
+}
+
+read_subcol <- function(subcol, strike_action="exclude") {
+  strike_action <- tolower(strike_action)
+  if (!strike_action %in% c("exclude", "keep", "star", "e", "k", "s")) {
+    stop("strike_action must be one of c('exclude', 'keep', 'star', 'e', 'k', 's')")
+  }
+  vals <- rep(NA, length(subcol))
+  for (i in seq_len(length(subcol))) {
+    val <- unlist(subcol[[i]])
+    if (is.null(val)) val <- NA
+    if ("Excluded" %in% names(attributes(subcol[[i]]))) {
+      if (attr(subcol[[i]], "Excluded") == "1") {
+        if (strike_action %in% c("exclude", "e")) {
+          val <- NA
+        } else if (strike_action %in% c("keep", "k")) {
+          val <- val
+        } else if (strike_action %in% c("star", "s")) {
+          val <- paste0(val, "*")
+        }
+      }
+    }
+    vals[i] <- val
+  }
+  if (!strike_action %in% c("star", "s")) {
+    suppressWarnings(new_vals <- as.numeric(vals))
+    if (all(is.na(new_vals) == is.na(vals))) vals <- new_vals
+  }
+  return(vals)
+}
+pzfx_tables<- function (path) {
+  xml <- xml2::read_xml(path)
+  table_nodes <- xml2::xml_find_all(xml, ".//*[name()='Table' or name()='HugeTable']")
+  tables <- sapply(table_nodes, function(t) xml2::xml_text(xml2::xml_child(t, 
+                                                                           ".//*[name()='Title']")))
+  return(tables)
+}
+
+read_pzfx <- function (path, table = 1, strike_action = "exclude", date_x = "character"){
+  date_x <- tolower(date_x)
+  if (!date_x %in% c("numeric", "character", "both", "n", "c", 
+                     "b")) {
+    stop("date_x must be one of c('numeric', 'character', 'both', 'n', 'c', 'b')")
+  }
+  table_names <- pzfx_tables(path)
+  if (is.numeric(table)) {
+    if (table > length(table_names)) 
+      stop("Table index out of range")
+    this_idx <- table
+  }
+  else {
+    table <- as.character(table)
+    if (!table %in% table_names) 
+      stop(sprintf("Can't find %s in prism file", table))
+    this_idx <- which(table_names == table)
+    if (length(this_idx) > 1) {
+      warning(sprintf("Multiple tables named %s, returning the first one only", 
+                      table))
+      this_idx <- this_idx[1]
+    }
+  }
+  xml <- xml2::read_xml(path)
+  table_nodes <- xml2::xml_find_all(xml, ".//*[name()='Table' or name()='HugeTable']")
+  this_table <- xml2::as_list(table_nodes[[this_idx]])
+  if (!"Title" %in% names(this_table)) 
+    stop("Can't work with this pzfx file, is it later than v6.0?")
+  if (is.character(table) && table != this_table[["Title"]]) 
+    stop("Can't work with this pzfx file, is it later than v6.0?")
+  x_format <- ""
+  if ("XFormat" %in% names(attributes(this_table))) {
+    x_format <- attributes(this_table)$XFormat
+  }
+  y_format <- ""
+  if ("YFormat" %in% names(attributes(this_table))) {
+    y_format <- attributes(this_table)$YFormat
+  }
+  col_lst <- list()
+  for (i in seq_len(length(this_table))) {
+    if (names(this_table)[i] == "XColumn") {
+      if (x_format == "date" & (date_x %in% c("numeric", 
+                                              "n", "both", "b") | !"XAdvancedColumn" %in% names(this_table))) {
+        this_col <- read_col(this_table[[i]], strike_action = strike_action, 
+                             col_name = "X", format = "")
+        if (date_x %in% c("both", "b")) {
+          colnames(this_col) <- paste0(colnames(this_col), 
+                                       "_1")
+        }
+      }
+      else if (x_format == "date") {
+        next
+      }
+      else {
+        this_col <- read_col(this_table[[i]], strike_action = strike_action, 
+                             col_name = "X", format = x_format)
+      }
+      if (nrow(this_col) > 0) {
+        col_lst[[length(col_lst) + 1]] <- this_col
+      }
+    }
+    else if (names(this_table)[i] == "XAdvancedColumn") {
+      if (x_format == "date" & date_x %in% c("character", 
+                                             "c", "both", "b")) {
+        this_col <- read_col(this_table[[i]], strike_action = strike_action, 
+                             col_name = "X", format = "")
+        if (date_x %in% c("both", "b")) {
+          colnames(this_col) <- paste0(colnames(this_col), 
+                                       "_2")
+        }
+        if (nrow(this_col) > 0) {
+          col_lst[[length(col_lst) + 1]] <- this_col
+        }
+      }
+      else {
+        next
+      }
+    }
+    else if (names(this_table)[i] == "RowTitlesColumn") {
+      this_col <- read_col(this_table[[i]], strike_action = strike_action, 
+                           col_name = "ROWTITLE", format = "")
+      if (nrow(this_col) > 0) {
+        col_lst[[length(col_lst) + 1]] <- this_col
+      }
+    }
+    else if (names(this_table)[i] == "YColumn") {
+      this_col <- read_col(this_table[[i]], strike_action = strike_action, 
+                           format = y_format)
+      col_lst[[length(col_lst) + 1]] <- this_col
+    }
+  }
+  if (length(col_lst) == 0) 
+    return(data.frame())
+  max_len <- max(sapply(col_lst, nrow))
+  long_col_lst <- lapply(col_lst, function(c) {
+    while (nrow(c) < max_len) {
+      col_names <- colnames(c)
+      c <- rbind(c, NA)
+      colnames(c) <- col_names
+    }
+    c
+  })
+  ret <- Reduce("cbind", long_col_lst)
+  return(ret)
 }

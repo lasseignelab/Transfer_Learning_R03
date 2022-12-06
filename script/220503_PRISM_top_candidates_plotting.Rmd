@@ -569,10 +569,10 @@ cell_gbm_info_longer_v3<- cell_gbm_info_longer_v2[cell_gbm_info_longer_v2$drug %
 
 ```{r}
 cell_gbm_info_longer_v3$drug<- factor(cell_gbm_info_longer_v3$drug , levels= c("pamidronate", "temozolomide", "nimodipine"))
-p2 <- ggplot(cell_gbm_info_longer_v3, aes(x=log2change, y= displayName, color= drug))+ geom_point(stat = "identity", size= 4) +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3) + theme(text = element_text(size = 20,  face="bold"))+ scale_color_brewer(palette = "Set2")
+p2 <- ggplot(cell_gbm_info_longer_v3, aes(x=log2change, y= displayName, color= drug))+ geom_point(stat = "identity", size= 4) +theme_minimal() + xlab("PRISM Primary Screen log(fold change)") + ylab("GBM Cell Lines") + geom_vline(xintercept = 0.3) + theme(text = element_text(size = 20,  face="bold"))+ scale_color_manual(values = c("#F1605DFF" ,"gold","#721F81FF"))
 
 p1 <- ggplot(cell_gbm_info_longer_v3, aes(x=log2change, fill= drug)) + geom_density(alpha=.8) +theme_minimal() +  theme(
-    axis.title.x = element_blank())+ geom_vline(xintercept = 0.3)+ theme(text = element_text(size = 20,  face="bold")) + scale_fill_brewer(palette = "Set2")
+    axis.title.x = element_blank())+ geom_vline(xintercept = 0.3)+ theme(text = element_text(size = 20,  face="bold")) + scale_fill_manual(values = c("#F1605DFF" ,"gold","#721F81FF"))
 
 plot_grid(p1, p2, ncol = 1, align = "v")
 ```

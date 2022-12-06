@@ -194,7 +194,7 @@ deseq2_limma_sum<- data.frame(cancers= cancers, spearman =c(0.94, 0.69, 0.81, 0.
 
 ```{r}
 ggplot(deseq2_limma_sum, aes(x=Metric, y= spearman, fill=Metric)) + geom_bar(stat="identity", position=position_dodge(), color = "black")+ ylab("Spearman Coefficient") +
-  facet_wrap(~ cancers, ncol = 4)+ xlab("Metric") + scale_fill_viridis_d(option= "E") +theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) +theme(text = element_text(size = 20,  face="bold"))
+  facet_wrap(~ cancers, ncol = 4)+ xlab("Metric") + scale_fill_viridis_d(option= "E") +theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) +theme(text = element_text(size = 35,  face="bold"))
 ```
 
 ```{r}

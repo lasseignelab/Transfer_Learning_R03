@@ -1,0 +1,766 @@
+---
+title: "221130_gbm_drug_testing_res"
+author: "Jennifer Fisher"
+date: '2022-11-30'
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# START 
+    Goal/Purpose of operations: 
+    Plot the results from the cell titer assay. There were two rounds of testing. One round tested four candidates at three different concentration with a control sovlent: pamidronate, nimodipine, icosapent, and saxagliptin. Pamidronate and nimodipine inhibit growth of the U251 GBM cell line in round one. Therefore, in round two we used three or four other drug concentrations for these two drugs in U251 cell lines and PDX JX39 cells. In addition, we evaluated these drugs in combination with TMZ, the standard of care for GBM. 
+    Note- the cell titer assay analysis was conducted by the Hjelmeland lab. 
+    
+    Finished psedocode on: 
+    221130
+    
+    System which operations were done on: 
+    my laptop
+    
+    GitHub Repo:
+    Transfer_Learning_R03
+    
+    Docker/Singularity: 
+    rstudio_cancer_dr
+    
+    Directory of operations: 
+    "/home/rstudio"
+    
+    Scripts being edited for operations:
+    functions were added to the /home/rstudio/script/functions_cancer_signature_reversion_JLF.R
+    
+    Data being used:
+    results from cell titer assay analysis a PRISM .pzfx file (Note different PRISM than the drug screen database)
+    
+    Papers and tools: 
+    NA
+
+# STEPS
+### Set working directory 
+```{r}
+source("/home/rstudio/script/functions_cancer_signature_reversion_JLF.R")
+library(ggpubr)
+library(tidyverse)
+library(rstatix)
+```
+
+### Round 1 Results
+```{r}
+#the folowing function (and internal functions) is from a r package called pzfx. The functions are inculded in the functions_cancer_signature_reversion_JLF.R script. 
+
+df1 <- read_pzfx("~/data/Lasseigne_Collaboration.pzfx", table=1)
+
+df2 <- read_pzfx("~/data/Lasseigne_Collaboration.pzfx", table=2)
+
+df3 <- read_pzfx("~/data/Lasseigne_Collaboration.pzfx", table=3)
+
+df4 <- read_pzfx("~/data/Lasseigne_Collaboration.pzfx", table=4)
+#Nte that the JX39 did not not control correctly in this round. Low number of cells. 
+```
+
+```{r}
+# pamidronate
+head(df1)
+# pamidronate
+head(df2)
+
+head(df3)
+
+head(df4)
+```
+
+
+```{r}
+#Pamidronate ploting round 1
+df2_longer <- pivot_longer(df2, cols = !ROWTITLE)
+
+df2_longer$name <- str_split(df2_longer$name, "_", simplify = TRUE)[,1]
+df2_longer$name <- str_split(df2_longer$name, " P", simplify = TRUE)[,1]
+df2_longer$name<- factor(df2_longer$name, levels = c("Control", "0.1uM", "10uM", "100uM"))
+posn.d <- position_dodge(width=0.95)
+ggplot(df2_longer, aes( x=name, y=value))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)+
+  labs(title="Pamidronate Round 1 in Cell Titer", x="Groups (Control H20)", y="Corrected Values to the Average of the Control")
+#+geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)
+df2_u251p <- df2_longer[df2_longer$ROWTITLE == "U251P", ]
+stat.test <- df2_u251p %>%
+  t_test(value ~ name) %>%
+  adjust_pvalue(method = "bonferroni") %>%
+  add_significance("p.adj")
+stat.test
+stat.test<- stat.test %>%
+  add_xy_position(x = "name", dodge =0)
+ggplot(df2_u251p, aes( x=name, y=value))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+ stat_pvalue_manual(
+    stat.test,  label = "p.adj", tip.length = 0, hide.ns = TRUE
+  ) +
+  labs(title="Pamidronate Round 1 in Cell Titer", x="Groups (Control H20)", y="Corrected Values to the Average of the Control")
+
+#df3_u251p <- df3_nimod[df3_nimod$ROWTITLE == "U251P", ]
+my_comparisons <- list( c("Control", "100uM"), 
+                        c("Control", "10uM"), 
+                        c("Control", "0.1uM"),  
+                        c("100uM", "10uM"),
+                        c("100uM", "0.1uM"),
+                        c("10uM", "0.1uM") )
+#stat.test <- df3_u251p %>%
+#  t_test(value ~ name) %>%
+#  adjust_pvalue(method = "bonferroni") %>%
+#  add_significance("p.adj")
+#stat.test
+#stat.test<- stat.test %>%
+#  add_xy_position(x = "name", dodge =0)
+#stat.test$y.position<- stat.test$y.position[order(-stat.test$y.position)]
+p3<- ggplot(df2_u251p, aes( x=name, y=value, fill = name))+ stat_summary(fun.data=mean_sdl, geom="bar", colour="black")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+
+  #stat_pvalue_manual(
+  #  stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+  ylim(0, 2)+ theme_minimal()+ stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf", step.increase = 0.15)+ # Add pairwise comparisons p-value
+  stat_compare_means(method = "anova", label.y = 2) +
+  labs(title="Pamidronate: Cell Titer\nU251P GBM Cell line", x="Groups (Control H20)", y="Corrected Values to the Average of the Control")  + scale_fill_brewer(palette = "YlGn")+ theme(legend.position = "none")
+
+
+df3_u251p <- df2_longer[df2_longer$ROWTITLE == "NHA", ]
+#stat.test <- df3_u251p %>%
+#  t_test(value ~ name) %>%
+#  adjust_pvalue(method = "bonferroni") %>%
+#  add_significance("p.adj")
+#stat.test
+#stat.test<- stat.test %>%
+#add_xy_position(x = "name", dodge =0.5, step.increase = 0.2)
+#stat.test$y.position<- stat.test$y.position[order(-stat.test$y.position)]
+#stat.test$y.position<- stat.test$y.position * 1.1
+p4<- ggplot(df3_u251p, aes( x=name, y=value, fill= name))+ stat_summary(fun.data=mean_sdl, geom="bar", colour="black")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+  ylim(0, 2) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf", step.increase = 0.1)+ # Add pairwise comparisons p-value
+  stat_compare_means(method = "anova", label.y = 2) + theme_minimal()+
+  labs(title="Pamidronate: Cell Titer \nNHA Cell line", x="Groups (Control H20)", 
+       y="Corrected Values to the Average of the Control") + scale_fill_brewer(palette = "YlGn") + theme(legend.position = "none")
+
+```
+
+```{r}
+ggarrange(p3, p4, ncol = 2, nrow = 1)
+```
+
+```{r}
+#nimodipine ploting round 1
+
+df3_longer <- pivot_longer(df3, cols = !ROWTITLE)
+df3_nimod <- df3_longer[!grepl("moxflox", df3_longer$name),]
+df3_nimod$name <- str_split(df3_nimod$name, "_", simplify = TRUE)[,1]
+df3_nimod$name <- str_split(df3_nimod$name, " n", simplify = TRUE)[,1]
+df3_nimod$name<- factor(df3_nimod$name, levels = c("DMSO", "1uM", "10uM", "50uM"))
+posn.d <- position_dodge(width=0.95)
+ggplot(df3_nimod, aes( x=name, y=value))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)+
+  labs(title="Nimodipine Round 1 in Cell Titer", x="Groups (Control DMSO)", y="Corrected Values to the Average of the Control")
+
+#+geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)
+df3_u251p <- df3_nimod[df3_nimod$ROWTITLE == "U251P", ]
+my_comparisons <- list( c("DMSO", "50uM"), 
+                        c("DMSO", "10uM"), 
+                        c("DMSO", "1uM"),  
+                        c("50uM", "10uM"),
+                        c("50uM", "1uM"),
+                        c("10uM", "1uM") )
+#stat.test <- df3_u251p %>%
+#  t_test(value ~ name) %>%
+#  adjust_pvalue(method = "bonferroni") %>%
+#  add_significance("p.adj")
+#stat.test
+#stat.test<- stat.test %>%
+#  add_xy_position(x = "name", dodge =0)
+#stat.test$y.position<- stat.test$y.position[order(-stat.test$y.position)]
+p1<- ggplot(df3_u251p, aes( x=name, y=value, fill = name))+ stat_summary(fun.data=mean_sdl, geom="bar", colour="black")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+
+  #stat_pvalue_manual(
+  #  stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+  ylim(0, 2)+ theme_minimal()+ stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf")+ # Add pairwise comparisons p-value
+  stat_compare_means(method = "anova", label.y = 2) +
+  labs(title="Nimodipine: Cell Titer\nU251P GBM Cell line", x="Groups (Control DMSO)", y="Corrected Values to the Average of the Control") + scale_fill_brewer(palette = "PuBu") + theme(legend.position = "none")
+
+df3_u251p <- df3_nimod[df3_nimod$ROWTITLE == "NHA", ]
+#stat.test <- df3_u251p %>%
+#  t_test(value ~ name) %>%
+#  adjust_pvalue(method = "bonferroni") %>%
+#  add_significance("p.adj")
+#stat.test
+#stat.test<- stat.test %>%
+  #add_xy_position(x = "name", dodge =0.5, step.increase = 0.2)
+#stat.test$y.position<- stat.test$y.position[order(-stat.test$y.position)]
+#stat.test$y.position<- stat.test$y.position * 1.1
+p2<- ggplot(df3_u251p, aes( x=name, y=value, fill= name))+ stat_summary(fun.data=mean_sdl, geom="bar", colour="black")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+  ylim(0, 2) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf", step.increase = 0.3)+ # Add pairwise comparisons p-value
+  stat_compare_means(method = "anova", label.y = 2) + theme_minimal()+
+  labs(title="Nimodipine: Cell Titer \nNHA Cell line", x="Groups (Control DMSO)", 
+       y="Corrected Values to the Average of the Control") + scale_fill_brewer(palette = "PuBu") + theme(legend.position = "none")
+
+```
+
+```{r}
+ggarrange(p2, p1, ncol = 2, nrow = 1)
+```
+
+```{r}
+ggarrange(p3, p4, p1, p2, labels = c("A", "B", "C", "D"), ncol = 2, nrow = 2)
+```
+
+
+
+```{r}
+#saxagliptin
+df4_longer <- pivot_longer(df4, cols = !ROWTITLE)
+df3_sax <- df4_longer[!grepl("icosap", df4_longer$name),]
+df3_sax$name <- str_split(df3_sax$name, "_", simplify = TRUE)[,1]
+df3_sax$name <- str_split(df3_sax$name, " s", simplify = TRUE)[,1]
+df3_sax$name<- factor(df3_sax$name, levels = c("DMSO", "1uM", "10uM", "100uM"))
+posn.d <- position_dodge(width=0.95)
+ggplot(df3_sax, aes( x=name, y=value))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)+
+  labs(title="Saxagliptin Round 1 in Cell Titer", x="Groups (Control DMSO)", y="Corrected Values to the Average of the Control for that Cell Type")
+#+geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)
+df3_u251p <- df3_sax[df3_sax$ROWTITLE == "U251P", ]
+stat.test <- df3_u251p %>%
+  t_test(value ~ name) %>%
+  adjust_pvalue(method = "bonferroni") %>%
+  add_significance("p.adj")
+stat.test
+stat.test<- stat.test %>%
+  add_xy_position(x = "name", dodge =0)
+ggplot(df3_u251p, aes( x=name, y=value))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+ stat_pvalue_manual(
+    stat.test,  label = "p.adj", tip.length = 0, hide.ns = TRUE
+  ) +
+  labs(title="Saxagliptin Round 1 in Cell Titer", x="Groups (Control DMSO)", y="Corrected Values to the Average of the Control for that Cell Type")
+
+df3_u251p <- df3_sax[df3_sax$ROWTITLE == "U251P", ]
+my_comparisons <- list( c("DMSO", "100uM"), 
+                        c("DMSO", "10uM"), 
+                        c("DMSO", "1uM"),  
+                        c("100uM", "10uM"),
+                        c("100uM", "1uM"),
+                        c("10uM", "1uM") )
+#stat.test <- df3_u251p %>%
+#  t_test(value ~ name) %>%
+#  adjust_pvalue(method = "bonferroni") %>%
+#  add_significance("p.adj")
+#stat.test
+#stat.test<- stat.test %>%
+#  add_xy_position(x = "name", dodge =0)
+#stat.test$y.position<- stat.test$y.position[order(-stat.test$y.position)]
+p1<- ggplot(df3_u251p, aes( x=name, y=value, fill = name))+ stat_summary(fun.data=mean_sdl, geom="bar", colour="black")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+
+  #stat_pvalue_manual(
+  #  stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+  ylim(0, 2.5)+ stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf", step.increase = 0.9, size =8)+ # Add pairwise comparisons p-value
+  stat_compare_means(method = "anova", label.y = 2.5, size = 8) +
+  labs( x="Groups (Control DMSO)", y="Corrected Values to\nthe Average of the Control") + scale_fill_brewer(palette = "YlGn") + theme(legend.position = "none")+ theme(text = element_text(size = 20,  face="bold"))
+
+df3_u251p <- df3_sax[df3_sax$ROWTITLE == "NHA", ]
+#stat.test <- df3_u251p %>%
+#  t_test(value ~ name) %>%
+#  adjust_pvalue(method = "bonferroni") %>%
+#  add_significance("p.adj")
+#stat.test
+#stat.test<- stat.test %>%
+  #add_xy_position(x = "name", dodge =0.5, step.increase = 0.2)
+#stat.test$y.position<- stat.test$y.position[order(-stat.test$y.position)]
+#stat.test$y.position<- stat.test$y.position * 1.1
+p2<- ggplot(df3_u251p, aes( x=name, y=value, fill= name))+ stat_summary(fun.data=mean_sdl, geom="bar", colour="black")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+  ylim(0, 2.5) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf", step.increase = 0.5, size= 7)+ # Add pairwise comparisons p-value
+  stat_compare_means(method = "anova", label.y = 2.5, size = 7) +
+  labs( x="Groups (Control DMSO)", 
+       y="Corrected Values to\nthe Average of the Control") + scale_fill_brewer(palette = "YlGn") + theme(legend.position = "none")+ theme(text = element_text(size = 20,  face="bold"))
+```
+
+```{r}
+ggarrange(p1, p2, ncol = 2, nrow = 1)
+```
+
+```{r}
+#icosapent
+
+df3_ico <- df4_longer[grepl("icosap", df4_longer$name) | grepl("DMSO", df4_longer$name),]
+df3_ico$name <- str_split(df3_ico$name, "_", simplify = TRUE)[,1]
+df3_ico$name <- str_split(df3_ico$name, " i", simplify = TRUE)[,1]
+df3_ico$name<- factor(df3_ico$name, levels = c("DMSO", "1uM", "10uM", "100uM"))
+posn.d <- position_dodge(width=0.95)
+ggplot(df3_ico, aes( x=name, y=value))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)+
+  labs(title="Icosapent Round 1 in Cell Titer", x="Groups (Control DMSO)", y="Corrected Values to the Average of the Control for that Cell Type")
+#+geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)
+df3_u251p <- df3_ico[df3_ico$ROWTITLE == "U251P", ]
+stat.test <- df3_u251p %>%
+  t_test(value ~ name) %>%
+  adjust_pvalue(method = "bonferroni") %>%
+  add_significance("p.adj")
+stat.test
+stat.test<- stat.test %>%
+  add_xy_position(x = "name", dodge =0)
+ggplot(df3_u251p, aes( x=name, y=value))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+ stat_pvalue_manual(
+    stat.test,  label = "p.adj", tip.length = 0, hide.ns = TRUE
+  ) +
+  labs(title="icosapent Round 1 in Cell Titer", x="Groups (Control DMSO)", y="Corrected Values to the Average of the Control for that Cell Type")
+
+
+```
+
+```{r}
+df3_u251p <- df3_ico[df3_ico$ROWTITLE == "U251P", ]
+my_comparisons <- list( c("DMSO", "100uM"), 
+                        c("DMSO", "10uM"), 
+                        c("DMSO", "1uM"),  
+                        c("100uM", "10uM"),
+                        c("100uM", "1uM"),
+                        c("10uM", "1uM") )
+#stat.test <- df3_u251p %>%
+#  t_test(value ~ name) %>%
+#  adjust_pvalue(method = "bonferroni") %>%
+#  add_significance("p.adj")
+#stat.test
+#stat.test<- stat.test %>%
+#  add_xy_position(x = "name", dodge =0)
+#stat.test$y.position<- stat.test$y.position[order(-stat.test$y.position)]
+p3<- ggplot(df3_u251p, aes( x=name, y=value, fill = name))+ stat_summary(fun.data=mean_sdl, geom="bar", colour="black")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+
+  #stat_pvalue_manual(
+  #  stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+  ylim(0, 2.5)+ stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf", step.increase = 1,  size = 8)+ # Add pairwise comparisons p-value
+  stat_compare_means(method = "anova", label.y = 2.5, size =8) +
+  labs( x="Groups (Control DMSO)", y="Corrected Values to\nthe Average of the Control") + scale_fill_brewer(palette = "PuBu") + theme(legend.position = "none") + theme(text = element_text(size = 20,  face="bold")) 
+
+df3_u251p <- df3_ico[df3_ico$ROWTITLE == "NHA", ]
+#stat.test <- df3_u251p %>%
+#  t_test(value ~ name) %>%
+#  adjust_pvalue(method = "bonferroni") %>%
+#  add_significance("p.adj")
+#stat.test
+#stat.test<- stat.test %>%
+  #add_xy_position(x = "name", dodge =0.5, step.increase = 0.2)
+#stat.test$y.position<- stat.test$y.position[order(-stat.test$y.position)]
+#stat.test$y.position<- stat.test$y.position * 1.1
+p4<- ggplot(df3_u251p, aes( x=name, y=value, fill= name))+ stat_summary(fun.data=mean_sdl, geom="bar", colour="black")+ 
+  stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+  ylim(0, 2.5) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf", step.increase = 0.25,  size = 8)+ # Add pairwise comparisons p-value
+  stat_compare_means(method = "anova", label.y = 2.5, size =8) +
+  labs( x="Groups (Control DMSO)", 
+       y="Corrected Values to\nthe Average of the Control") + scale_fill_brewer(palette = "PuBu") + theme(legend.position = "none") + theme(text = element_text(size = 20,  face="bold")) 
+```
+
+```{r}
+ggarrange(p3, p4, ncol = 2, nrow = 1)
+```
+
+```{r}
+ggarrange( p1, p2,p3, p4, labels = c("D", "E", "F", "G"), ncol = 2, nrow = 2)
+```
+## Round 2 testing results
+
+
+```{r}
+df1 <- read_pzfx("~/data/U251 and JX39 Lasseigne Collaboration.pzfx", table=1)
+
+df2 <- read_pzfx("~/data/U251 and JX39 Lasseigne Collaboration.pzfx", table=2)
+
+df3 <- read_pzfx("~/data/U251 and JX39 Lasseigne Collaboration.pzfx", table=3)
+
+df4 <- read_pzfx("~/data/U251 and JX39 Lasseigne Collaboration.pzfx", table=4)
+
+df5 <- read_pzfx("~/data/U251 and JX39 Lasseigne Collaboration.pzfx", table=5)
+
+df6 <- read_pzfx("~/data/U251 and JX39 Lasseigne Collaboration.pzfx", table=6)
+
+```
+
+```{r}
+round2_plotting<- function (df1, groups, title="Pamidronate & TMZ: Cell Titer \nNHA Cell line", x_lab= "Groups (Control DMSO)"){
+  df1_longer <- pivot_longer(df1, cols = everything())
+  df1_longer$value<- as.numeric(df1_longer$value)
+  xy.df<- as.data.frame(expand.grid(unique(df1_longer$name), unique(df1_longer$name)))
+  xy.list <- split(xy.df, seq(nrow(xy.df))) 
+  xy.list<- as.vector(xy.list)
+  my_comparisons <- xy.list
+  posn.d <- position_dodge(width=0.95)
+
+  df1_longer$name <- factor(df1_longer$name, levels= groups)
+  ggplot(df1_longer, aes( x=name, y=value, fill= name))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+    ylim(0, 1.25) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf")+ # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 1.25) +
+    labs(title=title, x= x_lab, y="Corrected Values to the Average of the Control")+ scale_fill_viridis_d()+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")
+}
+```
+
+
+```{r}
+groups<- c("Vehicle" , "20 uM pamidronate","40 uM pamidronate", "60 uM pamidronate", "80 uM pamidronate", "25uM TMZ" , "20um Pam +TMZ" , "40um Pam +TMZ" , "60um Pam +TMZ", "80um Pam +TMZ")
+P1<- round2_plotting(df1, groups, title="Pamidronate & TMZ: Cell Titer \nNHA Cell line", x_lab= "Groups (Control H2O)")
+
+groups<- c("Vehicle" , "20uM  Nimodipine","30uM  Nimodipine", "40uM  Nimodipine", "25uM TMZ" , "20uM  Nim+ TMZ" , "30uM  Nim+ TMZ" , "40uM  Nim+ TMZ")
+df2<- df2[,1:8]
+
+P2<- round2_plotting(df2, groups, title="Nimodipine & TMZ: Cell Titer \nNHA Cell line", x_lab= "Groups (Control DMSO)")
+groups<- c("Vehicle" , "20 uM pamidronate","40 uM pamidronate", "60 uM pamidronate", "80 uM pamidronate", "25uM TMZ" , "20um Pam +TMZ" , "40um Pam +TMZ" , "60um Pam +TMZ", "80um Pam +TMZ")
+
+P3<- round2_plotting(df3, groups, title="Pamidronate & TMZ: Cell Titer \nU251 Cell line", x_lab= "Groups (Control H2O)")
+
+groups<- c("Vehicle" , "20uM  Nimodipine","30uM  Nimodipine", "40uM  Nimodipine", "25uM TMZ" , "20uM  Nim+ TMZ" , "30uM  Nim+ TMZ" , "40uM  Nim+ TMZ")
+
+P4<- round2_plotting(df4, groups, title="Nimodipine & TMZ: Cell Titer \nU251 Cell line", x_lab= "Groups (Control DMSO)")
+
+groups<- c("Vehicle" , "20 uM pamidronate","40 uM pamidronate", "60 uM pamidronate" , "80 uM pamidronate", "25uM TMZ" , "20um Pam +TMZ" , "40um Pam +TMZ" , "60um Pam +TMZ", "80um Pam +TMZ")
+
+P5<- round2_plotting(df5, groups, title="Pamidronate & TMZ: Cell Titer \nJX39 Cell line", x_lab= "Groups (Control H2O)")
+
+groups<- c("Vehicle" , "20uM  Nimodipine","30uM  Nimodipine", "40uM  Nimodipine" , "25uM TMZ" , "20uM  Nim+ TMZ" , "30uM  Nim+ TMZ" ,"40uM  Nim+ TMZ")
+P6<- round2_plotting(df6, groups, title="Nimodipine & TMZ: Cell Titer \nJX39 Cell line", x_lab= "Groups (Control DMSO)")
+
+```
+
+
+
+```{r}
+ggarrange(P1,  P3,  P5,P2,P4, P6, labels = c("A", "B", "C", "D", "E", "F"), ncol = 3, nrow = 2)
+```
+
+
+
+
+
+```{r}
+# groups<- c("Vehicle" , "20 uM pamidronate","40 uM pamidronate", "60 uM pamidronate" , "80 uM pamidronate", "25uM TMZ" , "20um Pam +TMZ" , "40um Pam +TMZ" , "60um Pam +TMZ", "80um Pam +TMZ")
+
+my_comparisons <- list( c("Vehicle", "20 uM"), #1
+                        c("Vehicle", "40 uM"), #2
+                        c("Vehicle", "60 uM" ),  #3
+                        c("Vehicle", "80 uM"), #4
+                        c("Vehicle", "25 uM"), #5
+                        
+                        c("20 uM", "40 uM"),#6
+                        c("20 uM", "60 uM"), #7
+                        c("20 uM", "80 uM"), #8
+                        c("20 uM", "25 uM"), #9
+                        
+                        c("40 uM", "60 uM"), #10
+                        c("40 uM", "80 uM"), #11
+                        c("40 uM", "25 uM"), #12
+                        
+                        c("60 uM" , "80 uM"),#13
+                        c("60 uM" , "25 uM"),#14
+                        
+                        c("80 uM", "25 uM") ) #15
+
+df1_filter<- df1[, 1:6]
+df1_longer <- pivot_longer(df1_filter, cols = everything())
+df1_longer$group <- c("Vehicle", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide","Vehicle", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide", "Vehicle", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide")       
+df1_longer$dose<- c("Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "25 uM", "Vehicle", "20 uM", "40 uM", "60 uM" ,"80 uM" ,"25 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM" ,"25 uM")
+
+df1_longer$dose<- factor(df1_longer$dose, levels= c("Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "25 uM"))
+
+g1<- ggplot(df1_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+    ylim(0, 2.5) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf")+ # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 2.5) +
+    labs( title="Pamidronate & TMZ: Cell Titer \nNHA Cell line", x= "Groups (Control H2O)",y="Corrected Values to the Average of the Control")+ scale_fill_viridis_d()+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 20,  face="bold")) 
+```
+
+
+```{r}
+
+
+g1<- ggplot(df1_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+    ylim(0, 3.5) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1.5, size= 7,vjust= 0.23,step.increase = 0.16, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns")))+ # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 3.5, size =10) +
+    labs(  x= "Groups (Control H2O)",y="Corrected Values to\nthe Average of the Control")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("#F1605DFF", "gold" ,"darkgrey"))
+```
+
+```{r}
+#P3<- round2_plotting(df3, groups, title="Pamidronate & TMZ: Cell Titer \nU251 Cell line", x_lab= "Groups (Control H2O)")
+
+my_comparisons <- list( c("Vehicle", "20 uM"), #1
+                        c("Vehicle", "40 uM"), #2
+                        c("Vehicle", "60 uM" ),  #3
+                        c("Vehicle", "80 uM"), #4
+                        c("Vehicle", "25 uM"), #5
+                        
+                        c("20 uM", "40 uM"),#6
+                        c("20 uM", "60 uM"), #7
+                        c("20 uM", "80 uM"), #8
+                        c("20 uM", "25 uM"), #9
+                        
+                        c("40 uM", "60 uM"), #10
+                        c("40 uM", "80 uM"), #11
+                        c("40 uM", "25 uM"), #12
+                        
+                        c("60 uM" , "80 uM"),#13
+                        c("60 uM" , "25 uM"),#14
+                        
+                        c("80 uM", "25 uM") ) #15
+
+df3_filter<- df3[, 1:6]
+df3_longer <- pivot_longer(df3_filter, cols = everything())
+df3_longer$group <- c("Vehicle", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide","Vehicle", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide", "Vehicle", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide")       
+df3_longer$dose<- c("Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "25 uM", "Vehicle", "20 uM", "40 uM", "60 uM" ,"80 uM" ,"25 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM" ,"25 uM")
+
+df3_longer$dose<- factor(df3_longer$dose, levels= c("Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "25 uM"))
+
+g2<- ggplot(df3_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+    ylim(0, 4) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf")+ # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 2.5) +
+    labs( title="Pamidronate & TMZ: Cell Titer \nU251 Cell line", x= "Groups (Control H2O)",y="Corrected Values to the Average of the Control")+ scale_fill_viridis_d()+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 20,  face="bold")) 
+```
+
+```{r}
+g2<- ggplot(df3_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+    ylim(0, 3.5) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1.5, size= 7,vjust= 0.23,step.increase = 0.16, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns")))+ # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 3.5, size =10) +
+    labs(  x= "Groups (Control H2O)",y="Corrected Values to\nthe Average of the Control")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("#F1605DFF", "gold" ,"darkgrey"))
+```
+
+
+
+```{r}
+#P5<- round2_plotting(df5, groups, title="Pamidronate & TMZ: Cell Titer \nJX39 Cell line", x_lab= "Groups (Control H2O)")
+my_comparisons <- list( c("Vehicle", "20 uM"), #1
+                        c("Vehicle", "40 uM"), #2
+                        c("Vehicle", "60 uM" ),  #3
+                        c("Vehicle", "80 uM"), #4
+                        c("Vehicle", "25 uM"), #5
+                        
+                        c("20 uM", "40 uM"),#6
+                        c("20 uM", "60 uM"), #7
+                        c("20 uM", "80 uM"), #8
+                        c("20 uM", "25 uM"), #9
+                        
+                        c("40 uM", "60 uM"), #10
+                        c("40 uM", "80 uM"), #11
+                        c("40 uM", "25 uM"), #12
+                        
+                        c("60 uM" , "80 uM"),#13
+                        c("60 uM" , "25 uM"),#14
+                        
+                        c("80 uM", "25 uM") ) #15
+
+df5_filter<- df5[, 1:6]
+df5_longer <- pivot_longer(df5_filter, cols = everything())
+df5_longer$group <- c("Vehicle", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide","Vehicle", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide", "Vehicle", "pamidronate", "pamidronate", "pamidronate", "pamidronate", "temozolomide")       
+df5_longer$dose<- c("Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "25 uM", "Vehicle", "20 uM", "40 uM", "60 uM" ,"80 uM" ,"25 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM" ,"25 uM")
+
+df5_longer$dose<- factor(df5_longer$dose, levels= c("Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "25 uM"))
+
+g3<- ggplot(df5_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+    ylim(0, 4) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf")+ # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 2.5) +
+    labs( title="Pamidronate & TMZ: Cell Titer \nJX39 Cell line", x= "Groups (Control H2O)",y="Corrected Values to the Average of the Control")+ scale_fill_viridis_d()+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 20,  face="bold")) 
+```
+
+```{r}
+
+g3<- ggplot(df5_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+    ylim(0, 3) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1.5, size= 7,vjust= 0.23,step.increase = 0.13, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns")))+ # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 3, size =10) +
+    labs(  x= "Groups (Control H2O)",y="Corrected Values to\nthe Average of the Control")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("#F1605DFF", "gold" ,"darkgrey"))
+```
+
+
+
+
+```{r}
+#groups<- c("Vehicle" , "20uM  Nimodipine","30uM  Nimodipine", "40uM  Nimodipine", "25uM TMZ" , "20uM  Nim+ TMZ" , "30uM  Nim+ TMZ" , "40uM  Nim+ TMZ")
+#P2<- round2_plotting(df2, groups, title="Nimodipine & TMZ: Cell Titer \nNHA Cell line", x_lab= "Groups (Control DMSO)")
+
+my_comparisons <- list( c("Vehicle", "20 uM"), # 1
+                        c("Vehicle", "30 uM"), # 2
+                        c("Vehicle", "40 uM"),  # 3
+                        c("Vehicle", "25 uM"), # 4
+                        
+                        c("20 uM", "30 uM"), #5
+                        c("20 uM", "40 uM"), #6
+                        c("20 uM", "25 uM"), #7
+                        
+                        c("30 uM", "40 uM"), #8
+                        c("30 uM", "25 uM"), #9
+                        
+                        c("40 uM", "25 uM") )#10
+
+df2_filter<- df2[, 1:5]
+df2_longer <- pivot_longer(df2_filter, cols = everything())
+df2_longer$group <- c("Vehicle", "nimodipine", "nimodipine", "nimodipine",  "temozolomide","Vehicle", "nimodipine",  "nimodipine", "nimodipine", "temozolomide", "Vehicle", "nimodipine", "nimodipine",  "nimodipine", "temozolomide")       
+df2_longer$dose<- c("Vehicle", "20 uM", "30 uM", "40 uM", "25 uM", "Vehicle", "20 uM", "30 uM", "40 uM" ,"25 uM", "Vehicle", "20 uM", "30 uM", "40 uM", "25 uM")
+
+df2_longer$dose<- factor(df2_longer$dose, levels= c("Vehicle", "20 uM", "30 uM", "40 uM", "25 uM"))
+
+g4<- ggplot(df2_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+    ylim(0, 4) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf", size= 8,symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns")))+ # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 2.5) +
+    labs( title="Nimodipine & TMZ: Cell Titer \nNHA Cell line", x= "Groups (Control DMSO)",y="Corrected Values to the Average of the Control")+ scale_fill_viridis_d()+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 20,  face="bold")) 
+```
+
+```{r}
+my_comparisons <- list( #c("Vehicle", "20 uM"), # 1
+                        c("Vehicle", "30 uM"), # 2
+                        c("Vehicle", "40 uM"),  # 3
+                        c("Vehicle", "25 uM"), # 4
+                        
+                       # c("20 uM", "30 uM"), #5
+                        c("20 uM", "40 uM"), #6
+                        #c("20 uM", "25 uM"), #7
+                        
+                        #c("30 uM", "40 uM"), #8
+                        c("30 uM", "25 uM"), #9
+                        
+                        c("40 uM", "25 uM") )#10
+g4<- ggplot(df2_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+    ylim(0, 2.25) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=2, size= 7,vjust= 0.2,step.increase = 0.145, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns")))+ # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 2.25, size =10) +
+    labs(  x= "Groups (Control H2O)",y="Corrected Values to\nthe Average of the Control")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("#721F81FF", "gold" ,"darkgrey"))
+```
+
+
+```{r}
+#groups<- c("Vehicle" , "20uM  Nimodipine","30uM  Nimodipine", "40uM  Nimodipine", "25uM TMZ" , "20uM  Nim+ TMZ" , "30uM  Nim+ TMZ" , "40uM  Nim+ TMZ")
+#P4<- round2_plotting(df4, groups, title="Nimodipine & TMZ: Cell Titer \nU251 Cell line", x_lab= "Groups (Control DMSO)")
+
+my_comparisons <- list( c("Vehicle", "20 uM"), # 1
+                        c("Vehicle", "30 uM"), # 2
+                        c("Vehicle", "40 uM"),  # 3
+                        c("Vehicle", "25 uM"), # 4
+                        
+                        c("20 uM", "30 uM"), #5
+                        c("20 uM", "40 uM"), #6
+                        c("20 uM", "25 uM"), #7
+                        
+                        c("30 uM", "40 uM"), #8
+                        c("30 uM", "25 uM"), #9
+                        
+                        c("40 uM", "25 uM") )#10
+
+df4_filter<- df4[, 1:5]
+df4_longer <- pivot_longer(df4_filter, cols = everything())
+df4_longer$group <- c("Vehicle", "nimodipine", "nimodipine", "nimodipine",  "temozolomide","Vehicle", "nimodipine",  "nimodipine", "nimodipine", "temozolomide", "Vehicle", "nimodipine", "nimodipine",  "nimodipine", "temozolomide")       
+df4_longer$dose<- c("Vehicle", "20 uM", "30 uM", "40 uM", "25 uM", "Vehicle", "20 uM", "30 uM", "40 uM" ,"25 uM", "Vehicle", "20 uM", "30 uM", "40 uM", "25 uM")
+
+df4_longer$dose<- factor(df4_longer$dose, levels= c("Vehicle", "20 uM", "30 uM", "40 uM", "25 uM"))
+
+g5<- ggplot(df2_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point()+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+    ylim(0, 4) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf", size= 8,symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns")))+ # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 2.5) +
+    labs( title="Nimodipine & TMZ: Cell Titer \nU251 Cell line", x= "Groups (Control DMSO)",y="Corrected Values to the Average of the Control")+ scale_fill_viridis_d()+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 20,  face="bold")) 
+```
+
+```{r}
+
+g52<- ggplot(df4_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+    ylim(0, 2.25) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=2, size= 7,vjust= 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns")))+ # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 2.25, size =10) +
+    labs(  x= "Groups (Control H2O)",y="Corrected Values to\nthe Average of the Control")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("#721F81FF", "gold" ,"darkgrey"))
+```
+
+
+```{r}
+#P6<- round2_plotting(df6, groups, title="Nimodipine & TMZ: Cell Titer \nJX39 Cell line", x_lab= "Groups (Control DMSO)")
+
+df6_filter<- df6[, 1:5]
+df6_longer <- pivot_longer(df6_filter, cols = everything())
+df6_longer$group <- c("Vehicle", "nimodipine", "nimodipine", "nimodipine",  "temozolomide","Vehicle", "nimodipine",  "nimodipine", "nimodipine", "temozolomide", "Vehicle", "nimodipine", "nimodipine",  "nimodipine", "temozolomide")       
+df6_longer$dose<- c("Vehicle", "20 uM", "30 uM", "40 uM", "25 uM", "Vehicle", "20 uM", "30 uM", "40 uM" ,"25 uM", "Vehicle", "20 uM", "30 uM", "40 uM", "25 uM")
+
+df6_longer$dose<- factor(df6_longer$dose, levels= c("Vehicle", "20 uM", "30 uM", "40 uM", "25 uM"))
+
+g6<- ggplot(df6_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+    ylim(0, 2.25) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=2, size= 7,vjust= 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns")))+ # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 2.25, size =10) +
+    labs(  x= "Groups (Control H2O)",y="Corrected Values to\nthe Average of the Control")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("#721F81FF", "gold" ,"darkgrey"))
+```
+
+plots of round 2: Nimodipine U251 and then PDX 
+```{r}
+ggarrange(g52,  g6, ncol = 2, nrow = 1)
+```
+plots of round 2: pamidronate U251 and then PDX 
+```{r}
+ggarrange(g2,  g3, ncol = 2, nrow = 1)
+```
+plots of round two in NHA: pamidronate & Nimodipine
+```{r}
+ggarrange(g1,  g4, ncol = 2, nrow = 1)
+```
+
+group6 
+### Save Data
+done within the script 
+
+### Save Figures
+done within the script 
+    
+# END
+    Location of final scripts:
+    script 
+    
+    Location of data produced:
+    ~/output/
+    
+    Dates when operations were done:
+    221128
+    
+## Versions
+```{r}
+sessionInfo()
+```
