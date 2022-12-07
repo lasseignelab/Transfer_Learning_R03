@@ -228,6 +228,98 @@ tfl_gbm_targets <- tfl_gbm_targets[complete.cases(tfl_gbm_targets )]
 venn_dia_methods(limma_gbm_targets, deseq_gbm_targets, tfl_gbm_targets, file_name='~/output/pancreas_cancer/SR_drug_target_venn_diagram.png' )
 ```
 
+Pathway enrichment venn diagrams
+
+gbm
+```{r eval=FALSE}
+limma<- limma_pathways$term_id[ limma_pathways$set == "Up"]
+deseq2<- deseq2_pathways$term_id[ deseq2_pathways$set == "Up"]
+tfl<-TFL_pathways$term_id[ TFL_pathways$set == "Up"]
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/gbm_plots/SR_gbm_Up_pathway_venn_diagram.png' )
+```
+
+```{r eval=FALSE}
+limma<- limma_pathways$term_id[ limma_pathways$set == "Down"]
+deseq2<- deseq2_pathways$term_id[ deseq2_pathways$set == "Down"]
+tfl<-TFL_pathways$term_id[ TFL_pathways$set == "Down"]
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/gbm_plots/SR_gbm_Down_pathway_venn_diagram.png' )
+```
+
+```{r eval=FALSE}
+limma<- limma_pathways$term_id
+deseq2<- deseq2_pathways$term_id
+tfl<-TFL_pathways$term_id
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/gbm_plots/SR_gbm_all_pathway_venn_diagram.png' )
+```
+
+liver 
+limma_pathways_liver, deseq2_pathways_liver, TFL_pathways_liver,
+
+```{r eval=FALSE}
+limma<- limma_pathways_liver$term_id[ limma_pathways_liver$set == "Up"]
+deseq2<- deseq2_pathways_liver$term_id[ deseq2_pathways_liver$set == "Up"]
+tfl<-TFL_pathways_liver$term_id[ TFL_pathways_liver$set == "Up"]
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/liver_cancer/SR_liver_Up_pathway_venn_diagram.png' )
+```
+
+```{r eval=FALSE}
+limma<- limma_pathways_liver$term_id[ limma_pathways_liver$set == "Down"]
+deseq2<- deseq2_pathways_liver$term_id[ deseq2_pathways_liver$set == "Down"]
+tfl<-TFL_pathways_liver$term_id[ TFL_pathways_liver$set == "Down"]
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/liver_cancer/SR_liver_Down_pathway_venn_diagram.png' )
+```
+
+```{r eval=FALSE}
+limma<- limma_pathways_liver$term_id
+deseq2<- deseq2_pathways_liver$term_id
+tfl<-TFL_pathways_liver$term_id
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/liver_cancer/SR_liver_all_pathway_venn_diagram.png' )
+```
+
+lung
+```{r eval=FALSE}
+limma<- limma_pathways_lung$term_id[ limma_pathways_lung$set == "Up"]
+deseq2<- deseq2_pathways_lung$term_id[ deseq2_pathways_lung$set == "Up"]
+tfl<-TFL_pathways_lung$term_id[ TFL_pathways_lung$set == "Up"]
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/lung_cancer/SR_lung_Up_pathway_venn_diagram.png' )
+```
+
+```{r eval=FALSE}
+limma<- limma_pathways_lung$term_id[ limma_pathways_lung$set == "Down"]
+deseq2<- deseq2_pathways_lung$term_id[ deseq2_pathways_lung$set == "Down"]
+tfl<-TFL_pathways_lung$term_id[ TFL_pathways_lung$set == "Down"]
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/lung_cancer/SR_lung_Down_pathway_venn_diagram.png' )
+```
+
+```{r eval=FALSE}
+limma<- limma_pathways_lung$term_id
+deseq2<- deseq2_pathways_lung$term_id
+tfl<-TFL_pathways_lung$term_id
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/lung_cancer/SR_lung_all_pathway_venn_diagram.png' )
+```
+
+paad
+```{r eval=FALSE}
+limma<- limma_pathways_PAAD$term_id[ limma_pathways_PAAD$set == "Up"]
+deseq2<- deseq2_pathways_PAAD$term_id[ deseq2_pathways_PAAD$set == "Up"]
+tfl<-TFL_pathways_PAAD$term_id[ TFL_pathways_PAAD$set == "Up"]
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/pancreas_cancer/SR_PAAD_Up_pathway_venn_diagram.png' )
+```
+
+```{r eval=FALSE}
+limma<- limma_pathways_PAAD$term_id[ limma_pathways_PAAD$set == "Down"]
+deseq2<- deseq2_pathways_PAAD$term_id[ deseq2_pathways_PAAD$set == "Down"]
+tfl<-TFL_pathways_PAAD$term_id[ TFL_pathways_PAAD$set == "Down"]
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/pancreas_cancer/SR_PAAD_Down_pathway_venn_diagram.png' )
+```
+
+```{r eval=FALSE}
+limma<- limma_pathways_PAAD$term_id
+deseq2<- deseq2_pathways_PAAD$term_id
+tfl<-TFL_pathways_PAAD$term_id
+venn_dia_methods(limma, deseq2, tfl, file_name='~/output/pancreas_cancer/SR_PAAD_all_pathway_venn_diagram.png' )
+```
+
 Gene Ontology Semantic Similarity analysis
 ```{r}
 library(GOSemSim)
@@ -344,6 +436,8 @@ drug_moa_target_plotting(lincs_limma_gbm_res_HEPG2_fda_approved ,lincs_commpound
 
 drug_moa_target_plotting(lincs_deseq_gbm_res_HEPG2_fda_approved,lincs_commpound_info=lincs_commpound_info, "deseq2", "liver", "~/output/candidate_moa_target_plots/220808" )
 ```
+
+
 
 
 ### Save Data

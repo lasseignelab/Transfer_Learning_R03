@@ -86,38 +86,16 @@ venn_dia_methods(limma_gbm_list$down, deseq_gbm_list$down, tfl_gbm_list$down, fi
 venn_dia_methods(unlist(limma_gbm_list), unlist(deseq_gbm_list), unlist(tfl_gbm_list), file_name='~/output/gbm_plots/SR_all_genes_venn_diagram.png' )
 ```
 
-```{r}
+```{r eval = FALSE}
 limma_gbm_pathway_res <- method_up_down_gene_set_analysis(limma_gbm_list$up, limma_gbm_list$down, "~/output/gbm_plots/", "limma", "GBM_cancer_limma_input_genes_SR")
 ```
 
-```{r}
+```{r eval = FALSE}
 deseq2_gbm_pathway_res<- method_up_down_gene_set_analysis(deseq_gbm_list$up, deseq_gbm_list$down, "~/output/gbm_plots/", "DESEq2", "gbm_cancer_deseq2_input_genes_SR")
 ```
 
-```{r}
+```{r eval = FALSE}
 tfl_gbm_pathway_res<- method_up_down_gene_set_analysis(tfl_gbm_list$up, tfl_gbm_list$down, "~/output/gbm_plots/", "TFL", "gbm_cancer_tfl_input_genes_SR")
-```
-
-
-```{r}
-limma<- limma_gbm_pathway_res$term_id[ limma_gbm_pathway_res$set == "Up"]
-deseq2<- deseq2_gbm_pathway_res$term_id[ deseq2_gbm_pathway_res$set == "Up"]
-tfl<-tfl_gbm_pathway_res$term_id[ tfl_gbm_pathway_res$set == "Up"]
-venn_dia_methods(limma, deseq2, tfl, file_name='~/output/gbm_plots/SR_gbm_Up_pathway_venn_diagram.png' )
-```
-
-```{r}
-limma<- limma_gbm_pathway_res$term_id[ limma_gbm_pathway_res$set == "Down"]
-deseq2<- deseq2_gbm_pathway_res$term_id[ deseq2_gbm_pathway_res$set == "Down"]
-tfl<-tfl_gbm_pathway_res$term_id[ tfl_gbm_pathway_res$set == "Down"]
-venn_dia_methods(limma, deseq2, tfl, file_name='~/output/gbm_plots/SR_gbm_Down_pathway_venn_diagram.png' )
-```
-
-```{r}
-limma<- limma_gbm_pathway_res$term_id
-deseq2<- deseq2_gbm_pathway_res$term_id
-tfl<-tfl_gbm_pathway_res$term_id
-venn_dia_methods(limma, deseq2, tfl, file_name='~/output/gbm_plots/SR_gbm_all_pathway_venn_diagram.png' )
 ```
 
 

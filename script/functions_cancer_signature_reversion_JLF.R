@@ -907,8 +907,8 @@ method_up_down_gene_set_analysis<- function(up, down,result_path, method, name){
     ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value))+geom_tile()+scale_fill_viridis(direction=-1)+theme_classic()+ labs(title=name,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
     
   }else{
-    pathway_results<- pathway_results[pathway_results$source %in% c("KEGG","REAC","GO:MF" ),]
-    ggplot(pathway_results, aes(x=set, y=term_name, fill=p_value)) + geom_tile()+ scale_fill_viridis(direction=-1)+ theme_classic() + labs(title=name,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
+    pathway_results2<- pathway_results[pathway_results$source %in% c("KEGG","REAC","GO:MF" ),]
+    ggplot(pathway_results2, aes(x=set, y=term_name, fill=p_value)) + geom_tile()+ scale_fill_viridis(direction=-1)+ theme_classic() + labs(title=name,x="Drug Gene Sets", y = "g:Profiler Gene Sets", fill= "p-value")
   }
   ggsave(file_name, width = 12, height = 14)
   return(as.data.frame(pathway_results[,-14]))

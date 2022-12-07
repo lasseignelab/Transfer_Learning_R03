@@ -963,6 +963,60 @@ tfl_gbm_targets &lt;- unique(unlist(str_split(lincs_tfl_gbm_res_YAPC_fda_approve
 tfl_gbm_targets &lt;- tfl_gbm_targets[complete.cases(tfl_gbm_targets )]</code></pre>
 <pre class="r"><code>venn_dia_methods(limma_gbm_targets, deseq_gbm_targets, tfl_gbm_targets, file_name=&#39;~/output/pancreas_cancer/SR_drug_target_venn_diagram.png&#39; )</code></pre>
 <pre><code>## [1] 1</code></pre>
+<p>Pathway enrichment venn diagrams</p>
+<p>gbm</p>
+<pre class="r"><code>limma&lt;- limma_pathways$term_id[ limma_pathways$set == &quot;Up&quot;]
+deseq2&lt;- deseq2_pathways$term_id[ deseq2_pathways$set == &quot;Up&quot;]
+tfl&lt;-TFL_pathways$term_id[ TFL_pathways$set == &quot;Up&quot;]
+venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/gbm_plots/SR_gbm_Up_pathway_venn_diagram.png&#39; )</code></pre>
+<pre class="r"><code>limma&lt;- limma_pathways$term_id[ limma_pathways$set == &quot;Down&quot;]
+deseq2&lt;- deseq2_pathways$term_id[ deseq2_pathways$set == &quot;Down&quot;]
+tfl&lt;-TFL_pathways$term_id[ TFL_pathways$set == &quot;Down&quot;]
+venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/gbm_plots/SR_gbm_Down_pathway_venn_diagram.png&#39; )</code></pre>
+<pre class="r"><code>limma&lt;- limma_pathways$term_id
+deseq2&lt;- deseq2_pathways$term_id
+tfl&lt;-TFL_pathways$term_id
+venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/gbm_plots/SR_gbm_all_pathway_venn_diagram.png&#39; )</code></pre>
+<p>liver limma_pathways_liver, deseq2_pathways_liver,
+TFL_pathways_liver,</p>
+<pre class="r"><code>limma&lt;- limma_pathways_liver$term_id[ limma_pathways_liver$set == &quot;Up&quot;]
+deseq2&lt;- deseq2_pathways_liver$term_id[ deseq2_pathways_liver$set == &quot;Up&quot;]
+tfl&lt;-TFL_pathways_liver$term_id[ TFL_pathways_liver$set == &quot;Up&quot;]
+venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/liver_cancer/SR_liver_Up_pathway_venn_diagram.png&#39; )</code></pre>
+<pre class="r"><code>limma&lt;- limma_pathways_liver$term_id[ limma_pathways_liver$set == &quot;Down&quot;]
+deseq2&lt;- deseq2_pathways_liver$term_id[ deseq2_pathways_liver$set == &quot;Down&quot;]
+tfl&lt;-TFL_pathways_liver$term_id[ TFL_pathways_liver$set == &quot;Down&quot;]
+venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/liver_cancer/SR_liver_Down_pathway_venn_diagram.png&#39; )</code></pre>
+<pre class="r"><code>limma&lt;- limma_pathways_liver$term_id
+deseq2&lt;- deseq2_pathways_liver$term_id
+tfl&lt;-TFL_pathways_liver$term_id
+venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/liver_cancer/SR_liver_all_pathway_venn_diagram.png&#39; )</code></pre>
+<p>lung</p>
+<pre class="r"><code>limma&lt;- limma_pathways_lung$term_id[ limma_pathways_lung$set == &quot;Up&quot;]
+deseq2&lt;- deseq2_pathways_lung$term_id[ deseq2_pathways_lung$set == &quot;Up&quot;]
+tfl&lt;-TFL_pathways_lung$term_id[ TFL_pathways_lung$set == &quot;Up&quot;]
+venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/lung_cancer/SR_lung_Up_pathway_venn_diagram.png&#39; )</code></pre>
+<pre class="r"><code>limma&lt;- limma_pathways_lung$term_id[ limma_pathways_lung$set == &quot;Down&quot;]
+deseq2&lt;- deseq2_pathways_lung$term_id[ deseq2_pathways_lung$set == &quot;Down&quot;]
+tfl&lt;-TFL_pathways_lung$term_id[ TFL_pathways_lung$set == &quot;Down&quot;]
+venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/lung_cancer/SR_lung_Down_pathway_venn_diagram.png&#39; )</code></pre>
+<pre class="r"><code>limma&lt;- limma_pathways_lung$term_id
+deseq2&lt;- deseq2_pathways_lung$term_id
+tfl&lt;-TFL_pathways_lung$term_id
+venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/lung_cancer/SR_lung_all_pathway_venn_diagram.png&#39; )</code></pre>
+<p>paad</p>
+<pre class="r"><code>limma&lt;- limma_pathways_PAAD$term_id[ limma_pathways_PAAD$set == &quot;Up&quot;]
+deseq2&lt;- deseq2_pathways_PAAD$term_id[ deseq2_pathways_PAAD$set == &quot;Up&quot;]
+tfl&lt;-TFL_pathways_PAAD$term_id[ TFL_pathways_PAAD$set == &quot;Up&quot;]
+venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/pancreas_cancer/SR_PAAD_Up_pathway_venn_diagram.png&#39; )</code></pre>
+<pre class="r"><code>limma&lt;- limma_pathways_PAAD$term_id[ limma_pathways_PAAD$set == &quot;Down&quot;]
+deseq2&lt;- deseq2_pathways_PAAD$term_id[ deseq2_pathways_PAAD$set == &quot;Down&quot;]
+tfl&lt;-TFL_pathways_PAAD$term_id[ TFL_pathways_PAAD$set == &quot;Down&quot;]
+venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/pancreas_cancer/SR_PAAD_Down_pathway_venn_diagram.png&#39; )</code></pre>
+<pre class="r"><code>limma&lt;- limma_pathways_PAAD$term_id
+deseq2&lt;- deseq2_pathways_PAAD$term_id
+tfl&lt;-TFL_pathways_PAAD$term_id
+venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/pancreas_cancer/SR_PAAD_all_pathway_venn_diagram.png&#39; )</code></pre>
 <p>Gene Ontology Semantic Similarity analysis</p>
 <pre class="r"><code>library(GOSemSim)</code></pre>
 <pre><code>## GOSemSim v2.20.0  For help: https://yulab-smu.top/biomedical-knowledge-mining-book/

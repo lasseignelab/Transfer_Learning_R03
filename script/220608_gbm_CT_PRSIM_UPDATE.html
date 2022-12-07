@@ -628,21 +628,6 @@ tfl_gbm_list &lt;- readRDS(&quot;~/output/TF_L_GBM/22004_SR_gene_list_gbm_tfl.rd
 <pre class="r"><code>limma_gbm_pathway_res &lt;- method_up_down_gene_set_analysis(limma_gbm_list$up, limma_gbm_list$down, &quot;~/output/gbm_plots/&quot;, &quot;limma&quot;, &quot;GBM_cancer_limma_input_genes_SR&quot;)</code></pre>
 <pre class="r"><code>deseq2_gbm_pathway_res&lt;- method_up_down_gene_set_analysis(deseq_gbm_list$up, deseq_gbm_list$down, &quot;~/output/gbm_plots/&quot;, &quot;DESEq2&quot;, &quot;gbm_cancer_deseq2_input_genes_SR&quot;)</code></pre>
 <pre class="r"><code>tfl_gbm_pathway_res&lt;- method_up_down_gene_set_analysis(tfl_gbm_list$up, tfl_gbm_list$down, &quot;~/output/gbm_plots/&quot;, &quot;TFL&quot;, &quot;gbm_cancer_tfl_input_genes_SR&quot;)</code></pre>
-<pre class="r"><code>limma&lt;- limma_gbm_pathway_res$term_id[ limma_gbm_pathway_res$set == &quot;Up&quot;]
-deseq2&lt;- deseq2_gbm_pathway_res$term_id[ deseq2_gbm_pathway_res$set == &quot;Up&quot;]
-tfl&lt;-tfl_gbm_pathway_res$term_id[ tfl_gbm_pathway_res$set == &quot;Up&quot;]
-venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/gbm_plots/SR_gbm_Up_pathway_venn_diagram.png&#39; )</code></pre>
-<pre><code>## [1] 1</code></pre>
-<pre class="r"><code>limma&lt;- limma_gbm_pathway_res$term_id[ limma_gbm_pathway_res$set == &quot;Down&quot;]
-deseq2&lt;- deseq2_gbm_pathway_res$term_id[ deseq2_gbm_pathway_res$set == &quot;Down&quot;]
-tfl&lt;-tfl_gbm_pathway_res$term_id[ tfl_gbm_pathway_res$set == &quot;Down&quot;]
-venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/gbm_plots/SR_gbm_Down_pathway_venn_diagram.png&#39; )</code></pre>
-<pre><code>## [1] 1</code></pre>
-<pre class="r"><code>limma&lt;- limma_gbm_pathway_res$term_id
-deseq2&lt;- deseq2_gbm_pathway_res$term_id
-tfl&lt;-tfl_gbm_pathway_res$term_id
-venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/gbm_plots/SR_gbm_all_pathway_venn_diagram.png&#39; )</code></pre>
-<pre><code>## [1] 1</code></pre>
 <pre class="r"><code>lincs_limma_gbm_res_GI1_fda_approved&lt;- read_csv( &quot;~/output/limma_GBM/220808_SR_LINCS_GBM_top_RES_all.csv&quot;)</code></pre>
 <pre><code>## New names:
 ## Rows: 15 Columns: 17

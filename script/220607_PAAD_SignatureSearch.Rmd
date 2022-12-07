@@ -1156,27 +1156,6 @@ tfl_paad_pathway_res<- method_up_down_gene_set_analysis(tfl_paad_list$up, tfl_pa
 ```
 
 
-```{r eval=FALSE}
-limma<- limma_paad_pathway_res$term_id[ limma_paad_pathway_res$set == "Up"]
-deseq2<- deseq2_paad_pathway_res$term_id[ deseq2_paad_pathway_res$set == "Up"]
-tfl<-tfl_paad_pathway_res$term_id[ tfl_paad_pathway_res$set == "Up"]
-venn_dia_methods(limma, deseq2, tfl, file_name='~/output/pancreas_cancer/SR_PAAD_Up_pathway_venn_diagram.png' )
-```
-
-```{r eval=FALSE}
-limma<- limma_paad_pathway_res$term_id[ limma_paad_pathway_res$set == "Down"]
-deseq2<- deseq2_paad_pathway_res$term_id[ deseq2_paad_pathway_res$set == "Down"]
-tfl<-tfl_paad_pathway_res$term_id[ tfl_paad_pathway_res$set == "Down"]
-venn_dia_methods(limma, deseq2, tfl, file_name='~/output/pancreas_cancer/SR_PAAD_Down_pathway_venn_diagram.png' )
-```
-
-```{r eval=FALSE}
-limma<- limma_paad_pathway_res$term_id
-deseq2<- deseq2_paad_pathway_res$term_id
-tfl<-tfl_paad_pathway_res$term_id
-venn_dia_methods(limma, deseq2, tfl, file_name='~/output/pancreas_cancer/SR_PAAD_all_pathway_venn_diagram.png' )
-```
-
 compare candidates
 
 ```{r eval=FALSE}
