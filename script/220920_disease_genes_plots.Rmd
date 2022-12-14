@@ -125,7 +125,21 @@ paad_tfl_input <- readRDS("~/output/pancreas_cancer/TFL_res/SR_gene_list_paad_tf
 paad_limma_input <- readRDS("~/output/pancreas_cancer/limma_res/SR_gene_list_paad_limma.rds")
 paad_deseq2_input <- readRDS("~/output/pancreas_cancer/deseq2_res/SR_gene_list_paad_deseq2.rds")
 ```
+need to create the gene venn diagram for liver cancer 
 
+compare gene list across the different methods
+
+```{r eval=FALSE}
+venn_dia_methods(liver_limma_input$up, liver_deseq2_input$up, liver_tfl_input$up, file_name='~/output/liver_cancer/SR_up_genes_venn_diagramm.png' )
+```
+
+```{r eval=FALSE}
+venn_dia_methods(liver_limma_input$down, liver_deseq2_input$down, liver_tfl_input$down, file_name='~/output/liver_cancer/SR_down_genes_venn_diagramm.png' )
+```
+
+```{r eval=FALSE}
+venn_dia_methods(unlist(liver_limma_input), unlist(liver_deseq2_input), unlist(liver_tfl_input), file_name='~/output/liver_cancer/SR_all_genes_venn_diagramm.png' )
+```
 
 GBM
 ```{r}
