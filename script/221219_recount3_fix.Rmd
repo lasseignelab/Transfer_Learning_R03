@@ -1,0 +1,183 @@
+---
+title: "221219_recount3_fix"
+author: "Jennifer Fisher"
+date: '2022-12-19'
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# START 
+    Goal/Purpose of operations: 
+   Due to changes to recount3 server in Dec. 2022, the recount3 data was redownloaded to allow reproduction of downstream analysis. This script is setting up the data for the downstream analysis script. This script was ran after the 221219_recount3_download_fix.sh to download the data. 
+    
+    Finished psedocode on: 
+    221219
+    
+    System which operations were done on: 
+    my laptop
+    
+    GitHub Repo:
+    Transfer_Learning_R03
+    
+    Docker/Singularity: 
+    rstudio_cancer_dr
+    
+    Directory of operations: 
+    "/home/rstudio"
+    
+    Scripts being edited for operations:
+    functions were added to the /home/rstudio/script/functions_cancer_signature_reversion_JLF.R
+    
+    Data being used:
+    recount3 donwloaded data. 
+    
+    Papers and tools: 
+    NA
+
+# STEPS
+### Set working directory 
+
+
+gene info
+```{r eval=FALSE}
+feature_info <- rtracklayer::import.gff(file_retrieve("/home/rstudio/data/recount3/recount3_fix_download/human.gene_sums.G026.gtf.gz"))
+colnames(mcols(feature_info))[colnames(mcols(feature_info)) == "score"] <- "bp_length"
+feature_info<- as.data.frame(feature_info)
+saveRDS(feature_info, "/home/rstudio/data/recount3/recount3_fix_download/feature_info.rds")
+```
+
+
+```{r eval=FALSE}
+count_table_v2 <- function(file, file_name1){
+  counts<- read.table( file,
+                         header= TRUE)
+  print("check the rownames")
+  print(identical(gbm_counts$gene_id, feature_info$gene_id))
+  rownames(counts) <- counts[,1]
+  counts<-counts[,- 1]
+  saveRDS(counts, file_name1)
+  return(counts)
+}
+```
+
+```{r eval=FALSE}
+Counts_to_tpm <- function(counts, featureLength) {
+  # Ensure valid arguments.
+  stopifnot(length(featureLength) == nrow(counts))
+  # Compute effective lengths of features in each library.
+  effLen <- featureLength
+  # Process one column at a time.
+  tpm <- do.call(cbind, lapply(1:ncol(counts), function(i) {
+    rate = log(counts[,i]) - log(effLen)
+    denom = log(sum(exp(rate)))
+    exp(rate - denom + log(1e6))
+  }))
+  # Copy the row and column names from the original matrix.
+  colnames(tpm) <- colnames(counts)
+  rownames(tpm) <- rownames(counts)
+  return(tpm)
+}
+```
+
+
+
+Metadata 
+```{r eval=FALSE}
+#brain
+brain_gtex_metadata<- read.delim( "/home/rstudio/data/recount3/recount3_fix_download/gtex.gtex.BRAIN.MD", sep = "\t", header=TRUE)
+saveRDS(brain_gtex_metadata, "/home/rstudio/data/recount3/recount3_fix_download/brain_gtex_metadata.rds")
+#liver
+liver_gtex_metadata<- read.delim( "/home/rstudio/data/recount3/recount3_fix_download/gtex.gtex.LIVER.MD", sep = "\t", header=TRUE)
+saveRDS(liver_gtex_metadata, "/home/rstudio/data/recount3/recount3_fix_download/liver_gtex_metadata.rds")
+#lung
+lung_gtex_metadata<- read.delim( "/home/rstudio/data/recount3/recount3_fix_download/gtex.gtex.LUNG.MD", sep = "\t", header=TRUE)
+saveRDS(lung_gtex_metadata, "/home/rstudio/data/recount3/recount3_fix_download/lung_gtex_metadata.rds")
+#pancreas
+pan_gtex_metadata<- read.delim( "/home/rstudio/data/recount3/recount3_fix_download/gtex.gtex.PANCREAS.MD", sep = "\t", header=TRUE)
+saveRDS(pan_gtex_metadata, "/home/rstudio/data/recount3/recount3_fix_download/pan_gtex_metadata.rds")
+#gbm
+gbm_tcga_metadata<- read.delim( "/home/rstudio/data/recount3/recount3_fix_download/tcga.tcga.GBM.MD"  , sep = "\t", header=TRUE)
+saveRDS(gbm_tcga_metadata, "/home/rstudio/data/recount3/recount3_fix_download/gbm_tcga_metadata.rds")
+#lihc
+lihc_tcga_metadata<- read.delim( "/home/rstudio/data/recount3/recount3_fix_download/tcga.tcga.LIHC.MD", sep = "\t", header=TRUE)
+saveRDS(lihc_tcga_metadata, "/home/rstudio/data/recount3/recount3_fix_download/lihc_tcga_metadata.rds")
+#luad
+luad_tcga_metadata<- read.delim( "/home/rstudio/data/recount3/recount3_fix_download/tcga.tcga.LUAD.MD", sep = "\t", header=TRUE)
+saveRDS(luad_tcga_metadata, "/home/rstudio/data/recount3/recount3_fix_download/luad_tcga_metadata.rds")
+#paad
+paad_tcga_metadata<- read.delim( "/home/rstudio/data/recount3/recount3_fix_download/tcga.tcga.PAAD.MD", sep = "\t", header=TRUE)
+saveRDS(paad_tcga_metadata, "/home/rstudio/data/recount3/recount3_fix_download/paad_tcga_metadata.rds")
+```
+
+
+counts & tpm
+```{r eval=FALSE}
+#brain
+brain_gtex_counts<- count_table_v2( "/home/rstudio/data/recount3/recount3_fix_download/gtex.gene_sums.BRAIN.G026", file_name1= "/home/rstudio/data/recount3/recount3_fix_download/brain_gtex_counts.rds")
+brain_gtex_tpm<- Counts_to_tpm(brain_gtex_counts, feature_info$bp_length)
+saveRDS(brain_gtex_tpm, "/home/rstudio/data/recount3/recount3_fix_download/brain_gtex_tpm.rds")
+
+#liver
+liver_gtex_counts<- count_table_v2( "/home/rstudio/data/recount3/recount3_fix_download/gtex.gene_sums.LIVER.G026", file_name1= "/home/rstudio/data/recount3/recount3_fix_download/liver_gtex_counts.rds")
+liver_gtex_tpm<- Counts_to_tpm(liver_gtex_counts, feature_info$bp_length)
+saveRDS(liver_gtex_tpm, "/home/rstudio/data/recount3/recount3_fix_download/liver_gtex_tpm.rds")
+
+#lung
+lung_gtex_counts<- count_table_v2( "/home/rstudio/data/recount3/recount3_fix_download/gtex.gene_sums.LUNG.G026", file_name1= "/home/rstudio/data/recount3/recount3_fix_download/lung_gtex_counts.rds")
+lung_gtex_tpm<- Counts_to_tpm(lung_gtex_counts, feature_info$bp_length)
+saveRDS(lung_gtex_tpm, "/home/rstudio/data/recount3/recount3_fix_download/lung_gtex_tpm.rds")
+
+#pancreas
+pan_gtex_counts<- count_table_v2( "/home/rstudio/data/recount3/recount3_fix_download/gtex.gene_sums.PANCREAS.G026", file_name1= "/home/rstudio/data/recount3/recount3_fix_download/pan_gtex_counts.rds")
+pan_gtex_tpm<- Counts_to_tpm(pan_gtex_counts, feature_info$bp_length)
+saveRDS(pan_gtex_tpm, "/home/rstudio/data/recount3/recount3_fix_download/pan_gtex_tpm.rds")
+
+#gbm
+gbm_tcga_counts<- count_table_v2( "/home/rstudio/data/recount3/recount3_fix_download/tcga.gene_sums.GBM.G026", file_name1= "/home/rstudio/data/recount3/recount3_fix_download/gbm_tcga_counts.rds")
+gbm_tcga_tpm<- Counts_to_tpm(gbm_tcga_counts, feature_info$bp_length)
+saveRDS(gbm_tcga_tpm, "/home/rstudio/data/recount3/recount3_fix_download/gbm_tcga_tpm.rds")
+
+#lihc
+lihc_tcga_counts<- count_table_v2( "/home/rstudio/data/recount3/recount3_fix_download/tcga.gene_sums.LIHC.G026", file_name1= "/home/rstudio/data/recount3/recount3_fix_download/lihc_tcga_counts.rds")
+gbm_tcga_tpm<- Counts_to_tpm(gbm_tcga_counts, feature_info$bp_length)
+saveRDS(gbm_tcga_tpm, "/home/rstudio/data/recount3/recount3_fix_download/gbm_tcga_tpm.rds")
+
+#luad
+luad_tcga_counts<- count_table_v2( "/home/rstudio/data/recount3/recount3_fix_download/tcga.gene_sums.LUAD.G026", file_name1= "/home/rstudio/data/recount3/recount3_fix_download/luad_tcga_counts.rds")
+luad_tcga_tpm<- Counts_to_tpm(luad_tcga_counts, feature_info$bp_length)
+saveRDS(luad_tcga_tpm, "/home/rstudio/data/recount3/recount3_fix_download/luad_tcga_tpm.rds")
+
+#paad
+paad_tcga_counts<- count_table_v2( "/home/rstudio/data/recount3/recount3_fix_download/tcga.gene_sums.PAAD.G026", file_name1= "/home/rstudio/data/recount3/recount3_fix_download/paad_tcga_counts.rds")
+paad_tcga_tpm<- Counts_to_tpm(paad_tcga_counts, feature_info$bp_length)
+saveRDS(paad_tcga_tpm, "/home/rstudio/data/recount3/recount3_fix_download/paad_tcga_tpm.rds")
+```
+
+
+### Save Data
+done within the script 
+
+### Save Figures
+done within the script 
+    
+# END
+    Location of final scripts:
+    script 
+    
+    Location of data produced:
+    ~/data/recount3/recount_download_fix/
+    
+    Dates when operations were done:
+    221219
+    
+## Versions
+```{r}
+sessionInfo()
+```
