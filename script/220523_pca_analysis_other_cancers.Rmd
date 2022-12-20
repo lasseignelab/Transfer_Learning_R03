@@ -49,29 +49,106 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(recount3)
 library(SummarizedExperiment)
+library(stringr)
 ```
 
-```{r }
-human_projects<- available_projects()
-```
 
 ### Analysis
 
 PAAD
-```{r }
-#SRP118922
-recount3_rse_PANCREAS <- create_rse(human_projects[(human_projects$project == "PANCREAS"),])
+
+```{r}
+paad_tcga_metadata <- readRDS("~/data/recount3/recount3_fix_download/paad_tcga_metadata.rds")
+paad_tcga_counts <- readRDS("~/data/recount3/recount3_fix_download/paad_tcga_counts.rds")
 ```
 
-```{r }
-#SRP118922
-recount3_rse_PAAD <- create_rse(human_projects[(human_projects$project == "PAAD"),])
+check counts and metadata info
+```{r}
+dim(paad_tcga_counts)
+dim(paad_tcga_metadata)
 ```
+
+```{r}
+nchar(colnames(paad_tcga_counts)[1])
+```
+
+```{r}
+#https://stackoverflow.com/questions/7963898/extracting-the-last-n-characters-from-a-string-in-r
+substrRight <- function(x, n){
+  substr(x, nchar(x)-n+1, nchar(x))
+}
+```
+
+```{r}
+ids<- substrRight(colnames(paad_tcga_counts), 36)
+ids<- str_replace_all(ids, "[[:punct:]]", "-")
+```
+
+```{r}
+colnames(paad_tcga_counts) <- ids
+paad_tcga_counts_order <- paad_tcga_counts[,order(ids)]
+paad_tcga_metadata_order<- paad_tcga_metadata[order(paad_tcga_metadata$external_id), ]
+```
+
+```{r}
+identical(colnames(paad_tcga_counts_order), paad_tcga_metadata_order$external_id)
+```
+
+```{r}
+colnames(paad_tcga_counts_order)<- paad_tcga_metadata_order$tcga_barcode
+```
+
+```{r eval =FALSE}
+saveRDS(paad_tcga_counts_order,  "/home/rstudio/data/paad_tcga_count_ordered.rds")
+saveRDS(paad_tcga_metadata_order,  "/home/rstudio/data/paad_tcga_metadata_ordered.rds")
+```
+
+import the pancreas data 
+
+```{r}
+pan_gtex_counts <- readRDS("~/data/recount3/recount3_fix_download/pan_gtex_counts.rds")
+pan_gtex_metadata <- readRDS("~/data/recount3/recount3_fix_download/pan_gtex_metadata.rds")
+```
+
+
+```{r}
+colnames(pan_gtex_counts)[1:5]
+pan_gtex_metadata$external_id[1:5]
+```
+
+
+```{r}
+ids<- str_replace_all(colnames(pan_gtex_counts), "[[:punct:]]", "-") 
+meta_data_ids<- str_replace_all(pan_gtex_metadata$external_id, "[[:punct:]]", "-")
+```
+
+```{r}
+identical(ids[order(ids)], meta_data_ids[order(meta_data_ids)])
+```
+
+```{r}
+pan_gtex_counts_order <- pan_gtex_counts[,order(ids)]
+pan_gtex_metadata_order<- pan_gtex_metadata[order(meta_data_ids), ]
+```
+
+```{r}
+colnames(pan_gtex_counts_order )<- pan_gtex_metadata_order$external_id
+```
+
+```{r}
+recount3_count_pan <- as.data.frame(pan_gtex_counts_order)
+```
+
+```{r eval =FALSE}
+saveRDS(recount3_count_pan,  "/home/rstudio/data/pan_gtex_count_ordered.rds")
+saveRDS(pan_gtex_metadata_order,  "/home/rstudio/data/pan_gtex_metadata_ordered.rds")
+```
+
 
 ```{r}
 library(DESeq2)
 #colData(recount3_rse_PANCREAS)
-vst_table <- vst(as.matrix(assay(recount3_rse_PANCREAS)))
+vst_table <- vst(as.matrix(recount3_count_pan))
 vst_table_df <- t(vst_table)
 pca.tumor <- prcomp(vst_table_df)
 ```
@@ -83,57 +160,51 @@ summary(pca.tumor)
 
 
 ```{r}
-sex<- rownames(recount3_rse_PANCREAS@colData)[recount3_rse_PANCREAS$gtex.sex == "2"]
+sex<- pan_gtex_metadata_order$external_id[pan_gtex_metadata_order$SEX == "2"]
 sex<- sex[!is.na(sex)]
-normal_ids<-  rownames(recount3_rse_PANCREAS@colData)[rownames(recount3_rse_PANCREAS@colData) %in% sex]
-
-tumor_norm <- ifelse( rownames(recount3_rse_PANCREAS@colData) %in% normal_ids, "red", "black")
+tumor_norm <- ifelse( pan_gtex_metadata_order$external_id %in% sex, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of Gtex pancreas", xlab = "PC1 (10.84%)", ylab = "PC2 (7.17%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c("female", "male"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 
 ```{r}
-sex<- rownames(recount3_rse_PANCREAS@colData)[recount3_rse_PANCREAS$gtex.age == "70-79"]
-sex<- sex[!is.na(sex)]
-normal_ids<-  rownames(recount3_rse_PANCREAS@colData)[rownames(recount3_rse_PANCREAS@colData) %in% sex]
+age<- pan_gtex_metadata_order$external_id[pan_gtex_metadata_order$AGE == "70-79"]
+age<- age[!is.na(age)]
 
-tumor_norm <- ifelse( rownames(recount3_rse_PANCREAS@colData) %in% normal_ids, "red", "black")
+tumor_norm <- ifelse( pan_gtex_metadata_order$external_id %in% age, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of Gtex pancreas", xlab = "PC1 (10.84%)", ylab = "PC2 (7.17%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c("70-79", "! 70-79"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 ```{r}
-sex<- rownames(recount3_rse_PANCREAS@colData)[recount3_rse_PANCREAS$gtex.age == "20-29"]
-sex<- sex[!is.na(sex)]
-normal_ids<-  rownames(recount3_rse_PANCREAS@colData)[rownames(recount3_rse_PANCREAS@colData) %in% sex]
+age<- pan_gtex_metadata_order$external_id[pan_gtex_metadata_order$AGE == "20-29"]
+age<- age[!is.na(age)]
+#normal_ids<-  rownames(recount3_rse_PANCREAS@colData)[rownames(recount3_rse_PANCREAS@colData) %in% sex]
 
-tumor_norm <- ifelse( rownames(recount3_rse_PANCREAS@colData) %in% normal_ids, "red", "black")
+tumor_norm <- ifelse( pan_gtex_metadata_order$external_id %in% age, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of Gtex pancreas", xlab = "PC1 (10.84%)", ylab = "PC2 (7.17%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c("20-29", "! 20-29"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 looking at RIN scores
 ```{r}
-sex<- rownames(recount3_rse_PANCREAS@colData)[recount3_rse_PANCREAS$gtex.smrin >= 7]
-sex<- sex[!is.na(sex)]
-normal_ids<-  rownames(recount3_rse_PANCREAS@colData)[rownames(recount3_rse_PANCREAS@colData) %in% sex]
+RIN<- pan_gtex_metadata_order$external_id[pan_gtex_metadata_order$SMRIN >= 7]
+RIN<- RIN[!is.na(RIN)]
 
-tumor_norm <- ifelse( rownames(recount3_rse_PANCREAS@colData) %in% normal_ids, "red", "black")
+tumor_norm <- ifelse( pan_gtex_metadata_order$external_id %in% RIN, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of Gtex pancreas", xlab = "PC1 (10.84%)", ylab = "PC2 (7.17%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c(">= 7", "< 7"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 SMTSISCH- indicates the minutes of ischmia time
 ```{r}
-sex<- rownames(recount3_rse_PANCREAS@colData)[recount3_rse_PANCREAS$gtex.smtsisch>= 500]
-sex<- sex[!is.na(sex)]
-normal_ids<-  rownames(recount3_rse_PANCREAS@colData)[rownames(recount3_rse_PANCREAS@colData) %in% sex]
+time<- pan_gtex_metadata_order$external_id[pan_gtex_metadata_order$SMTSISCH >= 500]
+time<- time[!is.na(time)]
 
-tumor_norm <- ifelse( rownames(recount3_rse_PANCREAS@colData) %in% normal_ids, "red", "black")
+tumor_norm <- ifelse( pan_gtex_metadata_order$external_id %in% time, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of Gtex pancreas", xlab = "PC1 (10.84%)", ylab = "PC2 (7.17%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c(">= 500", "< 500"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
-
+PAAD
 ```{r}
-library(DESeq2)
-vst_table <- vst(as.matrix(assay(recount3_rse_PAAD)))
+vst_table <- vst(as.matrix(paad_tcga_counts_order))
 vst_table_df <- t(vst_table)
 pca.tumor <- prcomp(vst_table_df)
 ```
@@ -144,32 +215,31 @@ summary(pca.tumor)
 
 
 ```{r}
-nt <- rownames(recount3_rse_PAAD@colData)[recount3_rse_PAAD$tcga.cgc_sample_sample_type == "Solid Tissue Normal"] 
-normal_ids<- rownames(recount3_rse_PAAD@colData)[rownames(recount3_rse_PAAD@colData) %in% nt]
+nt <- paad_tcga_metadata_order$external_id[paad_tcga_metadata_order$cgc_sample_sample_type == "Solid Tissue Normal"] 
 
-tumor_norm <- ifelse(rownames(recount3_rse_PAAD@colData) %in% normal_ids, "black", "red")
+tumor_norm <- ifelse(paad_tcga_metadata_order$external_id %in% nt, "black", "red")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of PAAD", xlab = "PC1 (12.7%)", ylab = "PC2 (10.74%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c("tumor", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 
 ```{r}
-test <- as.data.frame(recount3_rse_PAAD@colData[pca.tumor$x[, 1] >150,])
+test <- as.data.frame(paad_tcga_metadata_order[pca.tumor$x[, 1] >150,])
 ```
 
 
 ```{r}
-nt <- rownames(recount3_rse_PAAD@colData)[grep("NEUROENDOCRINE",recount3_rse_PAAD@colData$tcga.cgc_case_other_histological_diagnosis, ignore.case = TRUE) ] 
-normal_ids<- rownames(recount3_rse_PAAD@colData)[rownames(recount3_rse_PAAD@colData) %in% nt]
+nt <- paad_tcga_metadata_order$external_id[grep("NEUROENDOCRINE",paad_tcga_metadata_order$cgc_case_other_histological_diagnosis, ignore.case = TRUE) ] 
+#normal_ids<- rownames(recount3_rse_PAAD@colData)[rownames(recount3_rse_PAAD@colData) %in% nt]
 
-tumor_norm <- ifelse(rownames(recount3_rse_PAAD@colData) %in% normal_ids, "black", "red")
+tumor_norm <- ifelse(paad_tcga_metadata_order$external_id %in% nt, "black", "red")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of PAAD", xlab = "PC1 (12.7%)", ylab = "PC2 (10.74%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c("other", "NEUROENDOCRINE tumors"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 
 remove neuroendocrine tumors
 ```{r}
-nt <- rownames(recount3_rse_PAAD@colData)[grep("NEUROENDOCRINE",recount3_rse_PAAD@colData$tcga.cgc_case_other_histological_diagnosis, ignore.case = TRUE) ] 
-metadata<- as.data.frame(recount3_rse_PAAD@colData)[! rownames(recount3_rse_PAAD@colData) %in% nt]
+nt <- paad_tcga_metadata_order$tcga_barcode[grep("NEUROENDOCRINE",paad_tcga_metadata_order$cgc_case_other_histological_diagnosis, ignore.case = TRUE) ] 
+metadata<- as.data.frame(paad_tcga_metadata_order)[! paad_tcga_metadata_order$tcga_barcode %in% nt]
 
 vst_table_v2 <- vst_table[,!colnames(vst_table) %in% nt]
 ```
@@ -184,10 +254,10 @@ summary(pca.tumor)
 ```
 
 ```{r}
-nt <- rownames(metadata)[metadata$tcga.cgc_sample_sample_type == "Solid Tissue Normal"] 
-normal_ids<- rownames(metadata)[rownames(metadata) %in% nt]
+nt <- metadata$tcga_barcode[metadata$cgc_sample_sample_type == "Solid Tissue Normal"] 
+#normal_ids<- rownames(metadata)[rownames(metadata) %in% nt]
 
-tumor_norm <- ifelse(rownames(metadata) %in% normal_ids, "black", "red")
+tumor_norm <- ifelse(metadata$tcga_barcode %in% nt, "black", "red")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of PAAD", xlab = "PC1 (13.67%)", ylab = "PC2 (7.716%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c("tumor", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
@@ -230,19 +300,58 @@ correctly label
 Note that PAAD tumors have a ton of cancer fibroblast which is why the tumor and normal don't separate. 
 
 
+
 Liver cancer 
-```{r }
-#SRP118922
-recount3_rse_liver <- create_rse(human_projects[(human_projects$project == "LIVER"),])
+
+import the liver data 
+
+```{r}
+liver_gtex_counts <- readRDS("~/data/recount3/recount3_fix_download/liver_gtex_counts.rds")
+liver_gtex_metadata <- readRDS("~/data/recount3/recount3_fix_download/liver_gtex_metadata.rds")
 ```
+
+
+```{r}
+colnames(liver_gtex_counts)[1:5]
+liver_gtex_metadata$external_id[1:5]
+```
+
+
+```{r}
+ids<- str_replace_all(colnames(liver_gtex_counts), "[[:punct:]]", "-") 
+meta_data_ids<- str_replace_all(liver_gtex_metadata$external_id, "[[:punct:]]", "-")
+```
+
+```{r}
+identical(ids[order(ids)], meta_data_ids[order(meta_data_ids)])
+```
+
+```{r}
+liver_gtex_counts_order <- liver_gtex_counts[,order(ids)]
+liver_gtex_metadata_order<- liver_gtex_metadata[order(meta_data_ids), ]
+```
+
+```{r}
+colnames(liver_gtex_counts_order )<- liver_gtex_metadata_order$external_id
+```
+
+```{r}
+recount3_count_liver <- as.data.frame(liver_gtex_counts_order)
+```
+
+```{r eval =FALSE}
+saveRDS(recount3_count_liver,  "/home/rstudio/data/liver_gtex_count_ordered.rds")
+saveRDS(liver_gtex_metadata_order,  "/home/rstudio/data/liver_gtex_metadata_ordered.rds")
+```
+
+
 
 ```{r}
 library(DESeq2)
 #colData(recount3_rse_PANCREAS)
-counts_liver <- assay(recount3_rse_liver)
 #counts_liver[is.na(counts_liver)] <- 0
 #sample has very high counts; removed for vst transformation
-counts_liver  <- counts_liver[,!colnames(counts_liver ) == "GTEX-WK11-1326-SM-4OOSI.1"]
+counts_liver  <- recount3_count_liver [,!colnames(recount3_count_liver ) == "GTEX-WK11-1326-SM-4OOSI.1"]
 
 vst_table <- vst(as.matrix(counts_liver))
 
@@ -254,74 +363,103 @@ pca.tumor <- prcomp(t(vst_table))
 summary(pca.tumor)
 ```
 
+```{r}
+liver_gtex_metadata_order_v2<- liver_gtex_metadata_order[! liver_gtex_metadata_order$external_id == "GTEX-WK11-1326-SM-4OOSI.1",]
+```
 
 
 ```{r}
-sex<- rownames(recount3_rse_liver@colData)[recount3_rse_liver$gtex.sex == "2"]
+sex<- liver_gtex_metadata_order_v2$external_id[liver_gtex_metadata_order_v2$SEX== "2"]
 sex<- sex[!is.na(sex)]
-sex<- sex[!colnames(counts_liver ) == "GTEX-WK11-1326-SM-4OOSI.1"]
-normal_ids<-  rownames(recount3_rse_liver@colData)[rownames(recount3_rse_liver@colData) %in% sex]
 
-tumor_norm <- ifelse( rownames(recount3_rse_liver@colData) %in% normal_ids, "red", "black")
+tumor_norm <- ifelse( liver_gtex_metadata_order_v2$external_id%in% sex, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GTEx Liver", xlab = "PC1 (19.09%)", ylab = "PC2 (8.92%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c("female", "male/normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 
 ```{r}
-sex<- rownames(recount3_rse_liver@colData)[recount3_rse_liver@colData$gtex.age ==  "70-79"]
-sex<- sex[!is.na(sex)]
-sex<- sex[!colnames(counts_liver ) == "GTEX-WK11-1326-SM-4OOSI.1"]
-normal_ids<-  rownames(recount3_rse_liver@colData)[rownames(recount3_rse_liver@colData) %in% sex]
+age<- liver_gtex_metadata_order_v2$external_id[liver_gtex_metadata_order_v2$AGE ==  "70-79"]
+age<- age[!is.na(age)]
 
-tumor_norm <- ifelse( rownames(recount3_rse_liver@colData) %in% normal_ids, "red", "black")
+
+tumor_norm <- ifelse( liver_gtex_metadata_order_v2$external_id %in% age, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GTEx Liver",  xlab = "PC1 (19.09%)", ylab = "PC2 (8.92%)", cex.axis = "1.5", cex.lab = "1.5")
-legend("topleft", legend = c("70-79", "other"), pch = 21, pt.bg = c("red", "black"), col = "black")
+legend("topleft", legend = c("70-79", "! 70-79"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 ```{r}
-sex<- rownames(recount3_rse_liver@colData)[recount3_rse_liver@colData$gtex.age ==  "20-29"]
-sex<- sex[!is.na(sex)]
-sex<- sex[!colnames(counts_liver ) == "GTEX-WK11-1326-SM-4OOSI.1"]
-normal_ids<-  rownames(recount3_rse_liver@colData)[rownames(recount3_rse_liver@colData) %in% sex]
+age<- liver_gtex_metadata_order_v2$external_id[liver_gtex_metadata_order_v2$AGE==  "20-29"]
+age<- age[!is.na(age)]
 
-tumor_norm <- ifelse( rownames(recount3_rse_liver@colData) %in% normal_ids, "red", "black")
+tumor_norm <- ifelse( liver_gtex_metadata_order_v2$external_id %in% age, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GTEx Liver", xlab = "PC1 (19.09%)", ylab = "PC2 (8.92%)", cex.axis = "1.5", cex.lab = "1.5")
-legend("topleft", legend = c("20-29", "others"), pch = 21, pt.bg = c("red", "black"), col = "black")
+legend("topleft", legend = c("20-29", "! 20-29"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 looking at the RIN score
 ```{r}
-sex<- rownames(recount3_rse_liver@colData)[recount3_rse_liver@colData$gtex.smrin >= 7]
-sex<- sex[!is.na(sex)]
-sex<- sex[!colnames(counts_liver ) == "GTEX-WK11-1326-SM-4OOSI.1"]
-normal_ids<-  rownames(recount3_rse_liver@colData)[rownames( recount3_rse_liver@colData) %in% sex]
+rin<- liver_gtex_metadata_order_v2$external_id[liver_gtex_metadata_order_v2$SMRIN >= 7]
+rin<- rin[!is.na(rin)]
 
-tumor_norm <- ifelse( rownames(recount3_rse_liver@colData) %in% normal_ids, "red", "black")
+
+tumor_norm <- ifelse( liver_gtex_metadata_order_v2$external_id %in% rin, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GTEx Liver",xlab = "PC1 (19.09%)", ylab = "PC2 (8.92%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c(">= 7", "< 7"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
-SMTSISCH- indicates the minutes of ischmia time
+SMTSISCH- indicates the minutes of ischemia time
 ```{r}
-sex<- rownames(recount3_rse_liver@colData)[recount3_rse_liver@colData$gtex.smtsisch>= 500]
-sex<- sex[!is.na(sex)]
-sex<- sex[!colnames(counts_liver ) == "GTEX-WK11-1326-SM-4OOSI.1"]
-normal_ids<-  rownames(recount3_rse_liver@colData)[rownames(recount3_rse_liver@colData) %in% sex]
+time<- liver_gtex_metadata_order_v2$external_id[liver_gtex_metadata_order_v2$SMTSISCH >= 500]
+time<- time[!is.na(time)]
 
-tumor_norm <- ifelse( rownames(recount3_rse_liver@colData) %in% normal_ids, "red", "black")
+tumor_norm <- ifelse( liver_gtex_metadata_order_v2$external_id %in% time, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GTEx Liver", xlab = "PC1 (19.09%)", ylab = "PC2 (8.92%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("bottomleft", legend = c(">= 500", "< 500"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
-```{r }
-#SRP118922
-recount3_rse_LIHC <- create_rse(human_projects[(human_projects$project == "LIHC"),])
+
+
+LIHC tumor samples 
+```{r}
+lihc_tcga_metadata <- readRDS("~/data/recount3/recount3_fix_download/lihc_tcga_metadata.rds")
+lihc_tcga_counts <- readRDS("~/data/recount3/recount3_fix_download/lihc_tcga_counts.rds")
+```
+
+check counts and metadata info
+```{r}
+dim(lihc_tcga_counts)
+dim(lihc_tcga_metadata)
 ```
 
 ```{r}
-library(DESeq2)
-#colData(recount3_rse_PANCREAS)
-counts_liver <- assay(recount3_rse_LIHC)
-#counts_liver[is.na(counts_liver)] <- 0
-#something odd with the integer conversion at these two locations in this sample everything else is
-#counts_liver[ c(60905, 60917), colnames(counts_liver)== "GTEX-WK11-1326-SM-4OOSI.1"] <- c(2727483904,2475008286 )
-#counts_liver<- counts_liver[!rowSums( counts_liver) == 0, ]
+nchar(colnames(lihc_tcga_counts)[1])
+```
+
+
+```{r}
+ids<- substrRight(colnames(lihc_tcga_counts), 36)
+ids<- str_replace_all(ids, "[[:punct:]]", "-")
+```
+
+```{r}
+colnames(lihc_tcga_counts) <- ids
+lihc_tcga_counts_order <- lihc_tcga_counts[,order(ids)]
+lihc_tcga_metadata_order<- lihc_tcga_metadata[order(lihc_tcga_metadata$external_id), ]
+```
+
+```{r}
+identical(colnames(lihc_tcga_counts_order), lihc_tcga_metadata_order$external_id)
+```
+
+```{r}
+colnames(lihc_tcga_counts_order)<- lihc_tcga_metadata_order$tcga_barcode
+```
+
+```{r eval =FALSE}
+saveRDS(lihc_tcga_counts_order,  "/home/rstudio/data/lihc_tcga_count_ordered.rds")
+saveRDS(lihc_tcga_metadata_order,  "/home/rstudio/data/lihc_tcga_metadata_ordered.rds")
+```
+
+
+
+```{r}
+counts_liver <- lihc_tcga_counts_order
 
 vst_table <- vst(as.matrix(counts_liver))
 
@@ -336,42 +474,73 @@ summary(pca.tumor)
 
 ```{r}
 #recount3_rse_LIHC@colData
-nt <- rownames(recount3_rse_LIHC@colData)[recount3_rse_LIHC@colData$tcga.cgc_sample_sample_type == "Solid Tissue Normal"] 
-normal_ids<- rownames(recount3_rse_LIHC@colData)[rownames(recount3_rse_LIHC@colData) %in% nt]
+nt <- lihc_tcga_metadata_order$tcga_barcode[lihc_tcga_metadata_order$cgc_sample_sample_type == "Solid Tissue Normal"] 
 
-tumor_norm <- ifelse(rownames(recount3_rse_LIHC@colData) %in% normal_ids, "black", "red")
+tumor_norm <- ifelse(lihc_tcga_metadata_order$tcga_barcode %in% nt, "black", "red")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of LIHC", xlab = "PC1 (11.24%)", ylab = "PC2 (9.38%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c("tumor", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 
 ```{r}
 #recount3_rse_LIHC@colData
-nt <- rownames(recount3_rse_LIHC@colData)[recount3_rse_LIHC@colData$tcga.xml_days_to_birth < -20000] 
-normal_ids<- rownames(recount3_rse_LIHC@colData)[rownames(recount3_rse_LIHC@colData) %in% nt]
+nt <- lihc_tcga_metadata_order$tcga_barcode[lihc_tcga_metadata_order$xml_days_to_birth < -20000] 
 
-tumor_norm <- ifelse(rownames(recount3_rse_LIHC@colData) %in% normal_ids, "black", "red")
+tumor_norm <- ifelse(lihc_tcga_metadata_order$tcga_barcode %in% nt, "black", "red")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of LIHC", xlab = "PC1 (11.24%)", ylab = "PC2 (9.38%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c(">-2000 day until birth", ">-2000 day until birth"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 
 
 lung cancer 
+import the lung data 
 
-```{r }
-#SRP118922
-recount3_rse_lung<- create_rse(human_projects[(human_projects$project == "LUNG"),])
+
+```{r}
+lung_gtex_counts <- readRDS("~/data/recount3/recount3_fix_download/lung_gtex_counts.rds")
+lung_gtex_metadata <- readRDS("~/data/recount3/recount3_fix_download/lung_gtex_metadata.rds")
+```
+
+
+```{r}
+colnames(lung_gtex_counts)[1:5]
+lung_gtex_metadata$external_id[1:5]
+```
+
+
+```{r}
+ids<- str_replace_all(colnames(lung_gtex_counts), "[[:punct:]]", "-") 
+meta_data_ids<- str_replace_all(lung_gtex_metadata$external_id, "[[:punct:]]", "-")
 ```
 
 ```{r}
-library(DESeq2)
-#colData(recount3_rse_PANCREAS)
-counts_liver <- assay(recount3_rse_lung)
-#counts_liver[is.na(counts_liver)] <- 0
-#something odd with the integer conversion at these two locations in this sample everything else is
-#counts_liver[ c(60905, 60917), colnames(counts_liver)== "GTEX-WK11-1326-SM-4OOSI.1"] <- c(2727483904,2475008286 )
-#counts_liver<- counts_liver[!rowSums( counts_liver) == 0, ]
+identical(ids[order(ids)], meta_data_ids[order(meta_data_ids)])
+```
 
-vst_table <- vst(as.matrix(counts_liver))
+```{r}
+lung_gtex_counts_order <- lung_gtex_counts[,order(ids)]
+lung_gtex_metadata_order<- lung_gtex_metadata[order(meta_data_ids), ]
+```
+
+```{r}
+colnames(lung_gtex_counts_order )<- lung_gtex_metadata_order$external_id
+```
+
+```{r}
+recount3_count_lung <- as.data.frame(lung_gtex_counts_order)
+```
+
+```{r eval =FALSE}
+saveRDS(recount3_count_lung,  "/home/rstudio/data/lung_gtex_count_ordered.rds")
+saveRDS(lung_gtex_metadata_order,  "/home/rstudio/data/lung_gtex_metadata_ordered.rds")
+```
+
+
+
+```{r}
+
+counts_lung <- recount3_count_lung
+
+vst_table <- vst(as.matrix(counts_lung))
 
 vst_table_df <- t(vst_table)
 pca.tumor <- prcomp(vst_table_df)
@@ -391,71 +560,95 @@ y[,1:10]
 
 
 ```{r}
-sex<- rownames(recount3_rse_lung@colData)[recount3_rse_lung$gtex.sex == "2"]
+sex<- lung_gtex_metadata_order$external_id[lung_gtex_metadata_order$SEX == "2"]
 sex<- sex[!is.na(sex)]
-normal_ids<-  rownames(recount3_rse_lung@colData)[rownames(recount3_rse_lung@colData) %in% sex]
 
-tumor_norm <- ifelse( rownames(recount3_rse_lung@colData) %in% normal_ids, "red", "black")
+tumor_norm <- ifelse( lung_gtex_metadata_order$external_id %in% sex, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GTEx Lung", xlab = "PC1 (14.496%)", ylab = "PC2 (8.195%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c("female", "male/normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 
 ```{r}
-sex<- rownames(recount3_rse_lung@colData)[recount3_rse_lung@colData$gtex.age ==  "70-79"]
-sex<- sex[!is.na(sex)]
-normal_ids<-  rownames(recount3_rse_lung@colData)[rownames(recount3_rse_lung@colData) %in% sex]
+age<- lung_gtex_metadata_order$external_id[lung_gtex_metadata_order$AGE ==  "70-79"]
+age<- sex[!is.na(age)]
 
-tumor_norm <- ifelse( rownames(recount3_rse_lung@colData) %in% normal_ids, "red", "black")
+tumor_norm <- ifelse( lung_gtex_metadata_order$external_id %in% age, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  ,  main = "PCA of GTEx Lung", xlab = "PC1 (14.496%)", ylab = "PC2 (8.195%)", cex.axis = "1.5", cex.lab = "1.5")
-legend("topleft", legend = c(">39", "<= 39"), pch = 21, pt.bg = c("red", "black"), col = "black")
+legend("topleft", legend = c("70-79", "!70-79"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 
 ```{r}
-sex<- rownames(recount3_rse_lung@colData)[recount3_rse_lung@colData$gtex.age ==  "20-29"]
-sex<- sex[!is.na(sex)]
-normal_ids<-  rownames(recount3_rse_lung@colData)[rownames(recount3_rse_lung@colData) %in% sex]
+age<- lung_gtex_metadata_order$external_id[lung_gtex_metadata_order$AGE==  "20-29"]
+age<- age[!is.na(age)]
 
-tumor_norm <- ifelse( rownames(recount3_rse_lung@colData) %in% normal_ids, "red", "black")
+tumor_norm <- ifelse( lung_gtex_metadata_order$external_id %in% age, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  ,  main = "PCA of GTEx Lung", xlab = "PC1 (14.496%)", ylab = "PC2 (8.195%)", cex.axis = "1.5", cex.lab = "1.5")
-legend("topleft", legend = c(">39", "<= 39"), pch = 21, pt.bg = c("red", "black"), col = "black")
+legend("topleft", legend = c("20-29", "! 20-29"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 
 ```{r}
-sex<- rownames(recount3_rse_lung@colData)[recount3_rse_lung@colData$gtex.smrin >= 7]
-sex<- sex[!is.na(sex)]
-normal_ids<-  rownames(recount3_rse_lung@colData)[rownames( recount3_rse_lung@colData) %in% sex]
+rin<- lung_gtex_metadata_order$external_id[lung_gtex_metadata_order$SMRIN >= 7]
+rin<- rin[!is.na(rin)]
 
-tumor_norm <- ifelse( rownames(recount3_rse_lung@colData) %in% normal_ids, "red", "black")
+tumor_norm <- ifelse( lung_gtex_metadata_order$external_id %in% rin, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  ,  main = "PCA of GTEx Lung", xlab = "PC1 (14.496%)", ylab = "PC2 (8.195%)",cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c(">= 7", "< 7"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 SMTSISCH
 ```{r}
-sex<- rownames(recount3_rse_lung@colData)[recount3_rse_lung@colData$gtex.smtsisch>= 500]
-sex<- sex[!is.na(sex)]
-normal_ids<-  rownames(recount3_rse_lung@colData)[rownames(recount3_rse_lung@colData) %in% sex]
+time<- lung_gtex_metadata_order$external_id[lung_gtex_metadata_order$SMTSISCH >= 500]
+time<- time[!is.na(time)]
 
-tumor_norm <- ifelse( rownames(recount3_rse_lung@colData) %in% normal_ids, "red", "black")
+tumor_norm <- ifelse( lung_gtex_metadata_order$external_id %in% time, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  ,  main = "PCA of GTEx Lung", xlab = "PC1 (14.496%)", ylab = "PC2 (8.195%)",cex.axis = "1.5", cex.lab = "1.5")
 legend("bottomleft", legend = c(">= 500", "< 500"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 
+LAUD
 
-```{r }
-#SRP118922
-recount3_rse_LUAD<- create_rse(human_projects[(human_projects$project == "LUAD"),])
+```{r}
+luad_tcga_metadata <- readRDS("~/data/recount3/recount3_fix_download/luad_tcga_metadata.rds")
+luad_tcga_counts <- readRDS("~/data/recount3/recount3_fix_download/luad_tcga_counts.rds")
+```
+
+check counts and metadata info
+```{r}
+dim(luad_tcga_counts)
+dim(luad_tcga_metadata)
 ```
 
 ```{r}
-library(DESeq2)
-#colData(recount3_rse_PANCREAS)
-counts_liver <- assay(recount3_rse_LUAD)
-#counts_liver[is.na(counts_liver)] <- 0
-#something odd with the integer conversion at these two locations in this sample everything else is
-#counts_liver[ c(60905, 60917), colnames(counts_liver)== "GTEX-WK11-1326-SM-4OOSI.1"] <- c(2727483904,2475008286 )
-#counts_liver<- counts_liver[!rowSums( counts_liver) == 0, ]
+nchar(colnames(luad_tcga_counts)[1])
+```
 
-vst_table <- vst(as.matrix(counts_liver))
+
+```{r}
+ids<- substrRight(colnames(luad_tcga_counts), 36)
+ids<- str_replace_all(ids, "[[:punct:]]", "-")
+```
+
+```{r}
+colnames(luad_tcga_counts) <- ids
+luad_tcga_counts_order <- luad_tcga_counts[,order(ids)]
+luad_tcga_metadata_order<- luad_tcga_metadata[order(luad_tcga_metadata$external_id), ]
+```
+
+```{r}
+identical(colnames(luad_tcga_counts_order), luad_tcga_metadata_order$external_id)
+```
+
+```{r}
+colnames(luad_tcga_counts_order)<- luad_tcga_metadata_order$tcga_barcode
+```
+
+```{r eval =FALSE}
+saveRDS(luad_tcga_counts_order,  "/home/rstudio/data/luad_tcga_count_ordered.rds")
+saveRDS(luad_tcga_metadata_order,  "/home/rstudio/data/luad_tcga_metadata_ordered.rds")
+```
+
+
+```{r}
+vst_table <- vst(as.matrix(luad_tcga_counts_order))
 
 vst_table_df <- t(vst_table)
 pca.tumor <- prcomp(vst_table_df)
@@ -474,20 +667,19 @@ y[,1:10]
 
 ```{r}
 #recount3_rse_LIHC@colData
-nt <- rownames(recount3_rse_LUAD@colData)[recount3_rse_LUAD@colData$tcga.cgc_sample_sample_type == "Solid Tissue Normal"] 
-normal_ids<- rownames(recount3_rse_LUAD@colData)[rownames(recount3_rse_LUAD@colData) %in% nt]
+nt <- luad_tcga_metadata_order$tcga_barcode[luad_tcga_metadata_order$cgc_sample_sample_type == "Solid Tissue Normal"] 
 
-tumor_norm <- ifelse(rownames(recount3_rse_LUAD@colData) %in% normal_ids, "black", "red")
+tumor_norm <- ifelse(luad_tcga_metadata_order$tcga_barcode%in% nt, "black", "red")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of LUAD", xlab = "PC1 (11.42%)", ylab = "PC2 (9.414%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c("tumor", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 
 ```{r}
 #recount3_rse_LIHC@colData
-nt <- rownames(recount3_rse_LUAD@colData)[recount3_rse_LUAD@colData$tcga.cgc_case_gender == "FEMALE"] 
-normal_ids<- rownames(recount3_rse_LUAD@colData)[rownames(recount3_rse_LUAD@colData) %in% nt]
+sex <- luad_tcga_metadata_order$tcga_barcode[luad_tcga_metadata_order$cgc_case_gender == "FEMALE"] 
 
-tumor_norm <- ifelse(rownames(recount3_rse_LUAD@colData) %in% normal_ids, "black", "red")
+
+tumor_norm <- ifelse(luad_tcga_metadata_order$tcga_barcode %in% sex, "black", "red")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of LUAD", xlab = "PC1 (11.24%)", ylab = "PC2 (9.38%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c("male", "female"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
@@ -495,10 +687,10 @@ legend("topleft", legend = c("male", "female"), pch = 21, pt.bg = c("red", "blac
 
 ```{r}
 #recount3_rse_LIHC@colData
-nt <- rownames(recount3_rse_LUAD@colData)[recount3_rse_LUAD@colData$tcga.xml_days_to_birth < -20000] 
-normal_ids<- rownames(recount3_rse_LUAD@colData)[rownames(recount3_rse_LUAD@colData) %in% nt]
+age <- luad_tcga_metadata_order$tcga_barcode[luad_tcga_metadata_order$xml_days_to_birth < -20000] 
 
-tumor_norm <- ifelse(rownames(recount3_rse_LUAD@colData) %in% normal_ids, "black", "red")
+
+tumor_norm <- ifelse(luad_tcga_metadata_order$tcga_barcode %in% age, "black", "red")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of LUAD", xlab = "PC1 (11.24%)", ylab = "PC2 (9.38%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c(">-2000 day until birth", ">-2000 day until birth"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
@@ -506,8 +698,8 @@ legend("topleft", legend = c(">-2000 day until birth", ">-2000 day until birth")
 
 ```{r}
 list <- names(pca.tumor$x[, 2] )[pca.tumor$x[, 2] > 50]
-metadata <- as.data.frame(recount3_rse_LUAD@colData)
-metadata_test <- metadata[rownames(metadata) %in% list, ]
+metadata <- as.data.frame(luad_tcga_metadata_order)
+metadata_test <- metadata[luad_tcga_metadata_order$tcga_barcode %in% list, ]
 ```
 
 I don' see a reason for the PC2 in the metadata

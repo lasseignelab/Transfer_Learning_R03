@@ -69,29 +69,14 @@ source("/home/rstudio/script/test_LV_differences.R")
 ```
 
 ```{r}
-count_table<- readRDS( "~/data/recount3_GBM_GTEx_BRAIN_raw_counts.rds")
 all_metadata<- readRDS("~/data/recount3_GBM_GTEx_BRAIN_metadata.rds")
 ```
 
 normalize count data by tpm
 
-get the gene lengths from recount3 
 ```{r}
-human_projects<- available_projects()
-recount3_rse_BRIAN <- create_rse(human_projects[(human_projects$project == "BRAIN"),])
-gene_info <- as.data.frame(recount3_rse_BRIAN@rowRanges)
-```
-check to make sure things line up 
-```{r}
-identical(gene_info$gene_id, rownames(count_table))
-```
-
-```{r}
-tpm_table<- Counts_to_tpm(count_table, gene_info$bp_length)
-```
-
-```{r}
-rownames(tpm_table)<- gene_info$gene_name
+feature_info <- readRDS("~/data/recount3/recount3_fix_download/feature_info.rds")
+tpm_table<- readRDS("~/output/recount3_gbm_gtex_tpm_df.rds")
 ```
 
 ```{r}
@@ -101,11 +86,6 @@ tpm_df <- as.data.frame(tpm_table)
 ### Analysis
 
 ## limma analysis 
-
-```{r}
-rm(count_table, recount3_rse_BRIAN)
-gc()
-```
 
 transfrom TPM for limma differential gene expression
 ```{r}
@@ -120,7 +100,9 @@ colnames(sampleinfo) <- c("Sample", "Tumor","database")
 sampleinfo<- as.data.frame(sampleinfo)
 database<- all_metadata$database
 names(database)<- colnames(tpm_df)
+```
 
+```{r eval= FALSE}
 limma_gene_TCGA_BH <- LVTestWrapperJLF_v2(b.matrix=TPM , sample.info.df= sampleinfo, phenotype.col= "Tumor", blocking= database, file.lead= "220421_limma_TCGA_GTEX_T_vs_NT", plot.dir= "~/output/limma_gbm/", results.dir= "~/output/limma_gbm/", use.bonferroni= FALSE, sig.threshold = 0.05)
 ```
 

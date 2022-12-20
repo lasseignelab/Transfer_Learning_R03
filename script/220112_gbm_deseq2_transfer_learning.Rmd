@@ -51,6 +51,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(recount3)
 library(SummarizedExperiment)
 library(dplyr)
+library(stringr)
 ```
 load in function scripts 
 ```{r}
@@ -59,15 +60,52 @@ source("/home/rstudio/script/plier_util.R")
 source("/home/rstudio/script/test_LV_differences.R")
 ```
 
-
-Download GBM dataset: make raw count and metadata table
-```{r }
-human_projects<- available_projects()
+```{r}
+gbm_tcga_counts <- readRDS("~/data/recount3/recount3_fix_download/gbm_tcga_counts.rds")
+brain_gtex_counts <- readRDS("~/data/recount3/recount3_fix_download/brain_gtex_counts.rds")
+feature_info <- readRDS("~/data/recount3/recount3_fix_download/feature_info.rds")
+gbm_tcga_metadata <- readRDS("~/data/recount3/recount3_fix_download/gbm_tcga_metadata.rds")
+brain_gtex_metadata <- readRDS("~/data/recount3/recount3_fix_download/brain_gtex_metadata.rds")
 ```
 
-```{r }
-recount3_rse_GBM <- create_rse(human_projects[(human_projects$project == "GBM"),])
+check counts and metadata info
+```{r}
+dim(gbm_tcga_counts)
+dim(gbm_tcga_metadata)
 ```
+
+```{r}
+nchar(colnames(gbm_tcga_counts)[1])
+nchar(colnames(gbm_tcga_counts))
+gbm_tcga_counts
+```
+```{r}
+#https://stackoverflow.com/questions/7963898/extracting-the-last-n-characters-from-a-string-in-r
+substrRight <- function(x, n){
+  substr(x, nchar(x)-n+1, nchar(x))
+}
+```
+
+```{r}
+ids<- substrRight(colnames(gbm_tcga_counts), 36)
+ids<- str_replace_all(ids, "[[:punct:]]", "-")
+```
+
+```{r}
+colnames(gbm_tcga_counts) <- ids
+gbm_tcga_counts_order <- gbm_tcga_counts[,order(ids)]
+gbm_tcga_metadata_order<- gbm_tcga_metadata[order(gbm_tcga_metadata$external_id), ]
+```
+
+```{r}
+identical(colnames(gbm_tcga_counts_order), gbm_tcga_metadata_order$external_id)
+```
+
+```{r}
+colnames(gbm_tcga_counts_order)<- gbm_tcga_metadata_order$tcga_barcode
+```
+
+
 tcgabiolinks download done by Avery Williams 
 ```{r}
 load("/home/rstudio/data/TCGA_GBM_GeneExpression_TCGABIOlinks.rda")
@@ -95,31 +133,40 @@ nt<- metadata_gbm$barcode[ metadata_gbm$sample_type == "Solid Tissue Normal"]
 IDS<- c(IDS, nt)
 ```
 
-```{r}
-recount_metadata<- colData(recount3_rse_GBM)
-recount_metadata<- as.data.frame(recount_metadata)
-```
+
 
 ```{r}
-recount_1ds<- rownames(recount_metadata)[recount_metadata$tcga.tcga_barcode %in% IDS]
-```
-
-```{r}
-recount3_count_GBM <- as.data.frame(assay(recount3_rse_GBM))
-```
-
-```{r}
-recount3_count_GBM<- recount3_count_GBM[,colnames(recount3_count_GBM) %in% recount_1ds]
+recount3_count_GBM<- gbm_tcga_counts_order[,colnames(gbm_tcga_counts_order) %in% IDS]
 ```
 
 Download GTEx Brain dataset: make raw count and metadata table
+
 ```{r}
-recount3_rse_BRIAN <- create_rse(human_projects[(human_projects$project == "BRAIN"),])
+colnames(brain_gtex_counts)[1:5]
+brain_gtex_metadata$external_id[1:5]
+```
+
+
+```{r}
+ids<- str_replace_all(colnames(brain_gtex_counts), "[[:punct:]]", "-") 
+meta_data_ids<- str_replace_all(brain_gtex_metadata$external_id, "[[:punct:]]", "-")
 ```
 
 ```{r}
-recount3_count_brain<- assay(recount3_rse_BRIAN)
-recount3_count_brain <- as.data.frame(recount3_count_brain)
+identical(ids[order(ids)], meta_data_ids[order(meta_data_ids)])
+```
+
+```{r}
+brain_gtex_counts_order <- brain_gtex_counts[,order(ids)]
+brain_gtex_metadata_order<- brain_gtex_metadata[order(meta_data_ids), ]
+```
+
+```{r}
+colnames(brain_gtex_counts_order )<- brain_gtex_metadata_order$external_id
+```
+
+```{r}
+recount3_count_brain <- as.data.frame(brain_gtex_counts_order)
 ```
 
 
@@ -140,19 +187,20 @@ summary(pca.tumor)
 ```
 
 ```{r}
-normal_ids<- rownames(recount_metadata)[recount_metadata$tcga.tcga_barcode %in% nt]
+recount_metadata<- gbm_tcga_metadata_order
+#normal_ids<- rownames(recount_metadata)[recount_metadata$tcga_barcode %in% nt]
 
-tumor_norm <- ifelse(colnames(recount3_count_GBM) %in% normal_ids, "black", "red")
-plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GBM", xlab = "PC1 (15.06%)", ylab = "PC2 (8.22%)", cex.axis = "1.5", cex.lab = "1.5")
+tumor_norm <- ifelse(colnames(recount3_count_GBM) %in% nt, "black", "red")
+plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GBM", xlab = "PC1 (15.01%)", ylab = "PC2 (8.20%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c("tumor", "normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
 
 ```{r}
 sex<- metadata_gbm$barcode[metadata_gbm$gender == "female"]
 sex<- sex[!is.na(sex)]
-normal_ids<- rownames(recount_metadata)[recount_metadata$tcga.tcga_barcode %in% sex]
+#normal_ids<- rownames(recount_metadata)[recount_metadata$tcga.tcga_barcode %in% sex]
 
-tumor_norm <- ifelse(colnames(recount3_count_GBM) %in% normal_ids, "red", "black")
+tumor_norm <- ifelse(colnames(recount3_count_GBM) %in% sex, "red", "black")
 plot(pca.tumor$x[, 1], pca.tumor$x[, 2], pch = 20, col = tumor_norm  , main = "PCA of GBM", xlab = "PC1 (15.06%)", ylab = "PC2 (8.22%)", cex.axis = "1.5", cex.lab = "1.5")
 legend("topleft", legend = c("female", "male/normal"), pch = 21, pt.bg = c("red", "black"), col = "black")
 ```
@@ -186,26 +234,26 @@ group_samples<- names(pca.brain$x[,1])[pca.brain$x[,1] >40]
 ```
 
 ```{r}
-metadata_gtex<- as.data.frame(colData(recount3_rse_BRIAN))
+metadata_gtex<- brain_gtex_metadata_order
 
-metadata_gtex_pca1 <- metadata_gtex[rownames(metadata_gtex) %in% group_samples,]
-metadata_gtex_pca1.2 <- metadata_gtex[!rownames(metadata_gtex) %in% group_samples,]
+metadata_gtex_pca1 <- metadata_gtex[metadata_gtex$external_id %in% group_samples,]
+metadata_gtex_pca1.2 <- metadata_gtex[! metadata_gtex$external_id  %in% group_samples,]
 ```
 
 ```{r}
-table(metadata_gtex_pca1$gtex.smtsd)
+table(metadata_gtex_pca1$SMTSD)
 ```
 
 ```{r}
-table(metadata_gtex_pca1.2$gtex.smtsd)
+table(metadata_gtex_pca1.2$SMTSD)
 ```
 
 ```{r}
-table(metadata_gtex_pca1$gtex.sex)
+table(metadata_gtex_pca1$SEX)
 ```
 
 ```{r}
-table(metadata_gtex_pca1.2$gtex.sex)
+table(metadata_gtex_pca1.2$SEX)
 ```
 
 note that brain structures are a major influence in the PCA, but I can not control this in DESeq2 or limma models because I don't have this information in TCGA GBM samples
@@ -218,10 +266,11 @@ only covariate at this point is GTex vs TCGA databases
 create metadata for DESeq2 - database, tumor/normal, subtype, sex
 ```{r}
 #order the tcga data to match recount3 order
+rownames(recount_metadata)<- recount_metadata$tcga_barcode
 recount3_ids <- colnames(recount3_count_GBM)
 recount_metadata_sub <- recount_metadata[rownames(recount_metadata) %in% recount3_ids,]
 identical(rownames(recount_metadata_sub),recount3_ids)
-ids <- recount_metadata_sub$tcga.tcga_barcode 
+ids <- recount_metadata_sub$tcga_barcode
 
 nam <- 
 status<- c()
@@ -231,7 +280,7 @@ for (i in 1:length(ids)){
   
 nam[i]<- ids[i]
 #create tumor/normal col
-status[i] <-metadata_gbm$sample_type[metadata_gbm$barcode == ids[i]]
+status[i] <-metadata_gbm$sample_type[metadata_gbm$barcode== ids[i]]
 #create subtype col
 subtype[i] <-as.character(metadata_gbm$paper_Transcriptome.Subtype[metadata_gbm$barcode == ids[i]])
 subtype[i]<- ifelse(is.na(subtype[i]), "NA", subtype[i])
@@ -256,11 +305,11 @@ table(tcga_gbm_metadata$sex)
 create metadata for GTEx
 ```{r}
 #order the metadata to match recount3 order
-
+rownames(metadata_gtex)<- metadata_gtex$external_id
 #create sex col 
 identical (rownames(metadata_gtex), colnames( recount3_count_brain))
 nam<- metadata_gtex$external_id
-sex<- ifelse(metadata_gtex$gtex.sex == 1, "male", "female")
+sex<- ifelse(metadata_gtex$SEX == 1, "male", "female")
 #create database col
 database<- rep ("GTEx",2931 )
 #create normal col
@@ -393,26 +442,23 @@ deseq2_gbm_normal
 normalize count data by tpm
 
 get gene lengths
-```{r}
-gene_info <- as.data.frame(recount3_rse_BRIAN@rowRanges)
-```
+
 check to make sure things line up 
 ```{r}
-identical(gene_info$gene_id, rownames(count_table))
+identical(feature_info$gene_id, rownames(count_table))
 ```
 
 ```{r}
-tpm_table<- Counts_to_tpm(count_table, gene_info$bp_length)
+tpm_table<- Counts_to_tpm(count_table, feature_info$bp_length)
 ```
 
 ```{r}
-rownames(tpm_table)<- gene_info$gene_name
+rownames(tpm_table)<- feature_info$gene_name
 ```
 
 
 ```{r eval=FALSE}
 saveRDS(tpm_table, "~/output/recount3_gbm_gtex_tpm_df.rds")
-saveRDS(all_metadata, "~/output/recount3_gbm_gtex_metadata.rds")
 ```
 
 

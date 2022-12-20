@@ -572,31 +572,10 @@ library(gprofiler2)</code></pre>
 <pre class="r"><code>source(&quot;/home/rstudio/script/functions_cancer_signature_reversion_JLF.R&quot;)
 source(&quot;/home/rstudio/script/plier_util.R&quot;)
 source(&quot;/home/rstudio/script/test_LV_differences.R&quot;)</code></pre>
-<pre class="r"><code>count_table&lt;- readRDS( &quot;~/data/recount3_GBM_GTEx_BRAIN_raw_counts.rds&quot;)
-all_metadata&lt;- readRDS(&quot;~/data/recount3_GBM_GTEx_BRAIN_metadata.rds&quot;)</code></pre>
+<pre class="r"><code>all_metadata&lt;- readRDS(&quot;~/data/recount3_GBM_GTEx_BRAIN_metadata.rds&quot;)</code></pre>
 <p>normalize count data by tpm</p>
-<p>get the gene lengths from recount3</p>
-<pre class="r"><code>human_projects&lt;- available_projects()</code></pre>
-<pre><code>## 2022-10-06 19:47:18 caching file sra.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 19:47:25 caching file gtex.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 19:47:26 caching file tcga.recount_project.MD.gz.</code></pre>
-<pre class="r"><code>recount3_rse_BRIAN &lt;- create_rse(human_projects[(human_projects$project == &quot;BRAIN&quot;),])</code></pre>
-<pre><code>## 2022-10-06 19:47:32 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-10-06 19:47:32 caching file gtex.gtex.BRAIN.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 19:47:34 caching file gtex.recount_project.BRAIN.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 19:47:35 caching file gtex.recount_qc.BRAIN.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 19:47:36 caching file gtex.recount_seq_qc.BRAIN.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 19:47:39 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-10-06 19:47:40 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-10-06 19:47:42 downloading and reading the counts: 2931 samples across 63856 features.</code></pre>
-<pre><code>## 2022-10-06 19:47:43 caching file gtex.gene_sums.BRAIN.G026.gz.</code></pre>
-<pre><code>## 2022-10-06 19:48:08 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
-<pre class="r"><code>gene_info &lt;- as.data.frame(recount3_rse_BRIAN@rowRanges)</code></pre>
-<p>check to make sure things line up</p>
-<pre class="r"><code>identical(gene_info$gene_id, rownames(count_table))</code></pre>
-<pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code>tpm_table&lt;- Counts_to_tpm(count_table, gene_info$bp_length)</code></pre>
-<pre class="r"><code>rownames(tpm_table)&lt;- gene_info$gene_name</code></pre>
+<pre class="r"><code>feature_info &lt;- readRDS(&quot;~/data/recount3/recount3_fix_download/feature_info.rds&quot;)
+tpm_table&lt;- readRDS(&quot;~/output/recount3_gbm_gtex_tpm_df.rds&quot;)</code></pre>
 <pre class="r"><code>tpm_df &lt;- as.data.frame(tpm_table)</code></pre>
 </div>
 <div id="analysis" class="section level3">
@@ -604,11 +583,6 @@ all_metadata&lt;- readRDS(&quot;~/data/recount3_GBM_GTEx_BRAIN_metadata.rds&quot
 </div>
 <div id="limma-analysis" class="section level2">
 <h2>limma analysis</h2>
-<pre class="r"><code>rm(count_table, recount3_rse_BRIAN)
-gc()</code></pre>
-<pre><code>##             used   (Mb) gc trigger    (Mb)   max used    (Mb)
-## Ncells  10918557  583.2   17608971   940.5   17608971   940.5
-## Vcells 607350329 4633.8 1360812768 10382.2 1360779271 10382.0</code></pre>
 <p>transfrom TPM for limma differential gene expression</p>
 <pre class="r"><code>TPM &lt;- log2(as.matrix(tpm_df) + 1)</code></pre>
 <pre class="r"><code>#adjust metadata for the function
@@ -616,9 +590,8 @@ sampleinfo&lt;- cbind(colnames(tpm_df), as.character(all_metadata$status), as.ch
 colnames(sampleinfo) &lt;- c(&quot;Sample&quot;, &quot;Tumor&quot;,&quot;database&quot;)
 sampleinfo&lt;- as.data.frame(sampleinfo)
 database&lt;- all_metadata$database
-names(database)&lt;- colnames(tpm_df)
-
-limma_gene_TCGA_BH &lt;- LVTestWrapperJLF_v2(b.matrix=TPM , sample.info.df= sampleinfo, phenotype.col= &quot;Tumor&quot;, blocking= database, file.lead= &quot;220421_limma_TCGA_GTEX_T_vs_NT&quot;, plot.dir= &quot;~/output/limma_gbm/&quot;, results.dir= &quot;~/output/limma_gbm/&quot;, use.bonferroni= FALSE, sig.threshold = 0.05)</code></pre>
+names(database)&lt;- colnames(tpm_df)</code></pre>
+<pre class="r"><code>limma_gene_TCGA_BH &lt;- LVTestWrapperJLF_v2(b.matrix=TPM , sample.info.df= sampleinfo, phenotype.col= &quot;Tumor&quot;, blocking= database, file.lead= &quot;220421_limma_TCGA_GTEX_T_vs_NT&quot;, plot.dir= &quot;~/output/limma_gbm/&quot;, results.dir= &quot;~/output/limma_gbm/&quot;, use.bonferroni= FALSE, sig.threshold = 0.05)</code></pre>
 <pre class="r"><code>saveRDS(limma_gene_TCGA_BH , file= &quot;~/output/limma_gbm/220421_GBM_GTEX_gene_limma_res.rds&quot;)</code></pre>
 </div>
 <div id="signaturesearch" class="section level2">
