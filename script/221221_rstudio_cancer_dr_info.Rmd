@@ -1,0 +1,32 @@
+---
+title: "221221_rstudio_cancer_dr_info"
+author: "Jennifer Fisher"
+date: '2022-12-21'
+output:
+  html_document: default
+---
+    GitHub Repo:
+    Transfer_Leanring_R03
+    
+    Docker:
+    rstudio_cancer_dr
+    
+    Directory of operations:
+    /home/rstudio (Docker)
+    
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+sessionInfo()
+```
+
+```{r}
+# Listing packages
+installed.packages()[,c(1,3)]
+```
+
+
+
