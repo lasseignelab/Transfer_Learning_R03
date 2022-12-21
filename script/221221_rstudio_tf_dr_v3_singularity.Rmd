@@ -9,7 +9,7 @@ output:
     Transfer_Learning_R03
     
     Docker:
-    rstudio_cancer_dr
+    rstudio_tf_dr_v3
     
     Directory of operations:
     /data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03 (singularity)
