@@ -1,0 +1,29 @@
+---
+title: "221221_rstudio_tf_dr_v3_singularity"
+author: "Jennifer Fisher"
+date: "12/21/2022"
+output:
+  html_document: default
+---
+    GitHub Repo:
+    Transfer_Learning_R03
+    
+    Docker:
+    rstudio_cancer_dr
+    
+    Directory of operations:
+    /data/project/lasseigne_lab/JLF_scratch/Transfer_Learning_R03 (singularity)
+    
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+sessionInfo()
+```
+
+```{r}
+# Listing packages
+installed.packages()[,c(1,3)]
+```
