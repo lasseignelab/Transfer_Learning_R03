@@ -61,54 +61,60 @@ library(circlize)
 source("~/script/plier_util.R")
 source("~/script/test_LV_differences.R")
 library(dplyr)
+library(stringr)
 ```
 
 
 ### load in data
 
-```{r }
-human_projects<- available_projects()
+```{r}
+brain_gtex_tpm <- readRDS("~/data/recount3/recount3_fix_download/brain_gtex_tpm.rds")
+brain_gtex_metadata <- readRDS("~/data/recount3/recount3_fix_download/brain_gtex_metadata.rds")
 ```
 
 ```{r}
-#SRP118922
-recount3_rse_BRIAN <- create_rse(human_projects[(human_projects$project == "BRAIN"),])
+ids<- str_replace_all(colnames(brain_gtex_tpm), "[[:punct:]]", "-") 
+meta_data_ids<- str_replace_all(brain_gtex_metadata$external_id, "[[:punct:]]", "-")
 ```
 
 ```{r}
-recount3_count_brain<- assay(recount3_rse_BRIAN)
-recount3_count_brain <- as.data.frame(recount3_count_brain)
+identical(ids[order(ids)], meta_data_ids[order(meta_data_ids)])
 ```
 
 ```{r}
-meta_brain_gtex_data<- colData(recount3_rse_BRIAN)
+brain_gtex_tpm_order <- brain_gtex_tpm[,order(ids)]
+brain_gtex_metadata_order<- brain_gtex_metadata[order(meta_data_ids), ]
+```
+
+```{r}
+colnames(brain_gtex_tpm_order )<- brain_gtex_metadata_order$external_id
+```
+
+check to make sure things line up 
+```{r}
+feature_info <- readRDS("~/data/recount3/recount3_fix_download/feature_info.rds")
+```
+
+```{r}
+identical(feature_info$gene_id, rownames(brain_gtex_tpm))
+```
+
+
+```{r}
+rownames(brain_gtex_tpm_order)<- feature_info$gene_name
+```
+
+
+```{r}
+tpm_df <- as.data.frame(brain_gtex_tpm_order)
 ```
 
 
 ```{r}
 # subsampling from  Brain - Frontal Cortex (BA9); Brain - Cerebellar Hemisphere
 #224 & 250 
-meta_brain_tissue  <- as.data.frame(meta_brain_gtex_data[meta_brain_gtex_data$gtex.smtsd == "Brain - Frontal Cortex (BA9)" | meta_brain_gtex_data$gtex.smtsd =="Brain - Cerebellar Hemisphere",])
-```
-
-```{r}
-gene_info <- as.data.frame(recount3_rse_BRIAN@rowRanges)
-```
-check to make sure things line up 
-```{r}
-identical(gene_info$gene_id, rownames(recount3_count_brain))
-```
-
-```{r}
-tpm_table<- Counts_to_tpm(recount3_count_brain, gene_info$bp_length)
-```
-
-```{r}
-rownames(tpm_table)<- gene_info$gene_name
-```
-
-```{r}
-tpm_df <- as.data.frame(tpm_table)
+rownames(brain_gtex_metadata) <- colnames(tpm_df )
+meta_brain_tissue  <- as.data.frame(brain_gtex_metadata[brain_gtex_metadata$SMTSD == "Brain - Frontal Cortex (BA9)" | brain_gtex_metadata$SMTSD =="Brain - Cerebellar Hemisphere",])
 ```
 
 
@@ -121,15 +127,10 @@ identical(colnames(GBM.GTEx.tpm_test), rownames(meta_brain_tissue))
 
 ```{r}
 #make test vector 
-test_vector <- meta_brain_tissue$gtex.smtsd
+test_vector <- meta_brain_tissue$SMTSD 
 names(test_vector) <- colnames(GBM.GTEx.tpm_test)
   #change to the
 test_vector<- ifelse(test_vector == "Brain - Cerebellar Hemisphere", "CH", "FC")
-```
-
-```{r eval=FALSE}
-rm(recount3_rse_BRIAN, meta_brain_gtex_data, human_projects)
-gc()
 ```
 
 
@@ -138,8 +139,6 @@ recount3_plier <- readRDS("~/data/recount3_plier_wo.rds")
 ```
 
 ### Analysis
-
-
 
 ```{r eval=FALSE}
 test<- round((1:10 *.1) * nrow(GBM.GTEx.tpm_test))
@@ -178,32 +177,22 @@ knitr::include_graphics("~/output/220428_gene_switching_line_plot.png")
 summary(lm(gene_test_data$Avg_Num_LV ~ gene_test_data$fraction))
 ```
 Call:
-
-lm(formula = gene_test_data Avg_Num_LV ~ gene_test_data fraction)
+lm(formula = gene_test_data$Avg_Num_LV ~ gene_test_data$fraction)
 
 Residuals:
-
    Min     1Q Median     3Q    Max 
-
--1.948 -1.482 -0.336  1.118  2.796 
+-1.956 -1.489 -0.330  1.159  2.737 
 
 Coefficients:
-
-Estimate Std. Error t value Pr(>|t|)    
-
-(Intercept)               16.959      1.282  13.230 1.02e-06 ***
-
-gene_test_data$fraction  -19.350      2.066  -9.367 1.38e-05 ***
-
+                        Estimate Std. Error t value Pr(>|t|)    
+(Intercept)               16.935      1.275  13.279 9.87e-07 ***
+gene_test_data$fraction  -19.318      2.055  -9.399 1.35e-05 ***
 ---
-
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 1.876 on 8 degrees of freedom
-
-Multiple R-squared:  0.9164,	Adjusted R-squared:  0.906 
-
-F-statistic: 87.73 on 1 and 8 DF,  p-value: 1.381e-05
+Residual standard error: 1.867 on 8 degrees of freedom
+Multiple R-squared:  0.917,	Adjusted R-squared:  0.9066 
+F-statistic: 88.34 on 1 and 8 DF,  p-value: 1.346e-05
 
 
 ### Save Data

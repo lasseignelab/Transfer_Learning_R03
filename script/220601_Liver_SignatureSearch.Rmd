@@ -67,24 +67,15 @@ source("~/script/test_LV_differences.R")
 library(dplyr)
 ```
 
-
-```{r }
-human_projects<- available_projects()
-```
-
-```{r }
-#SRP118922
-recount3_rse_LIHC<- create_rse(human_projects[(human_projects$project == "LIHC"),])
-```
 ```{r}
-#SRP118922
-recount3_rse_LIVER<- create_rse(human_projects[(human_projects$project == "LIVER"),])
+liver_gtex_count_ordered <- readRDS("~/data/liver_gtex_count_ordered.rds")
+liver_gtex_metadata_ordered <- readRDS("~/data/liver_gtex_metadata_ordered.rds")
+lihc_tcga_count_ordered <- readRDS("~/data/lihc_tcga_count_ordered.rds")
+lihc_tcga_metadata_ordered <- readRDS("~/data/lihc_tcga_metadata_ordered.rds")
 ```
+
 ```{r}
-LIHC_counts<- assay(recount3_rse_LIHC)
-LIHC_metadata<- as.data.frame(colData(recount3_rse_LIHC))
-LIVER_counts<- assay(recount3_rse_LIVER)
-LIVER_metadata<- as.data.frame(colData(recount3_rse_LIVER))
+colnames(lihc_tcga_count_ordered)<- lihc_tcga_metadata_ordered$external_id
 ```
 
 liver cancer vs normal 
@@ -92,10 +83,7 @@ things to add to metadata- database, tumor/normal, subtype, sex
 
 ```{r}
 #order the tcga data to match recount3 order
-recount3_ids <- colnames(LIHC_counts)
-recount_metadata_sub <-LIHC_metadata[rownames(LIHC_metadata) %in% recount3_ids,]
-identical(rownames(recount_metadata_sub),recount3_ids)
-ids <- recount_metadata_sub$tcga.tcga_barcode 
+ids <- lihc_tcga_metadata_ordered$external_id
 
 nam <- c()
 status<- c()
@@ -104,33 +92,30 @@ for (i in 1:length(ids)){
   
 nam[i]<- ids[i]
 #create tumor/normal col
-status[i] <-LIHC_metadata$tcga.cgc_sample_sample_type[LIHC_metadata$tcga.tcga_barcode == ids[i]]
+status[i] <- lihc_tcga_metadata_ordered$cgc_sample_sample_type[lihc_tcga_metadata_ordered$external_id == ids[i]]
 #create sex col 
-sex[i]<- LIHC_metadata$tcga.cgc_case_gender[LIHC_metadata$tcga.tcga_barcode == ids[i]]
+sex[i]<- lihc_tcga_metadata_ordered$cgc_case_gender[lihc_tcga_metadata_ordered$external_id== ids[i]]
 }
 #create database col
 database <- rep("TCGA", length(sex))
 #create metadata 
 tcga_lihc_metadata<- as.data.frame(cbind(nam, database, status,  sex))
-rownames(tcga_lihc_metadata) <- recount3_ids
+rownames(tcga_lihc_metadata) <- ids
 tcga_lihc_metadata[1:5,]
 ```
 ```{r}
 #order the metadata to match recount3 order
-
 #create sex col 
-identical (rownames(LIVER_metadata), colnames( LIVER_counts))
-nam<- LIVER_metadata$external_id
-sex<- ifelse(LIVER_metadata$gtex.sex == 1, "male", "female")
+identical (liver_gtex_metadata_ordered$external_id, colnames( liver_gtex_count_ordered))
+nam<- liver_gtex_metadata_ordered$external_id
+sex<- ifelse(liver_gtex_metadata_ordered$SEX == 1, "male", "female")
 #create database col
 database<- rep ("GTEx",length(sex) )
 #create normal col
 status<- rep ("Solid Tissue Normal", length(sex))
-
-
 #create metadata 
 gtex_metadata<- as.data.frame(cbind(nam, database, status, sex))
-rownames(gtex_metadata)<- rownames(LIVER_metadata)
+rownames(gtex_metadata)<- liver_gtex_metadata_ordered$external_id
 #combine count and metadata
 gtex_metadata[1:5,]
 ```
@@ -138,12 +123,14 @@ gtex_metadata[1:5,]
 ```{r}
 all_metadata <- rbind(tcga_lihc_metadata, gtex_metadata)
 rownames(all_metadata)<- c(rownames(tcga_lihc_metadata), rownames(gtex_metadata))
-count_table<- cbind(LIHC_counts, LIVER_counts)
+count_table<- cbind(lihc_tcga_count_ordered, liver_gtex_count_ordered)
 ```
 
 ```{r}
 identical(rownames(all_metadata), colnames(count_table))
 ```
+
+
 ```{r}
 library(signatureSearch)
 library(HDF5Array)
@@ -195,25 +182,16 @@ deseq2_lihc_normal <- deseq2_function(dds_lihc_normal, "~/output/liver_cancer/de
 
 signaturesearch 
 Genes
-```{r eval=FALSE}
-#SRP118922
-library(recount3)
-human_projects<- available_projects()
-test<- create_rse(human_projects[(human_projects$project == "SRP118922"),])
-gene_info <- test@rowRanges
-rm(test)
+```{r}
+feature_info <- readRDS("~/data/recount3/recount3_fix_download/feature_info.rds")
 ```
 
 ```{r eval=FALSE}
-dim(as.data.frame(gene_info))
+identical(feature_info$gene_id, rownames(deseq2_lihc_normal))
 ```
 
 ```{r eval=FALSE}
-identical(gene_info$gene_id, rownames(deseq2_lihc_normal))
-```
-
-```{r eval=FALSE}
-deseq2_lihc_normal$Symbol<- gene_info$gene_name
+deseq2_lihc_normal$Symbol<- feature_info$gene_name
 ```
 
 ```{r eval=FALSE}
@@ -376,15 +354,11 @@ write.csv(hyperG_k_res_v2 , file= "~/output/liver_cancer/deseq2_res/220929_SR_LI
 LINCS pathway & Drug targets
 
 ```{r eval=FALSE}
-gene_info <- as.data.frame(recount3_rse_LIVER@rowRanges)
+tpm_table<- Counts_to_tpm(count_table_v3, feature_info $bp_length)
 ```
 
 ```{r eval=FALSE}
-tpm_table<- Counts_to_tpm(count_table_v3, gene_info$bp_length)
-```
-
-```{r eval=FALSE}
-rownames(tpm_table)<- gene_info$gene_name
+rownames(tpm_table)<- feature_info$gene_name
 ```
 
 ```{r eval=FALSE}

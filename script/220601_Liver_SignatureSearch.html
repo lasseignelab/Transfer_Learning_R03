@@ -617,46 +617,15 @@ library(VennDiagram)</code></pre>
 <pre class="r"><code>source(&quot;~/script/plier_util.R&quot;)
 source(&quot;~/script/test_LV_differences.R&quot;)
 library(dplyr)</code></pre>
-<pre class="r"><code>human_projects&lt;- available_projects()</code></pre>
-<pre><code>## 2022-10-06 20:48:57 caching file sra.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 20:48:59 caching file gtex.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 20:49:01 caching file tcga.recount_project.MD.gz.</code></pre>
-<pre class="r"><code>#SRP118922
-recount3_rse_LIHC&lt;- create_rse(human_projects[(human_projects$project == &quot;LIHC&quot;),])</code></pre>
-<pre><code>## 2022-10-06 20:49:08 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-10-06 20:49:08 caching file tcga.tcga.LIHC.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 20:49:09 caching file tcga.recount_project.LIHC.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 20:49:10 caching file tcga.recount_qc.LIHC.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 20:49:11 caching file tcga.recount_seq_qc.LIHC.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 20:49:12 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-10-06 20:49:13 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-10-06 20:49:14 downloading and reading the counts: 424 samples across 63856 features.</code></pre>
-<pre><code>## 2022-10-06 20:49:15 caching file tcga.gene_sums.LIHC.G026.gz.</code></pre>
-<pre><code>## 2022-10-06 20:49:23 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
-<pre class="r"><code>#SRP118922
-recount3_rse_LIVER&lt;- create_rse(human_projects[(human_projects$project == &quot;LIVER&quot;),])</code></pre>
-<pre><code>## 2022-10-06 20:49:23 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-10-06 20:49:23 caching file gtex.gtex.LIVER.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 20:49:24 caching file gtex.recount_project.LIVER.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 20:49:25 caching file gtex.recount_qc.LIVER.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 20:49:26 caching file gtex.recount_seq_qc.LIVER.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 20:49:27 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-10-06 20:49:27 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-10-06 20:49:29 downloading and reading the counts: 251 samples across 63856 features.</code></pre>
-<pre><code>## 2022-10-06 20:49:29 caching file gtex.gene_sums.LIVER.G026.gz.</code></pre>
-<pre><code>## 2022-10-06 20:49:33 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
-<pre class="r"><code>LIHC_counts&lt;- assay(recount3_rse_LIHC)
-LIHC_metadata&lt;- as.data.frame(colData(recount3_rse_LIHC))
-LIVER_counts&lt;- assay(recount3_rse_LIVER)
-LIVER_metadata&lt;- as.data.frame(colData(recount3_rse_LIVER))</code></pre>
+<pre class="r"><code>liver_gtex_count_ordered &lt;- readRDS(&quot;~/data/liver_gtex_count_ordered.rds&quot;)
+liver_gtex_metadata_ordered &lt;- readRDS(&quot;~/data/liver_gtex_metadata_ordered.rds&quot;)
+lihc_tcga_count_ordered &lt;- readRDS(&quot;~/data/lihc_tcga_count_ordered.rds&quot;)
+lihc_tcga_metadata_ordered &lt;- readRDS(&quot;~/data/lihc_tcga_metadata_ordered.rds&quot;)</code></pre>
+<pre class="r"><code>colnames(lihc_tcga_count_ordered)&lt;- lihc_tcga_metadata_ordered$external_id</code></pre>
 <p>liver cancer vs normal things to add to metadata- database,
 tumor/normal, subtype, sex</p>
 <pre class="r"><code>#order the tcga data to match recount3 order
-recount3_ids &lt;- colnames(LIHC_counts)
-recount_metadata_sub &lt;-LIHC_metadata[rownames(LIHC_metadata) %in% recount3_ids,]
-identical(rownames(recount_metadata_sub),recount3_ids)</code></pre>
-<pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code>ids &lt;- recount_metadata_sub$tcga.tcga_barcode 
+ids &lt;- lihc_tcga_metadata_ordered$external_id
 
 nam &lt;- c()
 status&lt;- c()
@@ -665,61 +634,58 @@ for (i in 1:length(ids)){
   
 nam[i]&lt;- ids[i]
 #create tumor/normal col
-status[i] &lt;-LIHC_metadata$tcga.cgc_sample_sample_type[LIHC_metadata$tcga.tcga_barcode == ids[i]]
+status[i] &lt;- lihc_tcga_metadata_ordered$cgc_sample_sample_type[lihc_tcga_metadata_ordered$external_id == ids[i]]
 #create sex col 
-sex[i]&lt;- LIHC_metadata$tcga.cgc_case_gender[LIHC_metadata$tcga.tcga_barcode == ids[i]]
+sex[i]&lt;- lihc_tcga_metadata_ordered$cgc_case_gender[lihc_tcga_metadata_ordered$external_id== ids[i]]
 }
 #create database col
 database &lt;- rep(&quot;TCGA&quot;, length(sex))
 #create metadata 
 tcga_lihc_metadata&lt;- as.data.frame(cbind(nam, database, status,  sex))
-rownames(tcga_lihc_metadata) &lt;- recount3_ids
+rownames(tcga_lihc_metadata) &lt;- ids
 tcga_lihc_metadata[1:5,]</code></pre>
-<pre><code>##                                                               nam database
-## 2bea18cb-dcdd-43b7-815f-d4abf905f603 TCGA-DD-A3A4-01A-11R-A22L-07     TCGA
-## d909c8f2-de93-461e-8f7c-f4992aa8270c TCGA-CC-A5UE-01A-11R-A28V-07     TCGA
-## bfa1ab5c-3853-475e-ac26-23deaffeec24 TCGA-ED-A4XI-01A-11R-A266-07     TCGA
-## 74acdf1d-3ad8-4166-8ac8-ad5b51eef63e TCGA-CC-5258-01A-01R-A131-07     TCGA
-## 24fe253b-bc9f-48fe-84c4-33aa8ef99641 TCGA-DD-AADG-01A-11R-A41C-07     TCGA
-##                                             status  sex
-## 2bea18cb-dcdd-43b7-815f-d4abf905f603 Primary Tumor MALE
-## d909c8f2-de93-461e-8f7c-f4992aa8270c Primary Tumor MALE
-## bfa1ab5c-3853-475e-ac26-23deaffeec24 Primary Tumor MALE
-## 74acdf1d-3ad8-4166-8ac8-ad5b51eef63e Primary Tumor MALE
-## 24fe253b-bc9f-48fe-84c4-33aa8ef99641 Primary Tumor MALE</code></pre>
+<pre><code>##                                                                       nam
+## 01633eb8-9fef-4683-9ab5-2a16007f5f12 01633eb8-9fef-4683-9ab5-2a16007f5f12
+## 01cce3d3-b5cd-48a4-acce-73d8febb930f 01cce3d3-b5cd-48a4-acce-73d8febb930f
+## 020803d3-0f68-4b6c-aa71-68a09afbe1cf 020803d3-0f68-4b6c-aa71-68a09afbe1cf
+## 02af05b9-ad54-4a69-a0cf-8a27d0f68ac3 02af05b9-ad54-4a69-a0cf-8a27d0f68ac3
+## 0355357a-fea8-478d-9af5-0984bf6ac25d 0355357a-fea8-478d-9af5-0984bf6ac25d
+##                                      database        status    sex
+## 01633eb8-9fef-4683-9ab5-2a16007f5f12     TCGA Primary Tumor   MALE
+## 01cce3d3-b5cd-48a4-acce-73d8febb930f     TCGA Primary Tumor   MALE
+## 020803d3-0f68-4b6c-aa71-68a09afbe1cf     TCGA Primary Tumor FEMALE
+## 02af05b9-ad54-4a69-a0cf-8a27d0f68ac3     TCGA Primary Tumor   MALE
+## 0355357a-fea8-478d-9af5-0984bf6ac25d     TCGA Primary Tumor   MALE</code></pre>
 <pre class="r"><code>#order the metadata to match recount3 order
-
 #create sex col 
-identical (rownames(LIVER_metadata), colnames( LIVER_counts))</code></pre>
+identical (liver_gtex_metadata_ordered$external_id, colnames( liver_gtex_count_ordered))</code></pre>
 <pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code>nam&lt;- LIVER_metadata$external_id
-sex&lt;- ifelse(LIVER_metadata$gtex.sex == 1, &quot;male&quot;, &quot;female&quot;)
+<pre class="r"><code>nam&lt;- liver_gtex_metadata_ordered$external_id
+sex&lt;- ifelse(liver_gtex_metadata_ordered$SEX == 1, &quot;male&quot;, &quot;female&quot;)
 #create database col
 database&lt;- rep (&quot;GTEx&quot;,length(sex) )
 #create normal col
 status&lt;- rep (&quot;Solid Tissue Normal&quot;, length(sex))
-
-
 #create metadata 
 gtex_metadata&lt;- as.data.frame(cbind(nam, database, status, sex))
-rownames(gtex_metadata)&lt;- rownames(LIVER_metadata)
+rownames(gtex_metadata)&lt;- liver_gtex_metadata_ordered$external_id
 #combine count and metadata
 gtex_metadata[1:5,]</code></pre>
 <pre><code>##                                                   nam database
-## GTEX-14PJO-1726-SM-68719.1 GTEX-14PJO-1726-SM-68719.1     GTEx
-## GTEX-17HII-1026-SM-7IGLY.1 GTEX-17HII-1026-SM-7IGLY.1     GTEx
-## GTEX-18A7A-1526-SM-72D69.1 GTEX-18A7A-1526-SM-72D69.1     GTEx
-## GTEX-1GF9V-1226-SM-7MKGY.1 GTEX-1GF9V-1226-SM-7MKGY.1     GTEx
-## GTEX-1GN1U-0926-SM-9WPPY.1 GTEX-1GN1U-0926-SM-9WPPY.1     GTEx
+## GTEX-1192X-1026-SM-5H12P.1 GTEX-1192X-1026-SM-5H12P.1     GTEx
+## GTEX-11DXY-0526-SM-5EGGQ.1 GTEX-11DXY-0526-SM-5EGGQ.1     GTEx
+## GTEX-11DXZ-0126-SM-5EGGY.1 GTEX-11DXZ-0126-SM-5EGGY.1     GTEx
+## GTEX-11EQ9-0526-SM-5A5JZ.1 GTEX-11EQ9-0526-SM-5A5JZ.1     GTEx
+## GTEX-11GSP-0626-SM-5986T.1 GTEX-11GSP-0626-SM-5986T.1     GTEx
 ##                                         status    sex
-## GTEX-14PJO-1726-SM-68719.1 Solid Tissue Normal   male
-## GTEX-17HII-1026-SM-7IGLY.1 Solid Tissue Normal   male
-## GTEX-18A7A-1526-SM-72D69.1 Solid Tissue Normal female
-## GTEX-1GF9V-1226-SM-7MKGY.1 Solid Tissue Normal   male
-## GTEX-1GN1U-0926-SM-9WPPY.1 Solid Tissue Normal female</code></pre>
+## GTEX-1192X-1026-SM-5H12P.1 Solid Tissue Normal   male
+## GTEX-11DXY-0526-SM-5EGGQ.1 Solid Tissue Normal   male
+## GTEX-11DXZ-0126-SM-5EGGY.1 Solid Tissue Normal   male
+## GTEX-11EQ9-0526-SM-5A5JZ.1 Solid Tissue Normal   male
+## GTEX-11GSP-0626-SM-5986T.1 Solid Tissue Normal female</code></pre>
 <pre class="r"><code>all_metadata &lt;- rbind(tcga_lihc_metadata, gtex_metadata)
 rownames(all_metadata)&lt;- c(rownames(tcga_lihc_metadata), rownames(gtex_metadata))
-count_table&lt;- cbind(LIHC_counts, LIVER_counts)</code></pre>
+count_table&lt;- cbind(lihc_tcga_count_ordered, liver_gtex_count_ordered)</code></pre>
 <pre class="r"><code>identical(rownames(all_metadata), colnames(count_table))</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <pre class="r"><code>library(signatureSearch)
@@ -746,15 +712,9 @@ count_table_v3&lt;- count_table_v2[, !all_metadata_v2$status == &quot;Recurrent 
                               design= ~ database + status)</code></pre>
 <pre class="r"><code>deseq2_lihc_normal &lt;- deseq2_function(dds_lihc_normal, &quot;~/output/liver_cancer/deseq2_res/220929_deseq2_lihc_normal_gtx_res.csv&quot;, &quot;status&quot;, &quot;Primary Tumor&quot;, &quot;Solid Tissue Normal&quot;)</code></pre>
 <p>signaturesearch Genes</p>
-<pre class="r"><code>#SRP118922
-library(recount3)
-human_projects&lt;- available_projects()
-test&lt;- create_rse(human_projects[(human_projects$project == &quot;SRP118922&quot;),])
-gene_info &lt;- test@rowRanges
-rm(test)</code></pre>
-<pre class="r"><code>dim(as.data.frame(gene_info))</code></pre>
-<pre class="r"><code>identical(gene_info$gene_id, rownames(deseq2_lihc_normal))</code></pre>
-<pre class="r"><code>deseq2_lihc_normal$Symbol&lt;- gene_info$gene_name</code></pre>
+<pre class="r"><code>feature_info &lt;- readRDS(&quot;~/data/recount3/recount3_fix_download/feature_info.rds&quot;)</code></pre>
+<pre class="r"><code>identical(feature_info$gene_id, rownames(deseq2_lihc_normal))</code></pre>
+<pre class="r"><code>deseq2_lihc_normal$Symbol&lt;- feature_info$gene_name</code></pre>
 <pre class="r"><code>deseq2_lihc_normal&lt;- deseq2_lihc_normal[complete.cases(deseq2_lihc_normal),]
 deseq_results_sig_top &lt;- deseq2_lihc_normal[deseq2_lihc_normal$padj &lt; 0.05 &amp; deseq2_lihc_normal$log2FoldChange &gt; 2,]
 deseq_results_sig_bottom &lt;- deseq2_lihc_normal[deseq2_lihc_normal$padj &lt; 0.05 &amp; deseq2_lihc_normal$log2FoldChange &lt; -2,]</code></pre>
@@ -816,9 +776,8 @@ gbm.2 + coord_flip() + ylab(&quot;Number of Drugs&quot;) + xlab(&quot;KEGG Pathw
 <p>no kegg pathways are signficant</p>
 <pre class="r"><code>write.csv(hyperG_k_res_v2 , file= &quot;~/output/liver_cancer/deseq2_res/220929_SR_LINCS_LIHC_DESEQ2_PATHWYA.csv&quot; )</code></pre>
 <p>LINCS pathway &amp; Drug targets</p>
-<pre class="r"><code>gene_info &lt;- as.data.frame(recount3_rse_LIVER@rowRanges)</code></pre>
-<pre class="r"><code>tpm_table&lt;- Counts_to_tpm(count_table_v3, gene_info$bp_length)</code></pre>
-<pre class="r"><code>rownames(tpm_table)&lt;- gene_info$gene_name</code></pre>
+<pre class="r"><code>tpm_table&lt;- Counts_to_tpm(count_table_v3, feature_info $bp_length)</code></pre>
+<pre class="r"><code>rownames(tpm_table)&lt;- feature_info$gene_name</code></pre>
 <pre class="r"><code>tpm_df &lt;- as.data.frame(tpm_table)</code></pre>
 <pre class="r"><code>se_asssay&lt;- assay(se)</code></pre>
 <pre class="r"><code>for (i in 1:nrow(lincs_deseq_lihc_res_HEPG2_top_fda) ){
@@ -1178,18 +1137,6 @@ tfl_CT_test_res &lt;- clinical_trial_testing(101, &quot;HEPG2&quot;, len, fract,
 <pre class="r"><code>limma_liver_pathway_res &lt;- method_up_down_gene_set_analysis(limma_liver_list$up, limma_liver_list$down, &quot;~/output/liver_cancer/&quot;, &quot;limma&quot;, &quot;Liver_cancer_limma_input_genes_SR&quot;)</code></pre>
 <pre class="r"><code>deseq2_liver_pathway_res&lt;- method_up_down_gene_set_analysis(deseq2_liver_list$up, deseq2_liver_list$down, &quot;~/output/liver_cancer/&quot;, &quot;DESEq2&quot;, &quot;Liver_cancer_deseq2_input_genes_SR&quot;)</code></pre>
 <pre class="r"><code>tfl_liver_pathway_res&lt;- method_up_down_gene_set_analysis(tfl_liver_list$up, tfl_liver_list$down, &quot;~/output/liver_cancer/&quot;, &quot;TFL&quot;, &quot;Liver_cancer_tfl_input_genes_SR&quot;)</code></pre>
-<pre class="r"><code>limma&lt;- limma_liver_pathway_res$term_id[ limma_liver_pathway_res$set == &quot;Up&quot;]
-deseq2&lt;- deseq2_liver_pathway_res$term_id[ deseq2_liver_pathway_res$set == &quot;Up&quot;]
-tfl&lt;-tfl_liver_pathway_res$term_id[ tfl_liver_pathway_res$set == &quot;Up&quot;]
-venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/liver_cancer/SR_liver_Up_pathway_venn_diagram.png&#39; )</code></pre>
-<pre class="r"><code>limma&lt;- limma_liver_pathway_res$term_id[ limma_liver_pathway_res$set == &quot;Down&quot;]
-deseq2&lt;- deseq2_liver_pathway_res$term_id[ deseq2_liver_pathway_res$set == &quot;Down&quot;]
-tfl&lt;-tfl_liver_pathway_res$term_id[ tfl_liver_pathway_res$set == &quot;Down&quot;]
-venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/liver_cancer/SR_liver_Down_pathway_venn_diagram.png&#39; )</code></pre>
-<pre class="r"><code>limma&lt;- limma_liver_pathway_res$term_id
-deseq2&lt;- deseq2_liver_pathway_res$term_id
-tfl&lt;-tfl_liver_pathway_res$term_id
-venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/liver_cancer/SR_liver_all_pathway_venn_diagram.png&#39; )</code></pre>
 <pre class="r"><code>venn_dia_methods(lincs_limma_liver_res_HEPG2_top_fda$pert, lincs_deseq_lihc_res_HEPG2_top_fda$pert, lincs_tfl_liver_res_HEPG2_top_fda$pert, file_name=&#39;~/output/liver_cancer/SR_drug_candidates_venn_diagram.png&#39; )</code></pre>
 </div>
 </div>
