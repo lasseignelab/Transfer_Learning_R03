@@ -1854,8 +1854,8 @@ volcano_plots<- function(results, method, method_genes, transfer_learning_genes)
   
   #print(p3)
  # print(p4)
-  ggdraw(p2)
-  #return(res_lincs_only )
+  print(ggdraw(p2))
+  return(res_lincs_only )
   
   
 }

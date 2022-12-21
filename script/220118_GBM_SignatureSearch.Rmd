@@ -115,22 +115,16 @@ db_path <- "~/data/lincs_2020.h5"
 ## signature reversion for DESeq2 GBM vs control 
 add genes symbols to the DESeq2 output
 ```{r}
-human_projects<- available_projects()
-#get a random project data
-test<- create_rse(human_projects[(human_projects$project == "SRP118922"),])
-gene_info <- test@rowRanges
-rm(test)
+feature_info <- readRDS("~/data/recount3/recount3_fix_download/feature_info.rds")
 ```
+
+
 ```{r}
-dim(as.data.frame(gene_info))
+identical(feature_info$gene_id, rownames(deseq_results))
 ```
 
 ```{r}
-identical(gene_info$gene_id, rownames(deseq_results))
-```
-
-```{r}
-deseq_results$Symbol<- gene_info$gene_name
+deseq_results$Symbol<- feature_info$gene_name
 ```
 
 identify the top genes

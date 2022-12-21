@@ -616,47 +616,17 @@ library(VennDiagram)</code></pre>
 ## ========================================</code></pre>
 <pre class="r"><code>source(&quot;~/script/plier_util.R&quot;)
 source(&quot;~/script/test_LV_differences.R&quot;)
-library(dplyr)</code></pre>
-<pre class="r"><code>human_projects&lt;- available_projects()</code></pre>
-<pre><code>## 2022-10-06 21:08:58 caching file sra.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:01 caching file gtex.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:02 caching file tcga.recount_project.MD.gz.</code></pre>
-<pre class="r"><code>#SRP118922
-recount3_rse_LUAD&lt;- create_rse(human_projects[(human_projects$project == &quot;LUAD&quot;),])</code></pre>
-<pre><code>## 2022-10-06 21:09:09 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-10-06 21:09:10 caching file tcga.tcga.LUAD.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:11 caching file tcga.recount_project.LUAD.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:12 caching file tcga.recount_qc.LUAD.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:13 caching file tcga.recount_seq_qc.LUAD.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:15 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-10-06 21:09:15 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:17 downloading and reading the counts: 601 samples across 63856 features.</code></pre>
-<pre><code>## 2022-10-06 21:09:17 caching file tcga.gene_sums.LUAD.G026.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:29 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
-<pre class="r"><code>#SRP118922
-recount3_rse_LUNG&lt;- create_rse(human_projects[(human_projects$project == &quot;LUNG&quot;),])</code></pre>
-<pre><code>## 2022-10-06 21:09:30 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-10-06 21:09:30 caching file gtex.gtex.LUNG.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:31 caching file gtex.recount_project.LUNG.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:32 caching file gtex.recount_qc.LUNG.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:33 caching file gtex.recount_seq_qc.LUNG.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:35 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-10-06 21:09:35 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:37 downloading and reading the counts: 655 samples across 63856 features.</code></pre>
-<pre><code>## 2022-10-06 21:09:37 caching file gtex.gene_sums.LUNG.G026.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:44 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
-<pre class="r"><code>LUAD_counts&lt;- assay(recount3_rse_LUAD)
-LUAD_metadata&lt;- as.data.frame(colData(recount3_rse_LUAD))
-LUNG_counts&lt;- assay(recount3_rse_LUNG)
-LUNG_metadata&lt;- as.data.frame(colData(recount3_rse_LUNG))</code></pre>
+library(dplyr)
+library(stringr)</code></pre>
+<pre class="r"><code>lung_gtex_count_ordered &lt;- readRDS(&quot;~/data/lung_gtex_count_ordered.rds&quot;)
+lung_gtex_metadata_ordered &lt;- readRDS(&quot;~/data/lung_gtex_metadata_ordered.rds&quot;)
+luad_tcga_count_ordered &lt;- readRDS(&quot;~/data/luad_tcga_count_ordered.rds&quot;)
+luad_tcga_metadata_ordered &lt;- readRDS(&quot;~/data/luad_tcga_metadata_ordered.rds&quot;)</code></pre>
+<pre class="r"><code>colnames(luad_tcga_count_ordered)&lt;- luad_tcga_metadata_ordered$external_id</code></pre>
 <p>LUNG cancer vs normal things to add to metadata- database,
 tumor/normal, subtype, sex</p>
 <pre class="r"><code>#order the tcga data to match recount3 order
-recount3_ids &lt;- colnames(LUAD_counts)
-recount_metadata_sub &lt;-LUAD_metadata[rownames(LUAD_metadata) %in% recount3_ids,]
-identical(rownames(recount_metadata_sub),recount3_ids)</code></pre>
-<pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code>ids &lt;- recount_metadata_sub$tcga.tcga_barcode 
+ids &lt;- luad_tcga_metadata_ordered$external_id
 
 nam &lt;- c()
 status&lt;- c()
@@ -665,70 +635,58 @@ for (i in 1:length(ids)){
   
 nam[i]&lt;- ids[i]
 #create tumor/normal col
-status[i] &lt;-LUAD_metadata$tcga.cgc_sample_sample_type[LUAD_metadata$tcga.tcga_barcode == ids[i]]
+status[i] &lt;- luad_tcga_metadata_ordered$cgc_sample_sample_type[luad_tcga_metadata_ordered$external_id == ids[i]]
 #create sex col 
-sex[i]&lt;- LUAD_metadata$tcga.cgc_case_gender[LUAD_metadata$tcga.tcga_barcode == ids[i]]
-}</code></pre>
-<pre><code>## Warning in status[i] &lt;-
-## LUAD_metadata$tcga.cgc_sample_sample_type[LUAD_metadata$tcga.tcga_barcode == :
-## number of items to replace is not a multiple of replacement length</code></pre>
-<pre><code>## Warning in sex[i] &lt;-
-## LUAD_metadata$tcga.cgc_case_gender[LUAD_metadata$tcga.tcga_barcode == : number
-## of items to replace is not a multiple of replacement length</code></pre>
-<pre><code>## Warning in status[i] &lt;-
-## LUAD_metadata$tcga.cgc_sample_sample_type[LUAD_metadata$tcga.tcga_barcode == :
-## number of items to replace is not a multiple of replacement length</code></pre>
-<pre><code>## Warning in sex[i] &lt;-
-## LUAD_metadata$tcga.cgc_case_gender[LUAD_metadata$tcga.tcga_barcode == : number
-## of items to replace is not a multiple of replacement length</code></pre>
-<pre class="r"><code>#create database col
+sex[i]&lt;- luad_tcga_metadata_ordered$cgc_case_gender[luad_tcga_metadata_ordered$external_id== ids[i]]
+}
+#create database col
 database &lt;- rep(&quot;TCGA&quot;, length(sex))
 #create metadata 
 tcga_luad_metadata&lt;- as.data.frame(cbind(nam, database, status,  sex))
-rownames(tcga_luad_metadata) &lt;- recount3_ids
+rownames(tcga_luad_metadata) &lt;- ids
 tcga_luad_metadata[1:5,]</code></pre>
-<pre><code>##                                                               nam database
-## 5b1e3218-61b6-4d10-8815-c1038c739f05 TCGA-55-7911-01A-11R-2170-07     TCGA
-## c3257122-09a9-449c-be4a-107703def60c TCGA-44-2656-01A-02R-0946-07     TCGA
-## 6a4c997f-2f28-4888-8d4c-c2dc8b108520 TCGA-44-2657-11A-01R-1758-07     TCGA
-## dc7450dc-4a7a-48ee-bef1-f5e5b46db020 TCGA-44-5644-01A-21R-2039-07     TCGA
-## 642c8ec2-4829-4b2b-af17-a6b52a793e26 TCGA-55-8616-01A-11R-2403-07     TCGA
-##                                                   status    sex
-## 5b1e3218-61b6-4d10-8815-c1038c739f05       Primary Tumor FEMALE
-## c3257122-09a9-449c-be4a-107703def60c       Primary Tumor   MALE
-## 6a4c997f-2f28-4888-8d4c-c2dc8b108520 Solid Tissue Normal FEMALE
-## dc7450dc-4a7a-48ee-bef1-f5e5b46db020       Primary Tumor FEMALE
-## 642c8ec2-4829-4b2b-af17-a6b52a793e26       Primary Tumor FEMALE</code></pre>
+<pre><code>##                                                                       nam
+## 0037c575-d78c-4278-8c65-940eefff3a70 0037c575-d78c-4278-8c65-940eefff3a70
+## 007f0210-24bb-49fa-9308-077009becf3a 007f0210-24bb-49fa-9308-077009becf3a
+## 008159f2-5247-479a-8bfe-c394888d0b74 008159f2-5247-479a-8bfe-c394888d0b74
+## 009c7667-06ce-4c6f-a306-9b4b262712df 009c7667-06ce-4c6f-a306-9b4b262712df
+## 01433209-fec0-4140-b17b-f2b7c6b73b90 01433209-fec0-4140-b17b-f2b7c6b73b90
+##                                      database              status    sex
+## 0037c575-d78c-4278-8c65-940eefff3a70     TCGA       Primary Tumor   MALE
+## 007f0210-24bb-49fa-9308-077009becf3a     TCGA Solid Tissue Normal FEMALE
+## 008159f2-5247-479a-8bfe-c394888d0b74     TCGA       Primary Tumor FEMALE
+## 009c7667-06ce-4c6f-a306-9b4b262712df     TCGA       Primary Tumor FEMALE
+## 01433209-fec0-4140-b17b-f2b7c6b73b90     TCGA       Primary Tumor   &lt;NA&gt;</code></pre>
 <pre class="r"><code>#order the metadata to match recount3 order
 #create sex col 
-identical (rownames(LUNG_metadata), colnames( LUNG_counts))</code></pre>
+identical (lung_gtex_metadata_ordered$external_id, colnames( lung_gtex_count_ordered))</code></pre>
 <pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code>nam&lt;- LUNG_metadata$external_id
-sex&lt;- ifelse(LUNG_metadata$gtex.sex == 1, &quot;male&quot;, &quot;female&quot;)
+<pre class="r"><code>nam&lt;- lung_gtex_metadata_ordered$external_id
+sex&lt;- ifelse(lung_gtex_metadata_ordered$SEX == 1, &quot;male&quot;, &quot;female&quot;)
 #create database col
 database&lt;- rep (&quot;GTEx&quot;,length(sex) )
 #create normal col
 status&lt;- rep (&quot;Solid Tissue Normal&quot;, length(sex))
 #create metadata 
 gtex_metadata&lt;- as.data.frame(cbind(nam, database, status, sex))
-rownames(gtex_metadata)&lt;- rownames(LUNG_metadata)
+rownames(gtex_metadata)&lt;- lung_gtex_metadata_ordered$external_id
 #combine count and metadata
 gtex_metadata[1:5,]</code></pre>
 <pre><code>##                                                   nam database
-## GTEX-QMR6-1926-SM-32PL9.1   GTEX-QMR6-1926-SM-32PL9.1     GTEx
-## GTEX-T2IS-0526-SM-32QP9.1   GTEX-T2IS-0526-SM-32QP9.1     GTEx
-## GTEX-WYJK-0826-SM-3NM8Y.1   GTEX-WYJK-0826-SM-3NM8Y.1     GTEx
-## GTEX-WZTO-0426-SM-3NM99.1   GTEX-WZTO-0426-SM-3NM99.1     GTEx
-## GTEX-12WSG-5004-SM-7EPG9.1 GTEX-12WSG-5004-SM-7EPG9.1     GTEx
+## GTEX-111CU-0326-SM-5GZXO.1 GTEX-111CU-0326-SM-5GZXO.1     GTEx
+## GTEX-111FC-1126-SM-5GZWU.1 GTEX-111FC-1126-SM-5GZWU.1     GTEx
+## GTEX-111VG-0726-SM-5GIDC.1 GTEX-111VG-0726-SM-5GIDC.1     GTEx
+## GTEX-111YS-0626-SM-5GZXV.1 GTEX-111YS-0626-SM-5GZXV.1     GTEx
+## GTEX-1122O-0126-SM-5GICA.1 GTEX-1122O-0126-SM-5GICA.1     GTEx
 ##                                         status    sex
-## GTEX-QMR6-1926-SM-32PL9.1  Solid Tissue Normal   male
-## GTEX-T2IS-0526-SM-32QP9.1  Solid Tissue Normal female
-## GTEX-WYJK-0826-SM-3NM8Y.1  Solid Tissue Normal   male
-## GTEX-WZTO-0426-SM-3NM99.1  Solid Tissue Normal   male
-## GTEX-12WSG-5004-SM-7EPG9.1 Solid Tissue Normal female</code></pre>
+## GTEX-111CU-0326-SM-5GZXO.1 Solid Tissue Normal   male
+## GTEX-111FC-1126-SM-5GZWU.1 Solid Tissue Normal   male
+## GTEX-111VG-0726-SM-5GIDC.1 Solid Tissue Normal   male
+## GTEX-111YS-0626-SM-5GZXV.1 Solid Tissue Normal   male
+## GTEX-1122O-0126-SM-5GICA.1 Solid Tissue Normal female</code></pre>
 <pre class="r"><code>all_metadata &lt;- rbind(tcga_luad_metadata, gtex_metadata)
 rownames(all_metadata)&lt;- c(rownames(tcga_luad_metadata), rownames(gtex_metadata))
-count_table&lt;- cbind(LUAD_counts, LUNG_counts)</code></pre>
+count_table&lt;- cbind(luad_tcga_count_ordered, lung_gtex_count_ordered)</code></pre>
 <pre class="r"><code>identical(rownames(all_metadata), colnames(count_table))</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <pre class="r"><code>library(signatureSearch)
@@ -752,30 +710,9 @@ count_table_v3&lt;- count_table[, !all_metadata$status == &quot;Recurrent Tumor&
                               design= ~ database + status)</code></pre>
 <pre class="r"><code>deseq2_luad_normal &lt;- deseq2_function(dds_luad_normal, &quot;~/output/lung_cancer/deseq2_res/220929_Deseq2_luad_normal_gtx_res.csv&quot;, &quot;status&quot;, &quot;Primary Tumor&quot;, &quot;Solid Tissue Normal&quot;)</code></pre>
 <p>signaturesearch Genes</p>
-<pre class="r"><code>#SRP118922
-library(recount3)
-human_projects&lt;- available_projects()</code></pre>
-<pre><code>## 2022-10-06 21:09:53 caching file sra.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:54 caching file gtex.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:09:58 caching file tcga.recount_project.MD.gz.</code></pre>
-<pre class="r"><code>test&lt;- create_rse(human_projects[(human_projects$project == &quot;SRP118922&quot;),])</code></pre>
-<pre><code>## 2022-10-06 21:10:04 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-10-06 21:10:04 caching file sra.sra.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:10:06 caching file sra.recount_project.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:10:07 caching file sra.recount_qc.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:10:08 caching file sra.recount_seq_qc.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:10:09 caching file sra.recount_pred.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-10-06 21:10:10 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-10-06 21:10:10 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-10-06 21:10:12 downloading and reading the counts: 35 samples across 63856 features.</code></pre>
-<pre><code>## 2022-10-06 21:10:12 caching file sra.gene_sums.SRP118922.G026.gz.</code></pre>
-<pre><code>## 2022-10-06 21:10:13 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
-<pre class="r"><code>gene_info &lt;- test@rowRanges
-rm(test)</code></pre>
-<pre class="r"><code>dim(as.data.frame(gene_info))</code></pre>
-<pre><code>## [1] 63856    15</code></pre>
-<pre class="r"><code>identical(gene_info$gene_id, rownames(deseq2_luad_normal))</code></pre>
-<pre class="r"><code>deseq2_luad_normal$Symbol&lt;- gene_info$gene_name</code></pre>
+<pre class="r"><code>feature_info &lt;- readRDS(&quot;~/data/recount3/recount3_fix_download/feature_info.rds&quot;)</code></pre>
+<pre class="r"><code>identical(feature_info$gene_id, rownames(deseq2_luad_normal))</code></pre>
+<pre class="r"><code>deseq2_luad_normal$Symbol&lt;- feature_info$gene_name</code></pre>
 <pre class="r"><code>deseq2_luad_normal&lt;- deseq2_luad_normal[complete.cases(deseq2_luad_normal),]
 deseq_results_sig &lt;- deseq2_luad_normal[deseq2_luad_normal$padj &lt; 0.05 &amp; abs(deseq2_luad_normal$log2FoldChange) &gt; 2,]</code></pre>
 <pre class="r"><code>downset&lt;- deseq_results_sig$Symbol[deseq_results_sig$log2FoldChange &lt; -4.5] 
@@ -835,9 +772,8 @@ gbm.2 + coord_flip() + ylab(&quot;Number of Drugs&quot;) + xlab(&quot;KEGG Pathw
 <p>no kegg pathways are signficant</p>
 <pre class="r"><code>write.csv(hyperG_k_res_v2 , file= &quot;~/output/lung_cancer/deseq2_res/220929_SR_LINCS_LUAD_DESEQ2_PATHWAY.csv&quot; )</code></pre>
 <p>LINCS pathway &amp; Drug targets</p>
-<pre class="r"><code>gene_info &lt;- as.data.frame(recount3_rse_LUNG@rowRanges)</code></pre>
-<pre class="r"><code>tpm_table&lt;- Counts_to_tpm(count_table_v3, gene_info$bp_length)</code></pre>
-<pre class="r"><code>rownames(tpm_table)&lt;- gene_info$gene_name</code></pre>
+<pre class="r"><code>tpm_table&lt;- Counts_to_tpm(count_table_v3, feature_info$bp_length)</code></pre>
+<pre class="r"><code>rownames(tpm_table)&lt;- feature_info$gene_name</code></pre>
 <pre class="r"><code>tpm_df &lt;- as.data.frame(tpm_table)</code></pre>
 <pre class="r"><code>library(tidyr)</code></pre>
 <pre class="r"><code>se_asssay&lt;- assay(se)</code></pre>
@@ -1191,18 +1127,6 @@ tfl_CT_test_res &lt;- clinical_trial_testing(101, &quot;A549&quot;, len, fract, 
 <pre class="r"><code>limma_lung_pathway_res &lt;- method_up_down_gene_set_analysis(limma_lung_list$up, limma_lung_list$down, &quot;~/output/lung_cancer/&quot;, &quot;limma&quot;, &quot;LUNG_cancer_limma_input_genes_SR&quot;)</code></pre>
 <pre class="r"><code>deseq2_lung_pathway_res&lt;- method_up_down_gene_set_analysis(deseq_lung_list$up, deseq_lung_list$down, &quot;~/output/lung_cancer/&quot;, &quot;DESEq2&quot;, &quot;Lung_cancer_deseq2_input_genes_SR&quot;)</code></pre>
 <pre class="r"><code>tfl_lung_pathway_res&lt;- method_up_down_gene_set_analysis(tfl_lung_list$up, tfl_lung_list$down, &quot;~/output/lung_cancer/&quot;, &quot;TFL&quot;, &quot;LUNG_cancer_tfl_input_genes_SR&quot;)</code></pre>
-<pre class="r"><code>limma&lt;- limma_lung_pathway_res$term_id[ limma_lung_pathway_res$set == &quot;Up&quot;]
-deseq2&lt;- deseq2_lung_pathway_res$term_id[ deseq2_lung_pathway_res$set == &quot;Up&quot;]
-tfl&lt;-tfl_lung_pathway_res$term_id[ tfl_lung_pathway_res$set == &quot;Up&quot;]
-venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/lung_cancer/SR_lung_Up_pathway_venn_diagram.png&#39; )</code></pre>
-<pre class="r"><code>limma&lt;- limma_lung_pathway_res$term_id[ limma_lung_pathway_res$set == &quot;Down&quot;]
-deseq2&lt;- deseq2_lung_pathway_res$term_id[ deseq2_lung_pathway_res$set == &quot;Down&quot;]
-tfl&lt;-tfl_lung_pathway_res$term_id[ tfl_lung_pathway_res$set == &quot;Down&quot;]
-venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/lung_cancer/SR_lung_Down_pathway_venn_diagram.png&#39; )</code></pre>
-<pre class="r"><code>limma&lt;- limma_lung_pathway_res$term_id
-deseq2&lt;- deseq2_lung_pathway_res$term_id
-tfl&lt;-tfl_lung_pathway_res$term_id
-venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/lung_cancer/SR_lung_all_pathway_venn_diagram.png&#39; )</code></pre>
 <pre class="r"><code>venn_dia_methods(lincs_limma_lung_res_A549_top_fda$pert, lincs_deseq_luad_res_A549_top_fda$pert, lincs_tfl_lung_res_A549_top_fda$pert, file_name=&#39;~/output/lung_cancer/SR_drug_candidates_venn_diagram.png&#39; )</code></pre>
 </div>
 </div>
@@ -1248,21 +1172,22 @@ Dates when operations were done:
 ## [8] methods   base     
 ## 
 ## other attached packages:
-##  [1] DESeq2_1.34.0               circlize_0.4.15            
-##  [3] gplots_3.1.3                dplyr_1.0.10               
-##  [5] ComplexHeatmap_2.10.0       VennDiagram_1.7.3          
-##  [7] futile.logger_1.4.3         ggpubr_0.4.0               
-##  [9] ggplot2_3.3.6               gprofiler2_0.2.1           
-## [11] tidyr_1.2.1                 viridis_0.6.2              
-## [13] viridisLite_0.4.1           HDF5Array_1.22.1           
-## [15] rhdf5_2.38.1                DelayedArray_0.20.0        
-## [17] Matrix_1.5-1                signatureSearch_1.8.2      
-## [19] signatureSearchData_1.8.4   Rcpp_1.0.9                 
-## [21] recount3_1.4.0              SummarizedExperiment_1.24.0
-## [23] Biobase_2.54.0              GenomicRanges_1.46.1       
-## [25] GenomeInfoDb_1.30.1         IRanges_2.28.0             
-## [27] S4Vectors_0.32.4            BiocGenerics_0.40.0        
-## [29] MatrixGenerics_1.6.0        matrixStats_0.62.0         
+##  [1] DESeq2_1.34.0               stringr_1.4.1              
+##  [3] circlize_0.4.15             gplots_3.1.3               
+##  [5] dplyr_1.0.10                ComplexHeatmap_2.10.0      
+##  [7] VennDiagram_1.7.3           futile.logger_1.4.3        
+##  [9] ggpubr_0.4.0                ggplot2_3.3.6              
+## [11] gprofiler2_0.2.1            tidyr_1.2.1                
+## [13] viridis_0.6.2               viridisLite_0.4.1          
+## [15] HDF5Array_1.22.1            rhdf5_2.38.1               
+## [17] DelayedArray_0.20.0         Matrix_1.5-1               
+## [19] signatureSearch_1.8.2       signatureSearchData_1.8.4  
+## [21] Rcpp_1.0.9                  recount3_1.4.0             
+## [23] SummarizedExperiment_1.24.0 Biobase_2.54.0             
+## [25] GenomicRanges_1.46.1        GenomeInfoDb_1.30.1        
+## [27] IRanges_2.28.0              S4Vectors_0.32.4           
+## [29] BiocGenerics_0.40.0         MatrixGenerics_1.6.0       
+## [31] matrixStats_0.62.0         
 ## 
 ## loaded via a namespace (and not attached):
 ##   [1] utf8_1.2.2                    R.utils_2.12.0               
@@ -1329,27 +1254,27 @@ Dates when operations were done:
 ## [123] foreach_1.5.2                 ggtree_3.2.1                 
 ## [125] annotate_1.72.0               bslib_0.4.0                  
 ## [127] XVector_0.34.0                yulab.utils_0.0.5            
-## [129] stringr_1.4.1                 digest_0.6.29                
-## [131] graph_1.72.0                  Biostrings_2.62.0            
-## [133] rmarkdown_2.16                fastmatch_1.1-3              
-## [135] tidytree_0.4.1                GSEABase_1.56.0              
-## [137] restfulr_0.0.15               curl_4.3.2                   
-## [139] gtools_3.9.3                  shiny_1.7.2                  
-## [141] Rsamtools_2.10.0              rjson_0.2.21                 
-## [143] lifecycle_1.0.2               nlme_3.1-155                 
-## [145] jsonlite_1.8.0                Rhdf5lib_1.16.0              
-## [147] carData_3.0-5                 limma_3.50.3                 
-## [149] fansi_1.0.3                   pillar_1.8.1                 
-## [151] lattice_0.20-45               survival_3.3-1               
-## [153] KEGGREST_1.34.0               fastmap_1.1.0                
-## [155] httr_1.4.4                    GO.db_3.14.0                 
-## [157] interactiveDisplayBase_1.32.0 glue_1.6.2                   
-## [159] iterators_1.0.14              png_0.1-7                    
-## [161] BiocVersion_3.14.0            bit_4.0.4                    
-## [163] ggforce_0.3.4                 stringi_1.7.8                
-## [165] sass_0.4.2                    blob_1.2.3                   
-## [167] AnnotationHub_3.2.2           caTools_1.18.2               
-## [169] memoise_2.0.1                 ape_5.6-2</code></pre>
+## [129] digest_0.6.29                 graph_1.72.0                 
+## [131] Biostrings_2.62.0             rmarkdown_2.16               
+## [133] fastmatch_1.1-3               tidytree_0.4.1               
+## [135] GSEABase_1.56.0               restfulr_0.0.15              
+## [137] curl_4.3.2                    gtools_3.9.3                 
+## [139] shiny_1.7.2                   Rsamtools_2.10.0             
+## [141] rjson_0.2.21                  lifecycle_1.0.2              
+## [143] nlme_3.1-155                  jsonlite_1.8.0               
+## [145] Rhdf5lib_1.16.0               carData_3.0-5                
+## [147] limma_3.50.3                  fansi_1.0.3                  
+## [149] pillar_1.8.1                  lattice_0.20-45              
+## [151] survival_3.3-1                KEGGREST_1.34.0              
+## [153] fastmap_1.1.0                 httr_1.4.4                   
+## [155] GO.db_3.14.0                  interactiveDisplayBase_1.32.0
+## [157] glue_1.6.2                    iterators_1.0.14             
+## [159] png_0.1-7                     BiocVersion_3.14.0           
+## [161] bit_4.0.4                     ggforce_0.3.4                
+## [163] stringi_1.7.8                 sass_0.4.2                   
+## [165] blob_1.2.3                    AnnotationHub_3.2.2          
+## [167] caTools_1.18.2                memoise_2.0.1                
+## [169] ape_5.6-2</code></pre>
 </div>
 </div>
 

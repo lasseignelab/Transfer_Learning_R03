@@ -65,25 +65,19 @@ library(circlize)
 source("~/script/plier_util.R")
 source("~/script/test_LV_differences.R")
 library(dplyr)
+library(stringr)
 ```
 
-```{r }
-human_projects<- available_projects()
+
+```{r}
+lung_gtex_count_ordered <- readRDS("~/data/lung_gtex_count_ordered.rds")
+lung_gtex_metadata_ordered <- readRDS("~/data/lung_gtex_metadata_ordered.rds")
+luad_tcga_count_ordered <- readRDS("~/data/luad_tcga_count_ordered.rds")
+luad_tcga_metadata_ordered <- readRDS("~/data/luad_tcga_metadata_ordered.rds")
 ```
 
-```{r }
-#SRP118922
-recount3_rse_LUAD<- create_rse(human_projects[(human_projects$project == "LUAD"),])
-```
 ```{r}
-#SRP118922
-recount3_rse_LUNG<- create_rse(human_projects[(human_projects$project == "LUNG"),])
-```
-```{r}
-LUAD_counts<- assay(recount3_rse_LUAD)
-LUAD_metadata<- as.data.frame(colData(recount3_rse_LUAD))
-LUNG_counts<- assay(recount3_rse_LUNG)
-LUNG_metadata<- as.data.frame(colData(recount3_rse_LUNG))
+colnames(luad_tcga_count_ordered)<- luad_tcga_metadata_ordered$external_id
 ```
 
 LUNG cancer vs normal 
@@ -91,10 +85,7 @@ things to add to metadata- database, tumor/normal, subtype, sex
 
 ```{r}
 #order the tcga data to match recount3 order
-recount3_ids <- colnames(LUAD_counts)
-recount_metadata_sub <-LUAD_metadata[rownames(LUAD_metadata) %in% recount3_ids,]
-identical(rownames(recount_metadata_sub),recount3_ids)
-ids <- recount_metadata_sub$tcga.tcga_barcode 
+ids <- luad_tcga_metadata_ordered$external_id
 
 nam <- c()
 status<- c()
@@ -103,30 +94,30 @@ for (i in 1:length(ids)){
   
 nam[i]<- ids[i]
 #create tumor/normal col
-status[i] <-LUAD_metadata$tcga.cgc_sample_sample_type[LUAD_metadata$tcga.tcga_barcode == ids[i]]
+status[i] <- luad_tcga_metadata_ordered$cgc_sample_sample_type[luad_tcga_metadata_ordered$external_id == ids[i]]
 #create sex col 
-sex[i]<- LUAD_metadata$tcga.cgc_case_gender[LUAD_metadata$tcga.tcga_barcode == ids[i]]
+sex[i]<- luad_tcga_metadata_ordered$cgc_case_gender[luad_tcga_metadata_ordered$external_id== ids[i]]
 }
 #create database col
 database <- rep("TCGA", length(sex))
 #create metadata 
 tcga_luad_metadata<- as.data.frame(cbind(nam, database, status,  sex))
-rownames(tcga_luad_metadata) <- recount3_ids
+rownames(tcga_luad_metadata) <- ids
 tcga_luad_metadata[1:5,]
 ```
 ```{r}
 #order the metadata to match recount3 order
 #create sex col 
-identical (rownames(LUNG_metadata), colnames( LUNG_counts))
-nam<- LUNG_metadata$external_id
-sex<- ifelse(LUNG_metadata$gtex.sex == 1, "male", "female")
+identical (lung_gtex_metadata_ordered$external_id, colnames( lung_gtex_count_ordered))
+nam<- lung_gtex_metadata_ordered$external_id
+sex<- ifelse(lung_gtex_metadata_ordered$SEX == 1, "male", "female")
 #create database col
 database<- rep ("GTEx",length(sex) )
 #create normal col
 status<- rep ("Solid Tissue Normal", length(sex))
 #create metadata 
 gtex_metadata<- as.data.frame(cbind(nam, database, status, sex))
-rownames(gtex_metadata)<- rownames(LUNG_metadata)
+rownames(gtex_metadata)<- lung_gtex_metadata_ordered$external_id
 #combine count and metadata
 gtex_metadata[1:5,]
 ```
@@ -134,7 +125,7 @@ gtex_metadata[1:5,]
 ```{r}
 all_metadata <- rbind(tcga_luad_metadata, gtex_metadata)
 rownames(all_metadata)<- c(rownames(tcga_luad_metadata), rownames(gtex_metadata))
-count_table<- cbind(LUAD_counts, LUNG_counts)
+count_table<- cbind(luad_tcga_count_ordered, lung_gtex_count_ordered)
 ```
 
 ```{r}
@@ -184,25 +175,17 @@ deseq2_luad_normal <- deseq2_function(dds_luad_normal, "~/output/lung_cancer/des
 ```
 signaturesearch 
 Genes
-```{r}
-#SRP118922
-library(recount3)
-human_projects<- available_projects()
-test<- create_rse(human_projects[(human_projects$project == "SRP118922"),])
-gene_info <- test@rowRanges
-rm(test)
-```
 
 ```{r}
-dim(as.data.frame(gene_info))
+feature_info <- readRDS("~/data/recount3/recount3_fix_download/feature_info.rds")
 ```
 
 ```{r eval =FALSE}
-identical(gene_info$gene_id, rownames(deseq2_luad_normal))
+identical(feature_info$gene_id, rownames(deseq2_luad_normal))
 ```
 
 ```{r eval =FALSE}
-deseq2_luad_normal$Symbol<- gene_info$gene_name
+deseq2_luad_normal$Symbol<- feature_info$gene_name
 ```
 
 ```{r eval =FALSE}
@@ -359,15 +342,11 @@ write.csv(hyperG_k_res_v2 , file= "~/output/lung_cancer/deseq2_res/220929_SR_LIN
 LINCS pathway & Drug targets
 
 ```{r eval =FALSE}
-gene_info <- as.data.frame(recount3_rse_LUNG@rowRanges)
+tpm_table<- Counts_to_tpm(count_table_v3, feature_info$bp_length)
 ```
 
 ```{r eval =FALSE}
-tpm_table<- Counts_to_tpm(count_table_v3, gene_info$bp_length)
-```
-
-```{r eval =FALSE}
-rownames(tpm_table)<- gene_info$gene_name
+rownames(tpm_table)<- feature_info$gene_name
 ```
 
 ```{r eval =FALSE}

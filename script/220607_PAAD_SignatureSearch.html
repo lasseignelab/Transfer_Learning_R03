@@ -615,46 +615,15 @@ library(VennDiagram)</code></pre>
 <pre class="r"><code>source(&quot;~/script/plier_util.R&quot;)
 source(&quot;~/script/test_LV_differences.R&quot;)
 library(dplyr)</code></pre>
-<pre class="r"><code>human_projects&lt;- available_projects()</code></pre>
-<pre><code>## 2022-11-08 20:18:55 caching file sra.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:18:56 caching file gtex.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:18:57 caching file tcga.recount_project.MD.gz.</code></pre>
-<pre class="r"><code>#SRP118922
-recount3_rse_PAAD&lt;- create_rse(human_projects[(human_projects$project == &quot;PAAD&quot;),])</code></pre>
-<pre><code>## 2022-11-08 20:19:01 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-11-08 20:19:01 caching file tcga.tcga.PAAD.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:02 caching file tcga.recount_project.PAAD.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:03 caching file tcga.recount_qc.PAAD.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:03 caching file tcga.recount_seq_qc.PAAD.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:04 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-11-08 20:19:04 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:05 downloading and reading the counts: 183 samples across 63856 features.</code></pre>
-<pre><code>## 2022-11-08 20:19:06 caching file tcga.gene_sums.PAAD.G026.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:08 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
-<pre class="r"><code>#SRP118922
-recount3_rse_PANCREAS&lt;- create_rse(human_projects[(human_projects$project == &quot;PANCREAS&quot;),])</code></pre>
-<pre><code>## 2022-11-08 20:19:08 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-11-08 20:19:09 caching file gtex.gtex.PANCREAS.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:10 caching file gtex.recount_project.PANCREAS.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:11 caching file gtex.recount_qc.PANCREAS.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:12 caching file gtex.recount_seq_qc.PANCREAS.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:13 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-11-08 20:19:15 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:16 downloading and reading the counts: 360 samples across 63856 features.</code></pre>
-<pre><code>## 2022-11-08 20:19:16 caching file gtex.gene_sums.PANCREAS.G026.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:20 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
-<pre class="r"><code>PAAD_counts&lt;- assay(recount3_rse_PAAD)
-PAAD_metadata&lt;- as.data.frame(colData(recount3_rse_PAAD))
-PANCREAS_counts&lt;- assay(recount3_rse_PANCREAS)
-PANCREAS_metadata&lt;- as.data.frame(colData(recount3_rse_PANCREAS))</code></pre>
+<pre class="r"><code>pan_gtex_count_ordered &lt;- readRDS(&quot;~/data/pan_gtex_count_ordered.rds&quot;)
+pan_gtex_metadata_ordered &lt;- readRDS(&quot;~/data/pan_gtex_metadata_ordered.rds&quot;)
+paad_tcga_count_ordered &lt;- readRDS(&quot;~/data/paad_tcga_count_ordered.rds&quot;)
+paad_tcga_metadata_ordered &lt;- readRDS(&quot;~/data/paad_tcga_metadata_ordered.rds&quot;)</code></pre>
+<pre class="r"><code>colnames(paad_tcga_count_ordered)&lt;- paad_tcga_metadata_ordered$external_id</code></pre>
 <p>PANCREAS cancer vs normal things to add to metadata- database,
 tumor/normal, subtype, sex</p>
 <pre class="r"><code>#order the tcga data to match recount3 order
-recount3_ids &lt;- colnames(PAAD_counts)
-recount_metadata_sub &lt;-PAAD_metadata[rownames(PAAD_metadata) %in% recount3_ids,]
-identical(rownames(recount_metadata_sub),recount3_ids)</code></pre>
-<pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code>ids &lt;- recount_metadata_sub$tcga.tcga_barcode 
+ids &lt;- paad_tcga_metadata_ordered$external_id
 
 nam &lt;- c()
 status&lt;- c()
@@ -663,66 +632,63 @@ for (i in 1:length(ids)){
   
 nam[i]&lt;- ids[i]
 #create tumor/normal col
-status[i] &lt;-PAAD_metadata$tcga.cgc_sample_sample_type[PAAD_metadata$tcga.tcga_barcode == ids[i]]
+status[i] &lt;- paad_tcga_metadata_ordered$cgc_sample_sample_type[paad_tcga_metadata_ordered$external_id == ids[i]]
 #create sex col 
-sex[i]&lt;- PAAD_metadata$tcga.cgc_case_gender[PAAD_metadata$tcga.tcga_barcode == ids[i]]
+sex[i]&lt;- paad_tcga_metadata_ordered$cgc_case_gender[paad_tcga_metadata_ordered$external_id== ids[i]]
 }
 #create database col
 database &lt;- rep(&quot;TCGA&quot;, length(sex))
 #create metadata 
 tcga_paad_metadata&lt;- as.data.frame(cbind(nam, database, status,  sex))
-rownames(tcga_paad_metadata) &lt;- recount3_ids
+rownames(tcga_paad_metadata) &lt;- ids
 tcga_paad_metadata[1:5,]</code></pre>
-<pre><code>##                                                               nam database
-## 4a8f7d08-654e-4200-9b80-975d2ed0b205 TCGA-HV-A7OP-01A-11R-A33R-07     TCGA
-## f7b2e263-f0ae-440e-96c5-139233079a06 TCGA-IB-A5ST-01A-11R-A32O-07     TCGA
-## 9709f7c5-4a89-49e5-9983-8d94eefec50d TCGA-FB-AAPS-01A-12R-A39D-07     TCGA
-## 2e8f3cef-6852-4118-a6df-513c72488013 TCGA-XN-A8T3-01A-11R-A36G-07     TCGA
-## 8b23ab23-8931-42ca-972d-1528d44bf218 TCGA-IB-7885-01A-11R-2156-07     TCGA
-##                                             status    sex
-## 4a8f7d08-654e-4200-9b80-975d2ed0b205 Primary Tumor   MALE
-## f7b2e263-f0ae-440e-96c5-139233079a06 Primary Tumor FEMALE
-## 9709f7c5-4a89-49e5-9983-8d94eefec50d Primary Tumor FEMALE
-## 2e8f3cef-6852-4118-a6df-513c72488013 Primary Tumor   MALE
-## 8b23ab23-8931-42ca-972d-1528d44bf218 Primary Tumor FEMALE</code></pre>
+<pre><code>##                                                                       nam
+## 0393537d-9e6d-4740-a109-b201c6b0f2fa 0393537d-9e6d-4740-a109-b201c6b0f2fa
+## 064baa54-f97e-49ac-96e9-88a450be29f3 064baa54-f97e-49ac-96e9-88a450be29f3
+## 081452cb-9401-4678-9ba2-431cb2ecf105 081452cb-9401-4678-9ba2-431cb2ecf105
+## 0832cf9e-63ce-4eee-91fe-fdfc0ea20717 0832cf9e-63ce-4eee-91fe-fdfc0ea20717
+## 08c4c14a-94a8-4063-bbc3-916579960078 08c4c14a-94a8-4063-bbc3-916579960078
+##                                      database        status    sex
+## 0393537d-9e6d-4740-a109-b201c6b0f2fa     TCGA Primary Tumor FEMALE
+## 064baa54-f97e-49ac-96e9-88a450be29f3     TCGA Primary Tumor   MALE
+## 081452cb-9401-4678-9ba2-431cb2ecf105     TCGA Primary Tumor FEMALE
+## 0832cf9e-63ce-4eee-91fe-fdfc0ea20717     TCGA Primary Tumor   MALE
+## 08c4c14a-94a8-4063-bbc3-916579960078     TCGA Primary Tumor FEMALE</code></pre>
 <pre class="r"><code>#order the metadata to match recount3 order
-
 #create sex col 
-identical (rownames(PANCREAS_metadata), colnames( PANCREAS_counts))</code></pre>
+identical (pan_gtex_metadata_ordered$external_id, colnames( pan_gtex_count_ordered))</code></pre>
 <pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code>nam&lt;- PANCREAS_metadata$external_id
-sex&lt;- ifelse(PANCREAS_metadata$gtex.sex == 1, &quot;male&quot;, &quot;female&quot;)
+<pre class="r"><code>nam&lt;- pan_gtex_metadata_ordered$external_id
+sex&lt;- ifelse(pan_gtex_metadata_ordered$SEX == 1, &quot;male&quot;, &quot;female&quot;)
 #create database col
 database&lt;- rep (&quot;GTEx&quot;,length(sex) )
 #create normal col
 status&lt;- rep (&quot;Solid Tissue Normal&quot;, length(sex))
-
-
 #create metadata 
 gtex_metadata&lt;- as.data.frame(cbind(nam, database, status, sex))
-rownames(gtex_metadata)&lt;- rownames(PANCREAS_metadata)
+rownames(gtex_metadata)&lt;- pan_gtex_metadata_ordered$external_id
 #combine count and metadata
 gtex_metadata[1:5,]</code></pre>
 <pre><code>##                                                   nam database
-## GTEX-13FLV-0626-SM-5IFEY.1 GTEX-13FLV-0626-SM-5IFEY.1     GTEx
-## GTEX-15ER7-1326-SM-6LPK9.1 GTEX-15ER7-1326-SM-6LPK9.1     GTEx
-## GTEX-15UF6-1826-SM-6LLI9.1 GTEX-15UF6-1826-SM-6LLI9.1     GTEx
-## GTEX-18A67-1726-SM-7KFT9.1 GTEX-18A67-1726-SM-7KFT9.1     GTEx
-## GTEX-1AMFI-0726-SM-731D9.1 GTEX-1AMFI-0726-SM-731D9.1     GTEx
+## GTEX-111CU-0526-SM-5EGHK.1 GTEX-111CU-0526-SM-5EGHK.1     GTEx
+## GTEX-111YS-1226-SM-5EGGJ.1 GTEX-111YS-1226-SM-5EGGJ.1     GTEx
+## GTEX-1122O-0726-SM-5GIEV.1 GTEX-1122O-0726-SM-5GIEV.1     GTEx
+## GTEX-1128S-0826-SM-5GZZI.1 GTEX-1128S-0826-SM-5GZZI.1     GTEx
+## GTEX-117YX-0226-SM-5EGH6.1 GTEX-117YX-0226-SM-5EGH6.1     GTEx
 ##                                         status    sex
-## GTEX-13FLV-0626-SM-5IFEY.1 Solid Tissue Normal   male
-## GTEX-15ER7-1326-SM-6LPK9.1 Solid Tissue Normal female
-## GTEX-15UF6-1826-SM-6LLI9.1 Solid Tissue Normal female
-## GTEX-18A67-1726-SM-7KFT9.1 Solid Tissue Normal   male
-## GTEX-1AMFI-0726-SM-731D9.1 Solid Tissue Normal female</code></pre>
+## GTEX-111CU-0526-SM-5EGHK.1 Solid Tissue Normal   male
+## GTEX-111YS-1226-SM-5EGGJ.1 Solid Tissue Normal   male
+## GTEX-1122O-0726-SM-5GIEV.1 Solid Tissue Normal female
+## GTEX-1128S-0826-SM-5GZZI.1 Solid Tissue Normal female
+## GTEX-117YX-0226-SM-5EGH6.1 Solid Tissue Normal   male</code></pre>
 <pre class="r"><code>all_metadata &lt;- rbind(tcga_paad_metadata, gtex_metadata)
 rownames(all_metadata)&lt;- c(rownames(tcga_paad_metadata), rownames(gtex_metadata))
-count_table&lt;- cbind(PAAD_counts, PANCREAS_counts)</code></pre>
+count_table&lt;- cbind(paad_tcga_count_ordered, pan_gtex_count_ordered)</code></pre>
 <pre class="r"><code>identical(rownames(all_metadata), colnames(count_table))</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <p>the other tumor class… #grep(“NEUROENDOCRINE”,<a href="mailto:recount3_rse_PAAD@colData" class="email">recount3_rse_PAAD@colData</a>$tcga.cgc_case_other_histological_diagnosis,
 ignore.case = TRUE)</p>
-<pre class="r"><code>id_list &lt;-recount3_rse_PAAD@colData$tcga.tcga_barcode[ grep(&quot;NEUROENDOCRINE&quot;,recount3_rse_PAAD@colData$tcga.cgc_case_other_histological_diagnosis, ignore.case = TRUE)]
+<pre class="r"><code>id_list &lt;-paad_tcga_metadata_ordered$external_id[ grep(&quot;NEUROENDOCRINE&quot;,paad_tcga_metadata_ordered$cgc_case_other_histological_diagnosis, ignore.case = TRUE)]
 all_metadata_v2&lt;- all_metadata[! all_metadata$nam %in% id_list ,]
 count_table_v2&lt;- count_table[, !all_metadata$nam %in% id_list ]</code></pre>
 <pre class="r"><code>dim(all_metadata)</code></pre>
@@ -744,6 +710,7 @@ count_table_v3&lt;- count_table_v2[, !all_metadata_v2$status == &quot;Metastatic
 <pre><code>## [1] 63856   534</code></pre>
 <pre class="r"><code>dim(count_table_v3)</code></pre>
 <pre><code>## [1] 63856   533</code></pre>
+<p>[1] 533 4 [1] 534 4 [1] 63856 534 [1] 63856 533</p>
 <p>LINCS data</p>
 <pre class="r"><code>library(signatureSearch)
 library(HDF5Array)
@@ -765,29 +732,9 @@ colnames(se) &lt;- HDF5Array(&quot;~/data/lincs_2020.h5&quot;, name=&quot;colnam
                               design= ~ database + status)</code></pre>
 <pre class="r"><code>deseq2_paad_normal &lt;- deseq2_function(dds_paad_normal, &quot;~/output/pancreas_cancer/deseq2_res/Deseq2_paad_normal_gtx_res.csv&quot;, &quot;status&quot;, &quot;Primary Tumor&quot;, &quot;Solid Tissue Normal&quot;)</code></pre>
 <p>signaturesearch Genes</p>
-<pre class="r"><code>#SRP118922
-library(recount3)
-human_projects&lt;- available_projects()</code></pre>
-<pre><code>## 2022-11-08 20:19:25 caching file sra.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:25 caching file gtex.recount_project.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:26 caching file tcga.recount_project.MD.gz.</code></pre>
-<pre class="r"><code>test&lt;- create_rse(human_projects[(human_projects$project == &quot;SRP118922&quot;),])</code></pre>
-<pre><code>## 2022-11-08 20:19:30 downloading and reading the metadata.</code></pre>
-<pre><code>## 2022-11-08 20:19:30 caching file sra.sra.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:30 caching file sra.recount_project.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:31 caching file sra.recount_qc.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:32 caching file sra.recount_seq_qc.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:32 caching file sra.recount_pred.SRP118922.MD.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:33 downloading and reading the feature information.</code></pre>
-<pre><code>## 2022-11-08 20:19:33 caching file human.gene_sums.G026.gtf.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:34 downloading and reading the counts: 35 samples across 63856 features.</code></pre>
-<pre><code>## 2022-11-08 20:19:34 caching file sra.gene_sums.SRP118922.G026.gz.</code></pre>
-<pre><code>## 2022-11-08 20:19:34 construcing the RangedSummarizedExperiment (rse) object.</code></pre>
-<pre class="r"><code>gene_info &lt;- test@rowRanges
-rm(test)</code></pre>
-<pre class="r"><code>dim(as.data.frame(gene_info))</code></pre>
-<pre class="r"><code>identical(gene_info$gene_id, rownames(deseq2_paad_normal))</code></pre>
-<pre class="r"><code>deseq2_paad_normal$Symbol&lt;- gene_info$gene_name</code></pre>
+<pre class="r"><code>feature_info &lt;- readRDS(&quot;~/data/recount3/recount3_fix_download/feature_info.rds&quot;)</code></pre>
+<pre class="r"><code>identical(feature_info $gene_id, rownames(deseq2_paad_normal))</code></pre>
+<pre class="r"><code>deseq2_paad_normal$Symbol&lt;- feature_info$gene_name</code></pre>
 <pre class="r"><code>deseq2_paad_normal&lt;- deseq2_paad_normal[!is.na(deseq2_paad_normal$padj),]
 deseq_results_sig_top &lt;- deseq2_paad_normal[deseq2_paad_normal$padj &lt; 0.05 &amp; deseq2_paad_normal$log2FoldChange &gt; 0,]
 deseq_results_sig_bottom &lt;- deseq2_paad_normal[deseq2_paad_normal$padj &lt; 0.05 &amp; deseq2_paad_normal$log2FoldChange &lt; 0,]</code></pre>
@@ -847,9 +794,8 @@ hyperG_k_res_v2$logqvalue&lt;- -log(hyperG_k_res_v2$qvalue)</code></pre>
 gbm.2 + coord_flip() + ylab(&quot;Number of Drugs&quot;) + xlab(&quot;KEGG Pathways&quot;) +labs(fill = &quot;-log(q-value)&quot;)</code></pre>
 <pre class="r"><code>write.csv(hyperG_k_res_v2 , file= &quot;~/output/pancreas_cancer/deseq2_res/220929_SR_LINCS_PAAD_DESEQ2_PATHWAY.csv&quot; )</code></pre>
 <p>plotting the drug targets</p>
-<pre class="r"><code>gene_info &lt;- as.data.frame(recount3_rse_PANCREAS@rowRanges)</code></pre>
-<pre class="r"><code>tpm_table&lt;- Counts_to_tpm(count_table_v3, gene_info$bp_length)</code></pre>
-<pre class="r"><code>rownames(tpm_table)&lt;- gene_info$gene_name</code></pre>
+<pre class="r"><code>tpm_table&lt;- Counts_to_tpm(count_table_v3, feature_info$bp_length)</code></pre>
+<pre class="r"><code>rownames(tpm_table)&lt;- feature_info$gene_name</code></pre>
 <pre class="r"><code>tpm_df &lt;- as.data.frame(tpm_table)</code></pre>
 <p>look at all the drug target for this method/cancer</p>
 <pre class="r"><code>deseq2_paad_normal&lt;- cbind(rownames(deseq2_paad_normal), deseq2_paad_normal)
@@ -1212,18 +1158,6 @@ tfl_CT_test_res &lt;- clinical_trial_testing(101, &quot;YAPC&quot;, len, fract, 
 <pre class="r"><code>limma_paad_pathway_res &lt;- method_up_down_gene_set_analysis(limma_paad_list$up, limma_paad_list$down, &quot;~/output/pancreas_cancer/&quot;, &quot;limma&quot;, &quot;PAAD_cancer_limma_input_genes_SR&quot;)</code></pre>
 <pre class="r"><code>deseq2_paad_pathway_res&lt;- method_up_down_gene_set_analysis(deseq_paad_list$up, deseq_paad_list$down, &quot;~/output/pancreas_cancer/&quot;, &quot;DESEq2&quot;, &quot;PAAD_cancer_deseq2_input_genes_SR&quot;)</code></pre>
 <pre class="r"><code>tfl_paad_pathway_res&lt;- method_up_down_gene_set_analysis(tfl_paad_list$up, tfl_paad_list$down, &quot;~/output/pancreas_cancer/&quot;, &quot;TFL&quot;, &quot;PAAD_cancer_tfl_input_genes_SR&quot;)</code></pre>
-<pre class="r"><code>limma&lt;- limma_paad_pathway_res$term_id[ limma_paad_pathway_res$set == &quot;Up&quot;]
-deseq2&lt;- deseq2_paad_pathway_res$term_id[ deseq2_paad_pathway_res$set == &quot;Up&quot;]
-tfl&lt;-tfl_paad_pathway_res$term_id[ tfl_paad_pathway_res$set == &quot;Up&quot;]
-venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/pancreas_cancer/SR_PAAD_Up_pathway_venn_diagram.png&#39; )</code></pre>
-<pre class="r"><code>limma&lt;- limma_paad_pathway_res$term_id[ limma_paad_pathway_res$set == &quot;Down&quot;]
-deseq2&lt;- deseq2_paad_pathway_res$term_id[ deseq2_paad_pathway_res$set == &quot;Down&quot;]
-tfl&lt;-tfl_paad_pathway_res$term_id[ tfl_paad_pathway_res$set == &quot;Down&quot;]
-venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/pancreas_cancer/SR_PAAD_Down_pathway_venn_diagram.png&#39; )</code></pre>
-<pre class="r"><code>limma&lt;- limma_paad_pathway_res$term_id
-deseq2&lt;- deseq2_paad_pathway_res$term_id
-tfl&lt;-tfl_paad_pathway_res$term_id
-venn_dia_methods(limma, deseq2, tfl, file_name=&#39;~/output/pancreas_cancer/SR_PAAD_all_pathway_venn_diagram.png&#39; )</code></pre>
 <p>compare candidates</p>
 <pre class="r"><code>venn_dia_methods(lincs_limma_pancreas_res_YAPC_top_fda$pert, lincs_deseq_paad_res_YAPC_top_fda$pert, lincs_tfl_pancreas_res_YAPC_top_fda$pert, file_name=&#39;~/output/pancreas_cancer/SR_drug_candidates_venn_diagram.png&#39; )</code></pre>
 </div>

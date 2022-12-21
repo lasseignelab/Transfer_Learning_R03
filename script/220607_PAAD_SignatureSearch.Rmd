@@ -65,34 +65,23 @@ source("~/script/test_LV_differences.R")
 library(dplyr)
 ```
 
-
-```{r }
-human_projects<- available_projects()
-```
-
-```{r }
-#SRP118922
-recount3_rse_PAAD<- create_rse(human_projects[(human_projects$project == "PAAD"),])
-```
 ```{r}
-#SRP118922
-recount3_rse_PANCREAS<- create_rse(human_projects[(human_projects$project == "PANCREAS"),])
+pan_gtex_count_ordered <- readRDS("~/data/pan_gtex_count_ordered.rds")
+pan_gtex_metadata_ordered <- readRDS("~/data/pan_gtex_metadata_ordered.rds")
+paad_tcga_count_ordered <- readRDS("~/data/paad_tcga_count_ordered.rds")
+paad_tcga_metadata_ordered <- readRDS("~/data/paad_tcga_metadata_ordered.rds")
 ```
+
 ```{r}
-PAAD_counts<- assay(recount3_rse_PAAD)
-PAAD_metadata<- as.data.frame(colData(recount3_rse_PAAD))
-PANCREAS_counts<- assay(recount3_rse_PANCREAS)
-PANCREAS_metadata<- as.data.frame(colData(recount3_rse_PANCREAS))
+colnames(paad_tcga_count_ordered)<- paad_tcga_metadata_ordered$external_id
 ```
+
 PANCREAS cancer vs normal 
 things to add to metadata- database, tumor/normal, subtype, sex
 
 ```{r}
 #order the tcga data to match recount3 order
-recount3_ids <- colnames(PAAD_counts)
-recount_metadata_sub <-PAAD_metadata[rownames(PAAD_metadata) %in% recount3_ids,]
-identical(rownames(recount_metadata_sub),recount3_ids)
-ids <- recount_metadata_sub$tcga.tcga_barcode 
+ids <- paad_tcga_metadata_ordered$external_id
 
 nam <- c()
 status<- c()
@@ -101,33 +90,30 @@ for (i in 1:length(ids)){
   
 nam[i]<- ids[i]
 #create tumor/normal col
-status[i] <-PAAD_metadata$tcga.cgc_sample_sample_type[PAAD_metadata$tcga.tcga_barcode == ids[i]]
+status[i] <- paad_tcga_metadata_ordered$cgc_sample_sample_type[paad_tcga_metadata_ordered$external_id == ids[i]]
 #create sex col 
-sex[i]<- PAAD_metadata$tcga.cgc_case_gender[PAAD_metadata$tcga.tcga_barcode == ids[i]]
+sex[i]<- paad_tcga_metadata_ordered$cgc_case_gender[paad_tcga_metadata_ordered$external_id== ids[i]]
 }
 #create database col
 database <- rep("TCGA", length(sex))
 #create metadata 
 tcga_paad_metadata<- as.data.frame(cbind(nam, database, status,  sex))
-rownames(tcga_paad_metadata) <- recount3_ids
+rownames(tcga_paad_metadata) <- ids
 tcga_paad_metadata[1:5,]
 ```
 ```{r}
 #order the metadata to match recount3 order
-
 #create sex col 
-identical (rownames(PANCREAS_metadata), colnames( PANCREAS_counts))
-nam<- PANCREAS_metadata$external_id
-sex<- ifelse(PANCREAS_metadata$gtex.sex == 1, "male", "female")
+identical (pan_gtex_metadata_ordered$external_id, colnames( pan_gtex_count_ordered))
+nam<- pan_gtex_metadata_ordered$external_id
+sex<- ifelse(pan_gtex_metadata_ordered$SEX == 1, "male", "female")
 #create database col
 database<- rep ("GTEx",length(sex) )
 #create normal col
 status<- rep ("Solid Tissue Normal", length(sex))
-
-
 #create metadata 
 gtex_metadata<- as.data.frame(cbind(nam, database, status, sex))
-rownames(gtex_metadata)<- rownames(PANCREAS_metadata)
+rownames(gtex_metadata)<- pan_gtex_metadata_ordered$external_id
 #combine count and metadata
 gtex_metadata[1:5,]
 ```
@@ -135,17 +121,18 @@ gtex_metadata[1:5,]
 ```{r}
 all_metadata <- rbind(tcga_paad_metadata, gtex_metadata)
 rownames(all_metadata)<- c(rownames(tcga_paad_metadata), rownames(gtex_metadata))
-count_table<- cbind(PAAD_counts, PANCREAS_counts)
+count_table<- cbind(paad_tcga_count_ordered, pan_gtex_count_ordered)
 ```
 
 ```{r}
 identical(rownames(all_metadata), colnames(count_table))
 ```
 
+
 the other tumor class...
 #grep("NEUROENDOCRINE",recount3_rse_PAAD@colData$tcga.cgc_case_other_histological_diagnosis, ignore.case = TRUE)
 ```{r}
-id_list <-recount3_rse_PAAD@colData$tcga.tcga_barcode[ grep("NEUROENDOCRINE",recount3_rse_PAAD@colData$tcga.cgc_case_other_histological_diagnosis, ignore.case = TRUE)]
+id_list <-paad_tcga_metadata_ordered$external_id[ grep("NEUROENDOCRINE",paad_tcga_metadata_ordered$cgc_case_other_histological_diagnosis, ignore.case = TRUE)]
 all_metadata_v2<- all_metadata[! all_metadata$nam %in% id_list ,]
 count_table_v2<- count_table[, !all_metadata$nam %in% id_list ]
 ```
@@ -171,7 +158,10 @@ dim(all_metadata_v2)
 dim(count_table_v2)
 dim(count_table_v3)
 ```
-
+[1] 533   4
+[1] 534   4
+[1] 63856   534
+[1] 63856   533
 
 
 LINCS data
@@ -218,24 +208,16 @@ deseq2_paad_normal <- deseq2_function(dds_paad_normal, "~/output/pancreas_cancer
 signaturesearch 
 Genes
 ```{r}
-#SRP118922
-library(recount3)
-human_projects<- available_projects()
-test<- create_rse(human_projects[(human_projects$project == "SRP118922"),])
-gene_info <- test@rowRanges
-rm(test)
+feature_info <- readRDS("~/data/recount3/recount3_fix_download/feature_info.rds")
+```
+
+
+```{r eval=FALSE}
+identical(feature_info $gene_id, rownames(deseq2_paad_normal))
 ```
 
 ```{r eval=FALSE}
-dim(as.data.frame(gene_info))
-```
-
-```{r eval=FALSE}
-identical(gene_info$gene_id, rownames(deseq2_paad_normal))
-```
-
-```{r eval=FALSE}
-deseq2_paad_normal$Symbol<- gene_info$gene_name
+deseq2_paad_normal$Symbol<- feature_info$gene_name
 ```
 
 ```{r eval=FALSE}
@@ -391,16 +373,13 @@ write.csv(hyperG_k_res_v2 , file= "~/output/pancreas_cancer/deseq2_res/220929_SR
 
 
 plotting the drug targets
+
 ```{r eval=FALSE}
-gene_info <- as.data.frame(recount3_rse_PANCREAS@rowRanges)
+tpm_table<- Counts_to_tpm(count_table_v3, feature_info$bp_length)
 ```
 
 ```{r eval=FALSE}
-tpm_table<- Counts_to_tpm(count_table_v3, gene_info$bp_length)
-```
-
-```{r eval=FALSE}
-rownames(tpm_table)<- gene_info$gene_name
+rownames(tpm_table)<- feature_info$gene_name
 ```
 
 ```{r eval=FALSE}
