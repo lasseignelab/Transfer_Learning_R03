@@ -59,7 +59,7 @@ count_table_v2 <- function(file, file_name1){
   counts<- read.table( file,
                          header= TRUE)
   print("check the rownames")
-  print(identical(gbm_counts$gene_id, feature_info$gene_id))
+  print(identical(counts$gene_id, feature_info$gene_id))
   rownames(counts) <- counts[,1]
   counts<-counts[,- 1]
   saveRDS(counts, file_name1)
