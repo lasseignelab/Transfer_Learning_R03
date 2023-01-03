@@ -436,7 +436,7 @@ saveRDS(feature_info, &quot;/home/rstudio/data/recount3/recount3_fix_download/fe
   counts&lt;- read.table( file,
                          header= TRUE)
   print(&quot;check the rownames&quot;)
-  print(identical(gbm_counts$gene_id, feature_info$gene_id))
+  print(identical(counts$gene_id, feature_info$gene_id))
   rownames(counts) &lt;- counts[,1]
   counts&lt;-counts[,- 1]
   saveRDS(counts, file_name1)
