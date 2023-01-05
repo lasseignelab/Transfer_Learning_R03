@@ -730,7 +730,7 @@ limma_CT_test_res &lt;- clinical_trial_testing(101, &quot;GI1&quot;, len, fract,
 Deseq2_gbm_normal_gtx_res &lt;- read_csv(&quot;~/output/deseq2_gbm/Deseq2_gbm_normal_gtx_res.csv&quot;, 
     col_names = FALSE, skip = 1)
 colnames(Deseq2_gbm_normal_gtx_res) &lt;-c(&quot;baseMean&quot;, &quot;log2FoldChange&quot;,   &quot;lfcSE&quot;,    &quot;stat&quot;, &quot;pvalue&quot;,   &quot;padj&quot;)
-Deseq2_gbm_normal_gtx_res$Symbol&lt;- gene_info$gene_name
+Deseq2_gbm_normal_gtx_res$Symbol&lt;- feature_info$gene_name
 
 se &lt;- SummarizedExperiment(HDF5Array(&quot;~/data/lincs_2020.h5&quot;, name=&quot;assay&quot;))
 rownames(se) &lt;- HDF5Array(&quot;~/data/lincs_2020.h5&quot;, name=&quot;rownames&quot;)

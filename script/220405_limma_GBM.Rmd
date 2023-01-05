@@ -391,7 +391,7 @@ LINCS pathways & Drug targets for all the candidates
 Deseq2_gbm_normal_gtx_res <- read_csv("~/output/deseq2_gbm/Deseq2_gbm_normal_gtx_res.csv", 
     col_names = FALSE, skip = 1)
 colnames(Deseq2_gbm_normal_gtx_res) <-c("baseMean",	"log2FoldChange",	"lfcSE",	"stat",	"pvalue",	"padj")
-Deseq2_gbm_normal_gtx_res$Symbol<- gene_info$gene_name
+Deseq2_gbm_normal_gtx_res$Symbol<- feature_info$gene_name
 
 se <- SummarizedExperiment(HDF5Array("~/data/lincs_2020.h5", name="assay"))
 rownames(se) <- HDF5Array("~/data/lincs_2020.h5", name="rownames")
