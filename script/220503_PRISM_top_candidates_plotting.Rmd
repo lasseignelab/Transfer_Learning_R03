@@ -866,23 +866,18 @@ metadata <- readRDS("~/output/recount3_gbm_gtex_metadata.rds")
 ```
 
 ```{r}
-library(recount3)
-human_projects<- available_projects()
-#get a random project data
-test<- create_rse(human_projects[(human_projects$project == "SRP118922"),])
-gene_info <- test@rowRanges
-rm(test)
+feature_info <- readRDS("~/data/recount3/recount3_fix_download/feature_info.rds")
 ```
 ```{r}
-dim(as.data.frame(gene_info))
+dim(as.data.frame(feature_info))
 ```
 
 ```{r}
-identical(gene_info$gene_id, rownames(deseq_results))
+identical(feature_info$gene_id, rownames(deseq_results))
 ```
 
 ```{r}
-deseq_results$Symbol<- gene_info$gene_name
+deseq_results$Symbol<- feature_info$gene_name
 ```
 
 ```{r}
