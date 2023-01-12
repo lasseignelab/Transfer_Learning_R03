@@ -1,64 +1,68 @@
 "","go","cluster","parent","parentSimScore","score","size","term","parentTerm","tfl_drugs","deseq2_drugs","limma_drugs"
-"GO:0051225","GO:0051225",1,"GO:0008284",0.114,46,46,"spindle assembly","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:0051256","GO:0051256",1,"GO:0008284",0.075,11,11,"mitotic spindle midzone assembly","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:0051276","GO:0051276",1,"GO:0008284",0.147,13,13,"chromosome organization","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:0000022","GO:0000022",1,"GO:0008284",0.086,2,2,"mitotic spindle elongation","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:0051231","GO:0051231",1,"GO:0008284",0.134,0,0,"spindle elongation","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:0051255","GO:0051255",1,"GO:0008284",0.12,2,2,"spindle midzone assembly","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:0007051","GO:0007051",1,"GO:0008284",0.152,19,19,"spindle organization","positive regulation of cell population proliferation",TRUE,TRUE,FALSE
-"GO:0090307","GO:0090307",1,"GO:0008284",0.083,50,50,"mitotic spindle assembly","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:0000819","GO:0000819",1,"GO:0008284",0.13,3,3,"sister chromatid segregation","positive regulation of cell population proliferation",TRUE,TRUE,FALSE
-"GO:0007052","GO:0007052",1,"GO:0008284",0.12,58,58,"mitotic spindle organization","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
+"GO:0051225","GO:0051225",5,"GO:0030198",0.228,46,46,"spindle assembly","extracellular matrix organization",TRUE,FALSE,FALSE
+"GO:0051256","GO:0051256",5,"GO:0030198",0.141,11,11,"mitotic spindle midzone assembly","extracellular matrix organization",TRUE,FALSE,FALSE
+"GO:0051276","GO:0051276",5,"GO:0030198",0.377,13,13,"chromosome organization","extracellular matrix organization",TRUE,FALSE,FALSE
+"GO:0000022","GO:0000022",5,"GO:0030198",0.144,2,2,"mitotic spindle elongation","extracellular matrix organization",TRUE,FALSE,FALSE
+"GO:0051231","GO:0051231",5,"GO:0030198",0.222,0,0,"spindle elongation","extracellular matrix organization",TRUE,FALSE,FALSE
+"GO:0051255","GO:0051255",5,"GO:0030198",0.242,2,2,"spindle midzone assembly","extracellular matrix organization",TRUE,FALSE,FALSE
+"GO:0007051","GO:0007051",5,"GO:0030198",0.273,19,19,"spindle organization","extracellular matrix organization",TRUE,TRUE,FALSE
+"GO:0090307","GO:0090307",5,"GO:0030198",0.158,50,50,"mitotic spindle assembly","extracellular matrix organization",TRUE,FALSE,FALSE
+"GO:0000819","GO:0000819",5,"GO:0030198",0.267,3,3,"sister chromatid segregation","extracellular matrix organization",TRUE,TRUE,FALSE
+"GO:0007052","GO:0007052",5,"GO:0030198",0.211,58,58,"mitotic spindle organization","extracellular matrix organization",TRUE,FALSE,FALSE
 "GO:0051302","GO:0051302",1,"GO:0008284",0.447,12,12,"regulation of cell division","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:1902850","GO:1902850",1,"GO:0008284",0.123,2,2,"microtubule cytoskeleton organization involved in mitosis","positive regulation of cell population proliferation",TRUE,TRUE,FALSE
-"GO:0098813","GO:0098813",1,"GO:0008284",0.181,1,1,"nuclear chromosome segregation","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
+"GO:1902850","GO:1902850",5,"GO:0030198",0.231,2,2,"microtubule cytoskeleton organization involved in mitosis","extracellular matrix organization",TRUE,TRUE,FALSE
+"GO:0098813","GO:0098813",2,"GO:0007155",0.306,1,1,"nuclear chromosome segregation","cell adhesion",TRUE,FALSE,FALSE
 "GO:0140694","GO:0140694",6,"GO:0140694",1,0,0,"non-membrane-bounded organelle assembly","non-membrane-bounded organelle assembly",TRUE,FALSE,FALSE
-"GO:0000070","GO:0000070",1,"GO:0008284",0.106,35,35,"mitotic sister chromatid segregation","positive regulation of cell population proliferation",TRUE,TRUE,FALSE
+"GO:0000070","GO:0000070",5,"GO:0030198",0.193,35,35,"mitotic sister chromatid segregation","extracellular matrix organization",TRUE,TRUE,FALSE
 "GO:0033044","GO:0033044",1,"GO:0008284",0.289,4,4,"regulation of chromosome organization","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:0008608","GO:0008608",1,"GO:0008284",0.172,15,15,"attachment of spindle microtubules to kinetochore","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:0051988","GO:0051988",1,"GO:0008284",0.285,9,9,"regulation of attachment of spindle microtubules to kinetochore","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:0000723","GO:0000723",5,"GO:0000723",1,49,49,"telomere maintenance","telomere maintenance",TRUE,FALSE,FALSE
-"GO:0007059","GO:0007059",1,"GO:0008284",0.263,88,88,"chromosome segregation","positive regulation of cell population proliferation",TRUE,TRUE,FALSE
-"GO:0032200","GO:0032200",1,"GO:0008284",0.131,27,27,"telomere organization","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:0051301","GO:0051301",1,"GO:0008284",0.263,352,352,"cell division","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
+"GO:0008608","GO:0008608",2,"GO:0007155",0.285,15,15,"attachment of spindle microtubules to kinetochore","cell adhesion",TRUE,FALSE,FALSE
+"GO:0000723","GO:0000723",1,"GO:0008284",0.113,49,49,"telomere maintenance","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
+"GO:0007059","GO:0007059",2,"GO:0007155",0.469,88,88,"chromosome segregation","cell adhesion",TRUE,TRUE,FALSE
+"GO:0051988","GO:0051988",2,"GO:0007155",0.202,9,9,"regulation of attachment of spindle microtubules to kinetochore","cell adhesion",TRUE,FALSE,FALSE
+"GO:0032200","GO:0032200",5,"GO:0030198",0.315,27,27,"telomere organization","extracellular matrix organization",TRUE,FALSE,FALSE
+"GO:0051301","GO:0051301",2,"GO:0007155",0.469,352,352,"cell division","cell adhesion",TRUE,FALSE,FALSE
 "GO:0051781","GO:0051781",1,"GO:0008284",0.563,47,47,"positive regulation of cell division","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:0000280","GO:0000280",1,"GO:0008284",0.131,0,0,"nuclear division","positive regulation of cell population proliferation",TRUE,TRUE,FALSE
+"GO:0000280","GO:0000280",5,"GO:0030198",0.315,0,0,"nuclear division","extracellular matrix organization",TRUE,TRUE,FALSE
 "GO:0032465","GO:0032465",1,"GO:0008284",0.295,51,51,"regulation of cytokinesis","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:0140014","GO:0140014",1,"GO:0008284",0.128,3,3,"mitotic nuclear division","positive regulation of cell population proliferation",TRUE,TRUE,FALSE
 "GO:0048522","GO:0048522",1,"GO:0008284",0.758,0,0,"positive regulation of cellular process","positive regulation of cell population proliferation",TRUE,TRUE,TRUE
-"GO:0048285","GO:0048285",1,"GO:0008284",0.147,0,0,"organelle fission","positive regulation of cell population proliferation",TRUE,TRUE,FALSE
-"GO:1904356","GO:1904356",5,"GO:0000723",0.729,2,2,"regulation of telomere maintenance via telomere lengthening","telomere maintenance",TRUE,FALSE,FALSE
+"GO:0140014","GO:0140014",5,"GO:0030198",0.243,3,3,"mitotic nuclear division","extracellular matrix organization",TRUE,TRUE,FALSE
+"GO:0048285","GO:0048285",5,"GO:0030198",0.377,0,0,"organelle fission","extracellular matrix organization",TRUE,TRUE,FALSE
+"GO:1904356","GO:1904356",1,"GO:0008284",0.166,2,2,"regulation of telomere maintenance via telomere lengthening","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
 "GO:0048518","GO:0048518",3,"GO:0006954",0.166,0,0,"positive regulation of biological process","inflammatory response",TRUE,TRUE,TRUE
 "GO:0032467","GO:0032467",1,"GO:0008284",0.361,46,46,"positive regulation of cytokinesis","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
 "GO:0010990","GO:0010990",1,"GO:0008284",0.214,1,1,"regulation of SMAD protein complex assembly","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
-"GO:0010833","GO:0010833",5,"GO:0000723",0.943,10,10,"telomere maintenance via telomere lengthening","telomere maintenance",TRUE,FALSE,FALSE
-"GO:0000226","GO:0000226",1,"GO:0008284",0.17,142,142,"microtubule cytoskeleton organization","positive regulation of cell population proliferation",TRUE,TRUE,FALSE
+"GO:0000226","GO:0000226",5,"GO:0030198",0.334,142,142,"microtubule cytoskeleton organization","extracellular matrix organization",TRUE,TRUE,FALSE
+"GO:0010833","GO:0010833",1,"GO:0008284",0.115,10,10,"telomere maintenance via telomere lengthening","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
 "GO:0090068","GO:0090068",1,"GO:0008284",0.46,2,2,"positive regulation of cell cycle process","positive regulation of cell population proliferation",TRUE,TRUE,FALSE
-"GO:0030198","GO:0030198",1,"GO:0008284",0.136,157,157,"extracellular matrix organization","positive regulation of cell population proliferation",FALSE,TRUE,TRUE
-"GO:0043062","GO:0043062",1,"GO:0008284",0.171,1,1,"extracellular structure organization","positive regulation of cell population proliferation",FALSE,TRUE,TRUE
-"GO:0045229","GO:0045229",1,"GO:0008284",0.171,0,0,"external encapsulating structure organization","positive regulation of cell population proliferation",FALSE,TRUE,TRUE
+"GO:0031328","GO:0031328",1,"GO:0008284",0.361,3,3,"positive regulation of cellular biosynthetic process","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
+"GO:0010564","GO:0010564",1,"GO:0008284",0.37,12,12,"regulation of cell cycle process","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
+"GO:0045935","GO:0045935",1,"GO:0008284",0.294,0,0,"positive regulation of nucleobase-containing compound metabolic process","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
+"GO:0009891","GO:0009891",1,"GO:0008284",0.258,0,0,"positive regulation of biosynthetic process","positive regulation of cell population proliferation",TRUE,FALSE,FALSE
+"GO:0030198","GO:0030198",5,"GO:0030198",1,157,157,"extracellular matrix organization","extracellular matrix organization",FALSE,TRUE,TRUE
+"GO:0043062","GO:0043062",5,"GO:0030198",0.735,1,1,"extracellular structure organization","extracellular matrix organization",FALSE,TRUE,TRUE
+"GO:0045229","GO:0045229",5,"GO:0030198",0.735,0,0,"external encapsulating structure organization","extracellular matrix organization",FALSE,TRUE,TRUE
 "GO:0007088","GO:0007088",1,"GO:0008284",0.211,28,28,"regulation of mitotic nuclear division","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
-"GO:0030199","GO:0030199",1,"GO:0008284",0.123,66,66,"collagen fibril organization","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
+"GO:0030199","GO:0030199",5,"GO:0030198",0.794,66,66,"collagen fibril organization","extracellular matrix organization",FALSE,TRUE,FALSE
 "GO:0051783","GO:0051783",1,"GO:0008284",0.276,0,0,"regulation of nuclear division","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
-"GO:0051653","GO:0051653",1,"GO:0008284",0.166,5,5,"spindle localization","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
-"GO:0000212","GO:0000212",1,"GO:0008284",0.122,7,7,"meiotic spindle organization","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
+"GO:0051653","GO:0051653",5,"GO:0030198",0.151,5,5,"spindle localization","extracellular matrix organization",FALSE,TRUE,FALSE
+"GO:0000212","GO:0000212",5,"GO:0030198",0.209,7,7,"meiotic spindle organization","extracellular matrix organization",FALSE,TRUE,FALSE
 "GO:0051726","GO:0051726",1,"GO:0008284",0.447,256,256,"regulation of cell cycle","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
-"GO:0022402","GO:0022402",1,"GO:0008284",0.241,0,0,"cell cycle process","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
-"GO:0008283","GO:0008283",1,"GO:0008284",0.484,132,132,"cell population proliferation","positive regulation of cell population proliferation",FALSE,TRUE,TRUE
-"GO:0000278","GO:0000278",1,"GO:0008284",0.207,142,142,"mitotic cell cycle","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
-"GO:0007049","GO:0007049",1,"GO:0008284",0.263,296,296,"cell cycle","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
+"GO:0022402","GO:0022402",2,"GO:0007155",0.412,0,0,"cell cycle process","cell adhesion",FALSE,TRUE,FALSE
+"GO:0008283","GO:0008283",2,"GO:0007155",0.469,132,132,"cell population proliferation","cell adhesion",FALSE,TRUE,TRUE
+"GO:0000278","GO:0000278",2,"GO:0007155",0.373,142,142,"mitotic cell cycle","cell adhesion",FALSE,TRUE,FALSE
+"GO:0007049","GO:0007049",2,"GO:0007155",0.469,296,296,"cell cycle","cell adhesion",FALSE,TRUE,FALSE
 "GO:0045840","GO:0045840",1,"GO:0008284",0.267,31,31,"positive regulation of mitotic nuclear division","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
 "GO:0051983","GO:0051983",1,"GO:0008284",0.447,13,13,"regulation of chromosome segregation","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
-"GO:0040001","GO:0040001",1,"GO:0008284",0.088,7,7,"establishment of mitotic spindle localization","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
-"GO:1903047","GO:1903047",1,"GO:0008284",0.181,0,0,"mitotic cell cycle process","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
+"GO:0040001","GO:0040001",5,"GO:0030198",0.157,7,7,"establishment of mitotic spindle localization","extracellular matrix organization",FALSE,TRUE,FALSE
+"GO:1903047","GO:1903047",2,"GO:0007155",0.306,0,0,"mitotic cell cycle process","cell adhesion",FALSE,TRUE,FALSE
 "GO:0007346","GO:0007346",1,"GO:0008284",0.355,47,47,"regulation of mitotic cell cycle","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
 "GO:0050789","GO:0050789",3,"GO:0006954",0.182,0,0,"regulation of biological process","inflammatory response",FALSE,TRUE,TRUE
 "GO:0051785","GO:0051785",1,"GO:0008284",0.355,0,0,"positive regulation of nuclear division","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
-"GO:0007017","GO:0007017",1,"GO:0008284",0.263,17,17,"microtubule-based process","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
+"GO:0007017","GO:0007017",2,"GO:0007155",0.469,17,17,"microtubule-based process","cell adhesion",FALSE,TRUE,FALSE
 "GO:0050794","GO:0050794",1,"GO:0008284",0.596,2,2,"regulation of cellular process","positive regulation of cell population proliferation",FALSE,TRUE,TRUE
-"GO:0051293","GO:0051293",1,"GO:0008284",0.099,7,7,"establishment of spindle localization","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
+"GO:0051293","GO:0051293",5,"GO:0030198",0.18,7,7,"establishment of spindle localization","extracellular matrix organization",FALSE,TRUE,FALSE
 "GO:0045787","GO:0045787",1,"GO:0008284",0.563,34,34,"positive regulation of cell cycle","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
-"GO:0090306","GO:0090306",1,"GO:0008284",0.087,3,3,"meiotic spindle assembly","positive regulation of cell population proliferation",FALSE,TRUE,FALSE
+"GO:0090306","GO:0090306",5,"GO:0030198",0.161,3,3,"meiotic spindle assembly","extracellular matrix organization",FALSE,TRUE,FALSE
 "GO:0007155","GO:0007155",2,"GO:0007155",1,505,505,"cell adhesion","cell adhesion",FALSE,FALSE,TRUE
 "GO:0042127","GO:0042127",1,"GO:0008284",0.771,143,143,"regulation of cell population proliferation","positive regulation of cell population proliferation",FALSE,FALSE,TRUE
 "GO:0030334","GO:0030334",2,"GO:0007155",0.171,105,105,"regulation of cell migration","cell adhesion",FALSE,FALSE,TRUE
@@ -111,9 +115,9 @@
 "GO:0045597","GO:0045597",1,"GO:0008284",0.47,35,35,"positive regulation of cell differentiation","positive regulation of cell population proliferation",FALSE,FALSE,TRUE
 "GO:1900024","GO:1900024",2,"GO:0007155",0.321,5,5,"regulation of substrate adhesion-dependent cell spreading","cell adhesion",FALSE,FALSE,TRUE
 "GO:0001894","GO:0001894",3,"GO:0006954",0.082,19,19,"tissue homeostasis","inflammatory response",FALSE,FALSE,TRUE
-"GO:0030162","GO:0030162",5,"GO:0000723",0.207,12,12,"regulation of proteolysis","telomere maintenance",FALSE,FALSE,TRUE
-"GO:0052547","GO:0052547",5,"GO:0000723",0.179,3,3,"regulation of peptidase activity","telomere maintenance",FALSE,FALSE,TRUE
-"GO:0048869","GO:0048869",1,"GO:0008284",0.241,0,0,"cellular developmental process","positive regulation of cell population proliferation",FALSE,FALSE,TRUE
+"GO:0030162","GO:0030162",1,"GO:0008284",0.119,12,12,"regulation of proteolysis","positive regulation of cell population proliferation",FALSE,FALSE,TRUE
+"GO:0052547","GO:0052547",1,"GO:0008284",0.114,3,3,"regulation of peptidase activity","positive regulation of cell population proliferation",FALSE,FALSE,TRUE
+"GO:0048869","GO:0048869",2,"GO:0007155",0.412,0,0,"cellular developmental process","cell adhesion",FALSE,FALSE,TRUE
 "GO:0006959","GO:0006959",3,"GO:0006954",0.244,62,62,"humoral immune response","inflammatory response",FALSE,FALSE,TRUE
 "GO:0048584","GO:0048584",3,"GO:0006954",0.246,0,0,"positive regulation of response to stimulus","inflammatory response",FALSE,FALSE,TRUE
 "GO:0019730","GO:0019730",3,"GO:0006954",0.152,13,13,"antimicrobial humoral response","inflammatory response",FALSE,FALSE,TRUE
