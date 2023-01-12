@@ -364,7 +364,7 @@ go_term_heatmap(limma_pathways_liver, deseq2_pathways_liver, TFL_pathways_liver,
 up 
 
 ```{r}
-go_term_heatmap(limma_pathways_lung, deseq2_pathways_lung, TFL_pathways_lung, "Up", threshold =0.80, file_name = "~/output/lung_cancer/go_term_parents_up_genes.csv")
+go_term_heatmap(limma_pathways_lung, deseq2_pathways_lung, TFL_pathways_lung, "Up", threshold =0.87, file_name = "~/output/lung_cancer/go_term_parents_up_genes.csv")
 ```
 
 ```{r}

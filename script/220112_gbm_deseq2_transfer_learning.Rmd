@@ -348,7 +348,7 @@ dds_gbm_normal <- DESeqDataSetFromMatrix(countData = count_table,
 ```
 
 Run DESeq2 for GBM tumor vs normal
-```{r eval = FALSE}
+```{r eval=FALSE}
 deseq2_gbm_normal <- deseq2_function(dds_gbm_normal, "~/output/deseq2_gbm/220927_deseq2_gbm_normal_gtx_res.csv", "status", "Primary Tumor", "Solid Tissue Normal")
 ```
 estimating size factors

@@ -1738,7 +1738,7 @@ drug_struc_heatmap<- function(limma_drugs, deseq2_drugs, TFL_drugs, file){
   
   drug_sdfset <- lincs_sdfset[IDs]
   
-  drug_res <- sapply(cid(drug_sdfset ), function(x) fmcsBatch(drug_sdfset[x], drug_sdfset , au=0, bu=0, timeout=1000000, matching.mode = "aromatic")[,"Tanimoto_Coefficient"])
+  drug_res <- sapply(cid(drug_sdfset ), function(x) fmcsBatch(drug_sdfset[x], drug_sdfset , au=0, bu=0, timeout=10000000, matching.mode = "aromatic")[,"Tanimoto_Coefficient"])
   #return(drug_res)
   
   tfl_drugs3 <-  drug_sdfset@ID %in% TFL_drugs

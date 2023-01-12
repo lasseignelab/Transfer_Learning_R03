@@ -174,7 +174,7 @@ qsig_lincs_deseq2_res <- qSig(query=list(upset=as.character(upset_v2), downset=a
                    gess_method="LINCS", refdb=db_path)
 ```
 37 / 37 genes in up set share identifiers with reference database
-68 / 68 genes in down set share identifiers with reference database
+66 / 66 genes in down set share identifiers with reference database
 
 ```{r eval=FALSE}
 set.seed(101)
@@ -569,7 +569,7 @@ set.seed(101)
 qsig_lincs_transfer_res <- qSig(query=list(upset=as.character(upset_v2), downset=as.character(downset_v2)), 
                    gess_method="LINCS", refdb=db_path)
 ```
-53/ 53 genes in up set share identifiers with reference database
+52/ 52 genes in up set share identifiers with reference database
 54 / 54 genes in down set share identifiers with reference database
 
 ```{r eval=FALSE}

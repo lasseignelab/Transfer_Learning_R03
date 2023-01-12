@@ -1,106 +1,123 @@
 "","go","cluster","parent","parentSimScore","score","size","term","parentTerm","tfl_drugs","deseq2_drugs","limma_drugs"
-"GO:0006954","GO:0006954",3,"GO:0006954",1,410,410,"inflammatory response","inflammatory response",TRUE,FALSE,FALSE
-"GO:0050896","GO:0050896",3,"GO:0006954",0.51,67,67,"response to stimulus","inflammatory response",TRUE,FALSE,TRUE
-"GO:0001568","GO:0001568",4,"GO:0001525",0.674,41,41,"blood vessel development","angiogenesis",TRUE,FALSE,TRUE
-"GO:0001944","GO:0001944",4,"GO:0001525",0.614,15,15,"vasculature development","angiogenesis",TRUE,FALSE,TRUE
-"GO:0048514","GO:0048514",4,"GO:0001525",0.868,19,19,"blood vessel morphogenesis","angiogenesis",TRUE,FALSE,TRUE
-"GO:0050727","GO:0050727",3,"GO:0006954",0.523,91,91,"regulation of inflammatory response","inflammatory response",TRUE,FALSE,FALSE
-"GO:0006952","GO:0006952",3,"GO:0006954",0.812,73,73,"defense response","inflammatory response",TRUE,FALSE,FALSE
-"GO:0010033","GO:0010033",8,"GO:0034097",0.812,25,25,"response to organic substance","response to cytokine",TRUE,FALSE,TRUE
-"GO:0072359","GO:0072359",4,"GO:0001525",0.554,8,8,"circulatory system development","angiogenesis",TRUE,FALSE,TRUE
-"GO:0001525","GO:0001525",4,"GO:0001525",1,240,240,"angiogenesis","angiogenesis",TRUE,FALSE,TRUE
-"GO:0032879","GO:0032879",1,"GO:0007165",0.31,1,1,"regulation of localization","signal transduction",TRUE,FALSE,TRUE
-"GO:0007155","GO:0007155",2,"GO:0007155",1,505,505,"cell adhesion","cell adhesion",TRUE,FALSE,TRUE
-"GO:0006629","GO:0006629",6,"GO:0006629",1,145,145,"lipid metabolic process","lipid metabolic process",TRUE,FALSE,FALSE
-"GO:1901700","GO:1901700",8,"GO:0034097",0.491,0,0,"response to oxygen-containing compound","response to cytokine",TRUE,FALSE,TRUE
-"GO:0035239","GO:0035239",4,"GO:0001525",0.668,1,1,"tube morphogenesis","angiogenesis",TRUE,FALSE,TRUE
-"GO:0031347","GO:0031347",3,"GO:0006954",0.484,0,0,"regulation of defense response","inflammatory response",TRUE,FALSE,FALSE
-"GO:0035295","GO:0035295",4,"GO:0001525",0.546,2,2,"tube development","angiogenesis",TRUE,FALSE,TRUE
-"GO:0006950","GO:0006950",3,"GO:0006954",0.657,0,0,"response to stress","inflammatory response",TRUE,FALSE,FALSE
-"GO:0065007","GO:0065007",1,"GO:0007165",0.316,0,0,"biological regulation","signal transduction",TRUE,FALSE,TRUE
+"GO:0006954","GO:0006954",4,"GO:0006954",1,410,410,"inflammatory response","inflammatory response",TRUE,FALSE,FALSE
+"GO:0050896","GO:0050896",4,"GO:0006954",0.51,67,67,"response to stimulus","inflammatory response",TRUE,FALSE,TRUE
+"GO:0001568","GO:0001568",6,"GO:0001525",0.674,41,41,"blood vessel development","angiogenesis",TRUE,FALSE,TRUE
+"GO:0048514","GO:0048514",6,"GO:0001525",0.868,19,19,"blood vessel morphogenesis","angiogenesis",TRUE,FALSE,TRUE
+"GO:0001944","GO:0001944",6,"GO:0001525",0.614,15,15,"vasculature development","angiogenesis",TRUE,FALSE,TRUE
+"GO:0006952","GO:0006952",4,"GO:0006954",0.812,73,73,"defense response","inflammatory response",TRUE,FALSE,FALSE
+"GO:0006909","GO:0006909",2,"GO:0030154",0.251,70,70,"phagocytosis","cell differentiation",TRUE,FALSE,FALSE
+"GO:0031347","GO:0031347",4,"GO:0006954",0.484,0,0,"regulation of defense response","inflammatory response",TRUE,FALSE,FALSE
+"GO:0010033","GO:0010033",9,"GO:0034097",0.812,25,25,"response to organic substance","response to cytokine",TRUE,FALSE,TRUE
+"GO:0007155","GO:0007155",2,"GO:0030154",0.342,505,505,"cell adhesion","cell differentiation",TRUE,FALSE,TRUE
+"GO:0001525","GO:0001525",6,"GO:0001525",1,240,240,"angiogenesis","angiogenesis",TRUE,FALSE,TRUE
+"GO:0050727","GO:0050727",4,"GO:0006954",0.523,91,91,"regulation of inflammatory response","inflammatory response",TRUE,FALSE,FALSE
+"GO:0002376","GO:0002376",8,"GO:0008217",0.174,44,44,"immune system process","regulation of blood pressure",TRUE,FALSE,FALSE
+"GO:0072359","GO:0072359",6,"GO:0001525",0.554,8,8,"circulatory system development","angiogenesis",TRUE,FALSE,TRUE
+"GO:0006629","GO:0006629",7,"GO:0006629",1,145,145,"lipid metabolic process","lipid metabolic process",TRUE,FALSE,FALSE
+"GO:0035239","GO:0035239",6,"GO:0001525",0.668,1,1,"tube morphogenesis","angiogenesis",TRUE,FALSE,TRUE
+"GO:1901700","GO:1901700",9,"GO:0034097",0.491,0,0,"response to oxygen-containing compound","response to cytokine",TRUE,FALSE,TRUE
 "GO:0007229","GO:0007229",1,"GO:0007165",0.847,115,115,"integrin-mediated signaling pathway","signal transduction",TRUE,FALSE,FALSE
-"GO:0006909","GO:0006909",2,"GO:0007155",0.311,70,70,"phagocytosis","cell adhesion",TRUE,FALSE,FALSE
-"GO:0051716","GO:0051716",8,"GO:0034097",0.313,0,0,"cellular response to stimulus","response to cytokine",TRUE,FALSE,TRUE
-"GO:0071310","GO:0071310",8,"GO:0034097",0.501,13,13,"cellular response to organic substance","response to cytokine",TRUE,FALSE,TRUE
-"GO:0009888","GO:0009888",4,"GO:0001525",0.296,35,35,"tissue development","angiogenesis",TRUE,FALSE,FALSE
-"GO:0051179","GO:0051179",2,"GO:0007155",0.259,0,0,"localization","cell adhesion",TRUE,FALSE,TRUE
-"GO:0050794","GO:0050794",1,"GO:0007165",0.63,2,2,"regulation of cellular process","signal transduction",TRUE,FALSE,TRUE
-"GO:0048646","GO:0048646",4,"GO:0001525",0.575,8,8,"anatomical structure formation involved in morphogenesis","angiogenesis",TRUE,FALSE,TRUE
-"GO:0065009","GO:0065009",1,"GO:0007165",0.238,0,0,"regulation of molecular function","signal transduction",TRUE,FALSE,FALSE
+"GO:0006950","GO:0006950",4,"GO:0006954",0.657,0,0,"response to stress","inflammatory response",TRUE,FALSE,FALSE
+"GO:0035295","GO:0035295",6,"GO:0001525",0.546,2,2,"tube development","angiogenesis",TRUE,FALSE,TRUE
+"GO:0032101","GO:0032101",4,"GO:0006954",0.207,0,0,"regulation of response to external stimulus","inflammatory response",TRUE,FALSE,FALSE
+"GO:0009888","GO:0009888",6,"GO:0001525",0.296,35,35,"tissue development","angiogenesis",TRUE,FALSE,FALSE
+"GO:0051716","GO:0051716",9,"GO:0034097",0.313,0,0,"cellular response to stimulus","response to cytokine",TRUE,FALSE,TRUE
+"GO:0065009","GO:0065009",3,"GO:0050790",0.788,0,0,"regulation of molecular function","regulation of catalytic activity",TRUE,FALSE,FALSE
 "GO:0048518","GO:0048518",1,"GO:0007165",0.349,0,0,"positive regulation of biological process","signal transduction",TRUE,FALSE,TRUE
-"GO:0002376","GO:0002376",6,"GO:0006629",0.211,44,44,"immune system process","lipid metabolic process",TRUE,FALSE,FALSE
 "GO:0007165","GO:0007165",1,"GO:0007165",1,1096,1096,"signal transduction","signal transduction",TRUE,FALSE,FALSE
-"GO:0009605","GO:0009605",3,"GO:0006954",0.357,0,0,"response to external stimulus","inflammatory response",TRUE,FALSE,TRUE
-"GO:0070887","GO:0070887",8,"GO:0034097",0.401,0,0,"cellular response to chemical stimulus","response to cytokine",TRUE,FALSE,TRUE
-"GO:0032101","GO:0032101",3,"GO:0006954",0.207,0,0,"regulation of response to external stimulus","inflammatory response",TRUE,FALSE,FALSE
-"GO:0031589","GO:0031589",2,"GO:0007155",0.831,19,19,"cell-substrate adhesion","cell adhesion",TRUE,FALSE,FALSE
-"GO:0050790","GO:0050790",1,"GO:0007165",0.188,429,429,"regulation of catalytic activity","signal transduction",TRUE,FALSE,FALSE
-"GO:0048522","GO:0048522",1,"GO:0007165",0.507,0,0,"positive regulation of cellular process","signal transduction",TRUE,FALSE,TRUE
+"GO:0050794","GO:0050794",1,"GO:0007165",0.63,2,2,"regulation of cellular process","signal transduction",TRUE,FALSE,TRUE
+"GO:0048646","GO:0048646",6,"GO:0001525",0.575,8,8,"anatomical structure formation involved in morphogenesis","angiogenesis",TRUE,FALSE,TRUE
+"GO:0050790","GO:0050790",3,"GO:0050790",1,429,429,"regulation of catalytic activity","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0043281","GO:0043281",3,"GO:0050790",0.402,8,8,"regulation of cysteine-type endopeptidase activity involved in apoptotic process","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0016477","GO:0016477",5,"GO:0016477",1,266,266,"cell migration","cell migration",TRUE,FALSE,TRUE
+"GO:0071310","GO:0071310",9,"GO:0034097",0.501,13,13,"cellular response to organic substance","response to cytokine",TRUE,FALSE,TRUE
+"GO:0009605","GO:0009605",4,"GO:0006954",0.357,0,0,"response to external stimulus","inflammatory response",TRUE,FALSE,TRUE
+"GO:0045765","GO:0045765",6,"GO:0001525",0.742,30,30,"regulation of angiogenesis","angiogenesis",TRUE,FALSE,TRUE
+"GO:1901342","GO:1901342",6,"GO:0001525",0.439,3,3,"regulation of vasculature development","angiogenesis",TRUE,FALSE,TRUE
+"GO:0065007","GO:0065007",1,"GO:0007165",0.316,0,0,"biological regulation","signal transduction",TRUE,FALSE,TRUE
+"GO:0032879","GO:0032879",1,"GO:0007165",0.31,1,1,"regulation of localization","signal transduction",TRUE,FALSE,TRUE
+"GO:0022603","GO:0022603",6,"GO:0001525",0.33,0,0,"regulation of anatomical structure morphogenesis","angiogenesis",TRUE,FALSE,FALSE
+"GO:2000116","GO:2000116",3,"GO:0050790",0.392,3,3,"regulation of cysteine-type endopeptidase activity","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0051049","GO:0051049",1,"GO:0007165",0.23,3,3,"regulation of transport","signal transduction",TRUE,FALSE,TRUE
+"GO:0023052","GO:0023052",8,"GO:0008217",0.174,7,7,"signaling","regulation of blood pressure",TRUE,FALSE,FALSE
+"GO:0009893","GO:0009893",1,"GO:0007165",0.246,2,2,"positive regulation of metabolic process","signal transduction",TRUE,FALSE,FALSE
+"GO:0120162","GO:0120162",1,"GO:0007165",0.15,97,97,"positive regulation of cold-induced thermogenesis","signal transduction",TRUE,FALSE,FALSE
+"GO:0032787","GO:0032787",7,"GO:0006629",0.297,3,3,"monocarboxylic acid metabolic process","lipid metabolic process",TRUE,FALSE,FALSE
+"GO:0007154","GO:0007154",2,"GO:0030154",0.388,18,18,"cell communication","cell differentiation",TRUE,FALSE,FALSE
+"GO:0019882","GO:0019882",8,"GO:0008217",0.128,24,24,"antigen processing and presentation","regulation of blood pressure",TRUE,FALSE,FALSE
+"GO:0048870","GO:0048870",5,"GO:0016477",0.886,39,39,"cell motility","cell migration",TRUE,FALSE,TRUE
+"GO:0042221","GO:0042221",9,"GO:0034097",0.657,0,0,"response to chemical","response to cytokine",TRUE,FALSE,TRUE
+"GO:0001659","GO:0001659",1,"GO:0007165",0.143,19,19,"temperature homeostasis","signal transduction",TRUE,FALSE,FALSE
+"GO:0010942","GO:0010942",1,"GO:0007165",0.392,42,42,"positive regulation of cell death","signal transduction",TRUE,FALSE,FALSE
+"GO:0019752","GO:0019752",7,"GO:0006629",0.322,10,10,"carboxylic acid metabolic process","lipid metabolic process",TRUE,FALSE,FALSE
+"GO:0070887","GO:0070887",9,"GO:0034097",0.401,0,0,"cellular response to chemical stimulus","response to cytokine",TRUE,FALSE,TRUE
+"GO:0031589","GO:0031589",2,"GO:0030154",0.276,19,19,"cell-substrate adhesion","cell differentiation",TRUE,FALSE,FALSE
+"GO:0009725","GO:0009725",9,"GO:0034097",0.584,42,42,"response to hormone","response to cytokine",TRUE,FALSE,FALSE
+"GO:0043436","GO:0043436",7,"GO:0006629",0.356,0,0,"oxoacid metabolic process","lipid metabolic process",TRUE,FALSE,FALSE
 "GO:0050789","GO:0050789",1,"GO:0007165",0.427,0,0,"regulation of biological process","signal transduction",TRUE,FALSE,TRUE
-"GO:0016477","GO:0016477",2,"GO:0007155",0.265,266,266,"cell migration","cell adhesion",TRUE,FALSE,TRUE
-"GO:0032501","GO:0032501",7,"GO:0008217",0.38,0,0,"multicellular organismal process","regulation of blood pressure",TRUE,FALSE,TRUE
-"GO:0022603","GO:0022603",4,"GO:0001525",0.33,0,0,"regulation of anatomical structure morphogenesis","angiogenesis",TRUE,FALSE,FALSE
-"GO:0019882","GO:0019882",6,"GO:0006629",0.154,24,24,"antigen processing and presentation","lipid metabolic process",TRUE,FALSE,FALSE
-"GO:0042221","GO:0042221",8,"GO:0034097",0.657,0,0,"response to chemical","response to cytokine",TRUE,FALSE,TRUE
-"GO:0045765","GO:0045765",4,"GO:0001525",0.742,30,30,"regulation of angiogenesis","angiogenesis",TRUE,FALSE,TRUE
-"GO:0043299","GO:0043299",2,"GO:0007155",0.181,1,1,"leukocyte degranulation","cell adhesion",TRUE,FALSE,FALSE
-"GO:0007160","GO:0007160",2,"GO:0007155",0.717,111,111,"cell-matrix adhesion","cell adhesion",TRUE,FALSE,FALSE
-"GO:1901342","GO:1901342",4,"GO:0001525",0.439,3,3,"regulation of vasculature development","angiogenesis",TRUE,FALSE,TRUE
-"GO:0023052","GO:0023052",1,"GO:0007165",0.361,7,7,"signaling","signal transduction",TRUE,FALSE,FALSE
-"GO:0009653","GO:0009653",4,"GO:0001525",0.479,131,131,"anatomical structure morphogenesis","angiogenesis",TRUE,FALSE,TRUE
-"GO:0030041","GO:0030041",5,"GO:0030198",0.193,39,39,"actin filament polymerization","extracellular matrix organization",FALSE,TRUE,FALSE
-"GO:0008154","GO:0008154",5,"GO:0030198",0.271,22,22,"actin polymerization or depolymerization","extracellular matrix organization",FALSE,TRUE,FALSE
-"GO:2000145","GO:2000145",2,"GO:0007155",0.182,15,15,"regulation of cell motility","cell adhesion",FALSE,FALSE,TRUE
-"GO:0045926","GO:0045926",1,"GO:0007165",0.246,17,17,"negative regulation of growth","signal transduction",FALSE,FALSE,TRUE
+"GO:0006082","GO:0006082",7,"GO:0006629",0.4,21,21,"organic acid metabolic process","lipid metabolic process",TRUE,FALSE,FALSE
+"GO:0006631","GO:0006631",7,"GO:0006629",0.527,84,84,"fatty acid metabolic process","lipid metabolic process",TRUE,FALSE,FALSE
+"GO:0048583","GO:0048583",4,"GO:0006954",0.288,0,0,"regulation of response to stimulus","inflammatory response",TRUE,FALSE,TRUE
+"GO:0098609","GO:0098609",2,"GO:0030154",0.276,166,166,"cell-cell adhesion","cell differentiation",TRUE,FALSE,FALSE
+"GO:0032501","GO:0032501",8,"GO:0008217",0.38,0,0,"multicellular organismal process","regulation of blood pressure",TRUE,FALSE,TRUE
+"GO:0048522","GO:0048522",1,"GO:0007165",0.507,0,0,"positive regulation of cellular process","signal transduction",TRUE,FALSE,TRUE
+"GO:0051050","GO:0051050",1,"GO:0007165",0.219,1,1,"positive regulation of transport","signal transduction",TRUE,FALSE,FALSE
+"GO:0007160","GO:0007160",2,"GO:0030154",0.231,111,111,"cell-matrix adhesion","cell differentiation",TRUE,FALSE,FALSE
+"GO:2000145","GO:2000145",5,"GO:0016477",0.551,15,15,"regulation of cell motility","cell migration",FALSE,FALSE,TRUE
+"GO:0032502","GO:0032502",6,"GO:0001525",0.304,24,24,"developmental process","angiogenesis",FALSE,FALSE,TRUE
+"GO:0040011","GO:0040011",8,"GO:0008217",0.174,6,6,"locomotion","regulation of blood pressure",FALSE,FALSE,TRUE
 "GO:0040012","GO:0040012",1,"GO:0007165",0.31,6,6,"regulation of locomotion","signal transduction",FALSE,FALSE,TRUE
-"GO:0071345","GO:0071345",8,"GO:0034097",0.63,34,34,"cellular response to cytokine stimulus","response to cytokine",FALSE,FALSE,TRUE
-"GO:0051270","GO:0051270",2,"GO:0007155",0.248,1,1,"regulation of cellular component movement","cell adhesion",FALSE,FALSE,TRUE
-"GO:0034097","GO:0034097",8,"GO:0034097",1,52,52,"response to cytokine","response to cytokine",FALSE,FALSE,TRUE
-"GO:0051239","GO:0051239",7,"GO:0008217",0.358,0,0,"regulation of multicellular organismal process","regulation of blood pressure",FALSE,FALSE,TRUE
-"GO:0032502","GO:0032502",4,"GO:0001525",0.304,24,24,"developmental process","angiogenesis",FALSE,FALSE,TRUE
-"GO:0030334","GO:0030334",2,"GO:0007155",0.171,105,105,"regulation of cell migration","cell adhesion",FALSE,FALSE,TRUE
-"GO:0003013","GO:0003013",7,"GO:0008217",0.577,0,0,"circulatory system process","regulation of blood pressure",FALSE,FALSE,TRUE
-"GO:0008015","GO:0008015",7,"GO:0008217",0.691,34,34,"blood circulation","regulation of blood pressure",FALSE,FALSE,TRUE
-"GO:1990410","GO:1990410",1,"GO:0007165",0.795,4,4,"adrenomedullin receptor signaling pathway","signal transduction",FALSE,FALSE,TRUE
-"GO:0048731","GO:0048731",4,"GO:0001525",0.536,2,2,"system development","angiogenesis",FALSE,FALSE,TRUE
-"GO:0048870","GO:0048870",2,"GO:0007155",0.291,39,39,"cell motility","cell adhesion",FALSE,FALSE,TRUE
-"GO:0051674","GO:0051674",2,"GO:0007155",0.412,0,0,"localization of cell","cell adhesion",FALSE,FALSE,TRUE
-"GO:0040008","GO:0040008",1,"GO:0007165",0.31,60,60,"regulation of growth","signal transduction",FALSE,FALSE,TRUE
-"GO:0007507","GO:0007507",4,"GO:0001525",0.44,214,214,"heart development","angiogenesis",FALSE,FALSE,TRUE
-"GO:0050793","GO:0050793",4,"GO:0001525",0.202,1,1,"regulation of developmental process","angiogenesis",FALSE,FALSE,TRUE
-"GO:0007275","GO:0007275",4,"GO:0001525",0.496,219,219,"multicellular organism development","angiogenesis",FALSE,FALSE,TRUE
-"GO:0040011","GO:0040011",1,"GO:0007165",0.149,6,6,"locomotion","signal transduction",FALSE,FALSE,TRUE
-"GO:0048856","GO:0048856",4,"GO:0001525",0.382,50,50,"anatomical structure development","angiogenesis",FALSE,FALSE,TRUE
-"GO:0071493","GO:0071493",9,"GO:0010224",0.623,8,8,"cellular response to UV-B","response to UV-B",FALSE,FALSE,TRUE
-"GO:0040017","GO:0040017",1,"GO:0007165",0.246,2,2,"positive regulation of locomotion","signal transduction",FALSE,FALSE,TRUE
-"GO:0042127","GO:0042127",1,"GO:0007165",0.49,143,143,"regulation of cell population proliferation","signal transduction",FALSE,FALSE,TRUE
-"GO:0097435","GO:0097435",5,"GO:0030198",0.47,17,17,"supramolecular fiber organization","extracellular matrix organization",FALSE,FALSE,TRUE
-"GO:0003007","GO:0003007",4,"GO:0001525",0.428,41,41,"heart morphogenesis","angiogenesis",FALSE,FALSE,TRUE
-"GO:0051240","GO:0051240",7,"GO:0008217",0.299,0,0,"positive regulation of multicellular organismal process","regulation of blood pressure",FALSE,FALSE,TRUE
-"GO:0003008","GO:0003008",7,"GO:0008217",0.48,0,0,"system process","regulation of blood pressure",FALSE,FALSE,TRUE
-"GO:0045444","GO:0045444",2,"GO:0007155",0.295,64,64,"fat cell differentiation","cell adhesion",FALSE,FALSE,TRUE
-"GO:0030198","GO:0030198",5,"GO:0030198",1,157,157,"extracellular matrix organization","extracellular matrix organization",FALSE,FALSE,TRUE
-"GO:0043062","GO:0043062",5,"GO:0030198",0.735,1,1,"extracellular structure organization","extracellular matrix organization",FALSE,FALSE,TRUE
-"GO:0045229","GO:0045229",5,"GO:0030198",0.735,0,0,"external encapsulating structure organization","extracellular matrix organization",FALSE,FALSE,TRUE
-"GO:0097646","GO:0097646",1,"GO:0007165",0.847,0,0,"calcitonin family receptor signaling pathway","signal transduction",FALSE,FALSE,TRUE
-"GO:0065008","GO:0065008",1,"GO:0007165",0.238,0,0,"regulation of biological quality","signal transduction",FALSE,FALSE,TRUE
+"GO:0045926","GO:0045926",8,"GO:0008217",0.191,17,17,"negative regulation of growth","regulation of blood pressure",FALSE,FALSE,TRUE
+"GO:0051239","GO:0051239",8,"GO:0008217",0.358,0,0,"regulation of multicellular organismal process","regulation of blood pressure",FALSE,FALSE,TRUE
+"GO:0034097","GO:0034097",9,"GO:0034097",1,52,52,"response to cytokine","response to cytokine",FALSE,FALSE,TRUE
+"GO:0071345","GO:0071345",9,"GO:0034097",0.63,34,34,"cellular response to cytokine stimulus","response to cytokine",FALSE,FALSE,TRUE
 "GO:0048519","GO:0048519",1,"GO:0007165",0.349,0,0,"negative regulation of biological process","signal transduction",FALSE,FALSE,TRUE
+"GO:0030334","GO:0030334",5,"GO:0016477",0.644,105,105,"regulation of cell migration","cell migration",FALSE,FALSE,TRUE
+"GO:0048856","GO:0048856",6,"GO:0001525",0.382,50,50,"anatomical structure development","angiogenesis",FALSE,FALSE,TRUE
+"GO:0007275","GO:0007275",6,"GO:0001525",0.496,219,219,"multicellular organism development","angiogenesis",FALSE,FALSE,TRUE
+"GO:0050793","GO:0050793",6,"GO:0001525",0.202,1,1,"regulation of developmental process","angiogenesis",FALSE,FALSE,TRUE
+"GO:0007507","GO:0007507",6,"GO:0001525",0.44,214,214,"heart development","angiogenesis",FALSE,FALSE,TRUE
+"GO:0003013","GO:0003013",8,"GO:0008217",0.577,0,0,"circulatory system process","regulation of blood pressure",FALSE,FALSE,TRUE
+"GO:0009653","GO:0009653",6,"GO:0001525",0.479,131,131,"anatomical structure morphogenesis","angiogenesis",FALSE,FALSE,TRUE
+"GO:0008015","GO:0008015",8,"GO:0008217",0.691,34,34,"blood circulation","regulation of blood pressure",FALSE,FALSE,TRUE
+"GO:0030198","GO:0030198",2,"GO:0030154",0.186,157,157,"extracellular matrix organization","cell differentiation",FALSE,FALSE,TRUE
+"GO:0043062","GO:0043062",2,"GO:0030154",0.244,1,1,"extracellular structure organization","cell differentiation",FALSE,FALSE,TRUE
+"GO:0045229","GO:0045229",2,"GO:0030154",0.244,0,0,"external encapsulating structure organization","cell differentiation",FALSE,FALSE,TRUE
+"GO:0048513","GO:0048513",6,"GO:0001525",0.458,16,16,"animal organ development","angiogenesis",FALSE,FALSE,TRUE
+"GO:0003007","GO:0003007",6,"GO:0001525",0.428,41,41,"heart morphogenesis","angiogenesis",FALSE,FALSE,TRUE
+"GO:0045444","GO:0045444",2,"GO:0030154",0.837,64,64,"fat cell differentiation","cell differentiation",FALSE,FALSE,TRUE
+"GO:1990410","GO:1990410",1,"GO:0007165",0.795,4,4,"adrenomedullin receptor signaling pathway","signal transduction",FALSE,FALSE,TRUE
+"GO:0048731","GO:0048731",6,"GO:0001525",0.536,2,2,"system development","angiogenesis",FALSE,FALSE,TRUE
+"GO:0051094","GO:0051094",6,"GO:0001525",0.183,0,0,"positive regulation of developmental process","angiogenesis",FALSE,FALSE,TRUE
 "GO:0048523","GO:0048523",1,"GO:0007165",0.507,0,0,"negative regulation of cellular process","signal transduction",FALSE,FALSE,TRUE
-"GO:0006928","GO:0006928",2,"GO:0007155",0.469,0,0,"movement of cell or subcellular component","cell adhesion",FALSE,FALSE,TRUE
-"GO:0003015","GO:0003015",7,"GO:0008217",0.451,6,6,"heart process","regulation of blood pressure",FALSE,FALSE,TRUE
-"GO:0008283","GO:0008283",2,"GO:0007155",0.469,132,132,"cell population proliferation","cell adhesion",FALSE,FALSE,TRUE
-"GO:0040007","GO:0040007",1,"GO:0007165",0.149,0,0,"growth","signal transduction",FALSE,FALSE,TRUE
-"GO:2000147","GO:2000147",2,"GO:0007155",0.151,24,24,"positive regulation of cell motility","cell adhesion",FALSE,FALSE,TRUE
-"GO:0051094","GO:0051094",4,"GO:0001525",0.183,0,0,"positive regulation of developmental process","angiogenesis",FALSE,FALSE,TRUE
-"GO:0048583","GO:0048583",3,"GO:0006954",0.288,0,0,"regulation of response to stimulus","inflammatory response",FALSE,FALSE,TRUE
+"GO:0051240","GO:0051240",8,"GO:0008217",0.299,0,0,"positive regulation of multicellular organismal process","regulation of blood pressure",FALSE,FALSE,TRUE
+"GO:0040008","GO:0040008",8,"GO:0008217",0.236,60,60,"regulation of growth","regulation of blood pressure",FALSE,FALSE,TRUE
+"GO:0097435","GO:0097435",2,"GO:0030154",0.244,17,17,"supramolecular fiber organization","cell differentiation",FALSE,FALSE,TRUE
+"GO:0071493","GO:0071493",10,"GO:0010224",0.623,8,8,"cellular response to UV-B","response to UV-B",FALSE,FALSE,TRUE
+"GO:0042127","GO:0042127",1,"GO:0007165",0.49,143,143,"regulation of cell population proliferation","signal transduction",FALSE,FALSE,TRUE
+"GO:0085029","GO:0085029",2,"GO:0030154",0.153,14,14,"extracellular matrix assembly","cell differentiation",FALSE,FALSE,TRUE
+"GO:0040017","GO:0040017",1,"GO:0007165",0.246,2,2,"positive regulation of locomotion","signal transduction",FALSE,FALSE,TRUE
+"GO:0030154","GO:0030154",2,"GO:0030154",1,618,618,"cell differentiation","cell differentiation",FALSE,FALSE,TRUE
+"GO:0048869","GO:0048869",2,"GO:0030154",0.831,0,0,"cellular developmental process","cell differentiation",FALSE,FALSE,TRUE
+"GO:0097646","GO:0097646",1,"GO:0007165",0.847,0,0,"calcitonin family receptor signaling pathway","signal transduction",FALSE,FALSE,TRUE
+"GO:0042698","GO:0042698",8,"GO:0008217",0.16,8,8,"ovulation cycle","regulation of blood pressure",FALSE,FALSE,TRUE
+"GO:0010632","GO:0010632",5,"GO:0016477",0.465,6,6,"regulation of epithelial cell migration","cell migration",FALSE,FALSE,TRUE
+"GO:1904018","GO:1904018",6,"GO:0001525",0.382,1,1,"positive regulation of vasculature development","angiogenesis",FALSE,FALSE,TRUE
+"GO:0045766","GO:0045766",6,"GO:0001525",0.664,176,176,"positive regulation of angiogenesis","angiogenesis",FALSE,FALSE,TRUE
+"GO:0051241","GO:0051241",8,"GO:0008217",0.299,0,0,"negative regulation of multicellular organismal process","regulation of blood pressure",FALSE,FALSE,TRUE
+"GO:0090130","GO:0090130",8,"GO:0008217",0.273,0,0,"tissue migration","regulation of blood pressure",FALSE,FALSE,TRUE
+"GO:0065008","GO:0065008",1,"GO:0007165",0.238,0,0,"regulation of biological quality","signal transduction",FALSE,FALSE,TRUE
+"GO:0008283","GO:0008283",2,"GO:0030154",0.388,132,132,"cell population proliferation","cell differentiation",FALSE,FALSE,TRUE
+"GO:0048871","GO:0048871",1,"GO:0007165",0.166,3,3,"multicellular organismal homeostasis","signal transduction",FALSE,FALSE,TRUE
+"GO:0009719","GO:0009719",9,"GO:0034097",0.357,0,0,"response to endogenous stimulus","response to cytokine",FALSE,FALSE,TRUE
+"GO:0003008","GO:0003008",8,"GO:0008217",0.48,0,0,"system process","regulation of blood pressure",FALSE,FALSE,TRUE
+"GO:2000026","GO:2000026",6,"GO:0001525",0.331,0,0,"regulation of multicellular organismal development","angiogenesis",FALSE,FALSE,TRUE
+"GO:0003015","GO:0003015",8,"GO:0008217",0.451,6,6,"heart process","regulation of blood pressure",FALSE,FALSE,TRUE
+"GO:0098801","GO:0098801",8,"GO:0008217",0.308,0,0,"regulation of renal system process","regulation of blood pressure",FALSE,FALSE,TRUE
+"GO:0051046","GO:0051046",1,"GO:0007165",0.192,2,2,"regulation of secretion","signal transduction",FALSE,FALSE,TRUE
+"GO:2000147","GO:2000147",5,"GO:0016477",0.466,24,24,"positive regulation of cell motility","cell migration",FALSE,FALSE,TRUE
+"GO:0001667","GO:0001667",5,"GO:0016477",0.877,4,4,"ameboidal-type cell migration","cell migration",FALSE,FALSE,TRUE
+"GO:0010224","GO:0010224",10,"GO:0010224",1,9,9,"response to UV-B","response to UV-B",FALSE,FALSE,TRUE
+"GO:0008217","GO:0008217",8,"GO:0008217",1,70,70,"regulation of blood pressure","regulation of blood pressure",FALSE,FALSE,TRUE
 "GO:0001558","GO:0001558",1,"GO:0007165",0.378,67,67,"regulation of cell growth","signal transduction",FALSE,FALSE,TRUE
-"GO:0051272","GO:0051272",2,"GO:0007155",0.219,11,11,"positive regulation of cellular component movement","cell adhesion",FALSE,FALSE,TRUE
-"GO:0008217","GO:0008217",7,"GO:0008217",1,70,70,"regulation of blood pressure","regulation of blood pressure",FALSE,FALSE,TRUE
-"GO:0048513","GO:0048513",4,"GO:0001525",0.458,16,16,"animal organ development","angiogenesis",FALSE,FALSE,TRUE
-"GO:0010224","GO:0010224",9,"GO:0010224",1,9,9,"response to UV-B","response to UV-B",FALSE,FALSE,TRUE
-"GO:0098801","GO:0098801",7,"GO:0008217",0.308,0,0,"regulation of renal system process","regulation of blood pressure",FALSE,FALSE,TRUE
-"GO:0030308","GO:0030308",1,"GO:0007165",0.318,128,128,"negative regulation of cell growth","signal transduction",FALSE,FALSE,TRUE
-"GO:0044057","GO:0044057",7,"GO:0008217",0.393,0,0,"regulation of system process","regulation of blood pressure",FALSE,FALSE,TRUE
-"GO:2000026","GO:2000026",4,"GO:0001525",0.331,0,0,"regulation of multicellular organismal development","angiogenesis",FALSE,FALSE,TRUE
-"GO:0003014","GO:0003014",7,"GO:0008217",0.36,8,8,"renal system process","regulation of blood pressure",FALSE,FALSE,TRUE
-"GO:0022602","GO:0022602",7,"GO:0008217",0.139,4,4,"ovulation cycle process","regulation of blood pressure",FALSE,FALSE,TRUE
+"GO:0040007","GO:0040007",8,"GO:0008217",0.174,0,0,"growth","regulation of blood pressure",FALSE,FALSE,TRUE
