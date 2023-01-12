@@ -1,0 +1,8 @@
+"";"query";"significant";"p_value";"term_size";"query_size";"intersection_size";"precision";"recall";"term_id";"source";"term_name";"effective_domain_size";"source_order";"set"
+"1";"query_1";TRUE;0,0333056341475942;2;1;1;1;0,5;"CORUM:5389";"CORUM";"SERPINA3-CTSG complex";3385;1666;"Up"
+"2";"query_1";TRUE;0,0225991542069723;132;3;2;0,666666666666667;0,0151515151515152;"GO:0030018";"GO:CC";"Z disc";21690;1022;"Down"
+"3";"query_1";TRUE;0,0276554118008961;146;3;2;0,666666666666667;0,0136986301369863;"GO:0031674";"GO:CC";"I band";21690;1409;"Down"
+"4";"query_1";TRUE;0,0152404558734175;78;3;2;0,666666666666667;0,0256410256410256;"GO:0046332";"GO:MF";"SMAD binding";20166;7233;"Down"
+"5";"query_1";TRUE;0,00708631649300299;30;3;2;0,666666666666667;0,0666666666666667;"REAC:R-HSA-2173789";"REAC";"TGF-beta receptor signaling activates SMADs";10461;2275;"Down"
+"6";"query_1";TRUE;0,0426935767007129;73;3;2;0,666666666666667;0,0273972602739726;"REAC:R-HSA-170834";"REAC";"Signaling by TGF-beta Receptor Complex";10461;2160;"Down"
+"7";"query_1";TRUE;0,0136074147626345;9;15;2;0,133333333333333;0,222222222222222;"WP:WP1589";"WP";"Folate-alcohol and cancer pathway hypotheses";7827;185;"Down"

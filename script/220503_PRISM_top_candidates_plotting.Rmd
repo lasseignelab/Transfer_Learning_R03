@@ -802,7 +802,7 @@ drug_ranks<- rowMedians(method_ranks,na.rm= TRUE)
 ```
 
 
-```{r eval=FALSE}
+```{r}
 clinical_trial_GBM <- read_csv("~/data/SearchResults.csv")
 ```
 
@@ -811,7 +811,7 @@ all_cand<- data.frame(gbm_drugs, drug_ranks, group)
 ```
 
 clinical_trial_check
-```{r eval=FALSE}
+```{r}
 all_cand$ct <- clinical_trial_check(as.character(all_cand$gbm_drugs), clinical_trial_GBM)
 ```
 

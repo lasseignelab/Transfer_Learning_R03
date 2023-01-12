@@ -288,8 +288,8 @@ lincs_method_comparsion(deseq_results_all_PAAD ,limma_results_all_PAAD , tfl_res
 
 
 ```{r}
-NCS_sp<- c(0.59, 0.3, 0.37, 0.18, 0.036, 0.4, 0.029, -0.026, 0.27, 0.34, 0.28, 0.36)
-FDR_sp <- c(0.38, 0.16, 0.13, -0.012, -0.048, 0.18, 0.053, -0.058, -0.036, 0.12, 0.16, 0.23)
+NCS_sp<- c(0.59, 0.31, 0.38, 0.18, 0.036, 0.4, 0.023, -0.027, 0.27, 0.34, 0.28, 0.36)
+FDR_sp <- c(0.37, 0.15, 0.13, -0.012, -0.048, 0.18, 0.069, -0.12, -0.032, 0.12, 0.16, 0.23)
 NCS_test<- c(T, T,T, T, F,T,F,F,T,T,T,T)
 FDR_test<- c(T,T,T,F,F,T,F,F,F,T,T,T)
 #c("glioblastoma", "liver hepatocellular carcinoma",  "lung adenocarcinoma", " pancreatic adenocarcinoma")

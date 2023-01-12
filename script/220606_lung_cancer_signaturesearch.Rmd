@@ -163,7 +163,7 @@ library(DESeq2)
 ```
 
 
-```{r eval =FALSE}
+```{r}
 dds_luad_normal <- DESeqDataSetFromMatrix(countData = count_table_v3,
                               colData = all_metadata_v3,
                               design= ~ database + status)
