@@ -1133,10 +1133,6 @@ num_clin &lt;- nrow(lincs_tfl_liver_res_HEPG2_top_fda[lincs_tfl_liver_res_HEPG2_
 fract&lt;- num_clin/len
 tfl_CT_test_res &lt;- clinical_trial_testing(101, &quot;HEPG2&quot;, len, fract, clinical_trial_LIHC)</code></pre>
 <pre class="r"><code>tfl_CT_test_res</code></pre>
-<p>compare gene list across the different methods</p>
-<pre class="r"><code>limma_liver_pathway_res &lt;- method_up_down_gene_set_analysis(limma_liver_list$up, limma_liver_list$down, &quot;~/output/liver_cancer/&quot;, &quot;limma&quot;, &quot;Liver_cancer_limma_input_genes_SR&quot;)</code></pre>
-<pre class="r"><code>deseq2_liver_pathway_res&lt;- method_up_down_gene_set_analysis(deseq2_liver_list$up, deseq2_liver_list$down, &quot;~/output/liver_cancer/&quot;, &quot;DESEq2&quot;, &quot;Liver_cancer_deseq2_input_genes_SR&quot;)</code></pre>
-<pre class="r"><code>tfl_liver_pathway_res&lt;- method_up_down_gene_set_analysis(tfl_liver_list$up, tfl_liver_list$down, &quot;~/output/liver_cancer/&quot;, &quot;TFL&quot;, &quot;Liver_cancer_tfl_input_genes_SR&quot;)</code></pre>
 <pre class="r"><code>venn_dia_methods(lincs_limma_liver_res_HEPG2_top_fda$pert, lincs_deseq_lihc_res_HEPG2_top_fda$pert, lincs_tfl_liver_res_HEPG2_top_fda$pert, file_name=&#39;~/output/liver_cancer/SR_drug_candidates_venn_diagram.png&#39; )</code></pre>
 </div>
 </div>

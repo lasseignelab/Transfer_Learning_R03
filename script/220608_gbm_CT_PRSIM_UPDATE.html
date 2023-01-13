@@ -625,9 +625,7 @@ tfl_gbm_list &lt;- readRDS(&quot;~/output/TF_L_GBM/22004_SR_gene_list_gbm_tfl.rd
 <pre><code>## [1] 1</code></pre>
 <pre class="r"><code>venn_dia_methods(unlist(limma_gbm_list), unlist(deseq_gbm_list), unlist(tfl_gbm_list), file_name=&#39;~/output/gbm_plots/SR_all_genes_venn_diagram.png&#39; )</code></pre>
 <pre><code>## [1] 1</code></pre>
-<pre class="r"><code>limma_gbm_pathway_res &lt;- method_up_down_gene_set_analysis(limma_gbm_list$up, limma_gbm_list$down, &quot;~/output/gbm_plots/&quot;, &quot;limma&quot;, &quot;GBM_cancer_limma_input_genes_SR&quot;)</code></pre>
-<pre class="r"><code>deseq2_gbm_pathway_res&lt;- method_up_down_gene_set_analysis(deseq_gbm_list$up, deseq_gbm_list$down, &quot;~/output/gbm_plots/&quot;, &quot;DESEq2&quot;, &quot;gbm_cancer_deseq2_input_genes_SR&quot;)</code></pre>
-<pre class="r"><code>tfl_gbm_pathway_res&lt;- method_up_down_gene_set_analysis(tfl_gbm_list$up, tfl_gbm_list$down, &quot;~/output/gbm_plots/&quot;, &quot;TFL&quot;, &quot;gbm_cancer_tfl_input_genes_SR&quot;)</code></pre>
+<p>compare the drug candidates</p>
 <pre class="r"><code>lincs_limma_gbm_res_GI1_fda_approved&lt;- read_csv( &quot;~/output/limma_GBM/220808_SR_LINCS_GBM_top_RES_all.csv&quot;)</code></pre>
 <pre><code>## New names:
 ## Rows: 15 Columns: 17

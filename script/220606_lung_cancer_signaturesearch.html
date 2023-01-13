@@ -1130,9 +1130,6 @@ tfl_CT_test_res &lt;- clinical_trial_testing(101, &quot;A549&quot;, len, fract, 
 <pre class="r"><code>venn_dia_methods(limma_lung_list$up, deseq_lung_list$up, tfl_lung_list$up, file_name=&#39;~/output/lung_cancer/SR_up_genes_venn_diagram.png&#39; )</code></pre>
 <pre class="r"><code>venn_dia_methods(limma_lung_list$down, deseq_lung_list$down, tfl_lung_list$down, file_name=&#39;~/output/lung_cancer/SR_down_genes_venn_diagram.png&#39; )</code></pre>
 <pre class="r"><code>venn_dia_methods(unlist(limma_lung_list), unlist(deseq_lung_list), unlist(tfl_lung_list), file_name=&#39;~/output/lung_cancer/SR_all_genes_venn_diagram.png&#39; )</code></pre>
-<pre class="r"><code>limma_lung_pathway_res &lt;- method_up_down_gene_set_analysis(limma_lung_list$up, limma_lung_list$down, &quot;~/output/lung_cancer/&quot;, &quot;limma&quot;, &quot;LUNG_cancer_limma_input_genes_SR&quot;)</code></pre>
-<pre class="r"><code>deseq2_lung_pathway_res&lt;- method_up_down_gene_set_analysis(deseq_lung_list$up, deseq_lung_list$down, &quot;~/output/lung_cancer/&quot;, &quot;DESEq2&quot;, &quot;Lung_cancer_deseq2_input_genes_SR&quot;)</code></pre>
-<pre class="r"><code>tfl_lung_pathway_res&lt;- method_up_down_gene_set_analysis(tfl_lung_list$up, tfl_lung_list$down, &quot;~/output/lung_cancer/&quot;, &quot;TFL&quot;, &quot;LUNG_cancer_tfl_input_genes_SR&quot;)</code></pre>
 <pre class="r"><code>venn_dia_methods(lincs_limma_lung_res_A549_top_fda$pert, lincs_deseq_luad_res_A549_top_fda$pert, lincs_tfl_lung_res_A549_top_fda$pert, file_name=&#39;~/output/lung_cancer/SR_drug_candidates_venn_diagram.png&#39; )</code></pre>
 </div>
 </div>

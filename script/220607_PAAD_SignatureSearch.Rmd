@@ -1121,20 +1121,6 @@ venn_dia_methods(limma_paad_list$down, deseq_paad_list$down, tfl_paad_list$down,
 venn_dia_methods(unlist(limma_paad_list), unlist(deseq_paad_list), unlist(tfl_paad_list), file_name='~/output/pancreas_cancer/SR_all_genes_venn_diagram.png' )
 ```
 
-compare the input pathways
-```{r eval=FALSE}
-limma_paad_pathway_res <- method_up_down_gene_set_analysis(limma_paad_list$up, limma_paad_list$down, "~/output/pancreas_cancer/", "limma", "PAAD_cancer_limma_input_genes_SR")
-```
-
-```{r eval=FALSE}
-deseq2_paad_pathway_res<- method_up_down_gene_set_analysis(deseq_paad_list$up, deseq_paad_list$down, "~/output/pancreas_cancer/", "DESEq2", "PAAD_cancer_deseq2_input_genes_SR")
-```
-
-```{r eval=FALSE}
-tfl_paad_pathway_res<- method_up_down_gene_set_analysis(tfl_paad_list$up, tfl_paad_list$down, "~/output/pancreas_cancer/", "TFL", "PAAD_cancer_tfl_input_genes_SR")
-```
-
-
 compare candidates
 
 ```{r eval=FALSE}

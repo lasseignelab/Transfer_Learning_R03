@@ -640,6 +640,8 @@ drug_analysis <- function(drug_name, target_list,  tpm_df, sample_vector, deseq_
   down <- names(down[order(down)])
   #print(down)
   if (length(down) > 1 & length(up)> 1){
+  
+  set.seed(101)
   downset_pathway_results <- gost(query = down, 
                                   organism = "hsapiens", ordered_query = TRUE, 
                                   multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
@@ -649,7 +651,7 @@ drug_analysis <- function(drug_name, target_list,  tpm_df, sample_vector, deseq_
                                   numeric_ns = "", sources = NULL, as_short_link = FALSE)
   downset_pathway_results<- downset_pathway_results$result
   
-  
+  set.seed(101)
   upset_pathway_results <- gost(query = up, 
                                 organism = "hsapiens", ordered_query = TRUE, 
                                 multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
@@ -663,6 +665,7 @@ drug_analysis <- function(drug_name, target_list,  tpm_df, sample_vector, deseq_
   pathway_results$set<- c(rep("Up", nrow(upset_pathway_results)), rep("Down", nrow(downset_pathway_results)))
   } 
   if (length(down) > 1 & length(up)  < 1){
+    set.seed(101)
     downset_pathway_results <- gost(query = down, 
                                     organism = "hsapiens", ordered_query = TRUE, 
                                     multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
@@ -675,6 +678,7 @@ drug_analysis <- function(drug_name, target_list,  tpm_df, sample_vector, deseq_
     pathway_results$set<-  rep("Down", nrow(downset_pathway_results))
   }
   if  (length(down) < 1 & length(up)  > 1){
+    set.seed(101)
     upset_pathway_results <- gost(query = up, 
                                   organism = "hsapiens", ordered_query = TRUE, 
                                   multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
@@ -877,6 +881,7 @@ method_up_down_gene_set_analysis<- function(up, down,result_path, method, name){
   #saved as csv and a plot for quick veiw of results 
   
   library(gprofiler2)
+  set.seed(101)
   downset_pathway_results <- gost(query = down, 
                                   organism = "hsapiens", ordered_query = TRUE, 
                                   multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 
@@ -886,6 +891,7 @@ method_up_down_gene_set_analysis<- function(up, down,result_path, method, name){
                                   numeric_ns = "", sources = NULL, as_short_link = FALSE)
   downset_pathway_results<- downset_pathway_results$result
   
+  set.seed(101)
   upset_pathway_results <- gost(query = up, 
                                 organism = "hsapiens", ordered_query = TRUE, 
                                 multi_query = FALSE, significant = TRUE, exclude_iea = FALSE, 

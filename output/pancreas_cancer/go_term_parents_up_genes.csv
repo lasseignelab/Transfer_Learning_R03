@@ -1,29 +1,30 @@
 "","go","cluster","parent","parentSimScore","score","size","term","parentTerm","tfl_drugs","deseq2_drugs","limma_drugs"
-"GO:0090557","GO:0090557",1,"GO:0008544",0.302,17,17,"establishment of endothelial intestinal barrier","epidermis development",TRUE,FALSE,FALSE
-"GO:0061028","GO:0061028",1,"GO:0008544",0.306,19,19,"establishment of endothelial barrier","epidermis development",TRUE,FALSE,FALSE
-"GO:0001885","GO:0001885",1,"GO:0008544",0.31,3,3,"endothelial cell development","epidermis development",TRUE,FALSE,FALSE
-"GO:0150105","GO:0150105",6,"GO:0150105",1,9,9,"protein localization to cell-cell junction","protein localization to cell-cell junction",TRUE,FALSE,FALSE
-"GO:0045216","GO:0045216",5,"GO:0045216",1,23,23,"cell-cell junction organization","cell-cell junction organization",TRUE,FALSE,FALSE
-"GO:0045446","GO:0045446",1,"GO:0008544",0.358,12,12,"endothelial cell differentiation","epidermis development",TRUE,FALSE,FALSE
-"GO:0035633","GO:0035633",4,"GO:0035633",1,33,33,"maintenance of blood-brain barrier","maintenance of blood-brain barrier",TRUE,FALSE,FALSE
-"GO:0003158","GO:0003158",1,"GO:0008544",0.527,5,5,"endothelium development","epidermis development",TRUE,FALSE,FALSE
-"GO:1905605","GO:1905605",4,"GO:0035633",0.617,7,7,"positive regulation of blood-brain barrier permeability","maintenance of blood-brain barrier",TRUE,FALSE,FALSE
-"GO:0048871","GO:0048871",4,"GO:0035633",0.717,3,3,"multicellular organismal homeostasis","maintenance of blood-brain barrier",TRUE,FALSE,FALSE
-"GO:1905603","GO:1905603",4,"GO:0035633",0.695,0,0,"regulation of blood-brain barrier permeability","maintenance of blood-brain barrier",TRUE,FALSE,FALSE
-"GO:1904970","GO:1904970",5,"GO:0045216",0.39,4,4,"brush border assembly","cell-cell junction organization",FALSE,TRUE,FALSE
-"GO:0032532","GO:0032532",7,"GO:0032532",1,7,7,"regulation of microvillus length","regulation of microvillus length",FALSE,TRUE,FALSE
-"GO:0030855","GO:0030855",1,"GO:0008544",0.43,70,70,"epithelial cell differentiation","epidermis development",FALSE,TRUE,TRUE
-"GO:0032536","GO:0032536",7,"GO:0032532",0.623,1,1,"regulation of cell projection size","regulation of microvillus length",FALSE,TRUE,FALSE
-"GO:0032530","GO:0032530",8,"GO:0031344",0.716,0,0,"regulation of microvillus organization","regulation of cell projection organization",FALSE,TRUE,FALSE
-"GO:0090675","GO:0090675",5,"GO:0045216",0.335,2,2,"intermicrovillar adhesion","cell-cell junction organization",FALSE,TRUE,FALSE
-"GO:0009913","GO:0009913",1,"GO:0008544",0.591,8,8,"epidermal cell differentiation","epidermis development",FALSE,TRUE,FALSE
-"GO:0008544","GO:0008544",1,"GO:0008544",1,82,82,"epidermis development","epidermis development",FALSE,FALSE,TRUE
-"GO:0120035","GO:0120035",8,"GO:0031344",0.83,3,3,"regulation of plasma membrane bounded cell projection organization","regulation of cell projection organization",FALSE,FALSE,TRUE
-"GO:0031344","GO:0031344",8,"GO:0031344",1,5,5,"regulation of cell projection organization","regulation of cell projection organization",FALSE,FALSE,TRUE
-"GO:0060429","GO:0060429",1,"GO:0008544",0.639,4,4,"epithelium development","epidermis development",FALSE,FALSE,TRUE
-"GO:1903078","GO:1903078",2,"GO:1903078",1,59,59,"positive regulation of protein localization to plasma membrane","positive regulation of protein localization to plasma membrane",FALSE,FALSE,TRUE
-"GO:0043588","GO:0043588",3,"GO:0043588",1,39,39,"skin development","skin development",FALSE,FALSE,TRUE
-"GO:0009888","GO:0009888",1,"GO:0008544",0.812,35,35,"tissue development","epidermis development",FALSE,FALSE,TRUE
-"GO:1904377","GO:1904377",2,"GO:1903078",0.78,0,0,"positive regulation of protein localization to cell periphery","positive regulation of protein localization to plasma membrane",FALSE,FALSE,TRUE
-"GO:0009790","GO:0009790",3,"GO:0043588",0.558,17,17,"embryo development","skin development",FALSE,FALSE,TRUE
-"GO:1903076","GO:1903076",2,"GO:1903078",0.804,20,20,"regulation of protein localization to plasma membrane","positive regulation of protein localization to plasma membrane",FALSE,FALSE,TRUE
+"GO:0090557","GO:0090557",2,"GO:0008544",0.302,17,17,"establishment of endothelial intestinal barrier","epidermis development",TRUE,FALSE,FALSE
+"GO:0061028","GO:0061028",2,"GO:0008544",0.306,19,19,"establishment of endothelial barrier","epidermis development",TRUE,FALSE,FALSE
+"GO:0001885","GO:0001885",2,"GO:0008544",0.31,3,3,"endothelial cell development","epidermis development",TRUE,FALSE,FALSE
+"GO:0150105","GO:0150105",8,"GO:0150105",1,9,9,"protein localization to cell-cell junction","protein localization to cell-cell junction",TRUE,FALSE,FALSE
+"GO:0045216","GO:0045216",6,"GO:0045216",1,23,23,"cell-cell junction organization","cell-cell junction organization",TRUE,FALSE,FALSE
+"GO:0045446","GO:0045446",2,"GO:0008544",0.358,12,12,"endothelial cell differentiation","epidermis development",TRUE,FALSE,FALSE
+"GO:0035633","GO:0035633",5,"GO:0035633",1,33,33,"maintenance of blood-brain barrier","maintenance of blood-brain barrier",TRUE,FALSE,FALSE
+"GO:1905605","GO:1905605",5,"GO:0035633",0.617,7,7,"positive regulation of blood-brain barrier permeability","maintenance of blood-brain barrier",TRUE,FALSE,FALSE
+"GO:0003158","GO:0003158",2,"GO:0008544",0.527,5,5,"endothelium development","epidermis development",TRUE,FALSE,FALSE
+"GO:0097284","GO:0097284",7,"GO:0097284",1,12,12,"hepatocyte apoptotic process","hepatocyte apoptotic process",TRUE,FALSE,FALSE
+"GO:1905603","GO:1905603",5,"GO:0035633",0.695,0,0,"regulation of blood-brain barrier permeability","maintenance of blood-brain barrier",TRUE,FALSE,FALSE
+"GO:1904970","GO:1904970",6,"GO:0045216",0.39,4,4,"brush border assembly","cell-cell junction organization",FALSE,TRUE,FALSE
+"GO:0030855","GO:0030855",2,"GO:0008544",0.43,70,70,"epithelial cell differentiation","epidermis development",FALSE,TRUE,TRUE
+"GO:0032532","GO:0032532",9,"GO:0032532",1,7,7,"regulation of microvillus length","regulation of microvillus length",FALSE,TRUE,FALSE
+"GO:0009913","GO:0009913",2,"GO:0008544",0.591,8,8,"epidermal cell differentiation","epidermis development",FALSE,TRUE,TRUE
+"GO:0032530","GO:0032530",10,"GO:0031344",0.716,0,0,"regulation of microvillus organization","regulation of cell projection organization",FALSE,TRUE,FALSE
+"GO:0032536","GO:0032536",9,"GO:0032532",0.623,1,1,"regulation of cell projection size","regulation of microvillus length",FALSE,TRUE,FALSE
+"GO:0090675","GO:0090675",6,"GO:0045216",0.335,2,2,"intermicrovillar adhesion","cell-cell junction organization",FALSE,TRUE,FALSE
+"GO:0030216","GO:0030216",2,"GO:0008544",0.455,57,57,"keratinocyte differentiation","epidermis development",FALSE,TRUE,TRUE
+"GO:0060429","GO:0060429",2,"GO:0008544",0.639,4,4,"epithelium development","epidermis development",FALSE,TRUE,TRUE
+"GO:0008544","GO:0008544",2,"GO:0008544",1,82,82,"epidermis development","epidermis development",FALSE,TRUE,TRUE
+"GO:0120035","GO:0120035",10,"GO:0031344",0.83,3,3,"regulation of plasma membrane bounded cell projection organization","regulation of cell projection organization",FALSE,FALSE,TRUE
+"GO:0031344","GO:0031344",10,"GO:0031344",1,5,5,"regulation of cell projection organization","regulation of cell projection organization",FALSE,FALSE,TRUE
+"GO:0043588","GO:0043588",4,"GO:0043588",1,39,39,"skin development","skin development",FALSE,FALSE,TRUE
+"GO:0009888","GO:0009888",2,"GO:0008544",0.812,35,35,"tissue development","epidermis development",FALSE,FALSE,TRUE
+"GO:1903078","GO:1903078",3,"GO:1903078",1,59,59,"positive regulation of protein localization to plasma membrane","positive regulation of protein localization to plasma membrane",FALSE,FALSE,TRUE
+"GO:1904377","GO:1904377",3,"GO:1903078",0.78,0,0,"positive regulation of protein localization to cell periphery","positive regulation of protein localization to plasma membrane",FALSE,FALSE,TRUE
+"GO:0016477","GO:0016477",1,"GO:0016477",1,266,266,"cell migration","cell migration",FALSE,FALSE,TRUE
+"GO:0009790","GO:0009790",4,"GO:0043588",0.558,17,17,"embryo development","skin development",FALSE,FALSE,TRUE
