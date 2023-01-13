@@ -76,17 +76,6 @@ lincs_deseq2_gbm_res_GI1_fda_approved <- read_csv( "~/output/deseq2_gbm/220928_S
 lincs_tfl_gbm_res_GI1_fda_approved <- read_csv( "~/output/TF_L_GBM/220808_SR_LINCS_GBM_top_RES_all.csv")
 ```
 
-```{r}
-TFL_pathways <- read_delim("~/output/gbm_plots/TFL_pathways.csv", 
-    delim = ";", escape_double = FALSE, trim_ws = TRUE)
-
-deseq2_pathways <- read_delim("~/output/gbm_plots/DESEq2_pathways.csv", 
-    delim = ";", escape_double = FALSE, trim_ws = TRUE)
-
-limma_pathways <- read_delim("~/output/gbm_plots/limma_pathways.csv", 
-    delim = ";", escape_double = FALSE, trim_ws = TRUE)
-```
-
 liver
 ```{r}
 lincs_deseq_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/deseq2_res/220929_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
@@ -98,17 +87,6 @@ lincs_limma_gbm_res_HEPG2_fda_approved<- lincs_limma_gbm_res_HEPG2_fda_approved[
 #wrong date on file
 lincs_tfl_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/TFL_res/220602_SR_LINCS_LIHC_TFL_RES_tau.csv")
 lincs_tfl_gbm_res_HEPG2_fda_approved<- lincs_tfl_gbm_res_HEPG2_fda_approved[ lincs_tfl_gbm_res_HEPG2_fda_approved$fda_approved == TRUE, ]
-```
-
-```{r}
-TFL_pathways_liver <- read_delim("~/output/liver_cancer/TFL_pathways.csv", 
-    delim = ";", escape_double = FALSE, trim_ws = TRUE)
-
-deseq2_pathways_liver <-read_delim("~/output/liver_cancer/DESEq2_pathways.csv", 
-    delim = ";", escape_double = FALSE, trim_ws = TRUE)
-
-limma_pathways_liver <- read_delim("~/output/liver_cancer/limma_pathways.csv", 
-    delim = ";", escape_double = FALSE, trim_ws = TRUE)
 ```
 
 
@@ -123,16 +101,7 @@ lincs_tfl_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/TFL_res/220
 lincs_tfl_gbm_res_A549_fda_approved<- lincs_tfl_gbm_res_A549_fda_approved[lincs_tfl_gbm_res_A549_fda_approved$fda_approved==TRUE,]
 ```
 
-```{r}
-TFL_pathways_lung <- read_delim("~/output/lung_cancer/TFL_pathways.csv", 
-    delim = ";", escape_double = FALSE, trim_ws = TRUE)
 
-deseq2_pathways_lung <-read_delim("~/output/lung_cancer/DESEq2_pathways.csv", 
-    delim = ";", escape_double = FALSE, trim_ws = TRUE)
-
-limma_pathways_lung <- read_delim("~/output/lung_cancer/limma_pathways.csv", 
-    delim = ";", escape_double = FALSE, trim_ws = TRUE)
-```
 
 pancreatic
 ```{r}
@@ -146,16 +115,6 @@ lincs_tfl_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/TFL_re
 lincs_tfl_gbm_res_YAPC_fda_approved<- lincs_tfl_gbm_res_YAPC_fda_approved[ lincs_tfl_gbm_res_YAPC_fda_approved$fda_approved ==TRUE,]
 ```
 
-```{r}
-TFL_pathways_PAAD <- read_delim("~/output/pancreas_cancer/TFL_pathways.csv", 
-    delim = ";", escape_double = FALSE, trim_ws = TRUE)
-
-deseq2_pathways_PAAD <-read_delim("~/output/pancreas_cancer/DESEq2_pathways.csv", 
-    delim = ";", escape_double = FALSE, trim_ws = TRUE)
-
-limma_pathways_PAAD <- read_delim("~/output/pancreas_cancer/limma_pathways.csv", 
-    delim = ";", escape_double = FALSE, trim_ws = TRUE)
-```
 
 download the compound info from LINCS
 ```{r}
@@ -228,114 +187,201 @@ tfl_gbm_targets <- tfl_gbm_targets[complete.cases(tfl_gbm_targets )]
 venn_dia_methods(limma_gbm_targets, deseq_gbm_targets, tfl_gbm_targets, file_name='~/output/pancreas_cancer/SR_drug_target_venn_diagram.png' )
 ```
 
+pathway analysis of disease-associated gene signatures
+
+gbm
+```{r}
+#disease signatures from all the methods 
+gbm_tfl_input <- readRDS("~/output/TF_L_GBM/22004_SR_gene_list_gbm_tfl.rds")
+gbm_deseq2_input<- readRDS("~/output/deseq2_gbm/SR_gene_list_gbm_deseq2.rds")
+gbm_limma_input<- readRDS("~/output/limma_gbm/SR_gene_list_gbm_limma.rds")
+```
+
+
+```{r}
+limma_gbm_pathway_res <- method_up_down_gene_set_analysis(gbm_limma_input$up, gbm_limma_input$down, "~/output/gbm_plots/", "limma", "GBM_cancer_limma_input_genes_SR")
+```
+
+```{r}
+deseq2_gbm_pathway_res<- method_up_down_gene_set_analysis(gbm_deseq2_input$up, gbm_deseq2_input$down, "~/output/gbm_plots/", "DESEq2", "gbm_cancer_deseq2_input_genes_SR")
+```
+
+```{r}
+tfl_gbm_pathway_res<- method_up_down_gene_set_analysis(gbm_tfl_input$up, gbm_tfl_input$down, "~/output/gbm_plots/", "TFL", "gbm_cancer_tfl_input_genes_SR")
+```
+
 Pathway enrichment venn diagrams
 
 gbm
-```{r eval=FALSE}
-limma<- limma_pathways$term_id[ limma_pathways$set == "Up"]
-deseq2<- deseq2_pathways$term_id[ deseq2_pathways$set == "Up"]
-tfl<-TFL_pathways$term_id[ TFL_pathways$set == "Up"]
+
+```{r }
+limma<- limma_gbm_pathway_res$term_id[ limma_gbm_pathway_res$set == "Up"]
+deseq2<- deseq2_gbm_pathway_res$term_id[ deseq2_gbm_pathway_res$set == "Up"]
+tfl<-tfl_gbm_pathway_res$term_id[ tfl_gbm_pathway_res$set == "Up"]
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/gbm_plots/SR_gbm_Up_pathway_venn_diagram.png' )
 ```
 
-```{r eval=FALSE}
-limma<- limma_pathways$term_id[ limma_pathways$set == "Down"]
-deseq2<- deseq2_pathways$term_id[ deseq2_pathways$set == "Down"]
-tfl<-TFL_pathways$term_id[ TFL_pathways$set == "Down"]
+```{r }
+limma<- limma_gbm_pathway_res$term_id[ limma_gbm_pathway_res$set == "Down"]
+deseq2<- deseq2_gbm_pathway_res$term_id[ deseq2_gbm_pathway_res$set == "Down"]
+tfl<-tfl_gbm_pathway_res$term_id[ tfl_gbm_pathway_res$set == "Down"]
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/gbm_plots/SR_gbm_Down_pathway_venn_diagram.png' )
 ```
 
-```{r eval=FALSE}
-limma<- limma_pathways$term_id
-deseq2<- deseq2_pathways$term_id
-tfl<-TFL_pathways$term_id
+```{r }
+limma<- limma_gbm_pathway_res$term_id
+deseq2<- deseq2_gbm_pathway_res$term_id
+tfl<-tfl_gbm_pathway_res$term_id
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/gbm_plots/SR_gbm_all_pathway_venn_diagram.png' )
 ```
 
-liver 
-limma_pathways_liver, deseq2_pathways_liver, TFL_pathways_liver,
 
-```{r eval=FALSE}
-limma<- limma_pathways_liver$term_id[ limma_pathways_liver$set == "Up"]
-deseq2<- deseq2_pathways_liver$term_id[ deseq2_pathways_liver$set == "Up"]
-tfl<-TFL_pathways_liver$term_id[ TFL_pathways_liver$set == "Up"]
+
+liver
+```{r}
+#disease singatures 
+liver_tfl_input <- readRDS("~/output/liver_cancer/TFL_res/SR_gene_list_liver_tfl.rds")
+liver_deseq2_input <- readRDS("~/output/liver_cancer/deseq2_res/SR_gene_list_liver_deseq2.rds")
+liver_limma_input <- readRDS("~/output/liver_cancer/limma_res/SR_gene_list_liver_limma.rds")
+```
+
+```{r}
+limma_liver_pathway_res <- method_up_down_gene_set_analysis(liver_limma_input$up, liver_limma_input$down, "~/output/liver_cancer/", "limma", "Liver_cancer_limma_input_genes_SR")
+```
+
+```{r }
+deseq2_liver_pathway_res<- method_up_down_gene_set_analysis(liver_deseq2_input$up, liver_deseq2_input$down, "~/output/liver_cancer/", "DESEq2", "Liver_cancer_deseq2_input_genes_SR")
+```
+
+```{r}
+tfl_liver_pathway_res<- method_up_down_gene_set_analysis(liver_tfl_input$up, liver_tfl_input$down, "~/output/liver_cancer/", "TFL", "Liver_cancer_tfl_input_genes_SR")
+```
+
+```{r}
+limma<- limma_liver_pathway_res$term_id[ limma_liver_pathway_res$set == "Up"]
+deseq2<- deseq2_liver_pathway_res$term_id[ deseq2_liver_pathway_res$set == "Up"]
+tfl<-tfl_liver_pathway_res$term_id[ tfl_liver_pathway_res$set == "Up"]
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/liver_cancer/SR_liver_Up_pathway_venn_diagram.png' )
 ```
 
-```{r eval=FALSE}
-limma<- limma_pathways_liver$term_id[ limma_pathways_liver$set == "Down"]
-deseq2<- deseq2_pathways_liver$term_id[ deseq2_pathways_liver$set == "Down"]
-tfl<-TFL_pathways_liver$term_id[ TFL_pathways_liver$set == "Down"]
+```{r}
+limma<- limma_liver_pathway_res$term_id[ limma_liver_pathway_res$set == "Down"]
+deseq2<- deseq2_liver_pathway_res$term_id[ deseq2_liver_pathway_res$set == "Down"]
+tfl<-tfl_liver_pathway_res$term_id[ tfl_liver_pathway_res$set == "Down"]
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/liver_cancer/SR_liver_Down_pathway_venn_diagram.png' )
 ```
 
-```{r eval=FALSE}
-limma<- limma_pathways_liver$term_id
-deseq2<- deseq2_pathways_liver$term_id
-tfl<-TFL_pathways_liver$term_id
+```{r}
+limma<- limma_liver_pathway_res$term_id
+deseq2<- deseq2_liver_pathway_res$term_id
+tfl<-tfl_liver_pathway_res$term_id
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/liver_cancer/SR_liver_all_pathway_venn_diagram.png' )
 ```
 
+
 lung
-```{r eval=FALSE}
-limma<- limma_pathways_lung$term_id[ limma_pathways_lung$set == "Up"]
-deseq2<- deseq2_pathways_lung$term_id[ deseq2_pathways_lung$set == "Up"]
-tfl<-TFL_pathways_lung$term_id[ TFL_pathways_lung$set == "Up"]
+```{r}
+#disease singatures all in the deseq2 folder
+lung_deseq2_input <- readRDS("~/output/lung_cancer/deseq2_res/SR_gene_list_luad_deseq2.rds")
+lung_tfl_input<- readRDS("~/output/lung_cancer/deseq2_res/SR_gene_list_lung_tfl.rds")
+lung_limma_input<- readRDS("~/output/lung_cancer/deseq2_res/SR_gene_list_lung_limma.rds")
+```
+
+```{r }
+limma_lung_pathway_res <- method_up_down_gene_set_analysis(lung_limma_input$up, lung_limma_input$down, "~/output/lung_cancer/", "limma", "LUNG_cancer_limma_input_genes_SR")
+```
+
+```{r }
+deseq2_lung_pathway_res<- method_up_down_gene_set_analysis(lung_deseq2_input$up, lung_deseq2_input$down, "~/output/lung_cancer/", "DESEq2", "Lung_cancer_deseq2_input_genes_SR")
+```
+
+```{r }
+tfl_lung_pathway_res<- method_up_down_gene_set_analysis(lung_tfl_input$up, lung_tfl_input$down, "~/output/lung_cancer/", "TFL", "LUNG_cancer_tfl_input_genes_SR")
+```
+
+```{r}
+limma<- limma_lung_pathway_res$term_id[ limma_lung_pathway_res$set == "Up"]
+deseq2<- deseq2_lung_pathway_res$term_id[ deseq2_lung_pathway_res$set == "Up"]
+tfl<-tfl_lung_pathway_res$term_id[ tfl_lung_pathway_res$set == "Up"]
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/lung_cancer/SR_lung_Up_pathway_venn_diagram.png' )
 ```
 
-```{r eval=FALSE}
-limma<- limma_pathways_lung$term_id[ limma_pathways_lung$set == "Down"]
-deseq2<- deseq2_pathways_lung$term_id[ deseq2_pathways_lung$set == "Down"]
-tfl<-TFL_pathways_lung$term_id[ TFL_pathways_lung$set == "Down"]
+```{r}
+limma<- limma_lung_pathway_res$term_id[ limma_lung_pathway_res$set == "Down"]
+deseq2<- deseq2_lung_pathway_res$term_id[ deseq2_lung_pathway_res$set == "Down"]
+tfl<-tfl_lung_pathway_res$term_id[ tfl_lung_pathway_res$set == "Down"]
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/lung_cancer/SR_lung_Down_pathway_venn_diagram.png' )
 ```
 
-```{r eval=FALSE}
-limma<- limma_pathways_lung$term_id
-deseq2<- deseq2_pathways_lung$term_id
-tfl<-TFL_pathways_lung$term_id
+```{r}
+limma<- limma_lung_pathway_res$term_id
+deseq2<- deseq2_lung_pathway_res$term_id
+tfl<-tfl_lung_pathway_res$term_id
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/lung_cancer/SR_lung_all_pathway_venn_diagram.png' )
 ```
 
 paad
-```{r eval=FALSE}
-limma<- limma_pathways_PAAD$term_id[ limma_pathways_PAAD$set == "Up"]
-deseq2<- deseq2_pathways_PAAD$term_id[ deseq2_pathways_PAAD$set == "Up"]
-tfl<-TFL_pathways_PAAD$term_id[ TFL_pathways_PAAD$set == "Up"]
+
+```{r}
+paad_tfl_input <- readRDS("~/output/pancreas_cancer/TFL_res/SR_gene_list_paad_tfl.rds")
+paad_limma_input <- readRDS("~/output/pancreas_cancer/limma_res/SR_gene_list_paad_limma.rds")
+paad_deseq2_input <- readRDS("~/output/pancreas_cancer/deseq2_res/SR_gene_list_paad_deseq2.rds")
+```
+
+
+compare the input pathways
+```{r }
+limma_paad_pathway_res <- method_up_down_gene_set_analysis(paad_limma_input$up, paad_limma_input$down, "~/output/pancreas_cancer/", "limma", "PAAD_cancer_limma_input_genes_SR")
+```
+
+```{r }
+deseq2_paad_pathway_res<- method_up_down_gene_set_analysis(paad_deseq2_input$up, paad_deseq2_input$down, "~/output/pancreas_cancer/", "DESEq2", "PAAD_cancer_deseq2_input_genes_SR")
+```
+
+```{r }
+tfl_paad_pathway_res<- method_up_down_gene_set_analysis(paad_tfl_input$up, paad_tfl_input$down, "~/output/pancreas_cancer/", "TFL", "PAAD_cancer_tfl_input_genes_SR")
+```
+
+
+Pathway enrichment venn diagrams
+
+paad
+
+```{r }
+limma<- limma_paad_pathway_res$term_id[ limma_paad_pathway_res$set == "Up"]
+deseq2<- deseq2_paad_pathway_res$term_id[ deseq2_paad_pathway_res$set == "Up"]
+tfl<-tfl_paad_pathway_res$term_id[ tfl_paad_pathway_res$set == "Up"]
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/pancreas_cancer/SR_PAAD_Up_pathway_venn_diagram.png' )
 ```
 
-```{r eval=FALSE}
-limma<- limma_pathways_PAAD$term_id[ limma_pathways_PAAD$set == "Down"]
-deseq2<- deseq2_pathways_PAAD$term_id[ deseq2_pathways_PAAD$set == "Down"]
-tfl<-TFL_pathways_PAAD$term_id[ TFL_pathways_PAAD$set == "Down"]
+```{r }
+limma<- limma_paad_pathway_res$term_id[ limma_paad_pathway_res$set == "Down"]
+deseq2<- deseq2_paad_pathway_res$term_id[ deseq2_paad_pathway_res$set == "Down"]
+tfl<-tfl_paad_pathway_res$term_id[ tfl_paad_pathway_res$set == "Down"]
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/pancreas_cancer/SR_PAAD_Down_pathway_venn_diagram.png' )
 ```
 
-```{r eval=FALSE}
-limma<- limma_pathways_PAAD$term_id
-deseq2<- deseq2_pathways_PAAD$term_id
-tfl<-TFL_pathways_PAAD$term_id
+```{r}
+limma<- limma_paad_pathway_res$term_id
+deseq2<- deseq2_paad_pathway_res$term_id
+tfl<-tfl_paad_pathway_res$term_id
 venn_dia_methods(limma, deseq2, tfl, file_name='~/output/pancreas_cancer/SR_PAAD_all_pathway_venn_diagram.png' )
 ```
 
-Gene Ontology Semantic Similarity analysis
+
+# Gene Ontology Semantic Similarity analysis
 ```{r}
 library(GOSemSim)
 hsGO <- godata('org.Hs.eg.db', ont="BP")
 ```
 
 ```{r}
-go_term_heatmap(limma_pathways, deseq2_pathways, TFL_pathways, "Up", file_name = "~/output/gbm_plots/go_term_parents_up_genes.csv")
+go_term_heatmap(limma_gbm_pathway_res, deseq2_gbm_pathway_res, tfl_gbm_pathway_res, "Up", file_name = "~/output/gbm_plots/go_term_parents_up_genes.csv")
 ```
 
 
 ```{r}
-go_term_heatmap(limma_pathways, deseq2_pathways, TFL_pathways, "Down", file_name = "~/output/gbm_plots/go_term_parents_down_genes.csv")
-```
-```{r}
-#go_term_tree_plot(limma_pathways, deseq2_pathways, TFL_pathways, list_type= "Down", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
+go_term_heatmap(limma_gbm_pathway_res, deseq2_gbm_pathway_res, tfl_gbm_pathway_res, "Down", file_name = "~/output/gbm_plots/go_term_parents_down_genes.csv")
 ```
 
 # liver 
@@ -343,61 +389,46 @@ go_term_heatmap(limma_pathways, deseq2_pathways, TFL_pathways, "Down", file_name
 up 
 
 ```{r}
-go_term_heatmap(limma_pathways_liver, deseq2_pathways_liver, TFL_pathways_liver, "Up", threshold =0.95, file_name = "~/output/liver_cancer/go_term_parents_up_genes.csv")
+go_term_heatmap(limma_liver_pathway_res, deseq2_liver_pathway_res, tfl_liver_pathway_res, "Up", threshold =0.95, file_name = "~/output/liver_cancer/go_term_parents_up_genes.csv")
 ```
 
-```{r}
-#go_term_tree_plot(limma_pathways, deseq2_pathways1, TFL_pathways, "Up", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
-```
 
 down
 ```{r}
-go_term_heatmap(limma_pathways_liver, deseq2_pathways_liver, TFL_pathways_liver, "Down", threshold =0.95, file_name = "~/output/liver_cancer/go_term_parents_down_genes.csv")
+go_term_heatmap(limma_liver_pathway_res, deseq2_liver_pathway_res, tfl_liver_pathway_res, "Down", threshold =0.95, file_name = "~/output/liver_cancer/go_term_parents_down_genes.csv")
 ```
 
-```{r}
-#go_term_tree_plot(limma_pathways, deseq2_pathways1, TFL_pathways, "Down", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
-```
 
 # lung 
 
 up 
 
 ```{r}
-go_term_heatmap(limma_pathways_lung, deseq2_pathways_lung, TFL_pathways_lung, "Up", threshold =0.87, file_name = "~/output/lung_cancer/go_term_parents_up_genes.csv")
+go_term_heatmap(limma_lung_pathway_res, deseq2_lung_pathway_res, tfl_lung_pathway_res, "Up", threshold =0.87, file_name = "~/output/lung_cancer/go_term_parents_up_genes.csv")
 ```
 
-```{r}
-#go_term_tree_plot(limma_pathways, deseq2_pathways1, TFL_pathways, "Up", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
-```
+
 
 down
 ```{r}
-go_term_heatmap(limma_pathways_lung, deseq2_pathways_lung, TFL_pathways_lung, "Down", threshold =0.90, file_name = "~/output/lung_cancer/go_term_parents_down_genes.csv")
+go_term_heatmap(limma_lung_pathway_res, deseq2_lung_pathway_res, tfl_lung_pathway_res, "Down", threshold =0.90, file_name = "~/output/lung_cancer/go_term_parents_down_genes.csv")
 ```
 
-```{r}
-#go_term_tree_plot(limma_pathways, deseq2_pathways1, TFL_pathways, "Down", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
-```
 # pancreatic 
 
 up 
 ```{r}
-go_term_heatmap(limma_pathways_PAAD, deseq2_pathways_PAAD, TFL_pathways_PAAD, "Up", threshold =0.70, file_name = "~/output/pancreas_cancer/go_term_parents_up_genes.csv")
+go_term_heatmap(limma_paad_pathway_res, deseq2_paad_pathway_res, tfl_paad_pathway_res, "Up", threshold =0.70, file_name = "~/output/pancreas_cancer/go_term_parents_up_genes.csv")
 ```
 
-```{r}
-#go_term_tree_plot(limma_pathways, deseq2_pathways1, TFL_pathways, "Up", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
-```
+
 
 down
 ```{r}
-go_term_heatmap(limma_pathways_PAAD, deseq2_pathways_PAAD, TFL_pathways_PAAD, "Down", threshold =0.95, file_name = "~/output/pancreas_cancer/go_term_parents_down_genes.csv")
+go_term_heatmap(limma_paad_pathway_res, deseq2_paad_pathway_res, tfl_paad_pathway_res, "Down", threshold =0.95, file_name = "~/output/pancreas_cancer/go_term_parents_down_genes.csv")
 ```
 
-```{r}
-#go_term_tree_plot(limma_pathways, deseq2_pathways1, TFL_pathways, "Down", num=80, k_num=5, colors= c( "#117733", "#661100",  "#0072B2", "#D55E00", "#AA4499"), shift=6)
-```
+
 
 
 Alluvial and bar plots for each method/cancer combination for Mechanism of Action and Drug Targets

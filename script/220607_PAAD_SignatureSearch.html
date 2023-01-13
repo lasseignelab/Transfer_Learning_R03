@@ -1154,10 +1154,6 @@ tfl_CT_test_res &lt;- clinical_trial_testing(101, &quot;YAPC&quot;, len, fract, 
 <pre class="r"><code>venn_dia_methods(limma_paad_list$up, deseq_paad_list$up, tfl_paad_list$up, file_name=&#39;~/output/pancreas_cancer/SR_up_genes_venn_diagram.png&#39; )</code></pre>
 <pre class="r"><code>venn_dia_methods(limma_paad_list$down, deseq_paad_list$down, tfl_paad_list$down, file_name=&#39;~/output/pancreas_cancer/SR_down_genes_venn_diagram.png&#39; )</code></pre>
 <pre class="r"><code>venn_dia_methods(unlist(limma_paad_list), unlist(deseq_paad_list), unlist(tfl_paad_list), file_name=&#39;~/output/pancreas_cancer/SR_all_genes_venn_diagram.png&#39; )</code></pre>
-<p>compare the input pathways</p>
-<pre class="r"><code>limma_paad_pathway_res &lt;- method_up_down_gene_set_analysis(limma_paad_list$up, limma_paad_list$down, &quot;~/output/pancreas_cancer/&quot;, &quot;limma&quot;, &quot;PAAD_cancer_limma_input_genes_SR&quot;)</code></pre>
-<pre class="r"><code>deseq2_paad_pathway_res&lt;- method_up_down_gene_set_analysis(deseq_paad_list$up, deseq_paad_list$down, &quot;~/output/pancreas_cancer/&quot;, &quot;DESEq2&quot;, &quot;PAAD_cancer_deseq2_input_genes_SR&quot;)</code></pre>
-<pre class="r"><code>tfl_paad_pathway_res&lt;- method_up_down_gene_set_analysis(tfl_paad_list$up, tfl_paad_list$down, &quot;~/output/pancreas_cancer/&quot;, &quot;TFL&quot;, &quot;PAAD_cancer_tfl_input_genes_SR&quot;)</code></pre>
 <p>compare candidates</p>
 <pre class="r"><code>venn_dia_methods(lincs_limma_pancreas_res_YAPC_top_fda$pert, lincs_deseq_paad_res_YAPC_top_fda$pert, lincs_tfl_pancreas_res_YAPC_top_fda$pert, file_name=&#39;~/output/pancreas_cancer/SR_drug_candidates_venn_diagram.png&#39; )</code></pre>
 </div>

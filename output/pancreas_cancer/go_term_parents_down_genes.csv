@@ -1,311 +1,317 @@
 "","go","cluster","parent","parentSimScore","score","size","term","parentTerm","tfl_drugs","deseq2_drugs","limma_drugs"
-"GO:0006955","GO:0006955",6,"GO:0006955",1,463,463,"immune response","immune response",TRUE,TRUE,TRUE
-"GO:0002376","GO:0002376",6,"GO:0006955",0.63,44,44,"immune system process","immune response",TRUE,FALSE,TRUE
-"GO:0001775","GO:0001775",10,"GO:0042110",0.543,13,13,"cell activation","T cell activation",TRUE,TRUE,TRUE
+"GO:0001775","GO:0001775",1,"GO:0007165",0.28,13,13,"cell activation","signal transduction",TRUE,TRUE,TRUE
 "GO:0045321","GO:0045321",10,"GO:0042110",0.748,5,5,"leukocyte activation","T cell activation",TRUE,TRUE,TRUE
-"GO:0002252","GO:0002252",6,"GO:0006955",0.469,0,0,"immune effector process","immune response",TRUE,FALSE,TRUE
-"GO:0006952","GO:0006952",3,"GO:0045087",0.48,73,73,"defense response","innate immune response",TRUE,TRUE,TRUE
-"GO:0044419","GO:0044419",5,"GO:0007155",0.259,0,0,"biological process involved in interspecies interaction between organisms","cell adhesion",TRUE,FALSE,TRUE
+"GO:0006955","GO:0006955",5,"GO:0006955",1,463,463,"immune response","immune response",TRUE,TRUE,TRUE
+"GO:0002376","GO:0002376",5,"GO:0006955",0.63,44,44,"immune system process","immune response",TRUE,FALSE,TRUE
+"GO:0002252","GO:0002252",5,"GO:0006955",0.469,0,0,"immune effector process","immune response",TRUE,FALSE,TRUE
+"GO:0006952","GO:0006952",7,"GO:0006954",0.812,73,73,"defense response","inflammatory response",TRUE,TRUE,TRUE
+"GO:0044419","GO:0044419",6,"GO:0050790",0.246,0,0,"biological process involved in interspecies interaction between organisms","regulation of catalytic activity",TRUE,FALSE,TRUE
 "GO:0098542","GO:0098542",3,"GO:0045087",0.809,1,1,"defense response to other organism","innate immune response",TRUE,FALSE,TRUE
-"GO:0045087","GO:0045087",3,"GO:0045087",1,592,592,"innate immune response","innate immune response",TRUE,FALSE,TRUE
-"GO:0051707","GO:0051707",3,"GO:0045087",0.643,3,3,"response to other organism","innate immune response",TRUE,FALSE,TRUE
-"GO:0043207","GO:0043207",3,"GO:0045087",0.518,1,1,"response to external biotic stimulus","innate immune response",TRUE,FALSE,TRUE
-"GO:0002366","GO:0002366",10,"GO:0042110",0.46,4,4,"leukocyte activation involved in immune response","T cell activation",TRUE,TRUE,TRUE
-"GO:0002682","GO:0002682",1,"GO:0007165",0.31,10,10,"regulation of immune system process","signal transduction",TRUE,FALSE,TRUE
-"GO:0009607","GO:0009607",9,"GO:0019221",0.174,0,0,"response to biotic stimulus","cytokine-mediated signaling pathway",TRUE,FALSE,TRUE
-"GO:0002263","GO:0002263",10,"GO:0042110",0.386,1,1,"cell activation involved in immune response","T cell activation",TRUE,TRUE,TRUE
-"GO:0002443","GO:0002443",6,"GO:0006955",0.373,1,1,"leukocyte mediated immunity","immune response",TRUE,FALSE,TRUE
-"GO:0002274","GO:0002274",10,"GO:0042110",0.598,1,1,"myeloid leukocyte activation","T cell activation",TRUE,FALSE,TRUE
 "GO:0046649","GO:0046649",10,"GO:0042110",0.851,1,1,"lymphocyte activation","T cell activation",TRUE,TRUE,TRUE
-"GO:0009605","GO:0009605",9,"GO:0019221",0.174,0,0,"response to external stimulus","cytokine-mediated signaling pathway",TRUE,FALSE,TRUE
-"GO:0050896","GO:0050896",9,"GO:0019221",0.24,67,67,"response to stimulus","cytokine-mediated signaling pathway",TRUE,TRUE,TRUE
-"GO:0002684","GO:0002684",1,"GO:0007165",0.246,1,1,"positive regulation of immune system process","signal transduction",TRUE,FALSE,TRUE
-"GO:0006954","GO:0006954",3,"GO:0045087",0.383,410,410,"inflammatory response","innate immune response",TRUE,FALSE,TRUE
-"GO:0002697","GO:0002697",6,"GO:0006955",0.291,0,0,"regulation of immune effector process","immune response",TRUE,FALSE,TRUE
-"GO:0002449","GO:0002449",6,"GO:0006955",0.313,0,0,"lymphocyte mediated immunity","immune response",TRUE,FALSE,FALSE
+"GO:0051707","GO:0051707",7,"GO:0006954",0.203,3,3,"response to other organism","inflammatory response",TRUE,FALSE,TRUE
+"GO:0043207","GO:0043207",7,"GO:0006954",0.236,1,1,"response to external biotic stimulus","inflammatory response",TRUE,FALSE,TRUE
+"GO:0009607","GO:0009607",7,"GO:0006954",0.357,0,0,"response to biotic stimulus","inflammatory response",TRUE,FALSE,TRUE
+"GO:0002682","GO:0002682",6,"GO:0050790",0.307,10,10,"regulation of immune system process","regulation of catalytic activity",TRUE,FALSE,TRUE
+"GO:0002366","GO:0002366",10,"GO:0042110",0.46,4,4,"leukocyte activation involved in immune response","T cell activation",TRUE,TRUE,TRUE
+"GO:0002263","GO:0002263",10,"GO:0042110",0.386,1,1,"cell activation involved in immune response","T cell activation",TRUE,TRUE,TRUE
+"GO:0002684","GO:0002684",6,"GO:0050790",0.24,1,1,"positive regulation of immune system process","regulation of catalytic activity",TRUE,FALSE,TRUE
+"GO:0002443","GO:0002443",5,"GO:0006955",0.373,1,1,"leukocyte mediated immunity","immune response",TRUE,FALSE,TRUE
+"GO:0002274","GO:0002274",10,"GO:0042110",0.598,1,1,"myeloid leukocyte activation","T cell activation",TRUE,FALSE,FALSE
+"GO:0009605","GO:0009605",7,"GO:0006954",0.357,0,0,"response to external stimulus","inflammatory response",TRUE,FALSE,TRUE
+"GO:0045087","GO:0045087",3,"GO:0045087",1,592,592,"innate immune response","innate immune response",TRUE,FALSE,TRUE
+"GO:0050865","GO:0050865",10,"GO:0042110",0.317,1,1,"regulation of cell activation","T cell activation",TRUE,FALSE,FALSE
+"GO:0050896","GO:0050896",7,"GO:0006954",0.51,67,67,"response to stimulus","inflammatory response",TRUE,TRUE,TRUE
+"GO:0002697","GO:0002697",5,"GO:0006955",0.291,0,0,"regulation of immune effector process","immune response",TRUE,FALSE,TRUE
 "GO:0032101","GO:0032101",3,"GO:0045087",0.254,0,0,"regulation of response to external stimulus","innate immune response",TRUE,FALSE,TRUE
-"GO:0002683","GO:0002683",1,"GO:0007165",0.246,1,1,"negative regulation of immune system process","signal transduction",TRUE,FALSE,TRUE
-"GO:0001909","GO:0001909",5,"GO:0007155",0.291,1,1,"leukocyte mediated cytotoxicity","cell adhesion",TRUE,FALSE,TRUE
-"GO:0050776","GO:0050776",6,"GO:0006955",0.603,36,36,"regulation of immune response","immune response",TRUE,FALSE,FALSE
-"GO:0001906","GO:0001906",5,"GO:0007155",0.469,1,1,"cell killing","cell adhesion",TRUE,FALSE,TRUE
-"GO:0050865","GO:0050865",5,"GO:0007155",0.291,1,1,"regulation of cell activation","cell adhesion",TRUE,FALSE,FALSE
-"GO:0002250","GO:0002250",6,"GO:0006955",0.831,417,417,"adaptive immune response","immune response",TRUE,FALSE,FALSE
-"GO:0006909","GO:0006909",8,"GO:0016192",0.864,70,70,"phagocytosis","vesicle-mediated transport",TRUE,FALSE,TRUE
-"GO:0002703","GO:0002703",6,"GO:0006955",0.238,0,0,"regulation of leukocyte mediated immunity","immune response",TRUE,FALSE,TRUE
-"GO:0002460","GO:0002460",6,"GO:0006955",0.717,0,0,"adaptive immune response based on somatic recombination of immune receptors built from immunoglobulin superfamily domains","immune response",TRUE,FALSE,FALSE
-"GO:0050778","GO:0050778",1,"GO:0007165",0.239,12,12,"positive regulation of immune response","signal transduction",TRUE,FALSE,FALSE
+"GO:0002449","GO:0002449",5,"GO:0006955",0.313,0,0,"lymphocyte mediated immunity","immune response",TRUE,FALSE,FALSE
 "GO:0002694","GO:0002694",10,"GO:0042110",0.426,0,0,"regulation of leukocyte activation","T cell activation",TRUE,FALSE,FALSE
-"GO:0031341","GO:0031341",5,"GO:0007155",0.291,0,0,"regulation of cell killing","cell adhesion",TRUE,FALSE,FALSE
-"GO:1903131","GO:1903131",2,"GO:0030154",0.548,0,0,"mononuclear cell differentiation","cell differentiation",TRUE,FALSE,FALSE
-"GO:0050777","GO:0050777",6,"GO:0006955",0.488,11,11,"negative regulation of immune response","immune response",TRUE,FALSE,TRUE
-"GO:0006950","GO:0006950",9,"GO:0019221",0.174,0,0,"response to stress","cytokine-mediated signaling pathway",TRUE,FALSE,TRUE
-"GO:0007165","GO:0007165",1,"GO:0007165",1,1096,1096,"signal transduction","signal transduction",TRUE,FALSE,TRUE
-"GO:0031343","GO:0031343",5,"GO:0007155",0.241,1,1,"positive regulation of cell killing","cell adhesion",TRUE,FALSE,FALSE
-"GO:0002275","GO:0002275",10,"GO:0042110",0.375,0,0,"myeloid cell activation involved in immune response","T cell activation",TRUE,FALSE,FALSE
-"GO:0002521","GO:0002521",2,"GO:0030154",0.57,2,2,"leukocyte differentiation","cell differentiation",TRUE,FALSE,FALSE
-"GO:0001910","GO:0001910",5,"GO:0007155",0.177,1,1,"regulation of leukocyte mediated cytotoxicity","cell adhesion",TRUE,FALSE,FALSE
-"GO:0051716","GO:0051716",9,"GO:0019221",0.394,0,0,"cellular response to stimulus","cytokine-mediated signaling pathway",TRUE,FALSE,TRUE
-"GO:0002764","GO:0002764",1,"GO:0007165",0.753,1,1,"immune response-regulating signaling pathway","signal transduction",TRUE,FALSE,FALSE
-"GO:0050866","GO:0050866",10,"GO:0042110",0.266,2,2,"negative regulation of cell activation","T cell activation",TRUE,FALSE,FALSE
-"GO:0048583","GO:0048583",3,"GO:0045087",0.211,0,0,"regulation of response to stimulus","innate immune response",TRUE,FALSE,FALSE
-"GO:0043299","GO:0043299",8,"GO:0016192",0.519,1,1,"leukocyte degranulation","vesicle-mediated transport",TRUE,FALSE,TRUE
-"GO:0031347","GO:0031347",3,"GO:0045087",0.32,0,0,"regulation of defense response","innate immune response",TRUE,FALSE,FALSE
-"GO:0001817","GO:0001817",4,"GO:0010628",0.598,41,41,"regulation of cytokine production","positive regulation of gene expression",TRUE,FALSE,TRUE
-"GO:0023052","GO:0023052",1,"GO:0007165",0.361,7,7,"signaling","signal transduction",TRUE,FALSE,TRUE
-"GO:0001816","GO:0001816",4,"GO:0010628",0.415,7,7,"cytokine production","positive regulation of gene expression",TRUE,FALSE,TRUE
-"GO:0002706","GO:0002706",6,"GO:0006955",0.206,0,0,"regulation of lymphocyte mediated immunity","immune response",TRUE,FALSE,FALSE
-"GO:0007154","GO:0007154",5,"GO:0007155",0.469,18,18,"cell communication","cell adhesion",TRUE,FALSE,TRUE
-"GO:0042110","GO:0042110",10,"GO:0042110",1,54,54,"T cell activation","T cell activation",TRUE,FALSE,TRUE
+"GO:0006954","GO:0006954",7,"GO:0006954",1,410,410,"inflammatory response","inflammatory response",TRUE,FALSE,TRUE
+"GO:0050776","GO:0050776",5,"GO:0006955",0.603,36,36,"regulation of immune response","immune response",TRUE,FALSE,TRUE
+"GO:0002683","GO:0002683",6,"GO:0050790",0.24,1,1,"negative regulation of immune system process","regulation of catalytic activity",TRUE,FALSE,TRUE
+"GO:0002703","GO:0002703",5,"GO:0006955",0.238,0,0,"regulation of leukocyte mediated immunity","immune response",TRUE,FALSE,TRUE
+"GO:0050778","GO:0050778",5,"GO:0006955",0.488,12,12,"positive regulation of immune response","immune response",TRUE,FALSE,TRUE
+"GO:0002250","GO:0002250",5,"GO:0006955",0.831,417,417,"adaptive immune response","immune response",TRUE,FALSE,FALSE
+"GO:0006909","GO:0006909",9,"GO:0016192",0.864,70,70,"phagocytosis","vesicle-mediated transport",TRUE,FALSE,TRUE
+"GO:0002460","GO:0002460",5,"GO:0006955",0.717,0,0,"adaptive immune response based on somatic recombination of immune receptors built from immunoglobulin superfamily domains","immune response",TRUE,FALSE,FALSE
+"GO:0001909","GO:0001909",1,"GO:0007165",0.195,1,1,"leukocyte mediated cytotoxicity","signal transduction",TRUE,FALSE,TRUE
 "GO:0030101","GO:0030101",10,"GO:0042110",0.702,23,23,"natural killer cell activation","T cell activation",TRUE,FALSE,FALSE
-"GO:0002699","GO:0002699",6,"GO:0006955",0.241,0,0,"positive regulation of immune effector process","immune response",TRUE,FALSE,FALSE
-"GO:0007166","GO:0007166",1,"GO:0007165",0.915,288,288,"cell surface receptor signaling pathway","signal transduction",TRUE,FALSE,TRUE
-"GO:0071310","GO:0071310",9,"GO:0019221",0.588,13,13,"cellular response to organic substance","cytokine-mediated signaling pathway",TRUE,FALSE,FALSE
-"GO:0007159","GO:0007159",5,"GO:0007155",0.717,30,30,"leukocyte cell-cell adhesion","cell adhesion",TRUE,FALSE,FALSE
-"GO:0065009","GO:0065009",1,"GO:0007165",0.238,0,0,"regulation of molecular function","signal transduction",TRUE,FALSE,FALSE
-"GO:0032103","GO:0032103",3,"GO:0045087",0.223,0,0,"positive regulation of response to external stimulus","innate immune response",TRUE,FALSE,TRUE
-"GO:0032102","GO:0032102",3,"GO:0045087",0.223,0,0,"negative regulation of response to external stimulus","innate immune response",TRUE,FALSE,FALSE
-"GO:0002698","GO:0002698",6,"GO:0006955",0.241,0,0,"negative regulation of immune effector process","immune response",TRUE,FALSE,FALSE
-"GO:0050900","GO:0050900",7,"GO:0030335",0.439,21,21,"leukocyte migration","positive regulation of cell migration",TRUE,FALSE,TRUE
-"GO:0070661","GO:0070661",5,"GO:0007155",0.373,1,1,"leukocyte proliferation","cell adhesion",TRUE,FALSE,FALSE
-"GO:0002704","GO:0002704",6,"GO:0006955",0.194,0,0,"negative regulation of leukocyte mediated immunity","immune response",TRUE,FALSE,FALSE
-"GO:0001912","GO:0001912",5,"GO:0007155",0.138,1,1,"positive regulation of leukocyte mediated cytotoxicity","cell adhesion",TRUE,FALSE,FALSE
-"GO:0030097","GO:0030097",2,"GO:0030154",0.172,56,56,"hemopoiesis","cell differentiation",TRUE,FALSE,FALSE
-"GO:0048584","GO:0048584",3,"GO:0045087",0.19,0,0,"positive regulation of response to stimulus","innate immune response",TRUE,FALSE,FALSE
-"GO:0070887","GO:0070887",9,"GO:0019221",0.492,0,0,"cellular response to chemical stimulus","cytokine-mediated signaling pathway",TRUE,FALSE,FALSE
-"GO:0006968","GO:0006968",3,"GO:0045087",0.383,53,53,"cellular defense response","innate immune response",TRUE,FALSE,FALSE
-"GO:0060326","GO:0060326",7,"GO:0030335",0.359,74,74,"cell chemotaxis","positive regulation of cell migration",TRUE,FALSE,TRUE
-"GO:0050764","GO:0050764",8,"GO:0016192",0.566,9,9,"regulation of phagocytosis","vesicle-mediated transport",TRUE,FALSE,TRUE
-"GO:0048534","GO:0048534",2,"GO:0030154",0.186,0,0,"hematopoietic or lymphoid organ development","cell differentiation",TRUE,FALSE,FALSE
-"GO:0032649","GO:0032649",4,"GO:0010628",0.523,5,5,"regulation of interferon-gamma production","positive regulation of gene expression",TRUE,FALSE,FALSE
-"GO:0002285","GO:0002285",10,"GO:0042110",0.534,0,0,"lymphocyte activation involved in immune response","T cell activation",TRUE,TRUE,TRUE
-"GO:0032609","GO:0032609",4,"GO:0010628",0.357,0,0,"interferon-gamma production","positive regulation of gene expression",TRUE,FALSE,FALSE
+"GO:0001906","GO:0001906",1,"GO:0007165",0.28,1,1,"cell killing","signal transduction",TRUE,FALSE,TRUE
+"GO:0050777","GO:0050777",5,"GO:0006955",0.488,11,11,"negative regulation of immune response","immune response",TRUE,FALSE,TRUE
+"GO:0031347","GO:0031347",3,"GO:0045087",0.32,0,0,"regulation of defense response","innate immune response",TRUE,FALSE,TRUE
 "GO:0051249","GO:0051249",10,"GO:0042110",0.506,1,1,"regulation of lymphocyte activation","T cell activation",TRUE,FALSE,FALSE
-"GO:0002705","GO:0002705",6,"GO:0006955",0.194,0,0,"positive regulation of leukocyte mediated immunity","immune response",TRUE,FALSE,FALSE
-"GO:0048585","GO:0048585",3,"GO:0045087",0.19,0,0,"negative regulation of response to stimulus","innate immune response",TRUE,FALSE,FALSE
-"GO:0060627","GO:0060627",8,"GO:0016192",0.633,9,9,"regulation of vesicle-mediated transport","vesicle-mediated transport",TRUE,FALSE,FALSE
-"GO:0002695","GO:0002695",10,"GO:0042110",0.344,2,2,"negative regulation of leukocyte activation","T cell activation",TRUE,FALSE,FALSE
-"GO:0045088","GO:0045088",3,"GO:0045087",0.662,23,23,"regulation of innate immune response","innate immune response",TRUE,FALSE,FALSE
-"GO:0002520","GO:0002520",2,"GO:0030154",0.22,4,4,"immune system development","cell differentiation",TRUE,FALSE,FALSE
-"GO:0010033","GO:0010033",9,"GO:0019221",0.362,25,25,"response to organic substance","cytokine-mediated signaling pathway",TRUE,FALSE,FALSE
-"GO:0030155","GO:0030155",5,"GO:0007155",0.66,52,52,"regulation of cell adhesion","cell adhesion",TRUE,FALSE,FALSE
-"GO:0002707","GO:0002707",6,"GO:0006955",0.165,0,0,"negative regulation of lymphocyte mediated immunity","immune response",TRUE,FALSE,FALSE
-"GO:0042116","GO:0042116",10,"GO:0042110",0.493,13,13,"macrophage activation","T cell activation",TRUE,FALSE,FALSE
-"GO:0002823","GO:0002823",6,"GO:0006955",0.37,0,0,"negative regulation of adaptive immune response based on somatic recombination of immune receptors built from immunoglobulin superfamily domains","immune response",TRUE,FALSE,FALSE
-"GO:0002253","GO:0002253",1,"GO:0007165",0.236,3,3,"activation of immune response","signal transduction",TRUE,FALSE,FALSE
-"GO:0002429","GO:0002429",1,"GO:0007165",0.577,4,4,"immune response-activating cell surface receptor signaling pathway","signal transduction",TRUE,FALSE,FALSE
-"GO:0002757","GO:0002757",1,"GO:0007165",0.62,1,1,"immune response-activating signal transduction","signal transduction",TRUE,FALSE,FALSE
-"GO:0050863","GO:0050863",10,"GO:0042110",0.618,11,11,"regulation of T cell activation","T cell activation",TRUE,FALSE,FALSE
-"GO:0002820","GO:0002820",6,"GO:0006955",0.418,3,3,"negative regulation of adaptive immune response","immune response",TRUE,FALSE,FALSE
-"GO:0071674","GO:0071674",7,"GO:0030335",0.383,2,2,"mononuclear cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0006935","GO:0006935",9,"GO:0019221",0.194,117,117,"chemotaxis","cytokine-mediated signaling pathway",TRUE,FALSE,TRUE
-"GO:0042330","GO:0042330",9,"GO:0019221",0.135,0,0,"taxis","cytokine-mediated signaling pathway",TRUE,FALSE,TRUE
-"GO:0050920","GO:0050920",1,"GO:0007165",0.249,9,9,"regulation of chemotaxis","signal transduction",TRUE,FALSE,FALSE
-"GO:1903977","GO:1903977",2,"GO:0030154",0.28,1,1,"positive regulation of glial cell migration","cell differentiation",TRUE,FALSE,FALSE
-"GO:0019221","GO:0019221",9,"GO:0019221",1,160,160,"cytokine-mediated signaling pathway","cytokine-mediated signaling pathway",TRUE,FALSE,TRUE
-"GO:0002708","GO:0002708",6,"GO:0006955",0.165,0,0,"positive regulation of lymphocyte mediated immunity","immune response",TRUE,FALSE,FALSE
-"GO:0007155","GO:0007155",5,"GO:0007155",1,505,505,"cell adhesion","cell adhesion",TRUE,FALSE,TRUE
-"GO:0002768","GO:0002768",1,"GO:0007165",0.693,7,7,"immune response-regulating cell surface receptor signaling pathway","signal transduction",TRUE,FALSE,FALSE
-"GO:0030098","GO:0030098",2,"GO:0030154",0.442,4,4,"lymphocyte differentiation","cell differentiation",TRUE,FALSE,FALSE
-"GO:0008347","GO:0008347",2,"GO:0030154",0.428,8,8,"glial cell migration","cell differentiation",TRUE,FALSE,FALSE
-"GO:1905523","GO:1905523",7,"GO:0030335",0.709,2,2,"positive regulation of macrophage migration","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0001913","GO:0001913",6,"GO:0006955",0.412,8,8,"T cell mediated cytotoxicity","immune response",TRUE,FALSE,FALSE
-"GO:0051239","GO:0051239",1,"GO:0007165",0.31,0,0,"regulation of multicellular organismal process","signal transduction",TRUE,TRUE,FALSE
-"GO:0002444","GO:0002444",6,"GO:0006955",0.313,0,0,"myeloid leukocyte mediated immunity","immune response",TRUE,FALSE,TRUE
-"GO:0050790","GO:0050790",1,"GO:0007165",0.188,429,429,"regulation of catalytic activity","signal transduction",TRUE,FALSE,FALSE
-"GO:0002456","GO:0002456",6,"GO:0006955",0.51,12,12,"T cell mediated immunity","immune response",TRUE,FALSE,FALSE
+"GO:0001817","GO:0001817",4,"GO:0010628",0.598,41,41,"regulation of cytokine production","positive regulation of gene expression",TRUE,FALSE,TRUE
+"GO:0006950","GO:0006950",7,"GO:0006954",0.657,0,0,"response to stress","inflammatory response",TRUE,FALSE,TRUE
+"GO:0001816","GO:0001816",4,"GO:0010628",0.415,7,7,"cytokine production","positive regulation of gene expression",TRUE,FALSE,TRUE
+"GO:1903131","GO:1903131",2,"GO:0030154",0.548,0,0,"mononuclear cell differentiation","cell differentiation",TRUE,FALSE,FALSE
+"GO:0002699","GO:0002699",5,"GO:0006955",0.241,0,0,"positive regulation of immune effector process","immune response",TRUE,FALSE,FALSE
+"GO:0050866","GO:0050866",10,"GO:0042110",0.266,2,2,"negative regulation of cell activation","T cell activation",TRUE,FALSE,TRUE
+"GO:0032103","GO:0032103",3,"GO:0045087",0.223,0,0,"positive regulation of response to external stimulus","innate immune response",TRUE,FALSE,TRUE
+"GO:0002706","GO:0002706",5,"GO:0006955",0.206,0,0,"regulation of lymphocyte mediated immunity","immune response",TRUE,FALSE,FALSE
+"GO:0031341","GO:0031341",1,"GO:0007165",0.49,0,0,"regulation of cell killing","signal transduction",TRUE,FALSE,FALSE
+"GO:0042110","GO:0042110",10,"GO:0042110",1,54,54,"T cell activation","T cell activation",TRUE,FALSE,TRUE
+"GO:0050900","GO:0050900",8,"GO:0030335",0.439,21,21,"leukocyte migration","positive regulation of cell migration",TRUE,FALSE,TRUE
+"GO:0007159","GO:0007159",1,"GO:0007165",0.188,30,30,"leukocyte cell-cell adhesion","signal transduction",TRUE,FALSE,FALSE
+"GO:0002521","GO:0002521",2,"GO:0030154",0.57,2,2,"leukocyte differentiation","cell differentiation",TRUE,FALSE,FALSE
+"GO:0048583","GO:0048583",3,"GO:0045087",0.211,0,0,"regulation of response to stimulus","innate immune response",TRUE,FALSE,FALSE
+"GO:0002704","GO:0002704",5,"GO:0006955",0.194,0,0,"negative regulation of leukocyte mediated immunity","immune response",TRUE,FALSE,FALSE
+"GO:0031343","GO:0031343",1,"GO:0007165",0.392,1,1,"positive regulation of cell killing","signal transduction",TRUE,FALSE,FALSE
+"GO:0002764","GO:0002764",1,"GO:0007165",0.753,1,1,"immune response-regulating signaling pathway","signal transduction",TRUE,FALSE,FALSE
+"GO:0001910","GO:0001910",1,"GO:0007165",0.325,1,1,"regulation of leukocyte mediated cytotoxicity","signal transduction",TRUE,FALSE,FALSE
+"GO:0002275","GO:0002275",10,"GO:0042110",0.375,0,0,"myeloid cell activation involved in immune response","T cell activation",TRUE,FALSE,FALSE
+"GO:0051716","GO:0051716",7,"GO:0006954",0.313,0,0,"cellular response to stimulus","inflammatory response",TRUE,FALSE,TRUE
+"GO:0002698","GO:0002698",5,"GO:0006955",0.241,0,0,"negative regulation of immune effector process","immune response",TRUE,FALSE,FALSE
+"GO:0071674","GO:0071674",8,"GO:0030335",0.383,2,2,"mononuclear cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0048584","GO:0048584",3,"GO:0045087",0.19,0,0,"positive regulation of response to stimulus","innate immune response",TRUE,FALSE,TRUE
+"GO:0007165","GO:0007165",1,"GO:0007165",1,1096,1096,"signal transduction","signal transduction",TRUE,FALSE,TRUE
+"GO:0043299","GO:0043299",9,"GO:0016192",0.519,1,1,"leukocyte degranulation","vesicle-mediated transport",TRUE,FALSE,TRUE
+"GO:0002285","GO:0002285",10,"GO:0042110",0.534,0,0,"lymphocyte activation involved in immune response","T cell activation",TRUE,TRUE,TRUE
+"GO:0002705","GO:0002705",5,"GO:0006955",0.194,0,0,"positive regulation of leukocyte mediated immunity","immune response",TRUE,FALSE,FALSE
+"GO:0045088","GO:0045088",3,"GO:0045087",0.662,23,23,"regulation of innate immune response","innate immune response",TRUE,FALSE,TRUE
 "GO:0002831","GO:0002831",3,"GO:0045087",0.254,0,0,"regulation of response to biotic stimulus","innate immune response",TRUE,FALSE,TRUE
-"GO:0032943","GO:0032943",5,"GO:0007155",0.313,1,1,"mononuclear cell proliferation","cell adhesion",TRUE,FALSE,FALSE
-"GO:0016192","GO:0016192",8,"GO:0016192",1,167,167,"vesicle-mediated transport","vesicle-mediated transport",TRUE,FALSE,FALSE
-"GO:0050921","GO:0050921",1,"GO:0007165",0.197,19,19,"positive regulation of chemotaxis","signal transduction",TRUE,FALSE,FALSE
-"GO:1905517","GO:1905517",7,"GO:0030335",0.342,4,4,"macrophage migration","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0002710","GO:0002710",6,"GO:0006955",0.251,2,2,"negative regulation of T cell mediated immunity","immune response",TRUE,FALSE,FALSE
-"GO:0051240","GO:0051240",1,"GO:0007165",0.246,0,0,"positive regulation of multicellular organismal process","signal transduction",TRUE,FALSE,FALSE
-"GO:0031348","GO:0031348",3,"GO:0045087",0.291,0,0,"negative regulation of defense response","innate immune response",TRUE,FALSE,FALSE
-"GO:0050727","GO:0050727",3,"GO:0045087",0.298,91,91,"regulation of inflammatory response","innate immune response",TRUE,FALSE,FALSE
-"GO:0001819","GO:0001819",4,"GO:0010628",0.745,64,64,"positive regulation of cytokine production","positive regulation of gene expression",TRUE,FALSE,FALSE
-"GO:0007265","GO:0007265",1,"GO:0007165",0.795,77,77,"Ras protein signal transduction","signal transduction",TRUE,FALSE,FALSE
-"GO:0034097","GO:0034097",9,"GO:0019221",0.425,52,52,"response to cytokine","cytokine-mediated signaling pathway",TRUE,FALSE,TRUE
-"GO:0045954","GO:0045954",3,"GO:0045087",0.361,29,29,"positive regulation of natural killer cell mediated cytotoxicity","innate immune response",TRUE,FALSE,FALSE
-"GO:0071675","GO:0071675",7,"GO:0030335",0.573,0,0,"regulation of mononuclear cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0071345","GO:0071345",9,"GO:0019221",0.701,34,34,"cellular response to cytokine stimulus","cytokine-mediated signaling pathway",TRUE,FALSE,TRUE
-"GO:0097529","GO:0097529",7,"GO:0030335",0.383,0,0,"myeloid leukocyte migration","positive regulation of cell migration",TRUE,FALSE,TRUE
-"GO:0032729","GO:0032729",4,"GO:0010628",0.663,86,86,"positive regulation of interferon-gamma production","positive regulation of gene expression",TRUE,FALSE,FALSE
-"GO:1903037","GO:1903037",5,"GO:0007155",0.484,3,3,"regulation of leukocyte cell-cell adhesion","cell adhesion",TRUE,FALSE,FALSE
-"GO:0050794","GO:0050794",5,"GO:0007155",0.38,2,2,"regulation of cellular process","cell adhesion",TRUE,TRUE,FALSE
-"GO:1903975","GO:1903975",2,"GO:0030154",0.334,0,0,"regulation of glial cell migration","cell differentiation",TRUE,FALSE,FALSE
-"GO:0030335","GO:0030335",7,"GO:0030335",1,270,270,"positive regulation of cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0002822","GO:0002822",6,"GO:0006955",0.465,0,0,"regulation of adaptive immune response based on somatic recombination of immune receptors built from immunoglobulin superfamily domains","immune response",TRUE,FALSE,FALSE
-"GO:0036006","GO:0036006",9,"GO:0019221",0.57,5,5,"cellular response to macrophage colony-stimulating factor stimulus","cytokine-mediated signaling pathway",TRUE,FALSE,FALSE
-"GO:0036005","GO:0036005",9,"GO:0019221",0.338,0,0,"response to macrophage colony-stimulating factor","cytokine-mediated signaling pathway",TRUE,FALSE,FALSE
-"GO:0002688","GO:0002688",7,"GO:0030335",0.465,0,0,"regulation of leukocyte chemotaxis","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0098609","GO:0098609",5,"GO:0007155",0.831,166,166,"cell-cell adhesion","cell adhesion",TRUE,FALSE,FALSE
-"GO:1902105","GO:1902105",2,"GO:0030154",0.356,0,0,"regulation of leukocyte differentiation","cell differentiation",TRUE,FALSE,FALSE
-"GO:0019886","GO:0019886",11,"GO:0019886",1,39,39,"antigen processing and presentation of exogenous peptide antigen via MHC class II","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
-"GO:0050766","GO:0050766",8,"GO:0016192",0.478,50,50,"positive regulation of phagocytosis","vesicle-mediated transport",TRUE,FALSE,FALSE
-"GO:0016477","GO:0016477",7,"GO:0030335",0.538,266,266,"cell migration","positive regulation of cell migration",TRUE,FALSE,TRUE
+"GO:0050764","GO:0050764",9,"GO:0016192",0.566,9,9,"regulation of phagocytosis","vesicle-mediated transport",TRUE,FALSE,FALSE
+"GO:0023052","GO:0023052",1,"GO:0007165",0.361,7,7,"signaling","signal transduction",TRUE,FALSE,TRUE
+"GO:0098609","GO:0098609",1,"GO:0007165",0.217,166,166,"cell-cell adhesion","signal transduction",TRUE,FALSE,FALSE
+"GO:0030097","GO:0030097",2,"GO:0030154",0.172,56,56,"hemopoiesis","cell differentiation",TRUE,FALSE,FALSE
+"GO:0065009","GO:0065009",6,"GO:0050790",0.788,0,0,"regulation of molecular function","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0007154","GO:0007154",1,"GO:0007165",0.48,18,18,"cell communication","signal transduction",TRUE,FALSE,TRUE
+"GO:0002695","GO:0002695",10,"GO:0042110",0.344,2,2,"negative regulation of leukocyte activation","T cell activation",TRUE,FALSE,TRUE
+"GO:0042116","GO:0042116",10,"GO:0042110",0.493,13,13,"macrophage activation","T cell activation",TRUE,FALSE,FALSE
+"GO:0050863","GO:0050863",10,"GO:0042110",0.618,11,11,"regulation of T cell activation","T cell activation",TRUE,FALSE,FALSE
+"GO:0030155","GO:0030155",1,"GO:0007165",0.468,52,52,"regulation of cell adhesion","signal transduction",TRUE,FALSE,FALSE
+"GO:0007155","GO:0007155",1,"GO:0007165",0.259,505,505,"cell adhesion","signal transduction",TRUE,FALSE,TRUE
+"GO:0002707","GO:0002707",5,"GO:0006955",0.165,0,0,"negative regulation of lymphocyte mediated immunity","immune response",TRUE,FALSE,FALSE
+"GO:0001912","GO:0001912",1,"GO:0007165",0.25,1,1,"positive regulation of leukocyte mediated cytotoxicity","signal transduction",TRUE,FALSE,FALSE
+"GO:0032102","GO:0032102",3,"GO:0045087",0.223,0,0,"negative regulation of response to external stimulus","innate immune response",TRUE,FALSE,FALSE
+"GO:0048534","GO:0048534",2,"GO:0030154",0.186,0,0,"hematopoietic or lymphoid organ development","cell differentiation",TRUE,FALSE,FALSE
+"GO:0002253","GO:0002253",5,"GO:0006955",0.516,3,3,"activation of immune response","immune response",TRUE,FALSE,FALSE
+"GO:0002823","GO:0002823",5,"GO:0006955",0.37,0,0,"negative regulation of adaptive immune response based on somatic recombination of immune receptors built from immunoglobulin superfamily domains","immune response",TRUE,FALSE,FALSE
+"GO:0001819","GO:0001819",4,"GO:0010628",0.745,64,64,"positive regulation of cytokine production","positive regulation of gene expression",TRUE,FALSE,TRUE
+"GO:0002710","GO:0002710",5,"GO:0006955",0.251,2,2,"negative regulation of T cell mediated immunity","immune response",TRUE,FALSE,FALSE
+"GO:0002708","GO:0002708",5,"GO:0006955",0.165,0,0,"positive regulation of lymphocyte mediated immunity","immune response",TRUE,FALSE,FALSE
+"GO:0022407","GO:0022407",1,"GO:0007165",0.391,13,13,"regulation of cell-cell adhesion","signal transduction",TRUE,FALSE,FALSE
+"GO:0002456","GO:0002456",5,"GO:0006955",0.51,12,12,"T cell mediated immunity","immune response",TRUE,FALSE,FALSE
+"GO:0002820","GO:0002820",5,"GO:0006955",0.418,3,3,"negative regulation of adaptive immune response","immune response",TRUE,FALSE,FALSE
+"GO:0071310","GO:0071310",7,"GO:0006954",0.165,13,13,"cellular response to organic substance","inflammatory response",TRUE,FALSE,TRUE
+"GO:0006968","GO:0006968",7,"GO:0006954",0.639,53,53,"cellular defense response","inflammatory response",TRUE,FALSE,FALSE
+"GO:0051240","GO:0051240",6,"GO:0050790",0.24,0,0,"positive regulation of multicellular organismal process","regulation of catalytic activity",TRUE,FALSE,TRUE
+"GO:0002827","GO:0002827",5,"GO:0006955",0.338,16,16,"positive regulation of T-helper 1 type immune response","immune response",TRUE,FALSE,FALSE
+"GO:0070661","GO:0070661",1,"GO:0007165",0.229,1,1,"leukocyte proliferation","signal transduction",TRUE,FALSE,FALSE
+"GO:0048585","GO:0048585",3,"GO:0045087",0.19,0,0,"negative regulation of response to stimulus","innate immune response",TRUE,FALSE,FALSE
+"GO:0002520","GO:0002520",2,"GO:0030154",0.22,4,4,"immune system development","cell differentiation",TRUE,FALSE,FALSE
+"GO:0060326","GO:0060326",8,"GO:0030335",0.359,74,74,"cell chemotaxis","positive regulation of cell migration",TRUE,FALSE,TRUE
+"GO:0007166","GO:0007166",1,"GO:0007165",0.915,288,288,"cell surface receptor signaling pathway","signal transduction",TRUE,FALSE,TRUE
+"GO:0032649","GO:0032649",4,"GO:0010628",0.523,5,5,"regulation of interferon-gamma production","positive regulation of gene expression",TRUE,FALSE,FALSE
+"GO:0032609","GO:0032609",4,"GO:0010628",0.357,0,0,"interferon-gamma production","positive regulation of gene expression",TRUE,FALSE,FALSE
+"GO:1903037","GO:1903037",1,"GO:0007165",0.34,3,3,"regulation of leukocyte cell-cell adhesion","signal transduction",TRUE,FALSE,FALSE
+"GO:0051239","GO:0051239",6,"GO:0050790",0.307,0,0,"regulation of multicellular organismal process","regulation of catalytic activity",TRUE,FALSE,TRUE
+"GO:0016477","GO:0016477",8,"GO:0030335",0.538,266,266,"cell migration","positive regulation of cell migration",TRUE,FALSE,TRUE
+"GO:0002757","GO:0002757",1,"GO:0007165",0.62,1,1,"immune response-activating signal transduction","signal transduction",TRUE,FALSE,FALSE
+"GO:0002429","GO:0002429",1,"GO:0007165",0.577,4,4,"immune response-activating cell surface receptor signaling pathway","signal transduction",TRUE,FALSE,FALSE
+"GO:0060627","GO:0060627",9,"GO:0016192",0.633,9,9,"regulation of vesicle-mediated transport","vesicle-mediated transport",TRUE,FALSE,FALSE
+"GO:0071675","GO:0071675",8,"GO:0030335",0.573,0,0,"regulation of mononuclear cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0042088","GO:0042088",5,"GO:0006955",0.639,10,10,"T-helper 1 type immune response","immune response",TRUE,FALSE,FALSE
+"GO:0030098","GO:0030098",2,"GO:0030154",0.442,4,4,"lymphocyte differentiation","cell differentiation",TRUE,FALSE,FALSE
 "GO:0002286","GO:0002286",10,"GO:0042110",0.642,24,24,"T cell activation involved in immune response","T cell activation",TRUE,FALSE,TRUE
-"GO:0046578","GO:0046578",1,"GO:0007165",0.625,8,8,"regulation of Ras protein signal transduction","signal transduction",TRUE,FALSE,FALSE
-"GO:0002717","GO:0002717",3,"GO:0045087",0.441,2,2,"positive regulation of natural killer cell mediated immunity","innate immune response",TRUE,FALSE,FALSE
-"GO:0001818","GO:0001818",4,"GO:0010628",0.46,33,33,"negative regulation of cytokine production","positive regulation of gene expression",TRUE,FALSE,FALSE
-"GO:2000147","GO:2000147",7,"GO:0030335",0.871,24,24,"positive regulation of cell motility","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0002827","GO:0002827",6,"GO:0006955",0.338,16,16,"positive regulation of T-helper 1 type immune response","immune response",TRUE,FALSE,FALSE
-"GO:0002495","GO:0002495",11,"GO:0019886",0.729,3,3,"antigen processing and presentation of peptide antigen via MHC class II","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
-"GO:0071621","GO:0071621",7,"GO:0030335",0.274,4,4,"granulocyte chemotaxis","positive regulation of cell migration",TRUE,FALSE,TRUE
-"GO:0022407","GO:0022407",5,"GO:0007155",0.554,13,13,"regulation of cell-cell adhesion","cell adhesion",TRUE,FALSE,FALSE
-"GO:0002819","GO:0002819",6,"GO:0006955",0.521,10,10,"regulation of adaptive immune response","immune response",TRUE,FALSE,FALSE
-"GO:0002431","GO:0002431",1,"GO:0007165",0.594,4,4,"Fc receptor mediated stimulatory signaling pathway","signal transduction",TRUE,FALSE,FALSE
-"GO:0006928","GO:0006928",5,"GO:0007155",0.469,0,0,"movement of cell or subcellular component","cell adhesion",TRUE,FALSE,TRUE
-"GO:0051272","GO:0051272",7,"GO:0030335",0.636,11,11,"positive regulation of cellular component movement","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0009617","GO:0009617",3,"GO:0045087",0.535,99,99,"response to bacterium","innate immune response",TRUE,FALSE,FALSE
-"GO:0030154","GO:0030154",2,"GO:0030154",1,618,618,"cell differentiation","cell differentiation",TRUE,FALSE,FALSE
-"GO:0040017","GO:0040017",1,"GO:0007165",0.246,2,2,"positive regulation of locomotion","signal transduction",TRUE,FALSE,FALSE
-"GO:1905521","GO:1905521",7,"GO:0030335",0.556,2,2,"regulation of macrophage migration","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0048870","GO:0048870",7,"GO:0030335",0.499,39,39,"cell motility","positive regulation of cell migration",TRUE,FALSE,TRUE
-"GO:0051674","GO:0051674",7,"GO:0030335",0.331,0,0,"localization of cell","positive regulation of cell migration",TRUE,FALSE,TRUE
-"GO:0080134","GO:0080134",3,"GO:0045087",0.264,0,0,"regulation of response to stress","innate immune response",TRUE,FALSE,FALSE
-"GO:0042088","GO:0042088",6,"GO:0006955",0.639,10,10,"T-helper 1 type immune response","immune response",TRUE,FALSE,FALSE
-"GO:0038094","GO:0038094",1,"GO:0007165",0.677,1,1,"Fc-gamma receptor signaling pathway","signal transduction",TRUE,FALSE,FALSE
-"GO:0002237","GO:0002237",3,"GO:0045087",0.458,8,8,"response to molecule of bacterial origin","innate immune response",TRUE,FALSE,FALSE
-"GO:0002504","GO:0002504",11,"GO:0019886",0.528,1,1,"antigen processing and presentation of peptide or polysaccharide antigen via MHC class II","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
-"GO:0048869","GO:0048869",2,"GO:0030154",0.831,0,0,"cellular developmental process","cell differentiation",TRUE,FALSE,FALSE
-"GO:0045730","GO:0045730",5,"GO:0007155",0.193,15,15,"respiratory burst","cell adhesion",TRUE,FALSE,FALSE
-"GO:0046651","GO:0046651",5,"GO:0007155",0.215,6,6,"lymphocyte proliferation","cell adhesion",TRUE,FALSE,FALSE
-"GO:0110088","GO:0110088",5,"GO:0007155",0.24,0,0,"hippocampal neuron apoptotic process","cell adhesion",TRUE,FALSE,FALSE
-"GO:0110089","GO:0110089",5,"GO:0007155",0.157,1,1,"regulation of hippocampal neuron apoptotic process","cell adhesion",TRUE,FALSE,FALSE
+"GO:0070887","GO:0070887",7,"GO:0006954",0.218,0,0,"cellular response to chemical stimulus","inflammatory response",TRUE,FALSE,TRUE
+"GO:0002822","GO:0002822",5,"GO:0006955",0.465,0,0,"regulation of adaptive immune response based on somatic recombination of immune receptors built from immunoglobulin superfamily domains","immune response",TRUE,FALSE,FALSE
 "GO:0002696","GO:0002696",10,"GO:0042110",0.344,0,0,"positive regulation of leukocyte activation","T cell activation",TRUE,FALSE,FALSE
-"GO:0040011","GO:0040011",1,"GO:0007165",0.149,6,6,"locomotion","signal transduction",TRUE,FALSE,TRUE
-"GO:0042267","GO:0042267",3,"GO:0045087",0.672,24,24,"natural killer cell mediated cytotoxicity","innate immune response",TRUE,FALSE,FALSE
-"GO:0097530","GO:0097530",7,"GO:0030335",0.342,2,2,"granulocyte migration","positive regulation of cell migration",TRUE,FALSE,TRUE
-"GO:0002701","GO:0002701",4,"GO:0010628",0.423,0,0,"negative regulation of production of molecular mediator of immune response","positive regulation of gene expression",TRUE,FALSE,FALSE
-"GO:0071663","GO:0071663",4,"GO:0010628",0.574,3,3,"positive regulation of granzyme B production","positive regulation of gene expression",TRUE,FALSE,FALSE
+"GO:0002768","GO:0002768",1,"GO:0007165",0.693,7,7,"immune response-regulating cell surface receptor signaling pathway","signal transduction",TRUE,FALSE,FALSE
+"GO:0050766","GO:0050766",9,"GO:0016192",0.478,50,50,"positive regulation of phagocytosis","vesicle-mediated transport",TRUE,FALSE,FALSE
+"GO:0050867","GO:0050867",10,"GO:0042110",0.266,3,3,"positive regulation of cell activation","T cell activation",TRUE,FALSE,FALSE
+"GO:0016192","GO:0016192",9,"GO:0016192",1,167,167,"vesicle-mediated transport","vesicle-mediated transport",TRUE,FALSE,FALSE
+"GO:0050920","GO:0050920",3,"GO:0045087",0.169,9,9,"regulation of chemotaxis","innate immune response",TRUE,FALSE,FALSE
+"GO:0050790","GO:0050790",6,"GO:0050790",1,429,429,"regulation of catalytic activity","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:1903977","GO:1903977",8,"GO:0030335",0.775,1,1,"positive regulation of glial cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0030335","GO:0030335",8,"GO:0030335",1,270,270,"positive regulation of cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0001818","GO:0001818",4,"GO:0010628",0.46,33,33,"negative regulation of cytokine production","positive regulation of gene expression",TRUE,FALSE,FALSE
+"GO:0006935","GO:0006935",7,"GO:0006954",0.203,117,117,"chemotaxis","inflammatory response",TRUE,FALSE,TRUE
+"GO:0002819","GO:0002819",5,"GO:0006955",0.521,10,10,"regulation of adaptive immune response","immune response",TRUE,FALSE,FALSE
+"GO:0042330","GO:0042330",7,"GO:0006954",0.254,0,0,"taxis","inflammatory response",TRUE,FALSE,TRUE
+"GO:0001913","GO:0001913",5,"GO:0006955",0.412,8,8,"T cell mediated cytotoxicity","immune response",TRUE,FALSE,FALSE
+"GO:1905523","GO:1905523",8,"GO:0030335",0.709,2,2,"positive regulation of macrophage migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0002825","GO:0002825",5,"GO:0006955",0.426,0,0,"regulation of T-helper 1 type immune response","immune response",TRUE,FALSE,FALSE
+"GO:0010033","GO:0010033",7,"GO:0006954",0.267,25,25,"response to organic substance","inflammatory response",TRUE,FALSE,TRUE
+"GO:1902105","GO:1902105",2,"GO:0030154",0.356,0,0,"regulation of leukocyte differentiation","cell differentiation",TRUE,FALSE,FALSE
+"GO:0031348","GO:0031348",3,"GO:0045087",0.291,0,0,"negative regulation of defense response","innate immune response",TRUE,FALSE,FALSE
+"GO:0031349","GO:0031349",3,"GO:0045087",0.291,0,0,"positive regulation of defense response","innate immune response",TRUE,FALSE,FALSE
+"GO:0050921","GO:0050921",3,"GO:0045087",0.145,19,19,"positive regulation of chemotaxis","innate immune response",TRUE,FALSE,FALSE
+"GO:2000147","GO:2000147",8,"GO:0030335",0.871,24,24,"positive regulation of cell motility","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0002444","GO:0002444",5,"GO:0006955",0.313,0,0,"myeloid leukocyte mediated immunity","immune response",TRUE,FALSE,TRUE
+"GO:0008347","GO:0008347",8,"GO:0030335",0.368,8,8,"glial cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0048870","GO:0048870",8,"GO:0030335",0.499,39,39,"cell motility","positive regulation of cell migration",TRUE,FALSE,TRUE
+"GO:0080134","GO:0080134",3,"GO:0045087",0.264,0,0,"regulation of response to stress","innate immune response",TRUE,FALSE,FALSE
+"GO:1905517","GO:1905517",8,"GO:0030335",0.342,4,4,"macrophage migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0032943","GO:0032943",1,"GO:0007165",0.195,1,1,"mononuclear cell proliferation","signal transduction",TRUE,FALSE,FALSE
+"GO:0002687","GO:0002687",8,"GO:0030335",0.798,13,13,"positive regulation of leukocyte migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0040017","GO:0040017",6,"GO:0050790",0.24,2,2,"positive regulation of locomotion","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0050727","GO:0050727",3,"GO:0045087",0.298,91,91,"regulation of inflammatory response","innate immune response",TRUE,FALSE,FALSE
+"GO:0045954","GO:0045954",3,"GO:0045087",0.361,29,29,"positive regulation of natural killer cell mediated cytotoxicity","innate immune response",TRUE,FALSE,FALSE
+"GO:0007265","GO:0007265",1,"GO:0007165",0.795,77,77,"Ras protein signal transduction","signal transduction",TRUE,FALSE,FALSE
+"GO:0009617","GO:0009617",7,"GO:0006954",0.173,99,99,"response to bacterium","inflammatory response",TRUE,FALSE,FALSE
+"GO:0050794","GO:0050794",10,"GO:0042110",0.248,2,2,"regulation of cellular process","T cell activation",TRUE,TRUE,FALSE
+"GO:0019886","GO:0019886",11,"GO:0019886",1,39,39,"antigen processing and presentation of exogenous peptide antigen via MHC class II","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
+"GO:0002758","GO:0002758",3,"GO:0045087",0.482,1,1,"innate immune response-activating signal transduction","innate immune response",TRUE,FALSE,FALSE
+"GO:0036006","GO:0036006",7,"GO:0006954",0.112,5,5,"cellular response to macrophage colony-stimulating factor stimulus","inflammatory response",TRUE,FALSE,FALSE
+"GO:0036005","GO:0036005",7,"GO:0006954",0.173,0,0,"response to macrophage colony-stimulating factor","inflammatory response",TRUE,FALSE,FALSE
+"GO:0032729","GO:0032729",4,"GO:0010628",0.663,86,86,"positive regulation of interferon-gamma production","positive regulation of gene expression",TRUE,FALSE,FALSE
+"GO:0016064","GO:0016064",5,"GO:0006955",0.498,15,15,"immunoglobulin mediated immune response","immune response",TRUE,FALSE,FALSE
+"GO:0002685","GO:0002685",8,"GO:0030335",0.64,4,4,"regulation of leukocyte migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0019724","GO:0019724",5,"GO:0006955",0.51,4,4,"B cell mediated immunity","immune response",TRUE,FALSE,FALSE
+"GO:0019221","GO:0019221",1,"GO:0007165",0.686,160,160,"cytokine-mediated signaling pathway","signal transduction",TRUE,FALSE,TRUE
+"GO:0002495","GO:0002495",11,"GO:0019886",0.729,3,3,"antigen processing and presentation of peptide antigen via MHC class II","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
+"GO:0002717","GO:0002717",3,"GO:0045087",0.441,2,2,"positive regulation of natural killer cell mediated immunity","innate immune response",TRUE,FALSE,FALSE
+"GO:0071621","GO:0071621",8,"GO:0030335",0.274,4,4,"granulocyte chemotaxis","positive regulation of cell migration",TRUE,FALSE,TRUE
+"GO:0002688","GO:0002688",8,"GO:0030335",0.465,0,0,"regulation of leukocyte chemotaxis","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0097529","GO:0097529",8,"GO:0030335",0.383,0,0,"myeloid leukocyte migration","positive regulation of cell migration",TRUE,FALSE,TRUE
+"GO:0002431","GO:0002431",1,"GO:0007165",0.594,4,4,"Fc receptor mediated stimulatory signaling pathway","signal transduction",TRUE,FALSE,FALSE
+"GO:0038094","GO:0038094",1,"GO:0007165",0.677,1,1,"Fc-gamma receptor signaling pathway","signal transduction",TRUE,FALSE,FALSE
+"GO:0030154","GO:0030154",2,"GO:0030154",1,618,618,"cell differentiation","cell differentiation",TRUE,FALSE,FALSE
+"GO:0046578","GO:0046578",1,"GO:0007165",0.625,8,8,"regulation of Ras protein signal transduction","signal transduction",TRUE,FALSE,FALSE
+"GO:0002504","GO:0002504",11,"GO:0019886",0.528,1,1,"antigen processing and presentation of peptide or polysaccharide antigen via MHC class II","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
+"GO:0002709","GO:0002709",5,"GO:0006955",0.325,0,0,"regulation of T cell mediated immunity","immune response",TRUE,FALSE,FALSE
+"GO:0048869","GO:0048869",2,"GO:0030154",0.831,0,0,"cellular developmental process","cell differentiation",TRUE,FALSE,FALSE
+"GO:0002478","GO:0002478",11,"GO:0019886",0.729,0,0,"antigen processing and presentation of exogenous peptide antigen","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
+"GO:0045785","GO:0045785",1,"GO:0007165",0.376,52,52,"positive regulation of cell adhesion","signal transduction",TRUE,FALSE,FALSE
+"GO:0019835","GO:0019835",1,"GO:0007165",0.28,20,20,"cytolysis","signal transduction",TRUE,TRUE,FALSE
+"GO:0010628","GO:0010628",4,"GO:0010628",1,532,532,"positive regulation of gene expression","positive regulation of gene expression",TRUE,FALSE,FALSE
+"GO:2000556","GO:2000556",5,"GO:0006955",0.17,6,6,"positive regulation of T-helper 1 cell cytokine production","immune response",TRUE,FALSE,FALSE
+"GO:2000554","GO:2000554",5,"GO:0006955",0.223,0,0,"regulation of T-helper 1 cell cytokine production","immune response",TRUE,FALSE,FALSE
+"GO:0035744","GO:0035744",5,"GO:0006955",0.374,0,0,"T-helper 1 cell cytokine production","immune response",TRUE,FALSE,FALSE
+"GO:1903975","GO:1903975",8,"GO:0030335",0.595,0,0,"regulation of glial cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0022409","GO:0022409",1,"GO:0007165",0.314,16,16,"positive regulation of cell-cell adhesion","signal transduction",TRUE,FALSE,FALSE
 "GO:0071661","GO:0071661",4,"GO:0010628",0.434,0,0,"regulation of granzyme B production","positive regulation of gene expression",TRUE,FALSE,FALSE
 "GO:0071613","GO:0071613",4,"GO:0010628",0.357,0,0,"granzyme B production","positive regulation of gene expression",TRUE,FALSE,FALSE
-"GO:1902531","GO:1902531",1,"GO:0007165",0.714,8,8,"regulation of intracellular signal transduction","signal transduction",TRUE,FALSE,FALSE
+"GO:0071663","GO:0071663",4,"GO:0010628",0.574,3,3,"positive regulation of granzyme B production","positive regulation of gene expression",TRUE,FALSE,FALSE
+"GO:0051250","GO:0051250",10,"GO:0042110",0.406,3,3,"negative regulation of lymphocyte activation","T cell activation",TRUE,FALSE,TRUE
+"GO:0045730","GO:0045730",6,"GO:0050790",0.176,15,15,"respiratory burst","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0040011","GO:0040011",6,"GO:0050790",0.246,6,6,"locomotion","regulation of catalytic activity",TRUE,FALSE,TRUE
+"GO:0097530","GO:0097530",8,"GO:0030335",0.342,2,2,"granulocyte migration","positive regulation of cell migration",TRUE,FALSE,TRUE
+"GO:0050870","GO:0050870",10,"GO:0042110",0.371,39,39,"positive regulation of T cell activation","T cell activation",TRUE,FALSE,FALSE
+"GO:1905521","GO:1905521",8,"GO:0030335",0.556,2,2,"regulation of macrophage migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0002237","GO:0002237",7,"GO:0006954",0.133,8,8,"response to molecule of bacterial origin","inflammatory response",TRUE,FALSE,FALSE
+"GO:0042267","GO:0042267",3,"GO:0045087",0.672,24,24,"natural killer cell mediated cytotoxicity","innate immune response",TRUE,FALSE,FALSE
+"GO:0034097","GO:0034097",7,"GO:0006954",0.21,52,52,"response to cytokine","inflammatory response",TRUE,FALSE,TRUE
+"GO:0019884","GO:0019884",11,"GO:0019886",0.528,2,2,"antigen processing and presentation of exogenous antigen","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
+"GO:0046651","GO:0046651",10,"GO:0042110",0.572,6,6,"lymphocyte proliferation","T cell activation",TRUE,FALSE,FALSE
+"GO:1903706","GO:1903706",2,"GO:0030154",0.13,3,3,"regulation of hemopoiesis","cell differentiation",TRUE,FALSE,FALSE
 "GO:0002228","GO:0002228",3,"GO:0045087",0.807,2,2,"natural killer cell mediated immunity","innate immune response",TRUE,FALSE,FALSE
-"GO:0050867","GO:0050867",5,"GO:0007155",0.241,3,3,"positive regulation of cell activation","cell adhesion",TRUE,FALSE,FALSE
-"GO:0002690","GO:0002690",7,"GO:0030335",0.578,14,14,"positive regulation of leukocyte chemotaxis","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0045055","GO:0045055",8,"GO:0016192",0.659,24,24,"regulated exocytosis","vesicle-mediated transport",TRUE,FALSE,TRUE
-"GO:0065007","GO:0065007",1,"GO:0007165",0.316,0,0,"biological regulation","signal transduction",TRUE,FALSE,FALSE
-"GO:0002577","GO:0002577",1,"GO:0007165",0.241,1,1,"regulation of antigen processing and presentation","signal transduction",TRUE,FALSE,FALSE
-"GO:0002700","GO:0002700",4,"GO:0010628",0.55,0,0,"regulation of production of molecular mediator of immune response","positive regulation of gene expression",TRUE,FALSE,FALSE
 "GO:0043031","GO:0043031",10,"GO:0042110",0.274,12,12,"negative regulation of macrophage activation","T cell activation",TRUE,FALSE,FALSE
-"GO:0002687","GO:0002687",7,"GO:0030335",0.798,13,13,"positive regulation of leukocyte migration","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0002886","GO:0002886",6,"GO:0006955",0.206,0,0,"regulation of myeloid leukocyte mediated immunity","immune response",TRUE,FALSE,TRUE
-"GO:0042063","GO:0042063",2,"GO:0030154",0.586,7,7,"gliogenesis","cell differentiation",TRUE,FALSE,FALSE
-"GO:0071219","GO:0071219",3,"GO:0045087",0.376,6,6,"cellular response to molecule of bacterial origin","innate immune response",TRUE,FALSE,FALSE
-"GO:0030595","GO:0030595",7,"GO:0030335",0.313,13,13,"leukocyte chemotaxis","positive regulation of cell migration",TRUE,FALSE,TRUE
-"GO:0002685","GO:0002685",7,"GO:0030335",0.64,4,4,"regulation of leukocyte migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0002701","GO:0002701",4,"GO:0010628",0.423,0,0,"negative regulation of production of molecular mediator of immune response","positive regulation of gene expression",TRUE,FALSE,FALSE
+"GO:0071345","GO:0071345",7,"GO:0006954",0.132,34,34,"cellular response to cytokine stimulus","inflammatory response",TRUE,FALSE,TRUE
+"GO:0044093","GO:0044093",6,"GO:0050790",0.605,0,0,"positive regulation of molecular function","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0032814","GO:0032814",10,"GO:0042110",0.434,2,2,"regulation of natural killer cell activation","T cell activation",TRUE,FALSE,FALSE
+"GO:0002700","GO:0002700",4,"GO:0010628",0.55,0,0,"regulation of production of molecular mediator of immune response","positive regulation of gene expression",TRUE,FALSE,FALSE
+"GO:0002577","GO:0002577",6,"GO:0050790",0.23,1,1,"regulation of antigen processing and presentation","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0002690","GO:0002690",8,"GO:0030335",0.578,14,14,"positive regulation of leukocyte chemotaxis","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:1903039","GO:1903039",1,"GO:0007165",0.274,3,3,"positive regulation of leukocyte cell-cell adhesion","signal transduction",TRUE,FALSE,FALSE
+"GO:0030334","GO:0030334",8,"GO:0030335",0.789,105,105,"regulation of cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
 "GO:0042269","GO:0042269",3,"GO:0045087",0.451,3,3,"regulation of natural killer cell mediated cytotoxicity","innate immune response",TRUE,FALSE,FALSE
 "GO:0050728","GO:0050728",3,"GO:0045087",0.257,139,139,"negative regulation of inflammatory response","innate immune response",TRUE,FALSE,FALSE
-"GO:0044093","GO:0044093",1,"GO:0007165",0.188,0,0,"positive regulation of molecular function","signal transduction",TRUE,FALSE,FALSE
-"GO:0048523","GO:0048523",5,"GO:0007155",0.325,0,0,"negative regulation of cellular process","cell adhesion",TRUE,FALSE,FALSE
-"GO:0035556","GO:0035556",1,"GO:0007165",0.915,456,456,"intracellular signal transduction","signal transduction",TRUE,FALSE,FALSE
-"GO:0002440","GO:0002440",4,"GO:0010628",0.415,0,0,"production of molecular mediator of immune response","positive regulation of gene expression",TRUE,FALSE,FALSE
-"GO:0071622","GO:0071622",7,"GO:0030335",0.429,1,1,"regulation of granulocyte chemotaxis","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:1904141","GO:1904141",2,"GO:0030154",0.213,9,9,"positive regulation of microglial cell migration","cell differentiation",TRUE,FALSE,FALSE
-"GO:0038145","GO:0038145",9,"GO:0019221",0.852,4,4,"macrophage colony-stimulating factor signaling pathway","cytokine-mediated signaling pathway",TRUE,FALSE,FALSE
-"GO:0007264","GO:0007264",1,"GO:0007165",0.847,99,99,"small GTPase mediated signal transduction","signal transduction",TRUE,FALSE,FALSE
+"GO:0045055","GO:0045055",9,"GO:0016192",0.659,24,24,"regulated exocytosis","vesicle-mediated transport",TRUE,FALSE,TRUE
+"GO:0002725","GO:0002725",5,"GO:0006955",0.183,8,8,"negative regulation of T cell cytokine production","immune response",TRUE,FALSE,FALSE
+"GO:0006810","GO:0006810",9,"GO:0016192",0.728,21,21,"transport","vesicle-mediated transport",TRUE,FALSE,FALSE
+"GO:0038093","GO:0038093",1,"GO:0007165",0.684,4,4,"Fc receptor signaling pathway","signal transduction",TRUE,FALSE,FALSE
+"GO:0002833","GO:0002833",3,"GO:0045087",0.223,0,0,"positive regulation of response to biotic stimulus","innate immune response",TRUE,FALSE,FALSE
+"GO:0002886","GO:0002886",5,"GO:0006955",0.206,0,0,"regulation of myeloid leukocyte mediated immunity","immune response",TRUE,FALSE,TRUE
+"GO:0071622","GO:0071622",8,"GO:0030335",0.429,1,1,"regulation of granulocyte chemotaxis","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0071219","GO:0071219",7,"GO:0006954",0.119,6,6,"cellular response to molecule of bacterial origin","inflammatory response",TRUE,FALSE,FALSE
+"GO:1904141","GO:1904141",8,"GO:0030335",0.589,9,9,"positive regulation of microglial cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0110088","GO:0110088",1,"GO:0007165",0.158,0,0,"hippocampal neuron apoptotic process","signal transduction",TRUE,FALSE,FALSE
+"GO:0038145","GO:0038145",1,"GO:0007165",0.62,4,4,"macrophage colony-stimulating factor signaling pathway","signal transduction",TRUE,FALSE,FALSE
+"GO:0110089","GO:0110089",1,"GO:0007165",0.275,1,1,"regulation of hippocampal neuron apoptotic process","signal transduction",TRUE,FALSE,FALSE
+"GO:0030595","GO:0030595",8,"GO:0030335",0.313,13,13,"leukocyte chemotaxis","positive regulation of cell migration",TRUE,FALSE,TRUE
+"GO:0065007","GO:0065007",6,"GO:0050790",0.598,0,0,"biological regulation","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0048518","GO:0048518",6,"GO:0050790",0.373,0,0,"positive regulation of biological process","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0048002","GO:0048002",11,"GO:0019886",0.528,3,3,"antigen processing and presentation of peptide antigen","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
 "GO:0002715","GO:0002715",3,"GO:0045087",0.54,1,1,"regulation of natural killer cell mediated immunity","innate immune response",TRUE,FALSE,FALSE
-"GO:0002478","GO:0002478",11,"GO:0019886",0.729,0,0,"antigen processing and presentation of exogenous peptide antigen","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
-"GO:0051179","GO:0051179",8,"GO:0016192",0.467,0,0,"localization","vesicle-mediated transport",TRUE,FALSE,TRUE
-"GO:0016064","GO:0016064",6,"GO:0006955",0.498,15,15,"immunoglobulin mediated immune response","immune response",TRUE,FALSE,FALSE
-"GO:1903706","GO:1903706",2,"GO:0030154",0.13,3,3,"regulation of hemopoiesis","cell differentiation",TRUE,FALSE,FALSE
-"GO:0010628","GO:0010628",4,"GO:0010628",1,532,532,"positive regulation of gene expression","positive regulation of gene expression",TRUE,FALSE,FALSE
-"GO:0050870","GO:0050870",10,"GO:0042110",0.371,39,39,"positive regulation of T cell activation","T cell activation",TRUE,FALSE,FALSE
-"GO:0042221","GO:0042221",9,"GO:0019221",0.303,0,0,"response to chemical","cytokine-mediated signaling pathway",TRUE,FALSE,FALSE
-"GO:0006810","GO:0006810",8,"GO:0016192",0.728,21,21,"transport","vesicle-mediated transport",TRUE,FALSE,FALSE
-"GO:0019724","GO:0019724",6,"GO:0006955",0.51,4,4,"B cell mediated immunity","immune response",TRUE,FALSE,FALSE
-"GO:0002825","GO:0002825",6,"GO:0006955",0.426,0,0,"regulation of T-helper 1 type immune response","immune response",TRUE,FALSE,FALSE
-"GO:0032496","GO:0032496",3,"GO:0045087",0.368,149,149,"response to lipopolysaccharide","innate immune response",TRUE,FALSE,FALSE
+"GO:1902531","GO:1902531",1,"GO:0007165",0.714,8,8,"regulation of intracellular signal transduction","signal transduction",TRUE,FALSE,FALSE
+"GO:0002440","GO:0002440",4,"GO:0010628",0.415,0,0,"production of molecular mediator of immune response","positive regulation of gene expression",TRUE,FALSE,FALSE
+"GO:0051241","GO:0051241",6,"GO:0050790",0.24,0,0,"negative regulation of multicellular organismal process","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0042113","GO:0042113",10,"GO:0042110",0.702,38,38,"B cell activation","T cell activation",TRUE,FALSE,FALSE
+"GO:0007264","GO:0007264",1,"GO:0007165",0.847,99,99,"small GTPase mediated signal transduction","signal transduction",TRUE,FALSE,FALSE
+"GO:1904124","GO:1904124",8,"GO:0030335",0.299,2,2,"microglial cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:1904139","GO:1904139",8,"GO:0030335",0.465,2,2,"regulation of microglial cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
 "GO:0061518","GO:0061518",2,"GO:0030154",0.456,6,6,"microglial cell proliferation","cell differentiation",TRUE,FALSE,FALSE
-"GO:1904139","GO:1904139",2,"GO:0030154",0.265,2,2,"regulation of microglial cell migration","cell differentiation",TRUE,FALSE,FALSE
-"GO:1904124","GO:1904124",2,"GO:0030154",0.365,2,2,"microglial cell migration","cell differentiation",TRUE,FALSE,FALSE
-"GO:0071216","GO:0071216",9,"GO:0019221",0.287,0,0,"cellular response to biotic stimulus","cytokine-mediated signaling pathway",TRUE,FALSE,FALSE
-"GO:0051241","GO:0051241",1,"GO:0007165",0.246,0,0,"negative regulation of multicellular organismal process","signal transduction",TRUE,FALSE,FALSE
-"GO:0019884","GO:0019884",11,"GO:0019886",0.528,2,2,"antigen processing and presentation of exogenous antigen","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
-"GO:0032944","GO:0032944",5,"GO:0007155",0.206,0,0,"regulation of mononuclear cell proliferation","cell adhesion",TRUE,FALSE,FALSE
-"GO:0150076","GO:0150076",3,"GO:0045087",0.318,5,5,"neuroinflammatory response","innate immune response",TRUE,FALSE,FALSE
-"GO:1903039","GO:1903039",5,"GO:0007155",0.392,3,3,"positive regulation of leukocyte cell-cell adhesion","cell adhesion",TRUE,FALSE,FALSE
-"GO:0051234","GO:0051234",8,"GO:0016192",0.594,0,0,"establishment of localization","vesicle-mediated transport",TRUE,FALSE,FALSE
-"GO:0070663","GO:0070663",5,"GO:0007155",0.238,1,1,"regulation of leukocyte proliferation","cell adhesion",TRUE,FALSE,FALSE
+"GO:0042063","GO:0042063",2,"GO:0030154",0.586,7,7,"gliogenesis","cell differentiation",TRUE,FALSE,FALSE
+"GO:2000145","GO:2000145",8,"GO:0030335",0.711,15,15,"regulation of cell motility","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0051234","GO:0051234",9,"GO:0016192",0.594,0,0,"establishment of localization","vesicle-mediated transport",TRUE,FALSE,FALSE
+"GO:0072676","GO:0072676",8,"GO:0030335",0.342,6,6,"lymphocyte migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0032944","GO:0032944",1,"GO:0007165",0.347,0,0,"regulation of mononuclear cell proliferation","signal transduction",TRUE,FALSE,FALSE
+"GO:0045089","GO:0045089",3,"GO:0045087",0.554,29,29,"positive regulation of innate immune response","innate immune response",TRUE,FALSE,FALSE
+"GO:0002824","GO:0002824",5,"GO:0006955",0.37,0,0,"positive regulation of adaptive immune response based on somatic recombination of immune receptors built from immunoglobulin superfamily domains","immune response",TRUE,FALSE,FALSE
+"GO:0002862","GO:0002862",3,"GO:0045087",0.3,23,23,"negative regulation of inflammatory response to antigenic stimulus","innate immune response",TRUE,FALSE,FALSE
+"GO:0002889","GO:0002889",5,"GO:0006955",0.328,0,0,"regulation of immunoglobulin mediated immune response","immune response",TRUE,FALSE,FALSE
+"GO:0002712","GO:0002712",5,"GO:0006955",0.325,0,0,"regulation of B cell mediated immunity","immune response",TRUE,FALSE,FALSE
+"GO:0019882","GO:0019882",11,"GO:0019886",0.432,24,24,"antigen processing and presentation","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
+"GO:0032496","GO:0032496",7,"GO:0006954",0.12,149,149,"response to lipopolysaccharide","inflammatory response",TRUE,FALSE,FALSE
+"GO:0002223","GO:0002223",3,"GO:0045087",0.502,20,20,"stimulatory C-type lectin receptor signaling pathway","innate immune response",TRUE,FALSE,FALSE
+"GO:1990840","GO:1990840",7,"GO:0006954",0.267,0,0,"response to lectin","inflammatory response",TRUE,FALSE,FALSE
+"GO:1990858","GO:1990858",7,"GO:0006954",0.21,2,2,"cellular response to lectin","inflammatory response",TRUE,FALSE,FALSE
+"GO:0051251","GO:0051251",10,"GO:0042110",0.406,2,2,"positive regulation of lymphocyte activation","T cell activation",TRUE,FALSE,FALSE
+"GO:0071216","GO:0071216",7,"GO:0006954",0.218,0,0,"cellular response to biotic stimulus","inflammatory response",TRUE,FALSE,FALSE
+"GO:0071677","GO:0071677",8,"GO:0030335",0.727,4,4,"positive regulation of mononuclear cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0070663","GO:0070663",1,"GO:0007165",0.403,1,1,"regulation of leukocyte proliferation","signal transduction",TRUE,FALSE,FALSE
+"GO:0002821","GO:0002821",5,"GO:0006955",0.418,7,7,"positive regulation of adaptive immune response","immune response",TRUE,FALSE,FALSE
+"GO:0007162","GO:0007162",1,"GO:0007165",0.376,51,51,"negative regulation of cell adhesion","signal transduction",TRUE,FALSE,FALSE
+"GO:0050793","GO:0050793",6,"GO:0050790",0.307,1,1,"regulation of developmental process","regulation of catalytic activity",TRUE,FALSE,TRUE
 "GO:0043030","GO:0043030",10,"GO:0042110",0.338,11,11,"regulation of macrophage activation","T cell activation",TRUE,FALSE,FALSE
+"GO:0040012","GO:0040012",6,"GO:0050790",0.307,6,6,"regulation of locomotion","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0035556","GO:0035556",1,"GO:0007165",0.915,456,456,"intracellular signal transduction","signal transduction",TRUE,FALSE,FALSE
+"GO:0150076","GO:0150076",7,"GO:0006954",0.825,5,5,"neuroinflammatory response","inflammatory response",TRUE,FALSE,FALSE
+"GO:0044403","GO:0044403",6,"GO:0050790",0.176,0,0,"biological process involved in symbiotic interaction","regulation of catalytic activity",TRUE,FALSE,FALSE
 "GO:0032640","GO:0032640",4,"GO:0010628",0.315,0,0,"tumor necrosis factor production","positive regulation of gene expression",TRUE,FALSE,FALSE
 "GO:0032680","GO:0032680",4,"GO:0010628",0.468,12,12,"regulation of tumor necrosis factor production","positive regulation of gene expression",TRUE,FALSE,FALSE
-"GO:0038093","GO:0038093",1,"GO:0007165",0.684,4,4,"Fc receptor signaling pathway","signal transduction",TRUE,FALSE,FALSE
-"GO:0051250","GO:0051250",10,"GO:0042110",0.406,3,3,"negative regulation of lymphocyte activation","T cell activation",TRUE,FALSE,FALSE
-"GO:0002887","GO:0002887",6,"GO:0006955",0.165,0,0,"negative regulation of myeloid leukocyte mediated immunity","immune response",TRUE,FALSE,FALSE
-"GO:0048002","GO:0048002",11,"GO:0019886",0.528,3,3,"antigen processing and presentation of peptide antigen","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
-"GO:2000145","GO:2000145",7,"GO:0030335",0.711,15,15,"regulation of cell motility","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0009966","GO:0009966",1,"GO:0007165",0.782,35,35,"regulation of signal transduction","signal transduction",TRUE,FALSE,FALSE
-"GO:0031349","GO:0031349",3,"GO:0045087",0.291,0,0,"positive regulation of defense response","innate immune response",TRUE,FALSE,FALSE
-"GO:0002862","GO:0002862",3,"GO:0045087",0.3,23,23,"negative regulation of inflammatory response to antigenic stimulus","innate immune response",TRUE,FALSE,FALSE
+"GO:0002220","GO:0002220",3,"GO:0045087",0.467,1,1,"innate immune response activating cell surface receptor signaling pathway","innate immune response",TRUE,FALSE,FALSE
+"GO:0002218","GO:0002218",3,"GO:0045087",0.558,36,36,"activation of innate immune response","innate immune response",TRUE,FALSE,FALSE
+"GO:2000026","GO:2000026",6,"GO:0050790",0.183,0,0,"regulation of multicellular organismal development","regulation of catalytic activity",TRUE,FALSE,TRUE
+"GO:0002887","GO:0002887",5,"GO:0006955",0.165,0,0,"negative regulation of myeloid leukocyte mediated immunity","immune response",TRUE,FALSE,FALSE
+"GO:0002724","GO:0002724",5,"GO:0006955",0.241,5,5,"regulation of T cell cytokine production","immune response",TRUE,FALSE,FALSE
+"GO:0002369","GO:0002369",5,"GO:0006955",0.399,0,0,"T cell cytokine production","immune response",TRUE,FALSE,FALSE
 "GO:0051056","GO:0051056",1,"GO:0007165",0.663,120,120,"regulation of small GTPase mediated signal transduction","signal transduction",TRUE,FALSE,FALSE
+"GO:0045595","GO:0045595",6,"GO:0050790",0.183,37,37,"regulation of cell differentiation","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0045580","GO:0045580",2,"GO:0030154",0.27,13,13,"regulation of T cell differentiation","cell differentiation",TRUE,FALSE,FALSE
+"GO:0051049","GO:0051049",9,"GO:0016192",0.489,3,3,"regulation of transport","vesicle-mediated transport",TRUE,FALSE,FALSE
+"GO:0098883","GO:0098883",1,"GO:0007165",0.14,9,9,"synapse pruning","signal transduction",TRUE,FALSE,FALSE
+"GO:0061517","GO:0061517",1,"GO:0007165",0.195,0,0,"macrophage proliferation","signal transduction",TRUE,FALSE,FALSE
+"GO:0035702","GO:0035702",6,"GO:0050790",0.192,2,2,"monocyte homeostasis","regulation of catalytic activity",TRUE,FALSE,FALSE
 "GO:1903555","GO:1903555",4,"GO:0010628",0.523,0,0,"regulation of tumor necrosis factor superfamily cytokine production","positive regulation of gene expression",TRUE,FALSE,FALSE
 "GO:0071706","GO:0071706",4,"GO:0010628",0.357,0,0,"tumor necrosis factor superfamily cytokine production","positive regulation of gene expression",TRUE,FALSE,FALSE
-"GO:0002709","GO:0002709",6,"GO:0006955",0.325,0,0,"regulation of T cell mediated immunity","immune response",TRUE,FALSE,FALSE
-"GO:2000554","GO:2000554",6,"GO:0006955",0.223,0,0,"regulation of T-helper 1 cell cytokine production","immune response",TRUE,FALSE,FALSE
-"GO:0035744","GO:0035744",6,"GO:0006955",0.374,0,0,"T-helper 1 cell cytokine production","immune response",TRUE,FALSE,FALSE
-"GO:2000556","GO:2000556",6,"GO:0006955",0.17,6,6,"positive regulation of T-helper 1 cell cytokine production","immune response",TRUE,FALSE,FALSE
-"GO:0048518","GO:0048518",1,"GO:0007165",0.349,0,0,"positive regulation of biological process","signal transduction",TRUE,FALSE,FALSE
-"GO:0045785","GO:0045785",5,"GO:0007155",0.554,52,52,"positive regulation of cell adhesion","cell adhesion",TRUE,FALSE,FALSE
-"GO:0098883","GO:0098883",5,"GO:0007155",0.207,9,9,"synapse pruning","cell adhesion",TRUE,FALSE,FALSE
-"GO:0061517","GO:0061517",5,"GO:0007155",0.313,0,0,"macrophage proliferation","cell adhesion",TRUE,FALSE,FALSE
-"GO:0006959","GO:0006959",6,"GO:0006955",0.831,62,62,"humoral immune response","immune response",TRUE,FALSE,FALSE
-"GO:0019882","GO:0019882",11,"GO:0019886",0.432,24,24,"antigen processing and presentation","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
-"GO:0051049","GO:0051049",8,"GO:0016192",0.489,3,3,"regulation of transport","vesicle-mediated transport",TRUE,FALSE,FALSE
-"GO:0002437","GO:0002437",3,"GO:0045087",0.53,23,23,"inflammatory response to antigenic stimulus","innate immune response",TRUE,FALSE,FALSE
-"GO:0002604","GO:0002604",1,"GO:0007165",0.198,0,0,"regulation of dendritic cell antigen processing and presentation","signal transduction",TRUE,FALSE,FALSE
-"GO:0002889","GO:0002889",6,"GO:0006955",0.328,0,0,"regulation of immunoglobulin mediated immune response","immune response",TRUE,FALSE,FALSE
-"GO:0040012","GO:0040012",1,"GO:0007165",0.31,6,6,"regulation of locomotion","signal transduction",TRUE,FALSE,FALSE
-"GO:0002712","GO:0002712",6,"GO:0006955",0.325,0,0,"regulation of B cell mediated immunity","immune response",TRUE,FALSE,FALSE
-"GO:0002758","GO:0002758",3,"GO:0045087",0.482,1,1,"innate immune response-activating signal transduction","innate immune response",TRUE,FALSE,FALSE
-"GO:2000249","GO:2000249",5,"GO:0007155",0.165,21,21,"regulation of actin cytoskeleton reorganization","cell adhesion",TRUE,FALSE,FALSE
-"GO:0010759","GO:0010759",7,"GO:0030335",0.474,23,23,"positive regulation of macrophage chemotaxis","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0030334","GO:0030334",7,"GO:0030335",0.789,105,105,"regulation of cell migration","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0002725","GO:0002725",6,"GO:0006955",0.183,8,8,"negative regulation of T cell cytokine production","immune response",TRUE,FALSE,FALSE
-"GO:0042113","GO:0042113",10,"GO:0042110",0.702,38,38,"B cell activation","T cell activation",TRUE,FALSE,FALSE
-"GO:0044403","GO:0044403",5,"GO:0007155",0.193,0,0,"biological process involved in symbiotic interaction","cell adhesion",TRUE,FALSE,FALSE
-"GO:0051270","GO:0051270",7,"GO:0030335",0.527,1,1,"regulation of cellular component movement","positive regulation of cell migration",TRUE,FALSE,FALSE
-"GO:0050789","GO:0050789",1,"GO:0007165",0.427,0,0,"regulation of biological process","signal transduction",TRUE,TRUE,FALSE
-"GO:0022409","GO:0022409",5,"GO:0007155",0.454,16,16,"positive regulation of cell-cell adhesion","cell adhesion",TRUE,FALSE,FALSE
-"GO:0043085","GO:0043085",1,"GO:0007165",0.145,29,29,"positive regulation of catalytic activity","signal transduction",TRUE,FALSE,FALSE
-"GO:0034341","GO:0034341",3,"GO:0045087",0.807,29,29,"response to interferon-gamma","innate immune response",TRUE,FALSE,FALSE
-"GO:0007229","GO:0007229",1,"GO:0007165",0.847,115,115,"integrin-mediated signaling pathway","signal transduction",TRUE,FALSE,TRUE
-"GO:0048731","GO:0048731",2,"GO:0030154",0.247,2,2,"system development","cell differentiation",TRUE,FALSE,FALSE
-"GO:0006887","GO:0006887",8,"GO:0016192",0.703,99,99,"exocytosis","vesicle-mediated transport",TRUE,FALSE,TRUE
-"GO:0036230","GO:0036230",10,"GO:0042110",0.493,0,0,"granulocyte activation","T cell activation",TRUE,FALSE,FALSE
+"GO:0035743","GO:0035743",5,"GO:0006955",0.412,0,0,"CD4-positive, alpha-beta T cell cytokine production","immune response",TRUE,FALSE,FALSE
+"GO:0032623","GO:0032623",4,"GO:0010628",0.357,0,0,"interleukin-2 production","positive regulation of gene expression",TRUE,FALSE,FALSE
+"GO:0032663","GO:0032663",4,"GO:0010628",0.523,2,2,"regulation of interleukin-2 production","positive regulation of gene expression",TRUE,FALSE,FALSE
+"GO:0002604","GO:0002604",6,"GO:0050790",0.186,0,0,"regulation of dendritic cell antigen processing and presentation","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0002437","GO:0002437",7,"GO:0006954",0.701,23,23,"inflammatory response to antigenic stimulus","inflammatory response",TRUE,FALSE,FALSE
+"GO:0048523","GO:0048523",10,"GO:0042110",0.215,0,0,"negative regulation of cellular process","T cell activation",TRUE,FALSE,FALSE
+"GO:0010759","GO:0010759",8,"GO:0030335",0.474,23,23,"positive regulation of macrophage chemotaxis","positive regulation of cell migration",TRUE,FALSE,FALSE
+"GO:0006959","GO:0006959",5,"GO:0006955",0.831,62,62,"humoral immune response","immune response",TRUE,FALSE,FALSE
+"GO:0002292","GO:0002292",10,"GO:0042110",0.454,1,1,"T cell differentiation involved in immune response","T cell activation",TRUE,FALSE,FALSE
+"GO:0043085","GO:0043085",6,"GO:0050790",0.717,29,29,"positive regulation of catalytic activity","regulation of catalytic activity",TRUE,FALSE,FALSE
 "GO:0021612","GO:0021612",2,"GO:0030154",0.137,9,9,"facial nerve structural organization","cell differentiation",TRUE,FALSE,FALSE
-"GO:0070098","GO:0070098",9,"GO:0019221",0.852,78,78,"chemokine-mediated signaling pathway","cytokine-mediated signaling pathway",TRUE,FALSE,FALSE
-"GO:0043300","GO:0043300",8,"GO:0016192",0.358,0,0,"regulation of leukocyte degranulation","vesicle-mediated transport",TRUE,FALSE,TRUE
+"GO:0048731","GO:0048731",2,"GO:0030154",0.247,2,2,"system development","cell differentiation",TRUE,FALSE,FALSE
+"GO:2000249","GO:2000249",1,"GO:0007165",0.296,21,21,"regulation of actin cytoskeleton reorganization","signal transduction",TRUE,FALSE,TRUE
+"GO:0042221","GO:0042221",7,"GO:0006954",0.357,0,0,"response to chemical","inflammatory response",TRUE,FALSE,TRUE
+"GO:0051179","GO:0051179",9,"GO:0016192",0.467,0,0,"localization","vesicle-mediated transport",TRUE,FALSE,FALSE
+"GO:0036230","GO:0036230",10,"GO:0042110",0.493,0,0,"granulocyte activation","T cell activation",TRUE,FALSE,FALSE
+"GO:0048519","GO:0048519",6,"GO:0050790",0.373,0,0,"negative regulation of biological process","regulation of catalytic activity",TRUE,FALSE,FALSE
+"GO:0051345","GO:0051345",6,"GO:0050790",0.566,5,5,"positive regulation of hydrolase activity","regulation of catalytic activity",TRUE,FALSE,FALSE
 "GO:0002468","GO:0002468",11,"GO:0019886",0.319,0,0,"dendritic cell antigen processing and presentation","antigen processing and presentation of exogenous peptide antigen via MHC class II",TRUE,FALSE,FALSE
-"GO:0019835","GO:0019835",5,"GO:0007155",0.469,20,20,"cytolysis","cell adhesion",TRUE,TRUE,FALSE
-"GO:1901701","GO:1901701",9,"GO:0019221",0.372,0,0,"cellular response to oxygen-containing compound","cytokine-mediated signaling pathway",TRUE,FALSE,FALSE
-"GO:0042100","GO:0042100",5,"GO:0007155",0.19,35,35,"B cell proliferation","cell adhesion",TRUE,FALSE,FALSE
-"GO:0018108","GO:0018108",4,"GO:0010628",0.139,141,141,"peptidyl-tyrosine phosphorylation","positive regulation of gene expression",TRUE,FALSE,FALSE
-"GO:0001914","GO:0001914",6,"GO:0006955",0.256,2,2,"regulation of T cell mediated cytotoxicity","immune response",TRUE,FALSE,FALSE
-"GO:0048513","GO:0048513",2,"GO:0030154",0.235,16,16,"animal organ development","cell differentiation",TRUE,FALSE,FALSE
-"GO:0010646","GO:0010646",5,"GO:0007155",0.291,0,0,"regulation of cell communication","cell adhesion",TRUE,FALSE,FALSE
-"GO:0018212","GO:0018212",4,"GO:0010628",0.167,0,0,"peptidyl-tyrosine modification","positive regulation of gene expression",TRUE,FALSE,FALSE
-"GO:0032879","GO:0032879",8,"GO:0016192",0.285,1,1,"regulation of localization","vesicle-mediated transport",TRUE,FALSE,FALSE
-"GO:0001774","GO:0001774",10,"GO:0042110",0.42,31,31,"microglial cell activation","T cell activation",TRUE,FALSE,FALSE
-"GO:0002861","GO:0002861",3,"GO:0045087",0.362,0,0,"regulation of inflammatory response to antigenic stimulus","innate immune response",TRUE,FALSE,FALSE
-"GO:0002573","GO:0002573",2,"GO:0030154",0.505,2,2,"myeloid leukocyte differentiation","cell differentiation",TRUE,FALSE,FALSE
-"GO:0051345","GO:0051345",1,"GO:0007165",0.119,5,5,"positive regulation of hydrolase activity","signal transduction",TRUE,FALSE,FALSE
-"GO:0023051","GO:0023051",1,"GO:0007165",0.454,1,1,"regulation of signaling","signal transduction",TRUE,FALSE,FALSE
-"GO:0002702","GO:0002702",4,"GO:0010628",0.682,0,0,"positive regulation of production of molecular mediator of immune response","positive regulation of gene expression",TRUE,FALSE,FALSE
-"GO:0150099","GO:0150099",5,"GO:0007155",0.3,5,5,"neuron-glial cell signaling","cell adhesion",FALSE,TRUE,FALSE
-"GO:0001996","GO:0001996",1,"GO:0007165",0.12,4,4,"positive regulation of heart rate by epinephrine-norepinephrine","signal transduction",FALSE,TRUE,FALSE
-"GO:0033627","GO:0033627",5,"GO:0007155",0.831,27,27,"cell adhesion mediated by integrin","cell adhesion",FALSE,FALSE,TRUE
-"GO:0030593","GO:0030593",7,"GO:0030335",0.253,89,89,"neutrophil chemotaxis","positive regulation of cell migration",FALSE,FALSE,TRUE
-"GO:0030198","GO:0030198",5,"GO:0007155",0.245,157,157,"extracellular matrix organization","cell adhesion",FALSE,FALSE,TRUE
-"GO:0043062","GO:0043062",5,"GO:0007155",0.313,1,1,"extracellular structure organization","cell adhesion",FALSE,FALSE,TRUE
-"GO:0045229","GO:0045229",5,"GO:0007155",0.313,0,0,"external encapsulating structure organization","cell adhesion",FALSE,FALSE,TRUE
-"GO:1990266","GO:1990266",7,"GO:0030335",0.312,10,10,"neutrophil migration","positive regulation of cell migration",FALSE,FALSE,TRUE
+"GO:0150099","GO:0150099",1,"GO:0007165",0.44,5,5,"neuron-glial cell signaling","signal transduction",FALSE,TRUE,FALSE
+"GO:0007229","GO:0007229",1,"GO:0007165",0.847,115,115,"integrin-mediated signaling pathway","signal transduction",FALSE,FALSE,TRUE
+"GO:0033627","GO:0033627",1,"GO:0007165",0.217,27,27,"cell adhesion mediated by integrin","signal transduction",FALSE,FALSE,TRUE
+"GO:0030593","GO:0030593",8,"GO:0030335",0.253,89,89,"neutrophil chemotaxis","positive regulation of cell migration",FALSE,FALSE,TRUE
+"GO:0006887","GO:0006887",9,"GO:0016192",0.703,99,99,"exocytosis","vesicle-mediated transport",FALSE,FALSE,TRUE
 "GO:0002291","GO:0002291",10,"GO:0042110",0.608,4,4,"T cell activation via T cell receptor contact with antigen bound to MHC molecule on antigen presenting cell","T cell activation",FALSE,FALSE,TRUE
-"GO:0008360","GO:0008360",1,"GO:0007165",0.201,163,163,"regulation of cell shape","signal transduction",FALSE,FALSE,TRUE
-"GO:0032940","GO:0032940",8,"GO:0016192",0.577,10,10,"secretion by cell","vesicle-mediated transport",FALSE,FALSE,TRUE
-"GO:0140352","GO:0140352",8,"GO:0016192",0.731,0,0,"export from cell","vesicle-mediated transport",FALSE,FALSE,TRUE
-"GO:0007160","GO:0007160",5,"GO:0007155",0.717,111,111,"cell-matrix adhesion","cell adhesion",FALSE,FALSE,TRUE
-"GO:0046903","GO:0046903",8,"GO:0016192",0.584,7,7,"secretion","vesicle-mediated transport",FALSE,FALSE,TRUE
-"GO:0051649","GO:0051649",8,"GO:0016192",0.543,8,8,"establishment of localization in cell","vesicle-mediated transport",FALSE,FALSE,TRUE
-"GO:0051641","GO:0051641",8,"GO:0016192",0.518,1,1,"cellular localization","vesicle-mediated transport",FALSE,FALSE,TRUE
+"GO:1990266","GO:1990266",8,"GO:0030335",0.312,10,10,"neutrophil migration","positive regulation of cell migration",FALSE,FALSE,TRUE
+"GO:0043300","GO:0043300",9,"GO:0016192",0.358,0,0,"regulation of leukocyte degranulation","vesicle-mediated transport",FALSE,FALSE,TRUE
+"GO:0032940","GO:0032940",9,"GO:0016192",0.577,10,10,"secretion by cell","vesicle-mediated transport",FALSE,FALSE,TRUE
+"GO:0008360","GO:0008360",6,"GO:0050790",0.204,163,163,"regulation of cell shape","regulation of catalytic activity",FALSE,FALSE,TRUE
+"GO:0008284","GO:0008284",1,"GO:0007165",0.392,591,591,"positive regulation of cell population proliferation","signal transduction",FALSE,FALSE,TRUE
+"GO:0140352","GO:0140352",9,"GO:0016192",0.731,0,0,"export from cell","vesicle-mediated transport",FALSE,FALSE,TRUE
+"GO:0007160","GO:0007160",1,"GO:0007165",0.188,111,111,"cell-matrix adhesion","signal transduction",FALSE,FALSE,TRUE
+"GO:0018108","GO:0018108",4,"GO:0010628",0.139,141,141,"peptidyl-tyrosine phosphorylation","positive regulation of gene expression",FALSE,FALSE,TRUE
+"GO:0018212","GO:0018212",4,"GO:0010628",0.167,0,0,"peptidyl-tyrosine modification","positive regulation of gene expression",FALSE,FALSE,TRUE
+"GO:0007015","GO:0007015",1,"GO:0007165",0.155,138,138,"actin filament organization","signal transduction",FALSE,FALSE,TRUE
+"GO:0045123","GO:0045123",8,"GO:0030335",0.383,3,3,"cellular extravasation","positive regulation of cell migration",FALSE,FALSE,TRUE
+"GO:0051649","GO:0051649",9,"GO:0016192",0.543,8,8,"establishment of localization in cell","vesicle-mediated transport",FALSE,FALSE,TRUE
+"GO:0048872","GO:0048872",6,"GO:0050790",0.267,16,16,"homeostasis of number of cells","regulation of catalytic activity",FALSE,FALSE,TRUE
+"GO:0046903","GO:0046903",9,"GO:0016192",0.584,7,7,"secretion","vesicle-mediated transport",FALSE,FALSE,TRUE
