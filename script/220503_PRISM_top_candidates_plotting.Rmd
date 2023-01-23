@@ -862,7 +862,7 @@ deseq_results <- read.csv("~/output/deseq2_gbm/220927_deseq2_gbm_normal_gtx_res.
 
 ```{r}
 tpm_df <- readRDS("~/output/recount3_gbm_gtex_tpm_df.rds")
-metadata <- readRDS("~/output/recount3_gbm_gtex_metadata.rds")
+metadata <- readRDS("~/data/recount3_GBM_GTEx_BRAIN_metadata.rds")
 ```
 
 ```{r}
