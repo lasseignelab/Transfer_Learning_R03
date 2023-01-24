@@ -88,6 +88,7 @@ posn.d <- position_dodge(width=0.95)
 ggplot(df2_longer, aes( x=name, y=value))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
   stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)+
   labs(title="Pamidronate Round 1 in Cell Titer", x="Groups (Control H20)", y="Corrected Values to the Average of the Control")
+ggsave("~/output/gbm_drug_celltiter_plots/221130_pamidronate_round_1_cell_titer.png", height=8, width=16)
 #+geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)
 df2_u251p <- df2_longer[df2_longer$ROWTITLE == "U251P", ]
 stat.test <- df2_u251p %>%
@@ -102,6 +103,7 @@ ggplot(df2_u251p, aes( x=name, y=value))+ stat_summary(fun.data=mean_sdl, geom="
     stat.test,  label = "p.adj", tip.length = 0, hide.ns = TRUE
   ) +
   labs(title="Pamidronate Round 1 in Cell Titer", x="Groups (Control H20)", y="Corrected Values to the Average of the Control")
+
 
 #df3_u251p <- df3_nimod[df3_nimod$ROWTITLE == "U251P", ]
 my_comparisons <- list( c("Control", "100uM"), 
@@ -149,6 +151,7 @@ p4<- ggplot(df3_u251p, aes( x=name, y=value, fill= name))+ stat_summary(fun.data
 
 ```{r}
 ggarrange(p3, p4, ncol = 2, nrow = 1)
+ggsave("~/output/gbm_drug_celltiter_plots/221130_pamidronate_round_1_cell_titer_u251_nha.png", height=8, width=16)
 ```
 
 ```{r}
@@ -163,6 +166,7 @@ posn.d <- position_dodge(width=0.95)
 ggplot(df3_nimod, aes( x=name, y=value))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
   stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)+
   labs(title="Nimodipine Round 1 in Cell Titer", x="Groups (Control DMSO)", y="Corrected Values to the Average of the Control")
+ggsave("~/output/gbm_drug_celltiter_plots/221130_nimodipine_round_1_cell_titer.png" , height=8, width=16)
 
 #+geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)
 df3_u251p <- df3_nimod[df3_nimod$ROWTITLE == "U251P", ]
@@ -205,15 +209,16 @@ p2<- ggplot(df3_u251p, aes( x=name, y=value, fill= name))+ stat_summary(fun.data
   stat_compare_means(method = "anova", label.y = 2) + theme_minimal()+
   labs(title="Nimodipine: Cell Titer \nNHA Cell line", x="Groups (Control DMSO)", 
        y="Corrected Values to the Average of the Control") + scale_fill_brewer(palette = "PuBu") + theme(legend.position = "none")
-
 ```
 
 ```{r}
 ggarrange(p2, p1, ncol = 2, nrow = 1)
+ggsave("~/output/gbm_drug_celltiter_plots/221130_nimodipine_round_1_cell_titer_u251_nha.png" , height=8, width=16)
 ```
 
 ```{r}
 ggarrange(p3, p4, p1, p2, labels = c("A", "B", "C", "D"), ncol = 2, nrow = 2)
+ggsave("~/output/gbm_drug_celltiter_plots/221130_nimodipine_and_pamidronate_round_1_cell_titer_u251_nha.png", , height=8, width=16)
 ```
 
 
@@ -229,6 +234,7 @@ posn.d <- position_dodge(width=0.95)
 ggplot(df3_sax, aes( x=name, y=value))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
   stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)+
   labs(title="Saxagliptin Round 1 in Cell Titer", x="Groups (Control DMSO)", y="Corrected Values to the Average of the Control for that Cell Type")
+ggsave("~/output/gbm_drug_celltiter_plots/221130_saxagliptin_round_1_cell_titer.png", height=8, width=16)
 #+geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)
 df3_u251p <- df3_sax[df3_sax$ROWTITLE == "U251P", ]
 stat.test <- df3_u251p %>%
@@ -243,6 +249,7 @@ ggplot(df3_u251p, aes( x=name, y=value))+ stat_summary(fun.data=mean_sdl, geom="
     stat.test,  label = "p.adj", tip.length = 0, hide.ns = TRUE
   ) +
   labs(title="Saxagliptin Round 1 in Cell Titer", x="Groups (Control DMSO)", y="Corrected Values to the Average of the Control for that Cell Type")
+
 
 df3_u251p <- df3_sax[df3_sax$ROWTITLE == "U251P", ]
 my_comparisons <- list( c("DMSO", "100uM"), 
@@ -288,6 +295,7 @@ p2<- ggplot(df3_u251p, aes( x=name, y=value, fill= name))+ stat_summary(fun.data
 
 ```{r}
 ggarrange(p1, p2, ncol = 2, nrow = 1)
+ggsave("~/output/gbm_drug_celltiter_plots/221130_saxagliptin_round_1_cell_titer_u251_nha.png", height=8, width=16)
 ```
 
 ```{r}
@@ -301,6 +309,8 @@ posn.d <- position_dodge(width=0.95)
 ggplot(df3_ico, aes( x=name, y=value))+ stat_summary(fun.data=mean_sdl, geom="bar")+ 
   stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)+
   labs(title="Icosapent Round 1 in Cell Titer", x="Groups (Control DMSO)", y="Corrected Values to the Average of the Control for that Cell Type")
+ggsave("~/output/gbm_drug_celltiter_plots/221130_iscosapent_round_1_cell_titer.png", height=8, width=16)
+
 #+geom_point() + facet_wrap(~ ROWTITLE, nrow= 1)
 df3_u251p <- df3_ico[df3_ico$ROWTITLE == "U251P", ]
 stat.test <- df3_u251p %>%
@@ -364,10 +374,12 @@ p4<- ggplot(df3_u251p, aes( x=name, y=value, fill= name))+ stat_summary(fun.data
 
 ```{r}
 ggarrange(p3, p4, ncol = 2, nrow = 1)
+ggsave("~/output/gbm_drug_celltiter_plots/221130_iscosapent_round_1_cell_titer_u251_nha.png", height=8, width=16)
 ```
 
 ```{r}
 ggarrange( p1, p2,p3, p4, labels = c("D", "E", "F", "G"), ncol = 2, nrow = 2)
+ggsave("~/output/gbm_drug_celltiter_plots/221130_saxagliptin_iscosapent_round_1_cell_titer_u251_nha.png", height=10, width=16)
 ```
 ## Round 2 testing results
 
@@ -438,6 +450,7 @@ P6<- round2_plotting(df6, groups, title="Nimodipine & TMZ: Cell Titer \nJX39 Cel
 
 ```{r}
 ggarrange(P1,  P3,  P5,P2,P4, P6, labels = c("A", "B", "C", "D", "E", "F"), ncol = 3, nrow = 2)
+ggsave("~/output/gbm_drug_celltiter_plots/221130_nimodipine_and_pamidronate_round_2_cell_titer.png", height=8.5, width=20)
 ```
 
 
@@ -733,14 +746,17 @@ g6<- ggplot(df6_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.da
 plots of round 2: Nimodipine U251 and then PDX 
 ```{r}
 ggarrange(g52,  g6, ncol = 2, nrow = 1)
+ggsave("~/output/gbm_drug_celltiter_plots/221130_nimodipine_round_2_cell_titer_u251_PDX.png", height=8, width=18)
 ```
 plots of round 2: pamidronate U251 and then PDX 
 ```{r}
 ggarrange(g2,  g3, ncol = 2, nrow = 1)
+ggsave("~/output/gbm_drug_celltiter_plots/221130_pamdronate_round_2_cell_titer_u251_PDX.png", height=8, width=18)
 ```
 plots of round two in NHA: pamidronate & Nimodipine
 ```{r}
 ggarrange(g1,  g4, ncol = 2, nrow = 1)
+ggsave("~/output/gbm_drug_celltiter_plots/221130_pamdronate_nimodipine_round_2_cell_titer_nha.png", height=8, width=18)
 ```
 
 group6 
