@@ -370,6 +370,9 @@ se_asssay<- assay(se)
 ```
 
 ```{r eval=FALSE}
+deseq2_lihc_normal <- read.csv( "~/output/liver_cancer/deseq2_res/220929_deseq2_lihc_normal_gtx_res.csv")
+deseq2_lihc_normal<- cbind(rownames(deseq2_lihc_normal), deseq2_lihc_normal )
+deseq2_lihc_normal$Symbol<- feature_info$gene_name
 for (i in 1:nrow(lincs_deseq_lihc_res_HEPG2_top_fda) ){
   targets<- as.vector(unlist(strsplit(lincs_deseq_lihc_res_HEPG2_top_fda$t_gn_sym[i], "; ")))
   #print(targets)

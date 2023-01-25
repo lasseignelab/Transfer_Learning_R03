@@ -780,7 +780,10 @@ gbm.2 + coord_flip() + ylab(&quot;Number of Drugs&quot;) + xlab(&quot;KEGG Pathw
 <pre class="r"><code>rownames(tpm_table)&lt;- feature_info$gene_name</code></pre>
 <pre class="r"><code>tpm_df &lt;- as.data.frame(tpm_table)</code></pre>
 <pre class="r"><code>se_asssay&lt;- assay(se)</code></pre>
-<pre class="r"><code>for (i in 1:nrow(lincs_deseq_lihc_res_HEPG2_top_fda) ){
+<pre class="r"><code>deseq2_lihc_normal &lt;- read.csv( &quot;~/output/liver_cancer/deseq2_res/220929_deseq2_lihc_normal_gtx_res.csv&quot;)
+deseq2_lihc_normal&lt;- cbind(rownames(deseq2_lihc_normal), deseq2_lihc_normal )
+deseq2_lihc_normal$Symbol&lt;- feature_info$gene_name
+for (i in 1:nrow(lincs_deseq_lihc_res_HEPG2_top_fda) ){
   targets&lt;- as.vector(unlist(strsplit(lincs_deseq_lihc_res_HEPG2_top_fda$t_gn_sym[i], &quot;; &quot;)))
   #print(targets)
   try(drug_analysis( lincs_deseq_lihc_res_HEPG2_top_fda$pert[i], targets, tpm_df , all_metadata_v3$status, deseq2_lihc_normal, se= se_asssay, cell_lincs= &quot;__HEPG2__trt_cp&quot;, &quot;~/output/liver_cancer/deseq2_res/candidate_plots&quot;))
