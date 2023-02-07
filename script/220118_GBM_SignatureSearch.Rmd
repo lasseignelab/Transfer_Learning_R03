@@ -283,47 +283,6 @@ g<-ggplot(data=lincs_deseq_gbm_res_brain_tumor_top , aes(x=pert, y=NCS, color=ce
   geom_point(stat="identity", size = 3)
 g + coord_flip() + scale_color_viridis_d()
 ```
-GBM cell line drug target enrichment
-```{r eval=FALSE}
-hyperG_k_res <- dsea_hyperG(drugs = lincs_deseq_gbm_res_GI1_top_candidates$pert, type = "KEGG", 
-                            pvalueCutoff = 1, qvalueCutoff = 1, 
-                            minGSSize = 10, maxGSSize = 2000)
-hyperG_k_res_v2<- result(hyperG_k_res)
-```
-
-```{r eval=FALSE}
-write.csv(hyperG_k_res_v2, file= "~/output/deseq2_gbm/220928_SR_LINCS_GBM_gbm_cell_drug_pathway_RES.csv" )
-```
-
-```{r eval=FALSE}
-#false discovery rate
-hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
-```
-
-```{r eval=FALSE}
-hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
-```
-
-```{r eval=FALSE}
-gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
-  geom_bar(stat="identity", color= "black") +ylim(0, 8)
-gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
-ggsave("~/output/deseq2_gbm/220928_ggplot_deseq2_tau_gbm_candidates_kegg_pathways.pdf")
-```
-
-```{r}
-knitr::include_graphics("~/output/deseq2_gbm/220928_ggplot_deseq2_tau_gbm_candidates_kegg_pathways.pdf")
-```
-
-drug target enrichment with Go terms
-```{r eval=FALSE}
-hyperG_res_go <- dsea_hyperG(drugs=lincs_deseq_gbm_res_GI1_top$pert, type="GO", ont="ALL")
-hyperG_res_go<- result(hyperG_res_go )
-```
-
-```{r eval=FALSE}
-write.csv(hyperG_res_go, file= "~/output/deseq2_gbm/220928_SR_LINCS_GBM_gbm_cell_drug_Go_terms_RES.csv" )
-```
 
 PRISM plotting
 
@@ -409,15 +368,7 @@ V = 81737, p-value < 2.2e-16
 
 alternative hypothesis: true location is less than 0.3076923
 
-LINCS pathways & Drug targets for all the candidates
-```{r eval=FALSE}
-deseq_results<- cbind(rownames(deseq_results), deseq_results)
-for (i in 1:nrow( lincs_deseq_gbm_res_GI1_top_candidates) ){
-  targets<- as.vector(unlist( strsplit(lincs_deseq_gbm_res_GI1_top_candidates$t_gn_sym[i], "; ")))
-  #print(targets)
-  try(drug_analysis(  lincs_deseq_gbm_res_GI1_top_candidates$pert[i], targets, as.data.frame(tpm_df) , metadata$status, deseq_results, se= se_asssay, cell_lincs= "__GI1__trt_cp", "~/output/deseq2_gbm/220928_candidate_plots/"))
-}
-```
+
 
 
 ## signature reversion for Transfer Learning GBM vs control 
@@ -669,34 +620,6 @@ write.csv(lincs_transfer_gbm_res_GI1_top_top_fda, file = "~/output/TF_L_GBM/2208
 ```
 
 
-```{r eval=FALSE}
-hyperG_k_res.2 <- dsea_hyperG(drugs = lincs_transfer_gbm_res_GI1_top_top_fda$pert, type = "KEGG", 
-                            pvalueCutoff = 1, qvalueCutoff = 1, 
-                            minGSSize = 10, maxGSSize = 2000)
-hyperG_k_res_v2.2<- result(hyperG_k_res.2)
-```
-
-```{r eval=FALSE}
-write.csv(hyperG_k_res_v2.2 , file=  "~/output/TF_L_GBM/220808_SR_LINCS_GBM_top_drug_pathway_RES.csv" )
-```
-
-```{r eval=FALSE}
-
-#false discovery rate
-hyperG_k_res_v2.2$logqvalue<- -log(hyperG_k_res_v2.2$qvalue)
-
-hyperG_k_res_v2.2$Description<- factor(hyperG_k_res_v2.2$Description, levels= hyperG_k_res_v2.2$Description)
-
-gbm.2.2<-ggplot(data=hyperG_k_res_v2.2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
-  geom_bar(stat="identity" , color = "black")
-gbm.2.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
-ggsave("~/output/TF_L_GBM/220808_ggplot_tf_l_tau_gbm_approved_candidates_kegg.png")
-```
-
-```{r}
-knitr::include_graphics("~/output/TF_L_GBM/220808_ggplot_tf_l_tau_gbm_approved_candidates_kegg.png")
-```
-
 look at the brain tumor cell types 
 ```{r eval=FALSE}
 lincs_transfer_gbm_res_brain_tumor <- lincs_transfer_gbm_res[lincs_transfer_gbm_res$cell %in% c("GI1","SHSY5Y", "LN229","SKNSH", "U251MG","YH13")   ,]
@@ -782,17 +705,6 @@ TFL_CT_test_res <- clinical_trial_testing(101, "GI1", len, fract, FDA_CT_table)
 ```{r eval=FALSE}
 TFL_CT_test_res 
 ```
-
-
-LINCS pathways & Drug targets for all the candidates
-```{r eval=FALSE}
-for (i in 1:nrow(lincs_transfer_gbm_res_GI1_top_top_fda) ){
-  targets<- as.vector(unlist(strsplit(lincs_transfer_gbm_res_GI1_top_top_fda$t_gn_sym[i], "; ")))
-  #print(targets)
-  drug_analysis( lincs_transfer_gbm_res_GI1_top_top_fda$pert[i], targets, as.data.frame(tpm_df) , metadata$status, deseq_results, se= se_asssay, cell_lincs= "__GI1__trt_cp", "~/output/TF_L_GBM/220808_candidate_plots/")
-}
-```
-
 
 ### Save Data
 done within the script 

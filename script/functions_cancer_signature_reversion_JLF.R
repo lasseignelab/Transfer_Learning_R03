@@ -2661,3 +2661,32 @@ read_pzfx <- function (path, table = 1, strike_action = "exclude", date_x = "cha
   ret <- Reduce("cbind", long_col_lst)
   return(ret)
 }
+
+
+drug_target_sig_search<- function(drug_list, pathway_res_file_name, plot_file_name ){
+  #inputs
+  #drug_list- list of drug for signaturesearch 
+  #pathway_res_file_name- the file name and path for the pathway res output 
+  #plot_file_name- the file name and path for the plot output
+  
+  #outputs
+  #pathway csv file
+  #plot of the top 30 pathways from the drug targets
+  
+  set.seed(101)
+  hyperG_k_res <- dsea_hyperG(drugs = drug_list, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
+  
+  hyperG_k_res_v2<- hyperG_k_res@result
+  #false discovery rate
+  hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
+  hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
+  write.csv(hyperG_k_res_v2 , file= pathway_res_file_name )
+  
+  #plot only the top 30
+  ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
+    geom_bar(stat="identity") + scale_fill_viridis() + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
+  #save the plot too 
+  ggsave(plot_file_name)
+}
+
+
