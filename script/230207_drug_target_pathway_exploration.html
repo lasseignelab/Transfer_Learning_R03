@@ -867,7 +867,7 @@ for (i in 1:nrow(lincs_deseq_gbm_res_HEPG2_fda_approved) ){
   try(drug_analysis( lincs_deseq_gbm_res_HEPG2_fda_approved$pert[i], targets, liver_tpm_df , liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= &quot;__HEPG2__trt_cp&quot;, &quot;~/output/liver_cancer/deseq2_res/220602_candidate_plots&quot;))
 }</code></pre>
 <p>limma drug target pathway analysis</p>
-<pre class="r"><code>drug_target_sig_search(lincs_limma_gbm_res_HEPG2_fda_approved$pert, &quot;~/output/liver_cancer/deseq2_res/220808_SR_LINCS_LIHC_limma_PATHWAY.csv&quot;, &quot;~/output/liver_cancer/deseq2_res/220808_SR_LINCS_LIHC_limma_PATHWAY.png&quot; )</code></pre>
+<pre class="r"><code>drug_target_sig_search(lincs_limma_gbm_res_HEPG2_fda_approved$pert, &quot;~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_PATHWAY.csv&quot;, &quot;~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_PATHWAY.png&quot; )</code></pre>
 <pre><code>## Saving 7 x 5 in image</code></pre>
 <p>drug pathways and the boxplot of tumor vs control expression</p>
 <pre class="r"><code>for (i in 1:nrow(lincs_limma_gbm_res_HEPG2_fda_approved) ){

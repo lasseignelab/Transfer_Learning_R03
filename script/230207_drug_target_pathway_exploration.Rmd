@@ -250,7 +250,7 @@ for (i in 1:nrow(lincs_deseq_gbm_res_HEPG2_fda_approved) ){
 limma
   drug target pathway analysis  
 ```{r}
-drug_target_sig_search(lincs_limma_gbm_res_HEPG2_fda_approved$pert, "~/output/liver_cancer/deseq2_res/220808_SR_LINCS_LIHC_limma_PATHWAY.csv", "~/output/liver_cancer/deseq2_res/220808_SR_LINCS_LIHC_limma_PATHWAY.png" )
+drug_target_sig_search(lincs_limma_gbm_res_HEPG2_fda_approved$pert, "~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_PATHWAY.csv", "~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_PATHWAY.png" )
 ```
 
   drug pathways and the boxplot of tumor vs control expression
