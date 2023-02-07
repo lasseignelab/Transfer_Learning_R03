@@ -1,0 +1,396 @@
+---
+title: "230207_drug_target_pathway_exploration"
+author: "Jennifer Fisher"
+date: '2023-02-07'
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+# START 
+    Goal/Purpose of operations: 
+    We are conducting pathway analysis on the drug targets of the FDA approved drugs for the different disease-associated gene signatures. In addition, we are conducting pathway analysis on the drug perturbation profiles from LINCS and ploting boxplot of tpm tumor vs control for all the drug targets. 
+    
+    Finished psedocode on:
+    230207
+    
+    System which operations were done on: 
+    my laptop
+    
+    GitHub Repo:
+    Transfer_Learning_R03
+    
+    Docker/Singularity: 
+    rstudio_cancer_dr
+    
+    Directory of operations: 
+    "/home/rstudio"
+    
+    Scripts being edited for operations:
+    several functions are from /script/functions_cancer_signature_reversion_JLF.R
+    
+    Data being used: 
+    Output results from signature reversion for each cancer/method
+    ouputs for pathway results for disease signature for cancer method
+    
+    Papers and tools:
+    gprofiler and singatureSearch
+    
+# STEPS
+### Set working directory 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(recount3)
+library(SummarizedExperiment)
+source("/home/rstudio/script/functions_cancer_signature_reversion_JLF.R")
+library(signatureSearch)
+library(HDF5Array)
+library(viridis)
+library(tidyr)
+library(gprofiler2)
+library(ggplot2)
+library(ggpubr)
+library(VennDiagram)
+library(ComplexHeatmap)
+library(dplyr)
+library(gplots)
+library(circlize)
+library(dplyr)
+library(ggalluvial)
+library(readr)
+library(stringr)
+library(signatureSearch)
+library(HDF5Array)
+```
+
+### load in data
+```{r}
+se <- SummarizedExperiment(HDF5Array("~/data/lincs_2020.h5", name="assay"))
+rownames(se) <- HDF5Array("~/data/lincs_2020.h5", name="rownames")
+colnames(se) <- HDF5Array("~/data/lincs_2020.h5", name="colnames")
+se_asssay<- assay(se)
+```
+
+gene information
+Genes
+```{r}
+feature_info <- readRDS("~/data/recount3/recount3_fix_download/feature_info.rds")
+```
+
+
+#### drug repurposing candidates
+
+gbm
+```{r}
+lincs_limma_gbm_res_GI1_fda_approved<- read_csv( "~/output/limma_gbm/220808_SR_LINCS_GBM_top_RES_all.csv")
+lincs_deseq2_gbm_res_GI1_fda_approved <- read_csv( "~/output/deseq2_gbm/220928_SR_LINCS_GBM_DESEQ2_RES_all.csv")
+lincs_tfl_gbm_res_GI1_fda_approved <- read_csv( "~/output/TF_L_GBM/220808_SR_LINCS_GBM_top_RES_all.csv")
+```
+
+liver
+```{r}
+lincs_deseq_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/deseq2_res/220929_SR_LINCS_LIHC_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_HEPG2_fda_approved <- lincs_deseq_gbm_res_HEPG2_fda_approved [lincs_deseq_gbm_res_HEPG2_fda_approved$fda_approved== TRUE,]
+
+lincs_limma_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_RES_tau.csv")
+
+lincs_limma_gbm_res_HEPG2_fda_approved<- lincs_limma_gbm_res_HEPG2_fda_approved[ lincs_limma_gbm_res_HEPG2_fda_approved$fda_approved== TRUE,]
+#wrong date on file
+lincs_tfl_gbm_res_HEPG2_fda_approved <- read_csv("~/output/liver_cancer/TFL_res/220602_SR_LINCS_LIHC_TFL_RES_tau.csv")
+lincs_tfl_gbm_res_HEPG2_fda_approved<- lincs_tfl_gbm_res_HEPG2_fda_approved[ lincs_tfl_gbm_res_HEPG2_fda_approved$fda_approved == TRUE, ]
+```
+
+lung
+```{r}
+#comment.   
+lincs_limma_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/limma_res/220808_SR_LINCS_LUAD_limma_RES_tau.csv")
+lincs_limma_gbm_res_A549_fda_approved<- lincs_limma_gbm_res_A549_fda_approved[lincs_limma_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
+lincs_deseq_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/deseq2_res/220929_SR_LINCS_LUAD_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_A549_fda_approved<- lincs_deseq_gbm_res_A549_fda_approved[lincs_deseq_gbm_res_A549_fda_approved$fda_approved == TRUE, ]
+lincs_tfl_gbm_res_A549_fda_approved<- read_csv("~/output/lung_cancer/TFL_res/220808_SR_LINCS_LUAD_TFL_RES_tau.csv")
+lincs_tfl_gbm_res_A549_fda_approved<- lincs_tfl_gbm_res_A549_fda_approved[lincs_tfl_gbm_res_A549_fda_approved$fda_approved==TRUE,]
+```
+
+pancreatic
+```{r}
+lincs_deseq_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/deseq2_res/220929_SR_LINCS_PAAD_DESEQ2_RES_tau.csv")
+lincs_deseq_gbm_res_YAPC_fda_approved<- lincs_deseq_gbm_res_YAPC_fda_approved[lincs_deseq_gbm_res_YAPC_fda_approved$fda_approved == TRUE,]
+
+lincs_limma_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/limma_res/220808_SR_LINCS_PAAD_limma_RES_tau.csv")
+lincs_limma_gbm_res_YAPC_fda_approved<- lincs_limma_gbm_res_YAPC_fda_approved[lincs_limma_gbm_res_YAPC_fda_approved$fda_approved ==TRUE, ]
+
+lincs_tfl_gbm_res_YAPC_fda_approved <- read_csv("~/output/pancreas_cancer/TFL_res/220808_SR_LINCS_PAAD_TFL_RES_tau.csv")
+lincs_tfl_gbm_res_YAPC_fda_approved<- lincs_tfl_gbm_res_YAPC_fda_approved[ lincs_tfl_gbm_res_YAPC_fda_approved$fda_approved ==TRUE,]
+```
+
+
+DESeq2 results
+```{r}
+deseq_results <- read.csv("~/output/deseq2_gbm/220927_deseq2_gbm_normal_gtx_res.csv", sep=",")
+
+feature_info <- readRDS("~/data/recount3/recount3_fix_download/feature_info.rds")
+identical(feature_info$gene_id, rownames(deseq_results))
+deseq_results$Symbol<- feature_info$gene_name
+
+LIHC_deseq_results <- read.csv("~/output/liver_cancer/deseq2_res/220929_deseq2_lihc_normal_gtx_res.csv", sep=",")
+LIHC_deseq_results$Symbol<- feature_info$gene_name
+
+lung_deseq_results <- read.csv("~/output/lung_cancer/deseq2_res/220929_deseq2_luad_normal_gtx_res.csv", sep=",")
+lung_deseq_results$Symbol<- feature_info$gene_name
+
+paad_deseq_results <-read.csv("~/output/pancreas_cancer/deseq2_res/Deseq2_paad_normal_gtx_res.csv", sep= ",")
+paad_deseq_results$Symbol<- feature_info$gene_name
+```
+
+gbm metadata and tpm 
+```{r}
+gbm_metadata <- readRDS("~/output/recount3_gbm_gtex_metadata.rds")
+gbm_tpm_df <- readRDS("~/output/recount3_gbm_gtex_tpm_df.rds")
+```
+
+Metadata for other cancers
+```{r}
+liver_metadata <- readRDS("~/output/liver_cancer/liver_all_metadata_filtered.rds")
+lung_metadata <- readRDS("~/output/lung_cancer/lung_all_metadata_filtered.rds")
+paad_metadata <- readRDS("~/output/pancreas_cancer/paad_all_metadata_filtered.rds")
+```
+
+count data for other cancers
+```{r}
+liver_count <- readRDS("~/output/liver_cancer/liver_count_table_filtered.rds")
+liver_tpm_table<- Counts_to_tpm(liver_count, feature_info$bp_length)
+rownames(liver_tpm_table)<- feature_info$gene_name
+liver_tpm_df <- as.data.frame(liver_tpm_table)
+
+lung_count <- readRDS("~/output/lung_cancer/lung_count_table_filtered.rds")
+lung_tpm_table<- Counts_to_tpm(lung_count, feature_info$bp_length)
+rownames(lung_tpm_table)<- feature_info$gene_name
+lung_tpm_df <- as.data.frame(lung_tpm_table)
+
+paad_count <- readRDS("~/output/pancreas_cancer/paad_count_table_filtered.rds")
+paad_tpm_table<- Counts_to_tpm(paad_count, feature_info$bp_length)
+rownames(paad_tpm_table)<- feature_info$gene_name
+paad_tpm_df <- as.data.frame(paad_tpm_table)
+```
+
+
+### Analysis
+
+
+#### GBM
+Deseq2 
+  drug target pathway analysis  
+```{r}
+drug_target_sig_search(lincs_deseq2_gbm_res_GI1_fda_approved$pert, "~/output/deseq2_gbm/220928_SR_LINCS_GBM_gbm_cell_drug_pathway_RES.csv", "~/output/deseq2_gbm/220928_SR_LINCS_GBM_gbm_cell_drug_pathway_plot.png" )
+```
+
+  drug pathways and the boxplot of tumor vs control expression
+```{r eval=FALSE}
+deseq_results<- cbind(rownames(deseq_results), deseq_results )
+deseq_results$Symbol<- feature_info$gene_name
+for (i in 1:nrow(lincs_deseq2_gbm_res_GI1_fda_approved) ){
+  targets<- as.vector(unlist(strsplit(lincs_deseq2_gbm_res_GI1_fda_approved$t_gn_sym[i], "; ")))
+  #print(targets)
+  try(drug_analysis( lincs_deseq2_gbm_res_GI1_fda_approved$pert[i], targets, gbm_tpm_df , gbm_metadata$status, deseq_results, se= se_asssay, cell_lincs= "__GI1__trt_cp", "~/output/deseq2_gbm/220928_candidate_plots"))
+}
+```
+
+limma
+  drug target pathway analysis  
+```{r}
+drug_target_sig_search(lincs_limma_gbm_res_GI1_fda_approved$pert, "~/output/limma_gbm/220421_ggplot_limma_tau_gbm_approved_candidates_pathways.csv", "~/output/limma_gbm/220421_ggplot_limma_tau_gbm_approved_candidates_pathways.png" )
+```
+
+  drug pathways and the boxplot of tumor vs control expression
+```{r eval=FALSE}
+for (i in 1:nrow(lincs_limma_gbm_res_GI1_fda_approved) ){
+  targets<- as.vector(unlist(strsplit(lincs_limma_gbm_res_GI1_fda_approved$t_gn_sym[i], "; ")))
+  #print(targets)
+  try(drug_analysis( lincs_limma_gbm_res_GI1_fda_approved$pert[i], targets, gbm_tpm_df , gbm_metadata$status, deseq_results, se= se_asssay, cell_lincs= "__GI1__trt_cp", "~/output/limma_gbm/220808_candidate_plots"))
+}
+```
+
+transfer learning
+```{r}
+drug_target_sig_search(lincs_tfl_gbm_res_GI1_fda_approved$pert, "~/output/TF_L_GBM/220808_SR_LINCS_GBM_top_drug_pathway_RES.csv", "~/output/TF_L_GBM/220808_ggplot_tf_l_tau_gbm_approved_candidates_kegg.png" )
+```
+
+  drug pathways and the boxplot of tumor vs control expression
+```{r eval=FALSE}
+for (i in 1:nrow(lincs_tfl_gbm_res_GI1_fda_approved) ){
+  targets<- as.vector(unlist(strsplit(lincs_tfl_gbm_res_GI1_fda_approved$t_gn_sym[i], "; ")))
+  #print(targets)
+  try(drug_analysis( lincs_tfl_gbm_res_GI1_fda_approved$pert[i], targets, gbm_tpm_df , gbm_metadata$status, deseq_results, se= se_asssay, cell_lincs= "__GI1__trt_cp", "~/output/TF_L_GBM/220808_candidate_plots"))
+}
+```
+
+#### LIHC
+Deseq2 
+  drug target pathway analysis  
+```{r}
+drug_target_sig_search(lincs_deseq_gbm_res_HEPG2_fda_approved$pert, "~/output/liver_cancer/deseq2_res/220929_SR_LINCS_LIHC_DESEQ2_PATHWYA.csv", "~/output/liver_cancer/deseq2_res/220929_SR_LINCS_LIHC_DESEQ2_PATHWYA.png" )
+```
+
+  drug pathways and the boxplot of tumor vs control expression
+```{r eval=FALSE}
+LIHC_deseq_results<- cbind(rownames(LIHC_deseq_results), LIHC_deseq_results )
+LIHC_deseq_results$Symbol<- feature_info$gene_name
+for (i in 1:nrow(lincs_deseq_gbm_res_HEPG2_fda_approved) ){
+  targets<- as.vector(unlist(strsplit(lincs_deseq_gbm_res_HEPG2_fda_approved$t_gn_sym[i], "; ")))
+  #print(targets)
+  try(drug_analysis( lincs_deseq_gbm_res_HEPG2_fda_approved$pert[i], targets, liver_tpm_df , liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= "__HEPG2__trt_cp", "~/output/liver_cancer/deseq2_res/220602_candidate_plots"))
+}
+```
+
+limma
+  drug target pathway analysis  
+```{r}
+drug_target_sig_search(lincs_limma_gbm_res_HEPG2_fda_approved$pert, "~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_PATHWAY.csv", "~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_PATHWAY.png" )
+```
+
+  drug pathways and the boxplot of tumor vs control expression
+```{r eval=FALSE}
+for (i in 1:nrow(lincs_limma_gbm_res_HEPG2_fda_approved) ){
+  targets<- as.vector(unlist(strsplit(lincs_limma_gbm_res_HEPG2_fda_approved$t_gn_sym[i], "; ")))
+  #print(targets)
+  try(drug_analysis( lincs_limma_gbm_res_HEPG2_fda_approved$pert[i], targets, liver_tpm_df , liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= "__HEPG2__trt_cp", "~/output/liver_cancer/limma_res/220602_candidate_plots"))
+}
+```
+
+transfer learning
+  drug target pathway analysis  
+```{r}
+drug_target_sig_search(lincs_tfl_gbm_res_HEPG2_fda_approved$pert, "~/output/liver_cancer/TFL_res/220808_SR_LINCS_LIHC_TFL_PATHWAY.csv", "~/output/liver_cancer/TFL_res/220808_SR_LINCS_LIHC_TFL_PATHWAY.png" )
+```
+
+  drug pathways and the boxplot of tumor vs control expression
+```{r eval=FALSE}
+for (i in 1:nrow(lincs_tfl_gbm_res_HEPG2_fda_approved) ){
+  targets<- as.vector(unlist(strsplit(lincs_tfl_gbm_res_HEPG2_fda_approved$t_gn_sym[i], "; ")))
+  #print(targets)
+  try(drug_analysis( lincs_tfl_gbm_res_HEPG2_fda_approved$pert[i], targets, liver_tpm_df , liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= "__HEPG2__trt_cp", "~/output/liver_cancer/TFL_res/220602_candidate_plots"))
+}
+```
+
+#### LUAD
+Deseq2 
+  drug target pathway analysis  
+```{r}
+drug_target_sig_search(lincs_deseq_gbm_res_A549_fda_approved$pert, "~/output/lung_cancer/deseq2_res/220929_SR_LINCS_LUAD_DESEQ2_PATHWAY.csv", "~/output/lung_cancer/deseq2_res/220929_SR_LINCS_LUAD_DESEQ2_PATHWAY.png" )
+```
+
+  drug pathways and the boxplot of tumor vs control expression
+```{r eval=FALSE}
+lung_deseq_results<- cbind(rownames(lung_deseq_results), lung_deseq_results )
+lung_deseq_results$Symbol<- feature_info$gene_name
+for (i in 1:nrow(lincs_deseq_gbm_res_A549_fda_approved) ){
+  targets<- as.vector(unlist(strsplit(lincs_deseq_gbm_res_A549_fda_approved$t_gn_sym[i], "; ")))
+  #print(targets)
+  try(drug_analysis( lincs_deseq_gbm_res_A549_fda_approved$pert[i], targets, lung_tpm_df , lung_metadata$status, lung_deseq_results, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/deseq2_res/220929_candidate_plots"))
+}
+```
+
+limma
+  drug target pathway analysis  
+```{r}
+drug_target_sig_search(lincs_limma_gbm_res_A549_fda_approved$pert, "~/output/lung_cancer/limma_res/220808_SR_LINCS_LUAD_limma_PATHWAY.csv", "~/output/lung_cancer/limma_res/220808_SR_LINCS_LUAD_limma_PATHWAY.png" )
+```
+
+  drug pathways and the boxplot of tumor vs control expression
+```{r eval=FALSE}
+for (i in 1:nrow(lincs_limma_gbm_res_A549_fda_approved) ){
+  targets<- as.vector(unlist(strsplit(lincs_limma_gbm_res_A549_fda_approved$t_gn_sym[i], "; ")))
+  #print(targets)
+  try(drug_analysis( lincs_limma_gbm_res_A549_fda_approved$pert[i], targets, lung_tpm_df , lung_metadata$status, lung_deseq_results, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/limma_res/candidate_plots"))
+}
+```
+
+transfer learning
+  drug target pathway analysis  
+```{r}
+drug_target_sig_search(lincs_tfl_gbm_res_A549_fda_approved$pert, "~/output/lung_cancer/TFL_res/220808_SR_LINCS_LUAD_TFL_PATHWAY.csv", "~/output/lung_cancer/TFL_res/220808_SR_LINCS_LUAD_TFL_PATHWAY.png" )
+```
+
+  drug pathways and the boxplot of tumor vs control expression
+```{r eval=FALSE}
+for (i in 1:nrow(lincs_tfl_gbm_res_A549_fda_approved) ){
+  targets<- as.vector(unlist(strsplit(lincs_tfl_gbm_res_A549_fda_approved$t_gn_sym[i], "; ")))
+  #print(targets)
+  try(drug_analysis( lincs_tfl_gbm_res_A549_fda_approved$pert[i], targets, lung_tpm_df , lung_metadata$status, lung_deseq_results, se= se_asssay, cell_lincs= "__A549__trt_cp", "~/output/lung_cancer/TFL_res/candidate_plots"))
+}
+```
+
+#### PAAD
+Deseq2 
+  drug target pathway analysis  
+```{r}
+drug_target_sig_search(lincs_deseq_gbm_res_YAPC_fda_approved$pert, "~/output/pancreas_cancer/deseq2_res/220929_SR_LINCS_PAAD_DESEQ2_PATHWAY.csv", "~/output/pancreas_cancer/deseq2_res/220929_SR_LINCS_PAAD_DESEQ2_PATHWAY.png" )
+```
+
+  drug pathways and the boxplot of tumor vs control expression
+```{r eval=FALSE}
+paad_deseq_results<- cbind(rownames(paad_deseq_results), paad_deseq_results )
+paad_deseq_results$Symbol<- feature_info$gene_name
+for (i in 1:nrow(lincs_deseq_gbm_res_YAPC_fda_approved) ){
+  targets<- as.vector(unlist(strsplit(lincs_deseq_gbm_res_YAPC_fda_approved$t_gn_sym[i], "; ")))
+  #print(targets)
+  try(drug_analysis(lincs_deseq_gbm_res_YAPC_fda_approved$pert[i], targets, paad_tpm_df , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= "__YAPC__trt_cp", "~/output/pancreas_cancer/deseq2_res/220929_candidate_plots"))
+}
+```
+
+limma
+  drug target pathway analysis  
+```{r}
+drug_target_sig_search(lincs_limma_gbm_res_YAPC_fda_approved$pert, "~/output/pancreas_cancer/limma_res/220808_SR_LINCS_PAAD_limma_PATHWAY.csv", "~/output/pancreas_cancer/limma_res/220808_SR_LINCS_PAAD_limma_PATHWAY.png" )
+```
+
+  drug pathways and the boxplot of tumor vs control expression
+```{r eval=FALSE}
+for (i in 1:nrow(lincs_limma_gbm_res_YAPC_fda_approved ) ){
+  targets<- as.vector(unlist(strsplit(lincs_limma_gbm_res_YAPC_fda_approved$t_gn_sym[i], "; ")))
+  #print(targets)
+  try(drug_analysis(lincs_limma_gbm_res_YAPC_fda_approved$pert[i], targets, paad_tpm_df , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= "__YAPC__trt_cp", "~/output/pancreas_cancer/limma_res/candidate_plots"))
+}
+```
+
+transfer learning
+  drug target pathway analysis  
+```{r}
+drug_target_sig_search(lincs_tfl_gbm_res_YAPC_fda_approved$pert, "~/output/pancreas_cancer/TFL_res/220808_SR_LINCS_PAAD_TFL_PATHWAY.csv", "~/output/pancreas_cancer/TFL_res/220808_SR_LINCS_PAAD_TFL_PATHWAY.png" )
+```
+
+  drug pathways and the boxplot of tumor vs control expression
+```{r eval=FALSE}
+for (i in 1:nrow(lincs_tfl_gbm_res_YAPC_fda_approved ) ){
+  targets<- as.vector(unlist(strsplit(lincs_tfl_gbm_res_YAPC_fda_approved$t_gn_sym[i], "; ")))
+  #print(targets)
+  try(drug_analysis(lincs_tfl_gbm_res_YAPC_fda_approved$pert[i], targets, paad_tpm_df , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= "__YAPC__trt_cp", "~/output/pancreas_cancer/TFL_res/candidate_plots"))
+}
+```
+
+
+### Save Data
+done within the script 
+
+### Save Figures
+done within the script 
+    
+# END
+    Location of final scripts:
+    script 
+    
+    Location of data produced:
+    ~/output
+    
+    Dates when operations were done:
+    230207
+    
+## Versions
+```{r}
+sessionInfo()
+```

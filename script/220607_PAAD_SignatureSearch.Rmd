@@ -163,6 +163,11 @@ dim(count_table_v3)
 [1] 63856   534
 [1] 63856   533
 
+```{r}
+saveRDS(count_table_v3, "~/output/pancreas_cancer/paad_count_table_filtered.rds")
+saveRDS(all_metadata_v3, "~/output/pancreas_cancer/paad_all_metadata_filtered.rds" )
+```
+
 
 LINCS data
 ```{r}
@@ -344,35 +349,6 @@ knitr::include_graphics("~/output/pancreas_cancer/deseq2_res/220929_ggplot_deseq
 write.csv(lincs_deseq_paad_res_YAPC_top , file= "~/output/pancreas_cancer/deseq2_res/220929_SR_LINCS_PAAD_DESEQ2_RES_tau.csv" )
 ```
 
-pathways
-
-```{r eval=FALSE}
-
-hyperG_k_res <- dsea_hyperG(drugs = lincs_deseq_paad_res_YAPC_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
-hyperG_k_res_v2<- result(hyperG_k_res)
-```
-
-```{r eval=FALSE}
-#false discovery rate
-hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
-```
-
-```{r eval=FALSE}
-hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
-```
-
-```{r eval=FALSE}
-gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
-  geom_bar(stat="identity") + scale_fill_viridis()
-gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
-```
-
-```{r eval=FALSE}
-write.csv(hyperG_k_res_v2 , file= "~/output/pancreas_cancer/deseq2_res/220929_SR_LINCS_PAAD_DESEQ2_PATHWAY.csv" )
-```
-
-
-plotting the drug targets
 
 ```{r eval=FALSE}
 tpm_table<- Counts_to_tpm(count_table_v3, feature_info$bp_length)
@@ -384,18 +360,6 @@ rownames(tpm_table)<- feature_info$gene_name
 
 ```{r eval=FALSE}
 tpm_df <- as.data.frame(tpm_table)
-```
-
-
-
-look at all the drug target for this method/cancer
-```{r eval=FALSE}
-deseq2_paad_normal<- cbind(rownames(deseq2_paad_normal), deseq2_paad_normal)
-for (i in 1:nrow(lincs_deseq_paad_res_YAPC_top_fda) ){
-  targets<- as.vector(unlist(strsplit(lincs_deseq_paad_res_YAPC_top_fda$t_gn_sym[i], "; ")))
-  #print(targets)
-  try(drug_analysis( lincs_deseq_paad_res_YAPC_top_fda$pert[i], targets, tpm_df , all_metadata_v3$status, deseq2_paad_normal, se= se_asssay, cell_lincs= "__YAPC__trt_cp", "~/output/pancreas_cancer/deseq2_res/220929_candidate_plots"))
-}
 ```
 
 
@@ -633,39 +597,6 @@ knitr::include_graphics("~/output/pancreas_cancer/limma_res/220808_ggplot_limma_
 write.csv(lincs_limma_pancreas_res_YAPC_top , file= "~/output/pancreas_cancer/limma_res/220808_SR_LINCS_PAAD_limma_RES_tau.csv" )
 ```
 
-pathways
-
-```{r eval=FALSE}
-hyperG_k_res <- dsea_hyperG(drugs = lincs_limma_pancreas_res_YAPC_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
-hyperG_k_res_v2<- result(hyperG_k_res)
-```
-
-```{r eval=FALSE}
-#false discovery rate
-hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
-hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
-```
-
-```{r eval=FALSE}
-gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
-  geom_bar(stat="identity") + scale_fill_viridis()
-gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
-```
-
-```{r eval=FALSE}
-write.csv(hyperG_k_res_v2 , file= "~/output/pancreas_cancer/limma_res/220808_SR_LINCS_PAAD_limma_PATHWAY.csv" )
-```
-
-
-LINCS pathway & Drug targets
-
-```{r eval=FALSE}
-for (i in 1:nrow(lincs_limma_pancreas_res_YAPC_top_fda) ){
-  targets<- as.vector(unlist(strsplit(lincs_limma_pancreas_res_YAPC_top_fda$t_gn_sym[i], "; ")))
-  #print(targets)
-  try(drug_analysis( lincs_limma_pancreas_res_YAPC_top_fda$pert[i], targets, tpm_df , all_metadata_v3$status, deseq2_paad_normal, se= se_asssay, cell_lincs= "__YAPC__trt_cp", "~/output/pancreas_cancer/limma_res/candidate_plots"))
-}
-```
 
 PRISM
 
@@ -986,35 +917,6 @@ knitr::include_graphics("~/output/pancreas_cancer/TFL_res/220808_ggplot_tfl_tau_
 write.csv(lincs_tfl_pancreas_res_YAPC_top , file= "~/output/pancreas_cancer/TFL_res/220808_SR_LINCS_PAAD_TFL_RES_tau.csv" )
 ```
 
-drug target pathways
-
-```{r eval=FALSE}
-
-hyperG_k_res <- dsea_hyperG(drugs = lincs_tfl_pancreas_res_YAPC_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
-hyperG_k_res_v2<- result(hyperG_k_res)
-```
-
-```{r eval=FALSE}
-#false discovery rate
-hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
-```
-
-```{r eval=FALSE}
-hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
-```
-
-```{r eval=FALSE}
-gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
-  geom_bar(stat="identity") + scale_fill_viridis()
-gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
-```
-
-
-```{r eval=FALSE}
-write.csv(hyperG_k_res_v2 , file= "~/output/pancreas_cancer/TFL_res/220808_SR_LINCS_PAAD_TFL_PATHWAY.csv" )
-```
-
-
 PRISM plotting
 
 ```{r eval=FALSE}
@@ -1057,14 +959,6 @@ ggsave("~/output/pancreas_cancer/TFL_res/220808_ggplot_TFL_candidates_prism_scre
 knitr::include_graphics("~/output/pancreas_cancer/TFL_res/220808_ggplot_TFL_candidates_prism_screen1_sensitive_cell_lines.png")
 ```
 
-LINCS pathways & Drug targets
-```{r eval=FALSE}
-for (i in 1:nrow(lincs_tfl_pancreas_res_YAPC_top_fda) ){
-  targets<- as.vector(unlist(strsplit(lincs_tfl_pancreas_res_YAPC_top_fda$t_gn_sym[i], "; ")))
-  #print(targets)
-  try(drug_analysis( lincs_tfl_pancreas_res_YAPC_top_fda$pert[i], targets, tpm_df , all_metadata_v3$status, deseq2_paad_normal, se= se_asssay, cell_lincs= "__PAAD__trt_cp", "~/output/pancreas_cancer/TFL_res/candidate_plots"))
-}
-```
 
 test the PRISM and number of clinical trail drugs to random drug selection
 ```{r eval=FALSE}

@@ -159,6 +159,10 @@ all_metadata_v3<- all_metadata_v2[!all_metadata_v2$status == "Recurrent Tumor",]
 count_table_v3<- count_table_v2[, !all_metadata_v2$status == "Recurrent Tumor"]
 ```
 
+```{r}
+saveRDS(count_table_v3, "~/output/liver_cancer/liver_count_table_filtered.rds")
+saveRDS(all_metadata_v3, "~/output/liver_cancer/liver_all_metadata_filtered.rds" )
+```
 
 ### Analysis
 #### Deseq2
@@ -321,40 +325,10 @@ knitr::include_graphics("~/output/liver_cancer/deseq2_res/220929_ggplot_deseq2_t
 write.csv(lincs_deseq_lihc_res_HEPG2_top , file= "~/output/liver_cancer/deseq2_res/220929_SR_LINCS_LIHC_DESEQ2_RES_tau.csv" )
 ```
 
-pathways
-
-```{r eval=FALSE}
-
-hyperG_k_res <- dsea_hyperG(drugs = lincs_deseq_lihc_res_HEPG2_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
-hyperG_k_res_v2<- result(hyperG_k_res)
-```
-
-```{r eval=FALSE}
-#false discovery rate
-hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
-```
-
-```{r eval=FALSE}
-hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
-```
-
-
-```{r eval=FALSE}
-gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
-  geom_bar(stat="identity") + scale_fill_viridis()
-gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
-```
-no kegg pathways are signficant
-
-```{r eval=FALSE}
-write.csv(hyperG_k_res_v2 , file= "~/output/liver_cancer/deseq2_res/220929_SR_LINCS_LIHC_DESEQ2_PATHWYA.csv" )
-```
-
-
 LINCS pathway & Drug targets
 
 ```{r eval=FALSE}
-tpm_table<- Counts_to_tpm(count_table_v3, feature_info $bp_length)
+tpm_table<- Counts_to_tpm(count_table_v3, feature_info$bp_length)
 ```
 
 ```{r eval=FALSE}
@@ -367,17 +341,6 @@ tpm_df <- as.data.frame(tpm_table)
 
 ```{r eval=FALSE}
 se_asssay<- assay(se)
-```
-
-```{r eval=FALSE}
-deseq2_lihc_normal <- read.csv( "~/output/liver_cancer/deseq2_res/220929_deseq2_lihc_normal_gtx_res.csv")
-deseq2_lihc_normal<- cbind(rownames(deseq2_lihc_normal), deseq2_lihc_normal )
-deseq2_lihc_normal$Symbol<- feature_info$gene_name
-for (i in 1:nrow(lincs_deseq_lihc_res_HEPG2_top_fda) ){
-  targets<- as.vector(unlist(strsplit(lincs_deseq_lihc_res_HEPG2_top_fda$t_gn_sym[i], "; ")))
-  #print(targets)
-  try(drug_analysis( lincs_deseq_lihc_res_HEPG2_top_fda$pert[i], targets, tpm_df , all_metadata_v3$status, deseq2_lihc_normal, se= se_asssay, cell_lincs= "__HEPG2__trt_cp", "~/output/liver_cancer/deseq2_res/candidate_plots"))
-}
 ```
 
 
@@ -620,45 +583,6 @@ knitr::include_graphics("~/output/liver_cancer/limma_res/220808_ggplot_limma_tau
 ```{r eval=FALSE}
 #lincs_deseq_lihc_res_HEPG2_top 
 write.csv(lincs_limma_liver_res_HEPG2_top , file= "~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_RES_tau.csv" )
-```
-
-pathways
-
-```{r eval=FALSE}
-hyperG_k_res <- dsea_hyperG(drugs = lincs_limma_liver_res_HEPG2_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
-hyperG_k_res_v2<- result(hyperG_k_res)
-```
-
-```{r eval=FALSE}
-#false discovery rate
-hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
-```
-
-```{r eval=FALSE}
-hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
-```
-
-```{r eval=FALSE}
-gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
-  geom_bar(stat="identity") + scale_fill_viridis()
-gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
-```
-no kegg pathways are signficant
-
-```{r eval=FALSE}
-write.csv(hyperG_k_res_v2 , file= "~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_PATHWAY.csv" )
-```
-
-
-LINCS pathway & Drug targets
-
-
-```{r eval=FALSE}
-for (i in 1:nrow(lincs_limma_liver_res_HEPG2_top_fda) ){
-  targets<- as.vector(unlist(strsplit(lincs_limma_liver_res_HEPG2_top_fda$t_gn_sym[i], "; ")))
-  #print(targets)
-  try(drug_analysis( lincs_limma_liver_res_HEPG2_top_fda$pert[i], targets, tpm_df , all_metadata_v3$status, deseq2_lihc_normal, se= se_asssay, cell_lincs= "__HEPG2__trt_cp", "~/output/liver_cancer/limma_res/candidate_plots"))
-}
 ```
 
 
@@ -987,33 +911,6 @@ knitr::include_graphics("~/output/liver_cancer/TFL_res/220808_ggplot_tfl_tau_lih
 write.csv(lincs_tfl_liver_res_HEPG2_top , file= "~/output/liver_cancer/TFL_res/220602_SR_LINCS_LIHC_TFL_RES_tau.csv" )
 ```
 
-pathways
-
-```{r eval=FALSE}
-
-hyperG_k_res <- dsea_hyperG(drugs = lincs_tfl_liver_res_HEPG2_top_fda$pert, type = "KEGG", pvalueCutoff = 1, qvalueCutoff = 1,  minGSSize = 10, maxGSSize = 2000)
-hyperG_k_res_v2<- result(hyperG_k_res)
-```
-
-```{r eval=FALSE}
-#false discovery rate
-hyperG_k_res_v2$logqvalue<- -log(hyperG_k_res_v2$qvalue)
-```
-
-```{r eval=FALSE}
-hyperG_k_res_v2$Description<- factor(hyperG_k_res_v2$Description, levels= hyperG_k_res_v2$Description)
-```
-
-```{r eval=FALSE}
-gbm.2<-ggplot(data=hyperG_k_res_v2[1:30,] , aes(x=Description, y=Count, fill=logqvalue )) +
-  geom_bar(stat="identity") + scale_fill_viridis()
-gbm.2 + coord_flip() + ylab("Number of Drugs") + xlab("KEGG Pathways") +labs(fill = "-log(q-value)")
-```
-no kegg pathways are signficant
-
-```{r eval=FALSE}
-write.csv(hyperG_k_res_v2 , file= "~/output/liver_cancer/TFL_res/220808_SR_LINCS_LIHC_TFL_PATHWAY.csv" )
-```
 
 
 PRISM
@@ -1060,16 +957,6 @@ ggsave("~/output/liver_cancer/TFL_res/220808_ggplot_TFL_candidates_prism_screen1
 knitr::include_graphics("~/output/liver_cancer/TFL_res/220808_ggplot_TFL_candidates_prism_screen1_sensitive_cell_lines.png")
 ```
 
-LINCS pathway & Drug targets
-
-
-```{r eval=FALSE}
-for (i in 1:nrow(lincs_tfl_liver_res_HEPG2_top_fda) ){
-  targets<- as.vector(unlist(strsplit(lincs_tfl_liver_res_HEPG2_top_fda$t_gn_sym[i], "; ")))
-  #print(targets)
-  try(drug_analysis( lincs_tfl_liver_res_HEPG2_top_fda$pert[i], targets, tpm_df , all_metadata_v3$status, deseq2_lihc_normal, se= se_asssay, cell_lincs= "__HEPG2__trt_cp", "~/output/liver_cancer/TFL_res/candidate_plots"))
-}
-```
 
 
 ```{r eval=FALSE}
