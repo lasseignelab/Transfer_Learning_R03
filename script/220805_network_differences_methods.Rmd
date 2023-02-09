@@ -69,7 +69,7 @@ library(gridExtra)
 ```
 ### load in data
 ```{r}
-string_ppi_details<- readRDS("~/string_ppi_metrics2.rds")
+string_ppi_details<- readRDS("~/string_ppi_metrics.rds")
 ```
 
 gbm
