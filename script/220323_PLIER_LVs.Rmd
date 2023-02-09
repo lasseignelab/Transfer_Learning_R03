@@ -206,7 +206,7 @@ scores<- ppi$combined_score
 symbol_ppi_table <- cbind(protein1_symbols, protein2_symbols, scores)
 ```
 
-```{r}
+```{r eval= FALSE}
 saveRDS(symbol_ppi_table, "~/string_ppi_symbol.rds")
 ```
 
