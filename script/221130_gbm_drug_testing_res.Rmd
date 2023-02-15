@@ -786,7 +786,7 @@ my_comparisons <- list( c("Vehicle", "20 uM"), # 1
                         
                         c("60 uM", "80 uM") )#10
 
-df1_3_longer <- pivot_longer(df2_3, cols = everything())
+df1_3_longer <- pivot_longer(df1_3, cols = everything())
 df1_3_longer$group <- c("Vehicle", "pamidronate", "pamidronate", "pamidronate",  "pamidronate","Vehicle", "pamidronate",  "pamidronate", "pamidronate", "pamidronate", "Vehicle", "pamidronate", "pamidronate",  "pamidronate", "pamidronate", "Vehicle", "pamidronate", "pamidronate", "pamidronate",  "pamidronate","Vehicle", "pamidronate",  "pamidronate", "pamidronate", "pamidronate", "Vehicle", "pamidronate", "pamidronate",  "pamidronate", "pamidronate")       
 df1_3_longer$dose<- c("Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM")
 
@@ -840,6 +840,90 @@ g2_3<- ggplot(df2_3_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fu
 ```{r}
 ggarrange(g1_3,  g2_3, ncol = 2, nrow = 1)
 ggsave("~/output/gbm_drug_celltiter_plots/230207_pamdronate_nimodipine_round_3_cell_titer_u251.png", height=8, width=18)
+```
+
+```{r}
+df1_3_JX39 <- read_pzfx("~/data/Lasseigne Collaboration JX39 Final Repeat Pamid and Nim 2.12.23.pzfx", table=1)
+df2_3_JX39 <- read_pzfx("~/data/Lasseigne Collaboration JX39 Final Repeat Pamid and Nim 2.12.23.pzfx", table=2)
+```
+
+
+```{r}
+#groups<- c("Vehicle" , "20uM  Nimodipine","30uM  Nimodipine", "40uM  Nimodipine", "25uM TMZ" , "20uM  Nim+ TMZ" , "30uM  Nim+ TMZ" , "40uM  Nim+ TMZ")
+#P2<- round2_plotting(df2, groups, title="Nimodipine & TMZ: Cell Titer \nNHA Cell line", x_lab= "Groups (Control DMSO)")
+
+my_comparisons <- list( c("Vehicle", "20 uM"), # 1
+                        c("Vehicle", "40 uM"), # 2
+                        c("Vehicle", "60 uM"),  # 3
+                        c("Vehicle", "80 uM"), # 4
+                        
+                        c("20 uM", "40 uM"), #5
+                        c("20 uM", "60 uM"), #6
+                        c("20 uM", "80 uM"), #7
+                        
+                        c("40 uM", "60 uM"), #8
+                        c("40 uM", "80 uM"), #9
+                        
+                        c("60 uM", "80 uM") )#10
+
+df1_3_JX39_longer <- pivot_longer(df1_3_JX39, cols = everything())
+df1_3_JX39_longer$group <- c("Vehicle", "pamidronate", "pamidronate", "pamidronate",  "pamidronate","Vehicle", "pamidronate",  "pamidronate", "pamidronate", "pamidronate", "Vehicle", "pamidronate", "pamidronate",  "pamidronate", "pamidronate", "Vehicle", "pamidronate", "pamidronate", "pamidronate",  "pamidronate","Vehicle", "pamidronate",  "pamidronate", "pamidronate", "pamidronate", "Vehicle", "pamidronate", "pamidronate",  "pamidronate", "pamidronate")       
+df1_3_JX39_longer$dose<- c("Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM")
+
+df1_3_JX39_longer$dose<- factor(df1_3_JX39_longer$dose, levels= c("Vehicle", "20 uM", "40 uM", "60 uM", "80 uM"))
+
+g1_3_JX39<- ggplot(df1_3_JX39_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+    ylim(0, 2.25) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns")))+ # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 2.25, size =10) +
+    labs(  x= "Groups (Control H2O)",y="Corrected Values to\nthe Average of the Control")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("#F1605DFF","darkgrey"))
+```
+
+```{r}
+#groups<- c("Vehicle" , "20uM  Nimodipine","30uM  Nimodipine", "40uM  Nimodipine", "25uM TMZ" , "20uM  Nim+ TMZ" , "30uM  Nim+ TMZ" , "40uM  Nim+ TMZ")
+#P2<- round2_plotting(df2, groups, title="Nimodipine & TMZ: Cell Titer \nNHA Cell line", x_lab= "Groups (Control DMSO)")
+
+my_comparisons <- list( c("Vehicle", "20 uM"), # 1
+                        c("Vehicle", "30 uM"), # 2
+                        c("Vehicle", "40 uM"),  # 3
+                        c("Vehicle", "25 uM"), # 4
+                        
+                        c("20 uM", "30 uM"), #5
+                        c("20 uM", "40 uM"), #6
+                        c("20 uM", "25 uM"), #7
+                        
+                        c("30 uM", "40 uM"), #8
+                        c("30 uM", "25 uM"), #9
+                        
+                        c("40 uM", "25 uM") )#10
+
+df2_3_JX39_longer <- pivot_longer(df2_3_JX39, cols = everything())
+df2_3_JX39_longer$group <- c("Vehicle", "nimodipine", "nimodipine", "nimodipine",  "temozolomide","Vehicle", "nimodipine",  "nimodipine", "nimodipine", "temozolomide", "Vehicle", "nimodipine", "nimodipine",  "nimodipine", "temozolomide", "Vehicle", "nimodipine", "nimodipine", "nimodipine",  "temozolomide","Vehicle", "nimodipine",  "nimodipine", "nimodipine", "temozolomide", "Vehicle", "nimodipine", "nimodipine",  "nimodipine", "temozolomide")       
+df2_3_JX39_longer$dose<- c("Vehicle", "20 uM", "30 uM", "40 uM", "25 uM", "Vehicle", "20 uM", "30 uM", "40 uM" ,"25 uM", "Vehicle", "20 uM", "30 uM", "40 uM", "25 uM", "Vehicle", "20 uM", "30 uM", "40 uM", "25 uM", "Vehicle", "20 uM", "30 uM", "40 uM" ,"25 uM", "Vehicle", "20 uM", "30 uM", "40 uM", "25 uM")
+
+df2_3_JX39_longer$dose<- factor(df2_3_JX39_longer$dose, levels= c("Vehicle", "20 uM", "30 uM", "40 uM", "25 uM"))
+
+g2_3_JX39<- ggplot(df2_3_JX39_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+  #stat_pvalue_manual(stat.test,  label = "p.adj", tip.length = 0.03, hide.ns = TRUE) + 
+    ylim(0, 2.25) + stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns")))+ # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 2.25, size =10) +
+    labs(  x= "Groups (Control DMSO)",y="Corrected Values to\nthe Average of the Control")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("#721F81FF", "gold" ,"darkgrey"))
+```
+
+```{r}
+ggarrange(g1_3_JX39,  g2_3_JX39, ncol = 2, nrow = 1)
+ggsave("~/output/gbm_drug_celltiter_plots/230215_pamdronate_nimodipine_round_3_cell_titer_JX39.png", height=8, width=18)
+```
+
+```{r}
+ggarrange(g1_3, g1_3_JX39, g2_3, g2_3_JX39, ncol = 2, nrow = 2)
+ggsave("~/output/gbm_drug_celltiter_plots/230215_pamdronate_nimodipine_round_3_cell_titer_both.png", height=16, width=18)
 ```
 
 
