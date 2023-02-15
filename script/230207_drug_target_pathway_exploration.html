@@ -864,7 +864,7 @@ LIHC_deseq_results$Symbol&lt;- feature_info$gene_name
 for (i in 1:nrow(lincs_deseq_gbm_res_HEPG2_fda_approved) ){
   targets&lt;- as.vector(unlist(strsplit(lincs_deseq_gbm_res_HEPG2_fda_approved$t_gn_sym[i], &quot;; &quot;)))
   #print(targets)
-  try(drug_analysis( lincs_deseq_gbm_res_HEPG2_fda_approved$pert[i], targets, as.data.frame(liver_tpm_df) , liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= &quot;__HEPG2__trt_cp&quot;, &quot;~/output/liver_cancer/deseq2_res/220602_candidate_plots&quot;))
+  try(drug_analysis( lincs_deseq_gbm_res_HEPG2_fda_approved$pert[i], targets, as.data.frame(liver_tpm_df) , liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= &quot;__HEPG2__trt_cp&quot;, &quot;~/output/liver_cancer/deseq2_res/220602_candidate_plot&quot;))
 }</code></pre>
 <p>limma drug target pathway analysis</p>
 <pre class="r"><code>drug_target_sig_search(lincs_limma_gbm_res_HEPG2_fda_approved$pert, &quot;~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_PATHWAY.csv&quot;, &quot;~/output/liver_cancer/limma_res/220808_SR_LINCS_LIHC_limma_PATHWAY.png&quot; )</code></pre>
@@ -873,7 +873,7 @@ for (i in 1:nrow(lincs_deseq_gbm_res_HEPG2_fda_approved) ){
 <pre class="r"><code>for (i in 1:nrow(lincs_limma_gbm_res_HEPG2_fda_approved) ){
   targets&lt;- as.vector(unlist(strsplit(lincs_limma_gbm_res_HEPG2_fda_approved$t_gn_sym[i], &quot;; &quot;)))
   #print(targets)
-  try(drug_analysis( lincs_limma_gbm_res_HEPG2_fda_approved$pert[i], targets, as.data.frame(liver_tpm_df) , liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= &quot;__HEPG2__trt_cp&quot;, &quot;~/output/liver_cancer/limma_res/220602_candidate_plots&quot;))
+  try(drug_analysis( lincs_limma_gbm_res_HEPG2_fda_approved$pert[i], targets, as.data.frame(liver_tpm_df) , liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= &quot;__HEPG2__trt_cp&quot;, &quot;~/output/liver_cancer/limma_res/230215_candidate_plot&quot;))
 }</code></pre>
 <p>transfer learning drug target pathway analysis</p>
 <pre class="r"><code>drug_target_sig_search(lincs_tfl_gbm_res_HEPG2_fda_approved$pert, &quot;~/output/liver_cancer/TFL_res/220808_SR_LINCS_LIHC_TFL_PATHWAY.csv&quot;, &quot;~/output/liver_cancer/TFL_res/220808_SR_LINCS_LIHC_TFL_PATHWAY.png&quot; )</code></pre>
@@ -882,7 +882,7 @@ for (i in 1:nrow(lincs_deseq_gbm_res_HEPG2_fda_approved) ){
 <pre class="r"><code>for (i in 1:nrow(lincs_tfl_gbm_res_HEPG2_fda_approved) ){
   targets&lt;- as.vector(unlist(strsplit(lincs_tfl_gbm_res_HEPG2_fda_approved$t_gn_sym[i], &quot;; &quot;)))
   #print(targets)
-  try(drug_analysis( lincs_tfl_gbm_res_HEPG2_fda_approved$pert[i], targets, as.data.frame(liver_tpm_df ), liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= &quot;__HEPG2__trt_cp&quot;, &quot;~/output/liver_cancer/TFL_res/220602_candidate_plots&quot;))
+  try(drug_analysis( lincs_tfl_gbm_res_HEPG2_fda_approved$pert[i], targets, as.data.frame(liver_tpm_df ), liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= &quot;__HEPG2__trt_cp&quot;, &quot;~/output/liver_cancer/TFL_res/230215_candidate_plots&quot;))
 }</code></pre>
 </div>
 <div id="luad" class="section level4">
@@ -928,7 +928,7 @@ paad_deseq_results$Symbol&lt;- feature_info$gene_name
 for (i in 1:nrow(lincs_deseq_gbm_res_YAPC_fda_approved) ){
   targets&lt;- as.vector(unlist(strsplit(lincs_deseq_gbm_res_YAPC_fda_approved$t_gn_sym[i], &quot;; &quot;)))
   #print(targets)
-  try(drug_analysis(lincs_deseq_gbm_res_YAPC_fda_approved$pert[i], targets, as.data.frame(paad_tpm_df) , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= &quot;__YAPC__trt_cp&quot;, &quot;~/output/pancreas_cancer/deseq2_res/220929_candidate_plots&quot;))
+  try(drug_analysis(lincs_deseq_gbm_res_YAPC_fda_approved$pert[i], targets, as.data.frame(paad_tpm_df) , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= &quot;__YAPC__trt_cp&quot;, &quot;~/output/pancreas_cancer/deseq2_res/230215_candidate_plots&quot;))
 }</code></pre>
 <p>limma drug target pathway analysis</p>
 <pre class="r"><code>drug_target_sig_search(lincs_limma_gbm_res_YAPC_fda_approved$pert, &quot;~/output/pancreas_cancer/limma_res/220808_SR_LINCS_PAAD_limma_PATHWAY.csv&quot;, &quot;~/output/pancreas_cancer/limma_res/220808_SR_LINCS_PAAD_limma_PATHWAY.png&quot; )</code></pre>
@@ -937,7 +937,7 @@ for (i in 1:nrow(lincs_deseq_gbm_res_YAPC_fda_approved) ){
 <pre class="r"><code>for (i in 1:nrow(lincs_limma_gbm_res_YAPC_fda_approved ) ){
   targets&lt;- as.vector(unlist(strsplit(lincs_limma_gbm_res_YAPC_fda_approved$t_gn_sym[i], &quot;; &quot;)))
   #print(targets)
-  try(drug_analysis(lincs_limma_gbm_res_YAPC_fda_approved$pert[i], targets, as.data.frame(paad_tpm_df) , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= &quot;__YAPC__trt_cp&quot;, &quot;~/output/pancreas_cancer/limma_res/candidate_plots&quot;))
+  try(drug_analysis(lincs_limma_gbm_res_YAPC_fda_approved$pert[i], targets, as.data.frame(paad_tpm_df) , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= &quot;__YAPC__trt_cp&quot;, &quot;~/output/pancreas_cancer/limma_res/230215_candidate_plots&quot;))
 }</code></pre>
 <p>transfer learning drug target pathway analysis</p>
 <pre class="r"><code>drug_target_sig_search(lincs_tfl_gbm_res_YAPC_fda_approved$pert, &quot;~/output/pancreas_cancer/TFL_res/220808_SR_LINCS_PAAD_TFL_PATHWAY.csv&quot;, &quot;~/output/pancreas_cancer/TFL_res/220808_SR_LINCS_PAAD_TFL_PATHWAY.png&quot; )</code></pre>
@@ -946,7 +946,7 @@ for (i in 1:nrow(lincs_deseq_gbm_res_YAPC_fda_approved) ){
 <pre class="r"><code>for (i in 1:nrow(lincs_tfl_gbm_res_YAPC_fda_approved ) ){
   targets&lt;- as.vector(unlist(strsplit(lincs_tfl_gbm_res_YAPC_fda_approved$t_gn_sym[i], &quot;; &quot;)))
   #print(targets)
-  try(drug_analysis(lincs_tfl_gbm_res_YAPC_fda_approved$pert[i], targets, as.data.frame(paad_tpm_df) , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= &quot;__YAPC__trt_cp&quot;, &quot;~/output/pancreas_cancer/TFL_res/candidate_plots&quot;))
+  try(drug_analysis(lincs_tfl_gbm_res_YAPC_fda_approved$pert[i], targets, as.data.frame(paad_tpm_df) , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= &quot;__YAPC__trt_cp&quot;, &quot;~/output/pancreas_cancer/TFL_res/230215_candidate_plots&quot;))
 }</code></pre>
 </div>
 </div>
