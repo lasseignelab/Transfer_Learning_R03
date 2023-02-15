@@ -1,0 +1,7 @@
+"";"query";"significant";"p_value";"term_size";"query_size";"intersection_size";"precision";"recall";"term_id";"source";"term_name";"effective_domain_size";"source_order";"set"
+"1";"query_1";TRUE;0,0351384795801029;2354;24;11;0,458333333333333;0,00467289719626168;"GO:0050790";"GO:BP";"regulation of catalytic activity";21092;15302;"Up"
+"2";"query_1";TRUE;0,0163204370136128;45;7;2;0,285714285714286;0,0444444444444444;"GO:0001772";"GO:CC";"immunological synapse";21690;188;"Up"
+"3";"query_1";TRUE;0,0342774220330695;2;2;1;0,5;0,5;"GO:0031251";"GO:CC";"PAN complex";21690;1257;"Up"
+"4";"query_1";TRUE;0,0205618173397411;1555;20;8;0,4;0,00514469453376206;"GO:0005102";"GO:MF";"signaling receptor binding";20166;1606;"Up"
+"5";"query_1";TRUE;0,0418801202173856;206;18;4;0,222222222222222;0,0194174757281553;"GO:1901654";"GO:BP";"response to ketone";21092;24917;"Down"
+"6";"query_1";TRUE;0,0314427457202613;72;17;3;0,176470588235294;0,0416666666666667;"MIRNA:hsa-miR-4712-3p";"MIRNA";"hsa-miR-4712-3p";14830;1306;"Down"
