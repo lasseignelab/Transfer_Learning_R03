@@ -243,7 +243,7 @@ LIHC_deseq_results$Symbol<- feature_info$gene_name
 for (i in 1:nrow(lincs_deseq_gbm_res_HEPG2_fda_approved) ){
   targets<- as.vector(unlist(strsplit(lincs_deseq_gbm_res_HEPG2_fda_approved$t_gn_sym[i], "; ")))
   #print(targets)
-  try(drug_analysis( lincs_deseq_gbm_res_HEPG2_fda_approved$pert[i], targets, as.data.frame(liver_tpm_df) , liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= "__HEPG2__trt_cp", "~/output/liver_cancer/deseq2_res/220602_candidate_plots"))
+  try(drug_analysis( lincs_deseq_gbm_res_HEPG2_fda_approved$pert[i], targets, as.data.frame(liver_tpm_df) , liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= "__HEPG2__trt_cp", "~/output/liver_cancer/deseq2_res/220602_candidate_plot"))
 }
 ```
 
@@ -258,7 +258,7 @@ drug_target_sig_search(lincs_limma_gbm_res_HEPG2_fda_approved$pert, "~/output/li
 for (i in 1:nrow(lincs_limma_gbm_res_HEPG2_fda_approved) ){
   targets<- as.vector(unlist(strsplit(lincs_limma_gbm_res_HEPG2_fda_approved$t_gn_sym[i], "; ")))
   #print(targets)
-  try(drug_analysis( lincs_limma_gbm_res_HEPG2_fda_approved$pert[i], targets, as.data.frame(liver_tpm_df) , liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= "__HEPG2__trt_cp", "~/output/liver_cancer/limma_res/220602_candidate_plots"))
+  try(drug_analysis( lincs_limma_gbm_res_HEPG2_fda_approved$pert[i], targets, as.data.frame(liver_tpm_df) , liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= "__HEPG2__trt_cp", "~/output/liver_cancer/limma_res/230215_candidate_plot"))
 }
 ```
 
@@ -273,7 +273,7 @@ drug_target_sig_search(lincs_tfl_gbm_res_HEPG2_fda_approved$pert, "~/output/live
 for (i in 1:nrow(lincs_tfl_gbm_res_HEPG2_fda_approved) ){
   targets<- as.vector(unlist(strsplit(lincs_tfl_gbm_res_HEPG2_fda_approved$t_gn_sym[i], "; ")))
   #print(targets)
-  try(drug_analysis( lincs_tfl_gbm_res_HEPG2_fda_approved$pert[i], targets, as.data.frame(liver_tpm_df ), liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= "__HEPG2__trt_cp", "~/output/liver_cancer/TFL_res/220602_candidate_plots"))
+  try(drug_analysis( lincs_tfl_gbm_res_HEPG2_fda_approved$pert[i], targets, as.data.frame(liver_tpm_df ), liver_metadata$status, LIHC_deseq_results, se= se_asssay, cell_lincs= "__HEPG2__trt_cp", "~/output/liver_cancer/TFL_res/230215_candidate_plots"))
 }
 ```
 
@@ -339,7 +339,7 @@ paad_deseq_results$Symbol<- feature_info$gene_name
 for (i in 1:nrow(lincs_deseq_gbm_res_YAPC_fda_approved) ){
   targets<- as.vector(unlist(strsplit(lincs_deseq_gbm_res_YAPC_fda_approved$t_gn_sym[i], "; ")))
   #print(targets)
-  try(drug_analysis(lincs_deseq_gbm_res_YAPC_fda_approved$pert[i], targets, as.data.frame(paad_tpm_df) , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= "__YAPC__trt_cp", "~/output/pancreas_cancer/deseq2_res/220929_candidate_plots"))
+  try(drug_analysis(lincs_deseq_gbm_res_YAPC_fda_approved$pert[i], targets, as.data.frame(paad_tpm_df) , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= "__YAPC__trt_cp", "~/output/pancreas_cancer/deseq2_res/230215_candidate_plots"))
 }
 ```
 
@@ -354,7 +354,7 @@ drug_target_sig_search(lincs_limma_gbm_res_YAPC_fda_approved$pert, "~/output/pan
 for (i in 1:nrow(lincs_limma_gbm_res_YAPC_fda_approved ) ){
   targets<- as.vector(unlist(strsplit(lincs_limma_gbm_res_YAPC_fda_approved$t_gn_sym[i], "; ")))
   #print(targets)
-  try(drug_analysis(lincs_limma_gbm_res_YAPC_fda_approved$pert[i], targets, as.data.frame(paad_tpm_df) , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= "__YAPC__trt_cp", "~/output/pancreas_cancer/limma_res/candidate_plots"))
+  try(drug_analysis(lincs_limma_gbm_res_YAPC_fda_approved$pert[i], targets, as.data.frame(paad_tpm_df) , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= "__YAPC__trt_cp", "~/output/pancreas_cancer/limma_res/230215_candidate_plots"))
 }
 ```
 
@@ -369,7 +369,7 @@ drug_target_sig_search(lincs_tfl_gbm_res_YAPC_fda_approved$pert, "~/output/pancr
 for (i in 1:nrow(lincs_tfl_gbm_res_YAPC_fda_approved ) ){
   targets<- as.vector(unlist(strsplit(lincs_tfl_gbm_res_YAPC_fda_approved$t_gn_sym[i], "; ")))
   #print(targets)
-  try(drug_analysis(lincs_tfl_gbm_res_YAPC_fda_approved$pert[i], targets, as.data.frame(paad_tpm_df) , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= "__YAPC__trt_cp", "~/output/pancreas_cancer/TFL_res/candidate_plots"))
+  try(drug_analysis(lincs_tfl_gbm_res_YAPC_fda_approved$pert[i], targets, as.data.frame(paad_tpm_df) , paad_metadata$status, paad_deseq_results, se= se_asssay, cell_lincs= "__YAPC__trt_cp", "~/output/pancreas_cancer/TFL_res/230215_candidate_plots"))
 }
 ```
 
