@@ -1,0 +1,129 @@
+---
+title: "230511_more_gbm_drug_testing_res"
+author: "Jennifer Fisher"
+date: '2023-05-11'
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# START 
+    Goal/Purpose of operations: 
+    Plot the results from the cell titer assay. There were two rounds of testing. One round tested four candidates at three different concentration with a control sovlent: pamidronate, nimodipine, icosapent, and saxagliptin. Pamidronate and nimodipine inhibit growth of the U251 GBM cell line in round one. Therefore, in round two we used three or four other drug concentrations for these two drugs in U251 cell lines and PDX JX39 cells. In addition, we evaluated these drugs in combination with TMZ, the standard of care for GBM. 
+    Note- the cell titer assay analysis was conducted by the Hjelmeland lab. 
+    
+    Finished psedocode on: 
+    221130
+    
+    System which operations were done on: 
+    my laptop
+    
+    GitHub Repo:
+    Transfer_Learning_R03
+    
+    Docker/Singularity: 
+    rstudio_cancer_dr
+    
+    Directory of operations: 
+    "/home/rstudio"
+    
+    Scripts being edited for operations:
+    functions were added to the /home/rstudio/script/functions_cancer_signature_reversion_JLF.R
+    
+    Data being used:
+    results from cell titer assay analysis a PRISM .pzfx file (Note different PRISM than the drug screen database)
+    
+    Papers and tools: 
+    NA
+
+# STEPS
+### Set working directory 
+```{r}
+source("/home/rstudio/script/functions_cancer_signature_reversion_JLF.R")
+library(ggpubr)
+library(tidyverse)
+library(rstatix)
+```
+
+```{r}
+#the folowing function (and internal functions) is from a r package called pzfx. The functions are inculded in the functions_cancer_signature_reversion_JLF.R script. 
+
+df1 <- read_pzfx("~/data/D456 Pam and nim 5.11.23.pzfx", table=1)
+
+df2 <- read_pzfx("~/data/D456 Pam and nim 5.11.23.pzfx", table=2)
+
+```
+pamidronate plot
+```{r}
+posn.d <- position_dodge(width=0.95)
+my_comparisons <- list( c("Vehicle", "20 uM"), # 1
+                        c("Vehicle", "40 uM"), # 2
+                        c("Vehicle", "60 uM"),  # 3
+                        c("Vehicle", "80 uM"), # 4
+                        
+                        c("20 uM", "40 uM"), #5
+                        c("20 uM", "60 uM"), #6
+                        c("20 uM", "80 uM"), #7
+                        
+                        c("40 uM", "60 uM"), #8
+                        c("40 uM", "80 uM"), #9
+                        
+                        c("60 uM", "80 uM") )#10
+
+df1_longer <- pivot_longer(df1, cols = everything())
+df1_longer$group <- c("Vehicle", "pamidronate", "pamidronate", "pamidronate",  "pamidronate","Vehicle", "pamidronate",  "pamidronate", "pamidronate", "pamidronate", "Vehicle", "pamidronate", "pamidronate",  "pamidronate", "pamidronate", "Vehicle", "pamidronate", "pamidronate", "pamidronate",  "pamidronate","Vehicle", "pamidronate",  "pamidronate", "pamidronate", "pamidronate", "Vehicle", "pamidronate", "pamidronate",  "pamidronate", "pamidronate")       
+df1_longer$dose<- c("Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM", "Vehicle", "20 uM", "40 uM", "60 uM", "80 uM")
+
+df1_longer$dose<- factor(df1_longer$dose, levels= c("Vehicle", "20 uM", "40 uM", "60 uM", "80 uM"))
+
+g1 <- ggplot(df1_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 50000, size =10) +
+    labs(  x= "Groups (Control H2O)",y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("#F1605DFF","darkgrey"))
+```
+temozolomide and nimodipine plot
+```{r}
+
+my_comparisons <- list( c("Vehicle", "20 uM"), # 1
+                        c("Vehicle", "30 uM"), # 2
+                        c("Vehicle", "40 uM"),  # 3
+                        c("Vehicle", "25 uM"), # 4
+                        
+                        c("20 uM", "30 uM"), #5
+                        c("20 uM", "40 uM"), #6
+                        c("20 uM", "25 uM"), #7
+                        
+                        c("30 uM", "40 uM"), #8
+                        c("30 uM", "25 uM"), #9
+                        
+                        c("40 uM", "25 uM") )#10
+
+df2_longer <- pivot_longer(df2[,1:5], cols = everything())
+df2_longer$group <- c("Vehicle", "nimodipine", "nimodipine", "nimodipine",  "temozolomide","Vehicle", "nimodipine",  "nimodipine", "nimodipine", "temozolomide", "Vehicle", "nimodipine", "nimodipine",  "nimodipine", "temozolomide", "Vehicle", "nimodipine", "nimodipine", "nimodipine",  "temozolomide","Vehicle", "nimodipine",  "nimodipine", "nimodipine", "temozolomide", "Vehicle", "nimodipine", "nimodipine",  "nimodipine", "temozolomide")       
+df2_longer$dose<- c("Vehicle", "20 uM", "30 uM", "40 uM", "25 uM", "Vehicle", "20 uM", "30 uM", "40 uM" ,"25 uM", "Vehicle", "20 uM", "30 uM", "40 uM", "25 uM", "Vehicle", "20 uM", "30 uM", "40 uM", "25 uM", "Vehicle", "20 uM", "30 uM", "40 uM" ,"25 uM", "Vehicle", "20 uM", "30 uM", "40 uM", "25 uM")
+
+df2_longer$dose<- factor(df2_longer$dose, levels= c("Vehicle", "20 uM", "30 uM", "40 uM", "25 uM"))
+
+g2<- ggplot(df2_longer, aes( x=dose, y=value, fill= group))+ stat_summary(fun.data=mean_sdl, geom="bar", color = "black")+ 
+    stat_summary(fun.data=mean_cl_boot, geom="errorbar", position=posn.d, width=0.3) +geom_point(size =5)+
+    stat_compare_means(comparisons = my_comparisons, method= "t.test", p.adjust.method = "bonf",bracket.size=1, size= 5,vjust= 0.1,step.increase = 0.1, symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
+         symbols = c("****", "***", "**", "*", "ns"))) + # Add pairwise comparisons p-value
+    stat_compare_means(method = "anova", label.y = 50000, size =10) +
+    labs(  x= "Groups (Control DMSO)",y="Luminescence (RLU)")+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6))  + theme(legend.position = "none")+ theme(text = element_text(size = 25,  face="bold")) + scale_fill_manual(values = c("#721F81FF", "gold" ,"darkgrey"))
+```
+
+```{r}
+ggarrange(g1,  g2, ncol = 2, nrow = 1)
+ggsave("~/output/gbm_drug_celltiter_plots/230511_pamdronate_nimodipine_cell_titer_D456.png", height=8, width=18)
+```
+
+
